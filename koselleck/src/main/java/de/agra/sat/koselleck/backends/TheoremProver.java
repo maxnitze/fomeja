@@ -262,8 +262,10 @@ public abstract class TheoremProver {
 	 * ----- ----- ----- ----- ----- */
 	
 	/**
+	 * setComponent is a setter method for the component to proceed by the
+	 *  prover.
 	 * 
-	 * @param component
+	 * @param component the new component
 	 */
 	public void setComponent(Object component) {
 		this.component = component;
@@ -273,10 +275,15 @@ public abstract class TheoremProver {
 	 * ----- ----- ----- ----- ----- */
 	
 	/**
+	 * getAttributeReplacement checks if the given prefixed field is an
+	 *  attribute type field and returns the replacement for this field.
 	 * 
-	 * @param prefixedField
+	 * @param prefixedField the prefixed field to get the replacement for
 	 * 
-	 * @return
+	 * @return the replacement for the attribute field
+	 * 
+	 * @see TheoremProver#getReplacement(PrefixedField, Object)
+	 * @see TheoremProver#getParameterObject(PrefixedField, Object)
 	 */
 	private String getAttributeReplacement(PrefixedField prefixedField) {
 		if(prefixedField.fieldCode != Opcode.aload_0) {
@@ -288,11 +295,40 @@ public abstract class TheoremProver {
 	}
 	
 	/**
+	 * getReplacement returns the replacement for the given prefixed field by
+	 *  reflectively getting its parameter objects and the value of this for
+	 *  the given starting object.
 	 * 
-	 * @param prefixedField
-	 * @param startingObject
+	 * @param prefixedField the prefixed field to get the replacement for
+	 * @param startingObject the object to start getting its sub-values
 	 * 
-	 * @return
+	 * @return the replacement for the given prefixed field
+	 * 
+	 * @see TheoremProver#getParameterObject(PrefixedField, Object)
+	 */
+	private String getReplacement(PrefixedField prefixedField, Object startingObject) {
+		Object replacement = getParameterObject(prefixedField, startingObject);
+		
+		prefixedField.field.setAccessible(true);
+		try{
+			replacement = prefixedField.field.get(replacement);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			Logger.getLogger(TheoremProver.class).fatal("could not access field \"" + prefixedField.field.getName() +"\"");
+			throw new IllegalArgumentException("could not access field \"" + prefixedField.field.getName() +"\"");
+		}
+		
+		return replacement.toString();
+	}
+	
+	/**
+	 * getParameterObject returns the object for the given prefixed field by
+	 *  reflectively getting its parameter objects for the given starting
+	 *  object.
+	 * 
+	 * @param prefixedField the prefixed field to get the parameter object for
+	 * @param startingObject the object to start getting its sub-values
+	 * 
+	 * @return the parameter object for the given prefixed field
 	 */
 	private Object getParameterObject(PrefixedField prefixedField, Object startingObject) {
 		Object parameterObject = startingObject;
@@ -307,34 +343,5 @@ public abstract class TheoremProver {
 		}
 		
 		return parameterObject;
-	}
-	
-	/**
-	 * 
-	 * @param prefixedField
-	 * @param startingObject
-	 * 
-	 * @return
-	 */
-	private String getReplacement(PrefixedField prefixedField, Object startingObject) {
-		Object replacement = startingObject;
-		for(PrefixedField prePrefixedField : prefixedField.preFields) {
-			prePrefixedField.field.setAccessible(true);
-			try {
-				replacement = prePrefixedField.field.get(replacement);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				Logger.getLogger(TheoremProver.class).fatal("could not access field \"" + prePrefixedField.field.getName() +"\"");
-				throw new IllegalArgumentException("could not access field \"" + prePrefixedField.field.getName() +"\"");
-			}
-		}
-		prefixedField.field.setAccessible(true);
-		try{
-			replacement = prefixedField.field.get(replacement);
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			Logger.getLogger(TheoremProver.class).fatal("could not access field \"" + prefixedField.field.getName() +"\"");
-			throw new IllegalArgumentException("could not access field \"" + prefixedField.field.getName() +"\"");
-		}
-		
-		return replacement.toString();
 	}
 }
