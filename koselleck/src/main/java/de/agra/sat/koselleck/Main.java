@@ -23,9 +23,9 @@ public class Main {
 		
 		if(testSatisfy) {
 			if(I2AL.satisfy(graph))
-				System.out.println("the graph \"" + graphfile + "\" is satisfyable");
+				System.out.println("the graph \"" + graphfile + "\" is satisfiable");
 			else
-				System.out.println("the graph \"" + graphfile + "\" is not satisfyable");
+				System.out.println("the graph \"" + graphfile + "\" is not satisfiable");
 		}
 		
 		if(testMinimize) {

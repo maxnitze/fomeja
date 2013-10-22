@@ -121,10 +121,12 @@ public abstract class TheoremProver {
 	 * ----- ----- ----- ----- ----- */
 	
 	/**
+	 * getBackendConstraint returns the string representation of a given
+	 *  abstract constraint.
 	 * 
-	 * @param constraint
+	 * @param constraint the abstract constraint to proceed
 	 * 
-	 * @return
+	 * @return the string representation of the abstract constraint
 	 */
 	protected String getBackendConstraint(AbstractConstraint constraint) {
 		if(constraint instanceof AbstractBooleanConstraint)
@@ -140,10 +142,12 @@ public abstract class TheoremProver {
 	}
 	
 	/**
+	 * getBackendConstraint returns the string representation of a given
+	 *  abstract constraint value.
 	 * 
-	 * @param constraintValue
+	 * @param constraintValue the abstract constraint value to proceed
 	 * 
-	 * @return
+	 * @return the string representation of the abstract constraint value
 	 */
 	protected String getBackendConstraintValue(AbstractConstraintValue constraintValue) {
 		if(constraintValue instanceof AbstractConstraintLiteral)
@@ -157,12 +161,16 @@ public abstract class TheoremProver {
 	}
 	
 	/**
+	 * getConstraintForArguments assigns the given abstract single theorems
+	 *  with the non-variable fields of the component.
 	 * 
-	 * @param singleTheorems
+	 * @param singleTheorems the list of single theorems to assign
 	 * 
-	 * @return
+	 * @return the assigned theorem for the given abstract single theorems and
+	 *  the component
 	 * 
-	 * @throws NotSatisfyableException
+	 * @throws NotSatisfyableException if there is an assigned constraint that
+	 *  is not satisfiable
 	 */
 	protected Theorem getConstraintForArguments(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
 		List<AbstractConstraint> constraints = new ArrayList<AbstractConstraint>();
