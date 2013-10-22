@@ -19,10 +19,11 @@ import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
 import de.agra.sat.koselleck.utils.KoselleckUtils;
 
 /**
- * I2AL implements methods to validate, satisfy, minimize and maximize 
+ * I2AL implements methods to validate, satisfy, minimize and maximize a given
+ *  object. 
  * 
  * @author Max Nitze
- * @version 0.8.5
+ * @version 0.9.0
  */
 public abstract class I2AL {
 	/** instance of the theorem prover to use */
@@ -36,9 +37,6 @@ public abstract class I2AL {
 	 * 
 	 * @return {@code true} if the given configuration matches the constraints
 	 *  of the components class, {@code false} otherwise
-	 * 
-	 * @throws IllegalArgumentException if there is a constraint method that
-	 *  can't be invoked with the given parameters
 	 */
 	public static boolean validate(Object component) {
 		List<Method> constraintMethods = KoselleckUtils.getConstraintMethods(component.getClass());

@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
  *  variable for the class.
  * 
  * @author Max Nitze
+ * @version 1.0.0
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

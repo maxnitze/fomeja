@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
  *  constraint for the class.
  * 
  * @author Max Nitze
+ * @version 1.0.0
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

@@ -29,8 +29,10 @@ import de.agra.sat.koselleck.exceptions.UnsupportedConstraintValueException;
 import de.agra.sat.koselleck.utils.KoselleckUtils;
 
 /**
+ * TheoremProver is an interface for all possible theorem provers to extend.
  * 
  * @author Max Nitze
+ * @version 1.0.0
  */
 public abstract class TheoremProver {
 	/** the component to process */
@@ -40,62 +42,78 @@ public abstract class TheoremProver {
 	 * ----- ----- ----- ----- ----- */
 	
 	/**
+	 * format formats the given list of single theorems to the specific string
+	 *  representation of the theorem prover.
 	 * 
-	 * @param singleTheorems
+	 * @param singleTheorems the theorems to create the string from
 	 * 
-	 * @return
+	 * @return the specific string representation of the theorem prover
 	 * 
-	 * @throws NotSatisfyableException
+	 * @throws NotSatisfyableException if one of the single theorems is not
+	 *  satisfiable for the current configuration
 	 */
 	public abstract String format(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException;
 	
 	/**
+	 * solveAndAssign formats the given list of single theorems to the specific
+	 *  string representation. This representation is proved by the specific
+	 *  prover. Afterwards the configuration, that is returned by the prover,
+	 *  is assigned to the variable fields of the component.
 	 * 
-	 * @param singleTheorems
+	 * @param singleTheorems the theorems to solve and assign
 	 * 
-	 * @return
-	 * 
-	 * @throws NotSatisfyableException
+	 * @throws NotSatisfyableException if one of the single theorems is not
+	 *  satisfiable for the current configuration
 	 */
 	public abstract void solveAndAssign(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException;
 	
 	/**
+	 * prepareAbstractBooleanConstraint returns the string representation of a
+	 *  given abstract boolean constraint.
 	 * 
-	 * @param booleanConstraint
+	 * @param booleanConstraint the abstract boolean constraint to proceed
 	 * 
-	 * @return
+	 * @return the string representation of the abstract boolean constraint
 	 */
 	public abstract String prepareAbstractBooleanConstraint(AbstractBooleanConstraint booleanConstraint);
 	
 	/**
+	 * prepareAbstractSingleConstraint returns the string representation of a
+	 *  given abstract single constraint.
 	 * 
-	 * @param singleConstraint
+	 * @param singleConstraint the abstract single constraint to proceed
 	 * 
-	 * @return
+	 * @return the string representation of the abstract single constraint
 	 */
 	public abstract String prepareAbstractSingleConstraint(AbstractSingleConstraint singleConstraint);
 	
 	/**
+	 * prepareAbstractSubConstraint returns the string representation of a
+	 *  given abstract sub constraint.
 	 * 
-	 * @param subConstraint
+	 * @param subConstraint the abstract sub constraint to proceed
 	 * 
-	 * @return
+	 * @return the string representation of the abstract sub constraint
 	 */
 	public abstract String prepareAbstractSubConstraint(AbstractSubConstraint subConstraint);
 	
 	/**
+	 * prepareAbstractConstraintLiteral returns the string representation of a
+	 *  given abstract constraint literal.
 	 * 
-	 * @param constraintLiteral
+	 * @param constraintLiteral the abstract constraint literal to proceed
 	 * 
-	 * @return
+	 * @return the string representation of the abstract constraint literal
 	 */
 	public abstract String prepareAbstractConstraintLiteral(AbstractConstraintLiteral constraintLiteral);
 	
 	/**
+	 * prepareAbstractConstraintFormula returns the string representation of a
+	 *  given abstract constraint formula.
 	 * 
-	 * @param constraintFormula
+	 * @param constraintFormula the abstract constraint formula to proceed
 	 * 
-	 * @return
+	 * @return the string representation of the abstract constraint formula
 	 */
 	public abstract String prepareAbstractConstraintFormula(AbstractConstraintFormula constraintFormula);
 	
