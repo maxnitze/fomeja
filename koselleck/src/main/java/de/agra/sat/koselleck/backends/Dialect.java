@@ -34,7 +34,7 @@ import de.agra.sat.koselleck.utils.KoselleckUtils;
  * @author Max Nitze
  * @version 1.0.0
  */
-public abstract class TheoremProver {
+public abstract class Dialect {
 	/** the component to process */
 	private Object component;
 	
@@ -50,7 +50,7 @@ public abstract class TheoremProver {
 	 * @return the specific string representation of the theorem prover
 	 * 
 	 * @throws NotSatisfyableException if one of the single theorems is not
-	 *  satisfiable for the current configuration
+	 *  satisfiable for the current component
 	 */
 	public abstract String format(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException;
 	
@@ -63,7 +63,7 @@ public abstract class TheoremProver {
 	 * @param singleTheorems the theorems to solve and assign
 	 * 
 	 * @throws NotSatisfyableException if one of the single theorems is not
-	 *  satisfiable for the current configuration
+	 *  satisfiable for the current component
 	 */
 	public abstract void solveAndAssign(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException;
 	
@@ -136,7 +136,7 @@ public abstract class TheoremProver {
 		else if(constraint instanceof AbstractSubConstraint)
 			return prepareAbstractSubConstraint((AbstractSubConstraint)constraint);
 		else {
-			Logger.getLogger(TheoremProver.class).fatal("partial constraint type \"" + (constraint == null ? "null" : constraint.getClass().getSimpleName()) + "\" is not supported");
+			Logger.getLogger(Dialect.class).fatal("partial constraint type \"" + (constraint == null ? "null" : constraint.getClass().getSimpleName()) + "\" is not supported");
 			throw new UnsupportedConstraintException(constraint);
 		}
 	}
@@ -155,7 +155,7 @@ public abstract class TheoremProver {
 		else if(constraintValue instanceof AbstractConstraintFormula)
 			return prepareAbstractConstraintFormula((AbstractConstraintFormula)constraintValue);
 		else {
-			Logger.getLogger(TheoremProver.class).fatal("constraint value type \"" + (constraintValue == null ? "null" : constraintValue.getClass().getSimpleName()) + "\" is not supported");
+			Logger.getLogger(Dialect.class).fatal("constraint value type \"" + (constraintValue == null ? "null" : constraintValue.getClass().getSimpleName()) + "\" is not supported");
 			throw new UnsupportedConstraintValueException(constraintValue);
 		}
 	}
@@ -282,12 +282,12 @@ public abstract class TheoremProver {
 	 * 
 	 * @return the replacement for the attribute field
 	 * 
-	 * @see TheoremProver#getReplacement(PrefixedField, Object)
-	 * @see TheoremProver#getParameterObject(PrefixedField, Object)
+	 * @see Dialect#getReplacement(PrefixedField, Object)
+	 * @see Dialect#getParameterObject(PrefixedField, Object)
 	 */
 	private String getAttributeReplacement(PrefixedField prefixedField) {
 		if(prefixedField.fieldCode != Opcode.aload_0) {
-			Logger.getLogger(TheoremProver.class).fatal("given field \"" + prefixedField.field.getName() + "\" is no attribute field");
+			Logger.getLogger(Dialect.class).fatal("given field \"" + prefixedField.field.getName() + "\" is no attribute field");
 			throw new IllegalArgumentException("given field \"" + prefixedField.field.getName() + "\" is no attribute field");
 		}
 		
@@ -304,7 +304,7 @@ public abstract class TheoremProver {
 	 * 
 	 * @return the replacement for the given prefixed field
 	 * 
-	 * @see TheoremProver#getParameterObject(PrefixedField, Object)
+	 * @see Dialect#getParameterObject(PrefixedField, Object)
 	 */
 	private String getReplacement(PrefixedField prefixedField, Object startingObject) {
 		Object replacement = getParameterObject(prefixedField, startingObject);
@@ -313,7 +313,7 @@ public abstract class TheoremProver {
 		try{
 			replacement = prefixedField.field.get(replacement);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
-			Logger.getLogger(TheoremProver.class).fatal("could not access field \"" + prefixedField.field.getName() +"\"");
+			Logger.getLogger(Dialect.class).fatal("could not access field \"" + prefixedField.field.getName() +"\"");
 			throw new IllegalArgumentException("could not access field \"" + prefixedField.field.getName() +"\"");
 		}
 		
@@ -337,7 +337,7 @@ public abstract class TheoremProver {
 			try {
 				parameterObject = prePrefixedField.field.get(parameterObject);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				Logger.getLogger(TheoremProver.class).fatal("could not access field \"" + prePrefixedField.field.getName() +"\"");
+				Logger.getLogger(Dialect.class).fatal("could not access field \"" + prePrefixedField.field.getName() +"\"");
 				throw new IllegalArgumentException("could not access field \"" + prePrefixedField.field.getName() +"\"");
 			}
 		}

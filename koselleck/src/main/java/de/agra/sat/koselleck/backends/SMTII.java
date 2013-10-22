@@ -31,17 +31,21 @@ import de.agra.sat.koselleck.utils.IOUtils;
  * 
  * @author Max Nitze
  */
-public class Z3 extends TheoremProver {
-	/**  */
-	Pattern z3resultPattern = Pattern.compile("\\(define-fun (?<name>\\S+) \\(\\) (?<type>\\S+)(\n)?\\s*\\(?(?<value>(- \\d+|\\d+))\\)?");
+public class SMTII extends Dialect {
+	/** pattern for a smt2 result constant (function without parameters) */
+	Pattern smt2ResultPattern = Pattern.compile("\\(define-fun (?<name>\\S+) \\(\\) (?<type>\\S+)(\n)?\\s*\\(?(?<value>(- \\d+|\\d+))\\)?");
 	
 	/**
+	 * format formats the given single theorems by formatting its abstract
+	 *  constraint representation.
 	 * 
-	 * @param singleTheorems
+	 * @param singleTheorems the list of single theorems to format
 	 * 
-	 * @return
+	 * @return the SMT II string representation of the given single theorems
+	 *  based on the current component
 	 * 
-	 * @throws NotSatisfyableException
+	 * @throws NotSatisfyableException if one of the single theorems is not
+	 *  satisfiable for the current component
 	 */
 	@Override
 	public String format(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
@@ -49,30 +53,36 @@ public class Z3 extends TheoremProver {
 	}
 	
 	/**
+	 * solveAndAssign 
 	 * 
 	 * @param singleTheorems
 	 * 
 	 * @return
 	 * 
-	 * @throws NotSatisfyableException
+	 * @throws NotSatisfyableException if one of the single theorems is not
+	 *  satisfiable for the current component
 	 */
 	@Override
 	public void solveAndAssign(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
 		Theorem theorem = getConstraintForArguments(singleTheorems);
 		
-		String z3theorem = format(theorem);
+		String smt2Theorem = format(theorem);
 		
-		IOUtils.writeToFile("/home/max/Documents/code.txt", z3theorem);
-		
-		Process p = null;
+		Process process = null;
+		String proverResult = null;
 		try {
-			p = Runtime.getRuntime().exec("/home/max/Downloads/z3/bin/z3 -smt2 -file:/home/max/Documents/code.txt");
+			process = Runtime.getRuntime().exec("z3 -smt2 -in");
+			IOUtils.writeToOutputStream(process.getOutputStream(), smt2Theorem);
+			process.getOutputStream().flush();
+			
+			proverResult = IOUtils.readFromStream(process.getInputStream());
 		} catch (IOException e) {
 			String message = "could not execute z3 with the given file";
-			Logger.getLogger(Z3.class).fatal(message);
+			Logger.getLogger(SMTII.class).fatal(message);
 			throw new IllegalArgumentException(message); // TODO other exception type
+		} finally {
+			process.destroy();
 		}
-		String proverResult = IOUtils.readFromStream(p.getInputStream());
 		
 		Map<String, Object> resultMap = parseResult(proverResult);
 		for(Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {
@@ -84,7 +94,7 @@ public class Z3 extends TheoremProver {
 					variable.getValue().prefixedField.field.set(variable.getValue().object, result);
 				} catch (IllegalArgumentException | IllegalAccessException e) {
 					String message = "could not access field \"" + variable.getValue().prefixedField.field.getName() +"\"";
-					Logger.getLogger(Z3.class).fatal(message);
+					Logger.getLogger(SMTII.class).fatal(message);
 					throw new IllegalArgumentException(message);
 				}
 			}
@@ -216,7 +226,7 @@ public class Z3 extends TheoremProver {
 		case OR:
 			return "or";
 		default:
-			Logger.getLogger(Z3.class).fatal("boolean connector " + (connector == null ? "null" : "\"" + connector.code + "\"") + " is not known");
+			Logger.getLogger(SMTII.class).fatal("boolean connector " + (connector == null ? "null" : "\"" + connector.code + "\"") + " is not known");
 			throw new UnknownBooleanConnectorException(connector);
 		}
 	}
@@ -242,7 +252,7 @@ public class Z3 extends TheoremProver {
 		case NOT_EQUAL:
 			return "(not (=";
 		default:
-			Logger.getLogger(Z3.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+			Logger.getLogger(SMTII.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
 			throw new UnknownConstraintOperatorException(operator);
 		}
 	}
@@ -268,7 +278,7 @@ public class Z3 extends TheoremProver {
 		case NOT_EQUAL:
 			return "))";
 		default:
-			Logger.getLogger(Z3.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+			Logger.getLogger(SMTII.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
 			throw new UnknownConstraintOperatorException(operator);
 		}
 	}
@@ -287,7 +297,7 @@ public class Z3 extends TheoremProver {
 		if(variableField.fieldType.equals(Integer.class))
 			variableDeclaration.append(" Int)");
 		else {
-			Logger.getLogger(Z3.class).fatal("could not translate class \"" + variableField.fieldType.getName() + "\" to Z3 syntax.");
+			Logger.getLogger(SMTII.class).fatal("could not translate class \"" + variableField.fieldType.getName() + "\" to Z3 syntax.");
 			throw new IllegalArgumentException("could not translate class \"" + variableField.fieldType.getName() + "\" to Z3 syntax.");
 		}
 		
@@ -303,14 +313,14 @@ public class Z3 extends TheoremProver {
 	public Map<String, Object> parseResult(String result) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
-		Matcher resultMatcher = z3resultPattern.matcher(result);
+		Matcher resultMatcher = smt2ResultPattern.matcher(result);
 		while(resultMatcher.find()) {
 			if(resultMatcher.group("type").equals("Int"))
 				resultMap.put(
 						resultMatcher.group("name"),
 						new Integer(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
 			else {
-				Logger.getLogger(Z3.class).fatal("could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.");
+				Logger.getLogger(SMTII.class).fatal("could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.");
 				throw new IllegalArgumentException("could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.");
 			}
 		}

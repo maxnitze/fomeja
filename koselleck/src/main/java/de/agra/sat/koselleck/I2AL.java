@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import de.agra.sat.koselleck.backends.TheoremProver;
+import de.agra.sat.koselleck.backends.Dialect;
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
 import de.agra.sat.koselleck.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.decompiling.Decompiler;
@@ -27,7 +27,7 @@ import de.agra.sat.koselleck.utils.KoselleckUtils;
  */
 public abstract class I2AL {
 	/** instance of the theorem prover to use */
-	private static final TheoremProver theoremProver = new de.agra.sat.koselleck.backends.Z3();
+	private static final Dialect theoremProver = new de.agra.sat.koselleck.backends.SMTII();
 	
 	/**
 	 * validate validates a given component by checking its constraints with a

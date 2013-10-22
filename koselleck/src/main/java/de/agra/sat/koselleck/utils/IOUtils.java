@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 
 /**
@@ -62,8 +63,25 @@ public abstract class IOUtils {
 		try {
 			out = new PrintWriter(uri);
 			out.println(text);
+			out.flush();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		} finally {
+			out.close();
+		}
+	}
+	
+	/**
+	 * 
+	 * @param outputStream
+	 * @param text
+	 */
+	public static void writeToOutputStream(OutputStream outputStream, String text) {
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter(outputStream);
+			out.println(text);
+			out.flush();
 		} finally {
 			out.close();
 		}
