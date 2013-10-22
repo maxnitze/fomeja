@@ -11,8 +11,8 @@ public class Graph {
 	private List<Edge> edges;
 	
 	@Constraint(fields = { 
-			@Constraint.Field(name = "edges"),
-			@Constraint.Field(name = "edges")
+			@Constraint.Field("edges"),
+			@Constraint.Field("edges")
 	})
 	public boolean adjacentEdgesHaveDifferentColors(Edge e1, Edge e2) {
 		return (e1.v1 != e2.v1 && e1.v1 != e2.v2 && e1.v2 != e2.v1 && e1.v2 != e2.v2) ||

@@ -17,6 +17,6 @@ public @interface Constraint {
 	Field [] fields();
 	
 	public @interface Field {
-		String name();
+		String value();
 	}
 }

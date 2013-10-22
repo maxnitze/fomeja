@@ -64,7 +64,7 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 		}
 	}
 	
-	@Constraint(fields = { @Constraint.Field(name = "") })
+	@Constraint(fields = { @Constraint.Field("") })
 	public boolean adjacentHaveDifferentColors(CGEdge edge) {
 		return edge.vertex1.color != edge.vertex2.color;
 	}

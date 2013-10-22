@@ -9,8 +9,8 @@ public class ResourceManagement {
 	private List<Access> accesses;
 	
 	@Constraint(fields = {
-			@Constraint.Field(name = "accesses"),
-			@Constraint.Field(name = "accesses")
+			@Constraint.Field("accesses"),
+			@Constraint.Field("accesses")
 	})
 	public boolean noConcurrentAccess(Access a1, Access a2) {
 		return

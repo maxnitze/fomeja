@@ -60,7 +60,7 @@ public class Graph {
 		this.x = new Pair<Vertex, Vertex>(v1, v2);
 	}
 	
-	@Constraint(fields = @Constraint.Field(name = "vertices"))
+	@Constraint(fields = @Constraint.Field("edges"))
 	public boolean adjacentHaveDifferentColors(Pair<Vertex,Vertex> e) {
 		int x = 60;
 		

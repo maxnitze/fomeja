@@ -158,7 +158,7 @@ public abstract class KoselleckUtils {
 		
 		List<Field>[] methodCollectionFields = new FieldList[parameterCount];
 		for(int i=0; i<parameterCount; i++) {
-			String constraintFieldName = constraintFields[i].name();
+			String constraintFieldName = constraintFields[i].value();
 			if(constraintFieldName == null || constraintFieldName.equals(""))
 				methodCollectionFields[i] = getCollectionFields(declaringClass, methodParameterTypes[i]);
 			else {

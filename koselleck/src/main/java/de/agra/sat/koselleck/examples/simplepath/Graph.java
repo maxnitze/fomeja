@@ -14,8 +14,8 @@ public class Graph {
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	
 	@Constraint(fields = {
-			@Constraint.Field(name = "path"),
-			@Constraint.Field(name = "path")
+			@Constraint.Field("path"),
+			@Constraint.Field("path")
 	})
 	public boolean followingEdgesAreConnected(EdgeOnPath e1, EdgeOnPath e2) {
 		return 
@@ -26,8 +26,8 @@ public class Graph {
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	
 	@Constraint(fields = {
-			@Constraint.Field(name = "path"),
-			@Constraint.Field(name = "path")
+			@Constraint.Field("path"),
+			@Constraint.Field("path")
 	})
 	public boolean noDoubleVisitedVertices(EdgeOnPath e1, EdgeOnPath e2) {
 		return
@@ -38,7 +38,7 @@ public class Graph {
 	
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	
-	@Constraint(fields = @Constraint.Field(name = "path"))
+	@Constraint(fields = @Constraint.Field("path"))
 	public boolean isPathThroughGraph(EdgeOnPath edge) {
 		return this.edges.contains(edge);
 	}
