@@ -10,8 +10,8 @@ import java.lang.annotation.Target;
  * Variable is an annotation type to annotate a field, that represents a
  *  variable for the class.
  * 
- * @author Max Nitze
  * @version 1.0.0
+ * @author Max Nitze
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

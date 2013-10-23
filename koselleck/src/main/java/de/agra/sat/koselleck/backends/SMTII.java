@@ -26,12 +26,14 @@ import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 
 /**
+ * SMTII implements the smt2 pseudo boolean dialect.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public class SMTII extends Dialect {
 	/** pattern for a smt2 result constant (function without parameters) */
-	Pattern smt2ResultPattern = Pattern.compile("\\(define-fun (?<name>\\S+) \\(\\) (?<type>\\S+)(\n)?\\s*\\(?(?<value>(- \\d+|\\d+))\\)?");
+	private static final Pattern smt2ResultPattern = Pattern.compile("\\(define-fun (?<name>\\S+) \\(\\) (?<type>\\S+)(\n)?\\s*\\(?(?<value>(- \\d+|\\d+))\\)?");
 	
 	/**
 	 * format formats the given single theorems by formatting its abstract
@@ -64,9 +66,7 @@ public class SMTII extends Dialect {
 	public void solveAndAssign(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
 		Theorem theorem = getConstraintForArguments(singleTheorems);
 		
-		String smt2theorem = format(theorem);
-		
-		String proverResult = this.prover.solve(smt2theorem);
+		String proverResult = this.prover.solve(format(theorem));
 		
 		Map<String, Object> resultMap = parseResult(proverResult);
 		for(Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {
@@ -185,16 +185,16 @@ public class SMTII extends Dialect {
 			assignedConstraint.append(z3Constraint);
 		}
 		
-		StringBuilder z3theorem = new StringBuilder();
+		StringBuilder smt2theorem = new StringBuilder();
 		for(VariableField prefixedVariable : theorem.variables) {
-			z3theorem.append(getVariableDeclaration(prefixedVariable));
-			z3theorem.append("\n");
+			smt2theorem.append(getVariableDeclaration(prefixedVariable));
+			smt2theorem.append("\n");
 		}
-		z3theorem.append("(assert (and ");
-		z3theorem.append(assignedConstraint.toString());
-		z3theorem.append("\n))\n(check-sat)\n(get-model)");
+		smt2theorem.append("(assert (and ");
+		smt2theorem.append(assignedConstraint.toString());
+		smt2theorem.append("\n))\n(check-sat)\n(get-model)");
 		
-		return z3theorem.toString();
+		return smt2theorem.toString();
 	}
 	
 	/**
@@ -281,8 +281,9 @@ public class SMTII extends Dialect {
 		if(variableField.fieldType.equals(Integer.class))
 			variableDeclaration.append(" Int)");
 		else {
-			Logger.getLogger(SMTII.class).fatal("could not translate class \"" + variableField.fieldType.getName() + "\" to Z3 syntax.");
-			throw new IllegalArgumentException("could not translate class \"" + variableField.fieldType.getName() + "\" to Z3 syntax.");
+			String message = "could not translate class \"" + variableField.fieldType.getName() + "\" to Z3 syntax.";
+			Logger.getLogger(SMTII.class).fatal(message);
+			throw new IllegalArgumentException(message);
 		}
 		
 		return variableDeclaration.toString();
@@ -304,8 +305,9 @@ public class SMTII extends Dialect {
 						resultMatcher.group("name"),
 						new Integer(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
 			else {
-				Logger.getLogger(SMTII.class).fatal("could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.");
-				throw new IllegalArgumentException("could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.");
+				String message = "could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.";
+				Logger.getLogger(SMTII.class).fatal(message);
+				throw new IllegalArgumentException(message);
 			}
 		}
 		

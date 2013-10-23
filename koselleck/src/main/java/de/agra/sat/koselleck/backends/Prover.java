@@ -1,15 +1,18 @@
 package de.agra.sat.koselleck.backends;
 
 /**
+ * Prover is an interface for all possible theorem provers to extend.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public interface Prover {
 	/**
+	 * solve solves the given theorem by using the specific prover.
 	 * 
-	 * @param theorem
+	 * @param theorem the theorem to solve
 	 * 
-	 * @return
+	 * @return the solved configuration for the given theorem
 	 */
-	public String solve(String theorem);
+	public abstract String solve(String theorem);
 }

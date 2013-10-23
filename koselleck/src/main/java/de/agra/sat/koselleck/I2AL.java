@@ -25,14 +25,14 @@ import de.agra.sat.koselleck.utils.KoselleckUtils;
  * I2AL implements methods to validate, satisfy, minimize and maximize a given
  *  object. 
  * 
+ * @version 0.9.5
  * @author Max Nitze
- * @version 0.9.0
  */
 public abstract class I2AL {
 	/**  */
 	private static final Dialect dialect = new SMTII();
 	/** instance of the theorem prover to use */
-	private static final Prover prover = new Z3();
+	private static final Prover prover = new Z3("z3");
 	
 	/**
 	 * validate validates a given component by checking its constraints with a

@@ -29,10 +29,10 @@ import de.agra.sat.koselleck.exceptions.UnsupportedConstraintValueException;
 import de.agra.sat.koselleck.utils.KoselleckUtils;
 
 /**
- * TheoremProver is an interface for all possible theorem provers to extend.
+ * Dialect is an interface for all possible pseudo boolean dialects to extend.
  * 
- * @author Max Nitze
  * @version 1.0.0
+ * @author Max Nitze
  */
 public abstract class Dialect {
 	/** the component to process */

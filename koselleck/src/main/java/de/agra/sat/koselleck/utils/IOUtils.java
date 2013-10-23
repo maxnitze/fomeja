@@ -76,7 +76,7 @@ public abstract class IOUtils {
 	 * @param outputStream
 	 * @param text
 	 */
-	public static void writeToOutputStream(OutputStream outputStream, String text) {
+	public static void writeToStream(OutputStream outputStream, String text) {
 		PrintWriter out = null;
 		try {
 			out = new PrintWriter(outputStream);

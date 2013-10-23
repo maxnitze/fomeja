@@ -10,8 +10,8 @@ import java.lang.annotation.Target;
  * Objective is an annotation type to annotate a method, that represents an
  *  objective for the class.
  * 
- * @author Max Nitze
  * @version 1.0.0
+ * @author Max Nitze
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
