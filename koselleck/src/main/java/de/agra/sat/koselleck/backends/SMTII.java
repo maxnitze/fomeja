@@ -2,15 +2,12 @@ package de.agra.sat.koselleck.backends;
 
 /** imports */
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
-import de.agra.sat.koselleck.backends.datatypes.ParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
 import de.agra.sat.koselleck.backends.datatypes.VariableField;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractBooleanConstraint;
@@ -21,7 +18,6 @@ import de.agra.sat.koselleck.decompiling.datatypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.BooleanConnector;
 import de.agra.sat.koselleck.decompiling.datatypes.ConstraintOperator;
-import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 
@@ -36,147 +32,21 @@ public class SMTII extends Dialect {
 	private static final Pattern smt2ResultPattern = Pattern.compile("\\(define-fun (?<name>\\S+) \\(\\) (?<type>\\S+)(\n)?\\s*\\(?(?<value>(- \\d+|\\d+))\\)?");
 	
 	/**
-	 * format formats the given single theorems by formatting its abstract
-	 *  constraint representation.
+	 * Constructor for a new SMTII dialect.
+	 */
+	public SMTII() {
+		super(Dialect.Type.smt2);
+	}
+	
+	/**
+	 * format returns the smt2 string representation of the given theorem.
 	 * 
-	 * @param singleTheorems the list of single theorems to format
+	 * @param theorem the theorem to get the smt2 string representation for
 	 * 
-	 * @return the SMT II string representation of the given single theorems
-	 *  based on the current component
-	 * 
-	 * @throws NotSatisfyableException if one of the single theorems is not
-	 *  satisfiable for the current component
+	 * @return the smt2 string representation for the given theorem
 	 */
 	@Override
-	public String format(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
-		return format(getConstraintForArguments(singleTheorems));
-	}
-	
-	/**
-	 * solveAndAssign 
-	 * 
-	 * @param singleTheorems
-	 * 
-	 * @return
-	 * 
-	 * @throws NotSatisfyableException if one of the single theorems is not
-	 *  satisfiable for the current component
-	 */
-	@Override
-	public void solveAndAssign(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
-		Theorem theorem = getConstraintForArguments(singleTheorems);
-		
-		String proverResult = this.prover.solve(format(theorem));
-		
-		Map<String, Object> resultMap = parseResult(proverResult);
-		for(Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {
-			Object result = resultMap.get(variable.getKey());
-			
-			if(result != null) {
-				variable.getValue().prefixedField.field.setAccessible(true);
-				try {
-					variable.getValue().prefixedField.field.set(variable.getValue().object, result);
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					String message = "could not access field \"" + variable.getValue().prefixedField.field.getName() +"\"";
-					Logger.getLogger(SMTII.class).fatal(message);
-					throw new IllegalArgumentException(message);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * 
-	 * @param booleanConstraint
-	 * 
-	 * @return
-	 */
-	@Override
-	public String prepareAbstractBooleanConstraint(AbstractBooleanConstraint booleanConstraint) {
-		return booleanConstraint.value ? "True" : "False";
-	}
-	
-	/**
-	 * 
-	 * @param singleConstraint
-	 * 
-	 * @return
-	 */
-	@Override
-	public String prepareAbstractSingleConstraint(AbstractSingleConstraint singleConstraint) {
-		StringBuilder singleConstraintString = new StringBuilder();
-		
-		singleConstraintString.append(getOperatorOpening(singleConstraint.operator));
-		singleConstraintString.append(" ");
-		singleConstraintString.append(getBackendConstraintValue(singleConstraint.value1));
-		singleConstraintString.append(" ");
-		singleConstraintString.append(getBackendConstraintValue(singleConstraint.value2));
-		singleConstraintString.append(getOperatorClosing(singleConstraint.operator));
-		
-		return singleConstraintString.toString();
-	}
-	
-	/**
-	 * 
-	 * @param subConstraint
-	 * 
-	 * @return
-	 */
-	@Override
-	public String prepareAbstractSubConstraint(AbstractSubConstraint subConstraint) {
-		StringBuilder subConstraintString = new StringBuilder();
-		
-		subConstraintString.append("(");
-		subConstraintString.append(getConnectorName(subConstraint.connector));
-		subConstraintString.append(" ");
-		subConstraintString.append(getBackendConstraint(subConstraint.constraint1));
-		subConstraintString.append(" ");
-		subConstraintString.append(getBackendConstraint(subConstraint.constraint2));
-		subConstraintString.append(")");
-		
-		return subConstraintString.toString();
-	}
-	
-	/**
-	 * 
-	 * @param constraintLiteral
-	 * 
-	 * @return
-	 */
-	public String prepareAbstractConstraintLiteral(AbstractConstraintLiteral constraintLiteral) {
-		return constraintLiteral.value.toString();
-	}
-	
-	/**
-	 * 
-	 * @param constraintFormula
-	 * 
-	 * @return
-	 */
-	public String prepareAbstractConstraintFormula(AbstractConstraintFormula constraintFormula) {
-		StringBuilder constraintFormulaString = new StringBuilder();
-		
-		constraintFormulaString.append("(");
-		constraintFormulaString.append(constraintFormula.operator.asciiName);
-		constraintFormulaString.append(" ");
-		constraintFormulaString.append(getBackendConstraintValue(constraintFormula.value1));
-		constraintFormulaString.append(" ");
-		constraintFormulaString.append(getBackendConstraintValue(constraintFormula.value2));
-		constraintFormulaString.append(")");
-		
-		return constraintFormulaString.toString();
-	}
-	
-	/** private methods
-	 * ----- ----- ----- ----- ----- */
-	
-	/**
-	 * 
-	 * @param theorem
-	 * 
-	 * @return
-	 */
-	private String format(Theorem theorem) {
+	public String format(Theorem theorem) {
 		StringBuilder assignedConstraint = new StringBuilder();
 		for(AbstractConstraint theoremConstraint : theorem.abstractConstraints) {
 			String z3Constraint = getBackendConstraint(theoremConstraint);
@@ -198,10 +68,146 @@ public class SMTII extends Dialect {
 	}
 	
 	/**
+	 * parseResult parses the result from the theorem prover and returns an map
+	 *  representing the result configuration.
 	 * 
-	 * @param connector
+	 * @param result the result to parse
 	 * 
-	 * @return
+	 * @return a map representing the result configuration
+	 */
+	@Override
+	public Map<String, Object> parseResult(String result) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		Matcher resultMatcher = smt2ResultPattern.matcher(result);
+		while(resultMatcher.find()) {
+			if(resultMatcher.group("type").equals("Int"))
+				resultMap.put(
+						resultMatcher.group("name"),
+						new Integer(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
+			else {
+				String message = "could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.";
+				Logger.getLogger(SMTII.class).fatal(message);
+				throw new IllegalArgumentException(message); // TODO other exception
+			}
+		}
+		
+		return resultMap;
+	}
+	
+	/** ----- ----- ----- ----- ----- */
+	
+	/**
+	 * prepareAbstractBooleanConstraint returns the smt2 string representation
+	 *  of an abstract boolean constraint.
+	 * 
+	 * @param booleanConstraint the abstract boolean constraint to get the smt2
+	 *  string representation from
+	 * 
+	 * @return the smt2 string representation for the given abstract boolean
+	 *  constraint
+	 */
+	@Override
+	public String prepareAbstractBooleanConstraint(AbstractBooleanConstraint booleanConstraint) {
+		return booleanConstraint.value ? "True" : "False";
+	}
+	
+	/**
+	 * prepareAbstractSingleConstraint returns the smt2 string representation
+	 *  of an abstract single constraint.
+	 * 
+	 * @param singleConstraint the abstract single constraint to get the smt2
+	 *  string representation for
+	 * 
+	 * @return the smt2 string representation for the given abstract single
+	 *  constraint
+	 */
+	@Override
+	public String prepareAbstractSingleConstraint(AbstractSingleConstraint singleConstraint) {
+		StringBuilder singleConstraintString = new StringBuilder();
+		
+		singleConstraintString.append(getOperatorOpening(singleConstraint.operator));
+		singleConstraintString.append(" ");
+		singleConstraintString.append(getBackendConstraintValue(singleConstraint.value1));
+		singleConstraintString.append(" ");
+		singleConstraintString.append(getBackendConstraintValue(singleConstraint.value2));
+		singleConstraintString.append(getOperatorClosing(singleConstraint.operator));
+		
+		return singleConstraintString.toString();
+	}
+	
+	/**
+	 * prepareAbstractSubConstraint returns the smt2 string representation of
+	 *  an abstract sub-constraint.
+	 * 
+	 * @param subConstraint the abstract sub-constraint to get the smt2 string
+	 *  representation for
+	 * 
+	 * @return the smt2 string representation for the given abstract sub-
+	 *  constraint
+	 */
+	@Override
+	public String prepareAbstractSubConstraint(AbstractSubConstraint subConstraint) {
+		StringBuilder subConstraintString = new StringBuilder();
+		
+		subConstraintString.append("(");
+		subConstraintString.append(getConnectorName(subConstraint.connector));
+		subConstraintString.append(" ");
+		subConstraintString.append(getBackendConstraint(subConstraint.constraint1));
+		subConstraintString.append(" ");
+		subConstraintString.append(getBackendConstraint(subConstraint.constraint2));
+		subConstraintString.append(")");
+		
+		return subConstraintString.toString();
+	}
+	
+	/**
+	 * prepareAbstractConstraintLiteral returns the smt2 string representation
+	 *  of an abstract constraint literal.
+	 * 
+	 * @param singleConstraint the abstract constraint literal to get the smt2
+	 *  string representation for
+	 * 
+	 * @return the smt2 string representation for the given abstract constraint
+	 *  literal
+	 */
+	public String prepareAbstractConstraintLiteral(AbstractConstraintLiteral constraintLiteral) {
+		return constraintLiteral.value.toString();
+	}
+	
+	/**
+	 * prepareAbstractConstraintFormula returns the smt2 string representation
+	 *  of an abstract constraint formula.
+	 * 
+	 * @param constraintFormula the abstract sub-constraint to get the smt2
+	 *  string representation for
+	 * 
+	 * @return the smt2 string representation for the given abstract constraint
+	 *  formula
+	 */
+	public String prepareAbstractConstraintFormula(AbstractConstraintFormula constraintFormula) {
+		StringBuilder constraintFormulaString = new StringBuilder();
+		
+		constraintFormulaString.append("(");
+		constraintFormulaString.append(constraintFormula.operator.asciiName);
+		constraintFormulaString.append(" ");
+		constraintFormulaString.append(getBackendConstraintValue(constraintFormula.value1));
+		constraintFormulaString.append(" ");
+		constraintFormulaString.append(getBackendConstraintValue(constraintFormula.value2));
+		constraintFormulaString.append(")");
+		
+		return constraintFormulaString.toString();
+	}
+	
+	/** private methods
+	 * ----- ----- ----- ----- ----- */
+	
+	/**
+	 * getConnectorName returns the smt2 name of the given boolean connector.
+	 * 
+	 * @param connector the boolean connector
+	 * 
+	 * @return the smt2 name of the given boolean connector
 	 */
 	private String getConnectorName(BooleanConnector connector) {
 		switch(connector) {
@@ -216,10 +222,12 @@ public class SMTII extends Dialect {
 	}
 	
 	/**
+	 * getOperatorOpening returns the start of an expression with the given
+	 *  constraint operator.
 	 * 
-	 * @param operator
+	 * @param operator the constraint operator
 	 * 
-	 * @return
+	 * @return the start of an expression with the given constraint operator
 	 */
 	private String getOperatorOpening(ConstraintOperator operator) {
 		switch(operator) {
@@ -242,10 +250,12 @@ public class SMTII extends Dialect {
 	}
 	
 	/**
+	 * getOperatorClosing returns the end of an expression with the given
+	 *  constraint operator.
 	 * 
-	 * @param operator
+	 * @param operator the constraint operator
 	 * 
-	 * @return
+	 * @return the end of an expression with the given constraint operator
 	 */
 	private String getOperatorClosing(ConstraintOperator operator) {
 		switch(operator) {
@@ -268,10 +278,13 @@ public class SMTII extends Dialect {
 	}
 	
 	/**
+	 * getVariableDeclaration returns the smt2 representation of a variable
+	 *  declaration for the given variable field.
 	 * 
-	 * @param variableField
+	 * @param variableField the variable to get the declaration for
 	 * 
-	 * @return
+	 * @return the smt2 representation of a variable declaration for the given
+	 *  variable field
 	 */
 	private String getVariableDeclaration(VariableField variableField) {
 		StringBuilder variableDeclaration = new StringBuilder();
@@ -287,30 +300,5 @@ public class SMTII extends Dialect {
 		}
 		
 		return variableDeclaration.toString();
-	}
-	
-	/**
-	 * 
-	 * @param result
-	 * 
-	 * @return
-	 */
-	public Map<String, Object> parseResult(String result) {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
-		Matcher resultMatcher = smt2ResultPattern.matcher(result);
-		while(resultMatcher.find()) {
-			if(resultMatcher.group("type").equals("Int"))
-				resultMap.put(
-						resultMatcher.group("name"),
-						new Integer(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
-			else {
-				String message = "could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.";
-				Logger.getLogger(SMTII.class).fatal(message);
-				throw new IllegalArgumentException(message);
-			}
-		}
-		
-		return resultMap;
 	}
 }

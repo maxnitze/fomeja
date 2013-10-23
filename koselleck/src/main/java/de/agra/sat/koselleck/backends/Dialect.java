@@ -35,10 +35,25 @@ import de.agra.sat.koselleck.utils.KoselleckUtils;
  * @author Max Nitze
  */
 public abstract class Dialect {
-	/** the component to process */
-	private Object component;
-	/** the prover to use */
-	protected Prover prover;
+	/** dialect types */
+	public static enum Type {
+		smt,
+		smt2,
+		dl,
+		dimacs
+	};
+	
+	/** dialect type */
+	public final Dialect.Type dialectType;
+	
+	/**
+	 * Constructor for a new dialect.
+	 * 
+	 * @param dialectType the type of the dialect
+	 */
+	public Dialect(Dialect.Type dialectType) {
+		this.dialectType = dialectType;
+	}
 	
 	/** abstract methods
 	 * ----- ----- ----- ----- ----- */
@@ -47,27 +62,22 @@ public abstract class Dialect {
 	 * format formats the given list of single theorems to the specific string
 	 *  representation of the theorem prover.
 	 * 
-	 * @param singleTheorems the theorems to create the string from
+	 * @param theorem
 	 * 
 	 * @return the specific string representation of the theorem prover
 	 * 
 	 * @throws NotSatisfyableException if one of the single theorems is not
 	 *  satisfiable for the current component
 	 */
-	public abstract String format(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException;
+	public abstract String format(Theorem theorem) throws NotSatisfyableException;
 	
 	/**
-	 * solveAndAssign formats the given list of single theorems to the specific
-	 *  string representation. This representation is proved by the specific
-	 *  prover. Afterwards th e configuration, that is returned by the prover,
-	 *  is assigned to the variable fields of the component.
 	 * 
-	 * @param singleTheorems the theorems to solve and assign
+	 * @param result
 	 * 
-	 * @throws NotSatisfyableException if one of the single theorems is not
-	 *  satisfiable for the current component
+	 * @return
 	 */
-	public abstract void solveAndAssign(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException;
+	public abstract Map<String, Object> parseResult(String result);
 	
 	/**
 	 * prepareAbstractBooleanConstraint returns the string representation of a
@@ -166,6 +176,7 @@ public abstract class Dialect {
 	 * getConstraintForArguments assigns the given abstract single theorems
 	 *  with the non-variable fields of the component.
 	 * 
+	 * @param component the component to get the arguments from
 	 * @param singleTheorems the list of single theorems to assign
 	 * 
 	 * @return the assigned theorem for the given abstract single theorems and
@@ -174,7 +185,7 @@ public abstract class Dialect {
 	 * @throws NotSatisfyableException if there is an assigned constraint that
 	 *  is not satisfiable
 	 */
-	protected Theorem getConstraintForArguments(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
+	protected Theorem getConstraintForArguments(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
 		List<AbstractConstraint> constraints = new ArrayList<AbstractConstraint>();
 		List<VariableField> variableFields = new ArrayList<VariableField>();
 		Map<String, ParameterObject> variablesMap = new HashMap<String, ParameterObject>();
@@ -186,7 +197,7 @@ public abstract class Dialect {
 			
 			for(PrefixedField prefixedField : constraint.prefixedFields) {
 				if(prefixedField.fieldCode == Opcode.aload_0 && !prefixedField.isVariable && constraint.matches(prefixedField.prefixedName))
-					constraint.replaceAll(prefixedField, getAttributeReplacement(prefixedField));
+					constraint.replaceAll(prefixedField, getAttributeReplacement(component, prefixedField));
 				else if(prefixedField.fieldCode == Opcode.aload && constraint.matches(prefixedField))
 					if(!prefixedFieldsList.contains(prefixedField))
 						prefixedFieldsList.add(prefixedField);
@@ -260,28 +271,6 @@ public abstract class Dialect {
 		return new Theorem(variablesMap, constraints, variableFields);
 	}
 	
-	/** public methods
-	 * ----- ----- ----- ----- ----- */
-	
-	/**
-	 * setComponent is a setter method for the component to proceed by the
-	 *  prover.
-	 * 
-	 * @param component the new component
-	 */
-	public void setComponent(Object component) {
-		this.component = component;
-	}
-	
-	/**
-	 * setProver is a setter method for the prover to solve the theorem.
-	 * 
-	 * @param prover the new prover
-	 */
-	public void setProver(Prover prover) {
-		this.prover = prover;
-	}
-	
 	/** private methods
 	 * ----- ----- ----- ----- ----- */
 	
@@ -289,6 +278,7 @@ public abstract class Dialect {
 	 * getAttributeReplacement checks if the given prefixed field is an
 	 *  attribute type field and returns the replacement for this field.
 	 * 
+	 * @param component the component to get the replacements from
 	 * @param prefixedField the prefixed field to get the replacement for
 	 * 
 	 * @return the replacement for the attribute field
@@ -296,7 +286,7 @@ public abstract class Dialect {
 	 * @see Dialect#getReplacement(PrefixedField, Object)
 	 * @see Dialect#getParameterObject(PrefixedField, Object)
 	 */
-	private String getAttributeReplacement(PrefixedField prefixedField) {
+	private String getAttributeReplacement(Object component, PrefixedField prefixedField) {
 		if(prefixedField.fieldCode != Opcode.aload_0) {
 			Logger.getLogger(Dialect.class).fatal("given field \"" + prefixedField.field.getName() + "\" is no attribute field");
 			throw new IllegalArgumentException("given field \"" + prefixedField.field.getName() + "\" is no attribute field");
