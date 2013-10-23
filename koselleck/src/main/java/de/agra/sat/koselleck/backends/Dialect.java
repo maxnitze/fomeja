@@ -37,6 +37,8 @@ import de.agra.sat.koselleck.utils.KoselleckUtils;
 public abstract class Dialect {
 	/** the component to process */
 	private Object component;
+	/** the prover to use */
+	protected Prover prover;
 	
 	/** abstract methods
 	 * ----- ----- ----- ----- ----- */
@@ -57,7 +59,7 @@ public abstract class Dialect {
 	/**
 	 * solveAndAssign formats the given list of single theorems to the specific
 	 *  string representation. This representation is proved by the specific
-	 *  prover. Afterwards the configuration, that is returned by the prover,
+	 *  prover. Afterwards th e configuration, that is returned by the prover,
 	 *  is assigned to the variable fields of the component.
 	 * 
 	 * @param singleTheorems the theorems to solve and assign
@@ -269,6 +271,15 @@ public abstract class Dialect {
 	 */
 	public void setComponent(Object component) {
 		this.component = component;
+	}
+	
+	/**
+	 * setProver is a setter method for the prover to solve the theorem.
+	 * 
+	 * @param prover the new prover
+	 */
+	public void setProver(Prover prover) {
+		this.prover = prover;
 	}
 	
 	/** private methods

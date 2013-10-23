@@ -1,7 +1,6 @@
 package de.agra.sat.koselleck.backends;
 
 /** imports */
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,6 @@ import de.agra.sat.koselleck.decompiling.datatypes.ConstraintOperator;
 import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
-import de.agra.sat.koselleck.utils.IOUtils;
 
 /**
  * 
@@ -66,23 +64,9 @@ public class SMTII extends Dialect {
 	public void solveAndAssign(List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
 		Theorem theorem = getConstraintForArguments(singleTheorems);
 		
-		String smt2Theorem = format(theorem);
+		String smt2theorem = format(theorem);
 		
-		Process process = null;
-		String proverResult = null;
-		try {
-			process = Runtime.getRuntime().exec("z3 -smt2 -in");
-			IOUtils.writeToOutputStream(process.getOutputStream(), smt2Theorem);
-			process.getOutputStream().flush();
-			
-			proverResult = IOUtils.readFromStream(process.getInputStream());
-		} catch (IOException e) {
-			String message = "could not execute z3 with the given file";
-			Logger.getLogger(SMTII.class).fatal(message);
-			throw new IllegalArgumentException(message); // TODO other exception type
-		} finally {
-			process.destroy();
-		}
+		String proverResult = this.prover.solve(smt2theorem);
 		
 		Map<String, Object> resultMap = parseResult(proverResult);
 		for(Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {

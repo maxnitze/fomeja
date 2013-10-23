@@ -11,6 +11,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.backends.Dialect;
+import de.agra.sat.koselleck.backends.Prover;
+import de.agra.sat.koselleck.backends.SMTII;
+import de.agra.sat.koselleck.backends.Z3;
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
 import de.agra.sat.koselleck.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.decompiling.Decompiler;
@@ -26,8 +29,10 @@ import de.agra.sat.koselleck.utils.KoselleckUtils;
  * @version 0.9.0
  */
 public abstract class I2AL {
+	/**  */
+	private static final Dialect dialect = new SMTII();
 	/** instance of the theorem prover to use */
-	private static final Dialect theoremProver = new de.agra.sat.koselleck.backends.SMTII();
+	private static final Prover prover = new Z3();
 	
 	/**
 	 * validate validates a given component by checking its constraints with a
@@ -94,7 +99,8 @@ public abstract class I2AL {
 		
 		List<Field> variableFields = KoselleckUtils.getVariableFields(component.getClass());
 		if(variableFields.size() > 0) {
-			theoremProver.setComponent(component);
+			dialect.setComponent(component);
+			dialect.setProver(prover);
 			
 			Map<String, DisassembledMethod> disassembledMethods = KoselleckUtils.getDisassembledConstraintMethods(component);
 			
@@ -113,7 +119,7 @@ public abstract class I2AL {
 			}
 			
 			try {
-				theoremProver.solveAndAssign(singleTheorems);
+				dialect.solveAndAssign(singleTheorems);
 			} catch (NotSatisfyableException e) {
 				return false;
 			}
@@ -133,7 +139,8 @@ public abstract class I2AL {
 	 * @return {@code -1}
 	 */
 	public static int minimize(Object component) {
-		theoremProver.setComponent(component);
+		dialect.setComponent(component);
+		dialect.setProver(prover);
 		
 		KoselleckUtils.getVariableFields(component.getClass());
 		
@@ -151,7 +158,8 @@ public abstract class I2AL {
 	 * @return {@code -1}
 	 */
 	public static int maximize(Object component) {
-		theoremProver.setComponent(component);
+		dialect.setComponent(component);
+		dialect.setProver(prover);
 		
 		KoselleckUtils.getVariableFields(component.getClass());
 		
