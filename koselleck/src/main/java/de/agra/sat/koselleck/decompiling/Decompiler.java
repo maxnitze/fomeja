@@ -32,20 +32,23 @@ import de.agra.sat.koselleck.exceptions.UnknownOpcodeException;
 import de.agra.sat.koselleck.exceptions.UnknownSwitchCaseException;
 
 /**
+ * Decompiler represents decompiler for java byte code.
  * 
  * @author Max Nitze
  */
 public class Decompiler {
-	/**  */
+	/** map of byte code lines assigned to their offsets */
 	private final Map<Integer, BytecodeLine> bytecodeLines;
-	/**  */
+	
+	/** stack to process on */
 	private final Stack<AbstractConstraintValue> stack;
-	/**  */
+	/** store to store values */
 	private final Map<Integer, AbstractConstraintValue> store;
 	
 	/**
+	 * Private constructor for a new Decompiler.
 	 * 
-	 * @param bytecodeLines
+	 * @param bytecodeLines byte code lines to process
 	 */
 	private Decompiler(Map<Integer, BytecodeLine> bytecodeLines) {
 		this.bytecodeLines = bytecodeLines;
@@ -55,8 +58,11 @@ public class Decompiler {
 	}
 	
 	/**
+	 * decompile clears the stack and store and then returns the abstract
+	 *  constraint starting at index 0 of the byte code lines.
 	 * 
-	 * @return
+	 * @return the abstract constraint starting at index 0 of the byte code
+	 *  lines
 	 */
 	private AbstractConstraint decompile() {
 		this.stack.clear();
@@ -69,10 +75,12 @@ public class Decompiler {
 	 * ----- ----- ----- ----- ----- */
 	
 	/**
+	 * decompile instantiates a new decompiler with the given disassembled
+	 *  method and returns the decompiled abstract constraint.
 	 * 
-	 * @param disassembledMethod
+	 * @param disassembledMethod the disassembled method to decompile
 	 * 
-	 * @return
+	 * @return the decompiled abstract constraint of the disassembled method
 	 */
 	public static AbstractConstraint decompile(DisassembledMethod disassembledMethod) {
 		Decompiler decompiler = new Decompiler(disassembledMethod.bytecodeLines);
@@ -82,6 +90,13 @@ public class Decompiler {
 	/** constraint value methods
 	 * ----- ----- ----- ----- ----- */
 	
+	/**
+	 * 
+	 * 
+	 * @param offset
+	 * 
+	 * @return
+	 */
 	private AbstractConstraint getConstraint(int offset) {
 		BytecodeLine bytecodeLine = this.bytecodeLines.get(offset);
 		int nextOffset = bytecodeLine.followingLineNumber;
