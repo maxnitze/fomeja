@@ -7,47 +7,31 @@ import java.util.Map;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
 
 /**
+ * Theorem describes a theorem by its constraints and variables.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public class Theorem {
-	/**  */
-	public final List<String> stringConstraints;
-	/**  */
+	/** the abstract constraints of the theorem */
 	public final List<AbstractConstraint> abstractConstraints;
-	/**  */
+	/** the variables of the theorem */
 	public final List<VariableField> variables;
-	/**  */
+	/** an assignment of variable names to their parameter objects */
 	public final Map<String, ParameterObject> variablesMap;
-	/**  */
+	/** the size of the constraints list */
 	public final int constraintsSize;
-	/**  */
+	/** the size of the variables list */
 	public final int variablesSize;
 	
 	/**
+	 * Constructor for a new theorem.
 	 * 
-	 * @param constraints
-	 * @param variables
-	 * @param variablesMap
+	 * @param constraints the new list of abstract constraints
+	 * @param variables the new list of variable fields
+	 * @param variablesMap the new assignment map
 	 */
-	public Theorem(List<String> constraints, List<VariableField> variables, Map<String, ParameterObject> variablesMap) {
-		this.stringConstraints = constraints;
-		this.abstractConstraints = null;
-		this.variables = variables;
-		this.variablesMap = variablesMap;
-		
-		this.constraintsSize = constraints.size();
-		this.variablesSize = variables.size();
-	}
-	
-	/**
-	 * 
-	 * @param variablesMap
-	 * @param constraints
-	 * @param variables
-	 */
-	public Theorem(Map<String, ParameterObject> variablesMap, List<AbstractConstraint> constraints, List<VariableField> variables) {
-		this.stringConstraints = null;
+	public Theorem(List<AbstractConstraint> constraints, List<VariableField> variables, Map<String, ParameterObject> variablesMap) {
 		this.abstractConstraints = constraints;
 		this.variables = variables;
 		this.variablesMap = variablesMap;

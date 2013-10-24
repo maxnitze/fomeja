@@ -268,7 +268,7 @@ public abstract class Dialect {
 			} while(KoselleckUtils.incrementIndices(constraintParameters));
 		}
 		
-		return new Theorem(variablesMap, constraints, variableFields);
+		return new Theorem(constraints, variableFields, variablesMap);
 	}
 	
 	/** private methods
