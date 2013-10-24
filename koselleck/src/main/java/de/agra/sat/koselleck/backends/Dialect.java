@@ -10,10 +10,10 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
+import de.agra.sat.koselleck.backends.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.backends.datatypes.ParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
 import de.agra.sat.koselleck.backends.datatypes.VariableField;
-import de.agra.sat.koselleck.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractBooleanConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintFormula;

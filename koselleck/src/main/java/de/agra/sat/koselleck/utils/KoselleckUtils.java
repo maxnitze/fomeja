@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.annotations.Constraint;
 import de.agra.sat.koselleck.annotations.Variable;
-import de.agra.sat.koselleck.datatypes.ConstraintParameter;
+import de.agra.sat.koselleck.backends.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.disassembling.Disassembler;
 import de.agra.sat.koselleck.disassembling.datatypes.DisassembledMethod;
 

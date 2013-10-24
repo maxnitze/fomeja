@@ -14,7 +14,7 @@ import de.agra.sat.koselleck.backends.Prover;
 import de.agra.sat.koselleck.backends.SMTII;
 import de.agra.sat.koselleck.backends.Z3;
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
-import de.agra.sat.koselleck.datatypes.ConstraintParameter;
+import de.agra.sat.koselleck.backends.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.decompiling.Decompiler;
 import de.agra.sat.koselleck.disassembling.datatypes.DisassembledMethod;
 import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
