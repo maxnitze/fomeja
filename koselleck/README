@@ -1,1 +1,7 @@
 - needs java-7-oracle for javap to recognize generics in parameter types
+
+- data types
+-- decompiling.Decompiler.getCalculatedValue(AbstractConstraintValue, ArithmeticOperator, AbstractConstraintValue)
+-- decompiling.Decompiler.getSingleConstraint(AbstractConstraintValue, ConstraintOperator, AbstractConstraintValue, List<PrefixedField>)
+-- decompiling.datatypes.ConstraintValueType
+-- decompiling.datatypes.AbstractSingleConstraint.evaluate()

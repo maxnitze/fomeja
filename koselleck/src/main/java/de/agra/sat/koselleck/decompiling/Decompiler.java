@@ -91,15 +91,20 @@ public class Decompiler {
 	 * ----- ----- ----- ----- ----- */
 	
 	/**
+	 * getConstraint returns the constraint starting at the given index of the
+	 *  map of byte code lines. Recursively every single constraint is added to
+	 *  the abstract constraint.
 	 * 
+	 * @param offset the offset of the byte code line to start from
 	 * 
-	 * @param offset
-	 * 
-	 * @return
+	 * @return the abstract constraint starting at the given index
 	 */
 	private AbstractConstraint getConstraint(int offset) {
 		BytecodeLine bytecodeLine = this.bytecodeLines.get(offset);
-		int nextOffset = bytecodeLine.followingLineNumber;
+		if(bytecodeLine == null)
+			return new AbstractBooleanConstraint(false);
+		
+		int nextOffset;
 		
 		List<PrefixedField> prefixedFields = new ArrayList<PrefixedField>();
 		
@@ -297,12 +302,20 @@ public class Decompiler {
 				
 				return new AbstractSubConstraint(
 						new AbstractSubConstraint(
-								getSingleConstraint(constraintValue1, ConstraintOperator.fromOpcode(bytecodeLine.opcode), constraintValue2, prefixedFields),
+								getSingleConstraint(
+										constraintValue1,
+										ConstraintOperator.fromOpcode(bytecodeLine.opcode),
+										constraintValue2,
+										prefixedFields),
 								BooleanConnector.AND,
 								getConstraint(bytecodeLine.offset)),
 						BooleanConnector.OR,
 						new AbstractSubConstraint(
-								getSingleConstraint(constraintValue1, ConstraintOperator.fromOppositeOpcode(bytecodeLine.opcode), constraintValue2, prefixedFields),
+								getSingleConstraint(
+										constraintValue1,
+										ConstraintOperator.fromOppositeOpcode(bytecodeLine.opcode),
+										constraintValue2,
+										prefixedFields),
 								BooleanConnector.AND,
 								getConstraint(bytecodeLine.followingLineNumber)));
 				
@@ -333,12 +346,18 @@ public class Decompiler {
 	}
 	
 	/**
+	 * getCalculatedValue returns an abstract constraint value for the given
+	 *  constraint values and the arithmetic operator. If the constraint values
+	 *  are both numbers the new value is calculated, otherwise a new abstract
+	 *  constraint formula is returned.
 	 * 
-	 * @param constraintValue1
-	 * @param operator
-	 * @param constraintValue2
+	 * @param constraintValue1 the first abstract constraint value
+	 * @param operator the arithmetic operator to calculate the values
+	 * @param constraintValue2 the second abstract constraint value
 	 * 
-	 * @return
+	 * @return the calculated value as an abstract constraint literal if both
+	 *  values are numbers, a new abstract constraint formula with the abstract
+	 *  constraint values and the arithmetic operator otherwise
 	 */
 	private AbstractConstraintValue getCalculatedValue(AbstractConstraintValue constraintValue1, ArithmeticOperator operator, AbstractConstraintValue constraintValue2) {
 		if(
@@ -376,13 +395,20 @@ public class Decompiler {
 	}
 	
 	/**
+	 * getSingleConstraint returns an abstract constraint for the given
+	 *  abstract constraint values and the constraint operator. If the
+	 *  constraint values are both numbers the boolean value is calculated,
+	 *  otherwise a new abstract single constraint is returned.
 	 * 
-	 * @param constraintValue1
-	 * @param constraintOperator
-	 * @param constraintValue2
-	 * @param prefixedFields
+	 * @param constraintValue1 the first abstract constraint value
+	 * @param constraintOperator the constraint operator
+	 * @param constraintValue2 the second abstract constraint value
+	 * @param prefixedFields the list of prefixed fields of the abstract
+	 *  constraint values
 	 * 
-	 * @return
+	 * @return the calculated boolean value as an abstract constraint if both
+	 *  values are numbers, a new abstract single constraint with the abstract
+	 *  constraint values and the constraint operator otherwise
 	 */
 	private AbstractConstraint getSingleConstraint(AbstractConstraintValue constraintValue1, ConstraintOperator constraintOperator, AbstractConstraintValue constraintValue2, List<PrefixedField> prefixedFields) {
 		if(
@@ -414,17 +440,13 @@ public class Decompiler {
 					Logger.getLogger(Decompiler.class).fatal("constraint operator " + (constraintOperator == null ? "null" : "\"" + constraintOperator.asciiName + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(constraintOperator);
 				}
-			} else
-				return new AbstractSingleConstraint(
-						constraintValue1,
-						constraintOperator,
-						constraintValue2,
-						prefixedFields);
-		} else
-			return new AbstractSingleConstraint(
-					constraintValue1,
-					constraintOperator,
-					constraintValue2,
-					prefixedFields);
+			}
+		}
+		
+		return new AbstractSingleConstraint(
+				constraintValue1,
+				constraintOperator,
+				constraintValue2,
+				prefixedFields);
 	}
 }
