@@ -7,22 +7,25 @@ import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
 import de.agra.sat.koselleck.exceptions.UnsupportedNumberTypeException;
 
 /**
+ * AbstractConstraintFormula represents a formula in a constraint value.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public class AbstractConstraintFormula extends AbstractConstraintValue {
-	/**  */
+	/** the first value */
 	public AbstractConstraintValue value1;
-	/**  */
+	/** the arithmetic operator */
 	public final ArithmeticOperator operator;
-	/**  */
+	/** the second value */
 	public AbstractConstraintValue value2;
 	
 	/**
+	 * Constructor for a new AbstractConstraintFormula.
 	 * 
-	 * @param value1
-	 * @param operator
-	 * @param value2
+	 * @param value1 the new first value
+	 * @param operator the new arithmetic operator
+	 * @param value2 the new second value
 	 */
 	public AbstractConstraintFormula(AbstractConstraintValue value1, ArithmeticOperator operator, AbstractConstraintValue value2) {
 		this.value1 = value1;
@@ -31,9 +34,12 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * replaceAll replaces all occurrences of the regular expression
+	 *  {@code regex} of the values with the given {@code replacement} by
+	 *  calling the replaceAll(String, String) method of the values.
 	 * 
-	 * @param regex
-	 * @param replacement
+	 * @param regex the regular expression to look for
+	 * @param replacement the string to replace the matches with
 	 */
 	@Override
 	public void replaceAll(String regex, String replacement) {
@@ -42,9 +48,12 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * replaceAll replaces all occurrences of the given prefixed field
+	 *  {@code prefixedField} of the values with the given {@code replacement}
+	 *  by calling the replaceAll(PrefixedField, String) method of the values.
 	 * 
-	 * @param prefixedField
-	 * @param replacement
+	 * @param prefixedField the prefixed field to look for
+	 * @param replacement the string to replace the matches with
 	 */
 	@Override
 	public void replaceAll(PrefixedField prefixedField, String replacement) {
@@ -53,8 +62,13 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * evaluate first evaluates both values by calling their evaluate method. 
+	 *  Afterwards a new abstract constraint literal with the calculated value
+	 *  of the values is returned if both are of type integer. Otherwise this
+	 *  current object is returned.
 	 * 
-	 * @return
+	 * @return a new abstract constraint literal if both values are of type
+	 *  integer, this object otherwise
 	 */
 	@Override
 	public AbstractConstraintValue evaluate() {
@@ -83,10 +97,13 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * matches checks if this object matches the given regular expression
+	 *  {@code regex} by calling the matches(String) method of both values.
 	 * 
-	 * @param regex
+	 * @param regex the regular expression to look for
 	 * 
-	 * @return
+	 * @return {@code true} if one of the values matches the given regular
+	 *  expression, {@code false} otherwise
 	 */
 	@Override
 	public boolean matches(String regex) {
@@ -94,10 +111,14 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * matches checks if this object matches the given prefixed field
+	 *  {@code prefixedField} by calling the matches(String) method of both
+	 *  values.
 	 * 
-	 * @param prefixedField
+	 * @param prefixedField the prefixed field to look for
 	 * 
-	 * @return
+	 * @return {@code true} if one of the values matches the given prefixed
+	 *  field, {@code false} otherwise
 	 */
 	@Override
 	public boolean matches(PrefixedField prefixedField) {
@@ -105,10 +126,13 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * equals checks if this abstract constraint formula and the given object
+	 *  are equal.
 	 * 
-	 * @param object
+	 * @param object the object to check for equality
 	 * 
-	 * @return
+	 * @return {@code true} if the given object an this abstract constraint
+	 *  formula are equal, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(Object object) {
@@ -124,8 +148,9 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * clone returns a copy of this abstract constraint formula.
 	 * 
-	 * @return
+	 * @return a copy of this abstract constraint formula
 	 */
 	@Override
 	public AbstractConstraintValue clone() {
@@ -136,8 +161,10 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * toString returns the string representation of this abstract constraint
+	 *  formula.
 	 * 
-	 * @return
+	 * @return the string representation of this abstract constraint formula
 	 */
 	@Override
 	public String toString() {
@@ -154,12 +181,15 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	 * ----- ----- ----- ----- ----- */
 	
 	/**
+	 * calculateValue calculates the value of the two given numbers and returns
+	 *  the calculation of those considering the given arithmetic operator.
 	 * 
-	 * @param value1
-	 * @param operator
-	 * @param value2
+	 * @param value1 the first number
+	 * @param operator the arithmetic operator
+	 * @param value2 the second number
 	 * 
-	 * @return
+	 * @return a new number for the calculation considering the arithmetic
+	 *  operator
 	 */
 	private <T extends Number, U extends Number> Number calculateValue(T value1, ArithmeticOperator operator, U value2) {
 		switch(operator) {

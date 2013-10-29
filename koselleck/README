@@ -5,3 +5,4 @@
 -- decompiling.Decompiler.getSingleConstraint(AbstractConstraintValue, ConstraintOperator, AbstractConstraintValue, List<PrefixedField>)
 -- decompiling.datatypes.ConstraintValueType
 -- decompiling.datatypes.AbstractSingleConstraint.evaluate()
+-- decompiling.datatypes.AbstractConstraintFormula.calculateValue(T, ArithmeticOperator, U)

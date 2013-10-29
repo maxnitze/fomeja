@@ -1,65 +1,84 @@
 package de.agra.sat.koselleck.decompiling.datatypes;
 
 /**
+ * AbstractConstraint is an abstract class for all types of constraint values.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public abstract class AbstractConstraintValue {
 	/**
+	 * replaceAll replaces all occurrences of the given regular expression
+	 * 	{@code regex} with the given {@code replacement}.
 	 * 
-	 * @param regex
-	 * @param replacement
+	 * @param regex the regular expression to look for
+	 * @param replacement the replacement
 	 */
 	public abstract void replaceAll(String regex, String replacement);
 
 	/**
+	 * replaceAll replaces all occurrences of the given prefixed field
+	 *  {@code prefixedField} with the given {@code replacement}.
 	 * 
-	 * @param prefixedField
-	 * @param replacement
+	 * @param prefixedField the prefixed field to look for
+	 * @param replacement the replacement
 	 */
 	public abstract void replaceAll(PrefixedField prefixedField, String replacement);
 	
 	/**
+	 * evaluate evaluates the abstract constraint value.
 	 * 
-	 * @return
+	 * @return the new evaluated or this abstract constraint value 
 	 */
 	public abstract AbstractConstraintValue evaluate();
 	
 	/**
+	 * matches checks if this abstract constraint value matches the given
+	 *  regular expression {@code regex}.
 	 * 
-	 * @param regex
+	 * @param regex the regular expression
 	 * 
-	 * @return
+	 * @return {@code true} if this abstract constraint value matches the given
+	 *  regular expression {@code regex}, {@code false} otherwise
 	 */
 	public abstract boolean matches(String regex);
 	
 	/**
+	 * matches checks if this abstract constraint value matches the given
+	 *  prefixed field {@code prefixedField}.
 	 * 
-	 * @param prefixedField
+	 * @param prefixedField the prefixed field
 	 * 
-	 * @return
+	 * @return {@code true} if this abstract constraint value matches the given
+	 *  prefixed field {@code prefixedField}, {@code false} otherwise
 	 */
 	public abstract boolean matches(PrefixedField prefixedField);
 	
 	/**
+	 * equals checks if this abstract constraint value and the given object are
+	 *  equal.
 	 * 
-	 * @param object
+	 * @param object the object to check for equality
 	 * 
-	 * @return
+	 * @return {@code true} if the given object matches this abstract
+	 *  constraint value, {@code false} otherwise
 	 */
 	@Override
 	public abstract boolean equals(Object object);
 	
 	/**
+	 * clone returns a copy of this abstract constraint value.
 	 * 
-	 * @return
+	 * @return a copy of this abstract constraint value
 	 */
 	@Override
 	public abstract AbstractConstraintValue clone();
 	
 	/**
+	 * toString returns the string representation of this abstract constraint
+	 *  value.
 	 * 
-	 * @return
+	 * @return the string representation of this abstract constraint value
 	 */
 	@Override
 	public abstract String toString();

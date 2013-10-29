@@ -1,5 +1,6 @@
 package de.agra.sat.koselleck.decompiling.datatypes;
 
+/** imports */
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,22 +9,25 @@ import org.apache.log4j.Logger;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 
 /**
+ * AbstractSingleConstraint represents a single constraint in a constraint.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public class AbstractSingleConstraint extends AbstractConstraint {
-	/**  */
+	/** the first value */
 	public AbstractConstraintValue value1;
-	/**  */
+	/** the constraint operator */
 	public final ConstraintOperator operator;
-	/**  */
+	/** the second value */
 	public AbstractConstraintValue value2;
 	
 	/**
+	 * Constructor for a new abstract single constraint.
 	 * 
-	 * @param value1
-	 * @param operator
-	 * @param value2
+	 * @param value1 the new first value
+	 * @param operator the new constraint operator
+	 * @param value2 the new second value
 	 */
 	public AbstractSingleConstraint(AbstractConstraintValue value1, ConstraintOperator operator, AbstractConstraintValue value2, List<PrefixedField> prefixedFields) {
 		this.prefixedFields.addAll(prefixedFields);
@@ -34,9 +38,14 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * replaceAll replaces all occurrences of the given regular expression
+	 *  {@code regex} with the given replacement {@code replacement} by calling
+	 *  the replaceAll(String, String) method of the two values.
 	 * 
-	 * @param regex
-	 * @param replacement
+	 * @param regex the regular expression to look for
+	 * @param replacement the replacement
+	 * 
+	 * @see AbstractConstraintValue#replaceAll(String, String)
 	 */
 	@Override
 	public void replaceAll(String regex, String replacement) {
@@ -45,9 +54,14 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * replaceAll replaces all occurrences of the given prefixed field
+	 *  {@code prefixedField} with the given replacement {@code replacement} by
+	 *  calling the replaceAll(PrefixedField, String) method of the two values.
 	 * 
-	 * @param prefixedField
-	 * @param replacement
+	 * @param prefixedField the prefixed field to look for
+	 * @param replacement the replacement
+	 * 
+	 * @see AbstractConstraintValue#replaceAll(PrefixedField, String)
 	 */
 	@Override
 	public void replaceAll(PrefixedField prefixedField, String replacement) {
@@ -56,8 +70,15 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * evaluate evaluates this abstract single constraint. At first both values
+	 *  are evaluated. If these new values are of type integer afterwards the
+	 *  boolean value of this single constraint is calculated. If the values
+	 *  are both strings/variables and they are equal the boolean value of
+	 *  this single constraint is calculated. Otherwise this abstract single
+	 *  constraint is returned.
 	 * 
-	 * @return
+	 * @return the boolean value of this single constraint if possible to
+	 *  calculate, this abstract single constraint otherwise
 	 */
 	@Override
 	public AbstractConstraint evaluate() {
@@ -106,10 +127,13 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * matches checks if one or both of the values match the given regular
+	 *  expression {@code regex}.
 	 * 
-	 * @param regex
+	 * @param regex the regular expression to look for
 	 * 
-	 * @return
+	 * @return {@code true} if one or both of the values match the given
+	 *  regular expression {@code regex}, {@code false} otherwise
 	 */
 	@Override
 	public boolean matches(String regex) {
@@ -117,10 +141,13 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * matches checks if one or both of the values match the given prefixed
+	 *  field {@code prefixedField}.
 	 * 
-	 * @param prefixedField
+	 * @param prefixedField the prefixed field to look for
 	 * 
-	 * @return
+	 * @return {@code true} if one or both of the values match the given
+	 *  prefixed field {@code prefixedField}, {@code false} otherwise
 	 */
 	@Override
 	public boolean matches(PrefixedField prefixedField) {
@@ -128,10 +155,13 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * equals checks if this abstract single constraint and the given object
+	 *  are equal.
 	 * 
-	 * @param obj
+	 * @param object the object to check for equality
 	 * 
-	 * @return
+	 * @return {@code true} if the given object matches this abstract
+	 *  single constraint, {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -150,8 +180,9 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * clone returns a copy of this abstract single constraint.
 	 * 
-	 * @return
+	 * @return a copy of this abstract single constraint
 	 */
 	@Override
 	public AbstractConstraint clone() {
@@ -165,8 +196,10 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * toString returns the string representation of this abstract single
+	 *  constraint.
 	 * 
-	 * @return
+	 * @return the string representation of this abstract single constraint
 	 */
 	@Override
 	public String toString() {

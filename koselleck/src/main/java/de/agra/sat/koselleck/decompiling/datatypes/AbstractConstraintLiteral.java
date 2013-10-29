@@ -5,22 +5,25 @@ import org.apache.log4j.Logger;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintValueTypeException;
 
 /**
+ * AbstractConstraintLiteral represents a literal in a constraint value.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public class AbstractConstraintLiteral extends AbstractConstraintValue {
-	/**  */
+	/** the object */
 	public Object value;
-	/**  */
+	/** the type of the object */
 	public ConstraintValueType valueType;
-	/**  */
+	/** flag if the value is variable */
 	public final boolean isVariable;
 	
 	/**
+	 * Constructor for a new AbstractConstraintLiteral.
 	 * 
-	 * @param value
-	 * @param valueType
-	 * @param isVariable
+	 * @param value the new value
+	 * @param valueType the new type of the value
+	 * @param isVariable the new variable flag for the value
 	 */
 	public AbstractConstraintLiteral(Object value, ConstraintValueType valueType, boolean isVariable) {
 		if(valueType == ConstraintValueType.STRING && ((String)value).matches("\\d+")) {
@@ -34,9 +37,12 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * replaceAll replaces all occurrences of the given regular expression
+	 *  {@code regex} with the given {@code replacement}. if the replacement is
+	 *  an integer type the type of this literal is changed to integer.
 	 * 
-	 * @param regex
-	 * @param replacement
+	 * @param regex the regular expression to look for
+	 * @param replacement the replacement
 	 */
 	@Override
 	public void replaceAll(String regex, String replacement) {
@@ -58,9 +64,13 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * replaceAll replaces all occurrences of the given prefixed field
+	 *  {@code prefixedField} with the given {@code replacement}. if the
+	 *  replacement is an integer type the type of this literal is changed to
+	 *  integer.
 	 * 
-	 * @param prefixedField
-	 * @param replacement
+	 * @param prefixedField the prefixed field to look for
+	 * @param replacement the replacement
 	 */
 	@Override
 	public void replaceAll(PrefixedField prefixedField, String replacement) {
@@ -76,8 +86,10 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * If the value of the literal is parsable to integer evaluate parses it.
+	 *  Afterwards this abstract constraint literal is returned.
 	 * 
-	 * @return
+	 * @return this abstract constraint literal
 	 */
 	@Override
 	public AbstractConstraintValue evaluate() {
@@ -93,10 +105,13 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * matches checks whether the value matches the given regular expression
+	 *  {@code regex}.
 	 * 
-	 * @param regex
+	 * @param regex the regular expression to look for
 	 * 
-	 * @return
+	 * @return {@code true} if the value matches the given regular expression,
+	 *  {@code false} otherwise
 	 */
 	@Override
 	public boolean matches(String regex) {
@@ -109,10 +124,13 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * matches checks whether the value matches the given prefixed field
+	 *  {@code prefixedField}.
 	 * 
-	 * @param prefixedField
+	 * @param prefixedField the prefixed field to look for
 	 * 
-	 * @return
+	 * @return {@code true} if the value matches the given prefixed field,
+	 *  {@code false} otherwise
 	 */
 	@Override
 	public boolean matches(PrefixedField prefixedField) {
@@ -123,24 +141,28 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * equals checks if this abstract constraint literal and the given object
+	 *  are equal.
 	 * 
-	 * @param obj
+	 * @param object the object to check for equality
 	 * 
-	 * @return
+	 * @return {@code true} if the given object an this abstract constraint
+	 *  literal are equal, {@code false} otherwise
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof AbstractConstraintLiteral))
+	public boolean equals(Object object) {
+		if(!(object instanceof AbstractConstraintLiteral))
 			return false;
 		
-		AbstractConstraintLiteral constraintValue = (AbstractConstraintLiteral)obj;
+		AbstractConstraintLiteral constraintValue = (AbstractConstraintLiteral)object;
 		
 		return this.value.equals(constraintValue.value);
 	}
 	
 	/**
+	 * clone returns a copy of this abstract constraint literal.
 	 * 
-	 * @return
+	 * @return a copy of this abstract constraint literal
 	 */
 	@Override
 	public AbstractConstraintLiteral clone() {
@@ -151,8 +173,10 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue {
 	}
 	
 	/**
+	 * toString returns the string representation of this abstract constraint
+	 *  literal.
 	 * 
-	 * @return
+	 * @return the string representation of this abstract constraint literal
 	 */
 	@Override
 	public String toString() {
