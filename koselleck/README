@@ -6,3 +6,4 @@
 -- decompiling.datatypes.ConstraintValueType
 -- decompiling.datatypes.AbstractSingleConstraint.evaluate()
 -- decompiling.datatypes.AbstractConstraintFormula.calculateValue(T, ArithmeticOperator, U)
+-- decompiling.datatypes.ConstraintValueType

@@ -304,7 +304,7 @@ public class Decompiler {
 						new AbstractSubConstraint(
 								getSingleConstraint(
 										constraintValue1,
-										ConstraintOperator.fromOpcode(bytecodeLine.opcode),
+										ConstraintOperator.fromOpcode(bytecodeLine.opcode.name),
 										constraintValue2,
 										prefixedFields),
 								BooleanConnector.AND,
@@ -313,7 +313,7 @@ public class Decompiler {
 						new AbstractSubConstraint(
 								getSingleConstraint(
 										constraintValue1,
-										ConstraintOperator.fromOppositeOpcode(bytecodeLine.opcode),
+										ConstraintOperator.fromOppositeOpcode(bytecodeLine.opcode.name),
 										constraintValue2,
 										prefixedFields),
 								BooleanConnector.AND,

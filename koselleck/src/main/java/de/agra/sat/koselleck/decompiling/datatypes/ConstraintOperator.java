@@ -1,9 +1,9 @@
 package de.agra.sat.koselleck.decompiling.datatypes;
 
-import de.agra.sat.koselleck.disassembling.datatypes.Opcode;
-
 /**
+ * An enumeration of the six constraint operators ==, >=, >, <=, < and !=.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public enum ConstraintOperator {
@@ -12,28 +12,27 @@ public enum ConstraintOperator {
 	GREATER(">", "<=", "<", "if_[i]cmpgt", "if_[i]cmple"),
 	LESS_EQUAL("<=", ">", ">=", "if_[i]cmple", "if_[i]cmpgt"),
 	LESS("<", ">=", ">", "if_[i]cmplt", "if_[i]cmpge"),
-	NOT_EQUAL("!=", "==", "!=", "if_[i]cmpne", "if_[i]cmpeq"),
+	NOT_EQUAL("!=", "==", "!=", "if_[i]cmpne", "if_[i]cmpeq");
 	
-	NULL("", "", "", "", "");
-	
-	/**  */
+	/** the ascii name */
 	public final String asciiName;
-	/**  */
+	/** the oppsite ascii name */
 	public final String oppositeAsciiName;
-	/**  */
+	/** the swapped ascii name */
 	public final String swappedAsciiName;
-	/**  */
+	/** the opcode regex */
 	public final String opcode;
-	/**  */
+	/** the opposite opcode regex */
 	public final String oppositeOpcode;
 	
 	/**
+	 * Constructor for a new constraint operator.
 	 * 
-	 * @param asciiName
-	 * @param oppositeAsciiName
-	 * @param swappedAsciiName
-	 * @param opcode
-	 * @param oppositeOpcode
+	 * @param asciiName the new ascii name
+	 * @param oppositeAsciiName the new opposite ascii name
+	 * @param swappedAsciiName the new swapped ascii name
+	 * @param opcode the new opcode regex
+	 * @param oppositeOpcode the new opposite opcode regex
 	 */
 	ConstraintOperator(String asciiName, String oppositeAsciiName, String swappedAsciiName, String opcode, String oppositeOpcode) {
 		this.asciiName = asciiName;
@@ -44,10 +43,11 @@ public enum ConstraintOperator {
 	}
 	
 	/**
+	 * fromAsciiName returns the constraint operator with the given ascii name.
 	 * 
-	 * @param asciiName
+	 * @param asciiName the ascii name to look for
 	 * 
-	 * @return
+	 * @return the constraint operator with the given ascii name
 	 */
 	public static ConstraintOperator fromAsciiName(String asciiName) {
 		for(ConstraintOperator co : values())
@@ -57,10 +57,12 @@ public enum ConstraintOperator {
 	}
 	
 	/**
+	 * fromOppositeAsciiName returns the constraint operator with the given
+	 *  opposite ascii name.
 	 * 
-	 * @param oppositeAsciiName
+	 * @param oppositeAsciiName the opposite ascii name to look for
 	 * 
-	 * @return
+	 * @return the constraint operator with the given opposite ascii name
 	 */
 	public static ConstraintOperator fromOppositeAsciiName(String oppositeAsciiName) {
 		for(ConstraintOperator co : values())
@@ -70,10 +72,12 @@ public enum ConstraintOperator {
 	}
 	
 	/**
+	 * fromSwappedAsciiName returns the constraint operator with the given
+	 *  swapped ascii name.
 	 * 
-	 * @param swappedAsciiName
+	 * @param swappedAsciiName the swapped ascii name to look for
 	 * 
-	 * @return
+	 * @return the constraint operator with the given swapped ascii name
 	 */
 	public static ConstraintOperator fromSwappedAsciiName(String swappedAsciiName) {
 		for(ConstraintOperator co : values())
@@ -83,10 +87,11 @@ public enum ConstraintOperator {
 	}
 	
 	/**
+	 * fromOpcode returns the constraint operator with the given opcode.
 	 * 
-	 * @param opcode
+	 * @param opcode the opcode to look for
 	 * 
-	 * @return
+	 * @return the constraint operator with the given opcode
 	 */
 	public static ConstraintOperator fromOpcode(String opcode) {
 		for(ConstraintOperator co : values())
@@ -96,40 +101,16 @@ public enum ConstraintOperator {
 	}
 	
 	/**
+	 * fromOpcode returns the constraint operator with the given opposite
+	 *  opcode.
 	 * 
-	 * @param opcode
+	 * @param opcode the oposite opcode to look for
 	 * 
-	 * @return
-	 */
-	public static ConstraintOperator fromOpcode(Opcode opcode) {
-		for(ConstraintOperator co : values())
-			if(opcode.name.matches(co.opcode))
-				return co;
-		throw new IllegalArgumentException("no constant with opcode \"" + opcode + "\" found");
-	}
-	
-	/**
-	 * 
-	 * @param oppositeOpcode
-	 * 
-	 * @return
+	 * @return the constraint operator with the given opposite opcode
 	 */
 	public static ConstraintOperator fromOppositeOpcode(String oppositeOpcode) {
 		for(ConstraintOperator co : values())
 			if(oppositeOpcode.matches(co.oppositeOpcode))
-				return co;
-		throw new IllegalArgumentException("no constant with opposite opcode \"" + oppositeOpcode + "\" found");
-	}
-	
-	/**
-	 * 
-	 * @param oppositeOpcode
-	 * 
-	 * @return
-	 */
-	public static ConstraintOperator fromOppositeOpcode(Opcode oppositeOpcode) {
-		for(ConstraintOperator co : values())
-			if(oppositeOpcode.name.matches(co.oppositeOpcode))
 				return co;
 		throw new IllegalArgumentException("no constant with opposite opcode \"" + oppositeOpcode + "\" found");
 	}

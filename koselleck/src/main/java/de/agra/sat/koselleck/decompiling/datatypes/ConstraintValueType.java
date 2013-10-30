@@ -1,27 +1,26 @@
 package de.agra.sat.koselleck.decompiling.datatypes;
 
-/** imports */
-
 /**
+ * An enumeration of the constraint value types.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public enum ConstraintValueType {
 	INTEGER("Integer", Integer.class),
 	STRING("String", String.class),
-	PREFIXED_FIELD("PrefixedField", PrefixedField.class),
+	PREFIXED_FIELD("PrefixedField", PrefixedField.class);
 	
-	NULL("", null);
-	
-	/**  */
+	/** the name */
 	public final String name;
-	/**  */
+	/** the class */
 	public final Class<?> clazz;
 	
 	/**
+	 * Constructor for a new constraint value type.
 	 * 
-	 * @param name
-	 * @param clazz
+	 * @param name the new name
+	 * @param clazz the new class
 	 */
 	ConstraintValueType(String name, Class<?> clazz) {
 		this.name = name;
@@ -29,10 +28,11 @@ public enum ConstraintValueType {
 	}
 	
 	/**
+	 * fromClass returns the constraint value type with the given class.
 	 * 
-	 * @param clazz
+	 * @param clazz the class to look for
 	 * 
-	 * @return
+	 * @return the constraint value type with the given class
 	 */
 	public static ConstraintValueType fromClass(Class<?> clazz) {
 		for(ConstraintValueType vct : values())
