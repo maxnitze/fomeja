@@ -218,11 +218,14 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	 * ----- ----- ----- ----- ----- */
 	
 	/**
+	 * evaluateConstraint evaluates the given comparable values to its abstract
+	 *  boolean value considering the operator.
 	 * 
-	 * @param value1
-	 * @param value2
+	 * @param value1 the first comparable value
+	 * @param value2 the second comparable value
 	 * 
-	 * @return
+	 * @return the abstract boolean value of the given comparable values
+	 *  considering the operator
 	 */
 	private <T extends Comparable<T>> AbstractBooleanConstraint evaluateConstraint(T value1, T value2) {
 		switch(this.operator) {
