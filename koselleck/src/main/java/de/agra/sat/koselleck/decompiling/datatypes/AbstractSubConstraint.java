@@ -1,31 +1,31 @@
 package de.agra.sat.koselleck.decompiling.datatypes;
 
 /** imports */
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 
 /**
+ * AbstractSubConstraint represents a sub constraint in a constraint.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public class AbstractSubConstraint extends AbstractConstraint {
-	/**  */
+	/** the first constraint */
 	public AbstractConstraint constraint1;
-	/**  */
+	/** the boolean connector of both constraints */
 	public final BooleanConnector connector;
-	/**  */
+	/** the second constraint */
 	public AbstractConstraint constraint2;
 	
 	/**
+	 * Constructor for a new abstract sub constraint.
 	 * 
-	 * @param constraint1
-	 * @param connector
-	 * @param constraint2
+	 * @param constraint1 the new first constraint
+	 * @param connector the new boolean connector of both constraints
+	 * @param constraint2 the new second constraint
 	 */
 	public AbstractSubConstraint(AbstractConstraint constraint1, BooleanConnector connector, AbstractConstraint constraint2) {
 		this.prefixedFields.addAll(constraint1.prefixedFields);
@@ -37,9 +37,14 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * replaceAll replaces all occurrences of the given regular expression
+	 *  {@code regex} with the given replacement {@code replacement} by calling
+	 *  the replaceAll(String, String) method of the two constraints.
 	 * 
-	 * @param regex
-	 * @param replacement
+	 * @param regex the regular expression to look for
+	 * @param replacement the replacement
+	 * 
+	 * @see AbstractConstraint#replaceAll(String, String)
 	 */
 	@Override
 	public void replaceAll(String regex, String replacement) {
@@ -48,9 +53,15 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * replaceAll replaces all occurrences of the given prefixed field
+	 *  {@code prefixeField} with the given replacement {@code replacement} by
+	 *  calling the replaceAll(PrefixedField, String) method of the two
+	 *  constraints.
 	 * 
-	 * @param regex
-	 * @param replacement
+	 * @param prefixeField the prefixed field to look for
+	 * @param replacement the replacement
+	 * 
+	 * @see AbstractConstraint#replaceAll(PrefixedField, String)
 	 */
 	@Override
 	public void replaceAll(PrefixedField prefixedField, String replacement) {
@@ -59,8 +70,18 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * evaluate evaluates this abstract single constraint. At first both
+	 *  constraints are evaluated.<br />
+	 *  If any of these new constraints is a boolean constraints the calculated
+	 *  value of those considering the boolean connector is calculated.<br />
+	 *  If both new constraints are single constraints and those are equal one
+	 *  of the constraints is returned. If only the values of the two
+	 *  constraints are equal the boolean connectors of those two single
+	 *  constraints are evaluated considering the boolean connector of this
+	 *  abstract sub constraint.<br />
+	 *  Otherwise this abstract sub constraint is returned.
 	 * 
-	 * @return
+	 * @return the evaluated value of this abstract constraint
 	 */
 	@Override
 	public AbstractConstraint evaluate() {
@@ -121,10 +142,13 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * matches checks if one or both of the constraints match the given regular
+	 *  expression {@code regex}.
 	 * 
-	 * @param regex
+	 * @param regex the regular expression to look for
 	 * 
-	 * @return
+	 * @return {@code true} if one or both of the constraints match the given
+	 *  regular expression {@code regex}, {@code false} otherwise
 	 */
 	@Override
 	public boolean matches(String regex) {
@@ -132,10 +156,13 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * matches checks if one or both of the constraints match the prefixed
+	 *  field expression {@code prefixedField}.
 	 * 
-	 * @param prefixedField
+	 * @param prefixedField the prefixed field to look for
 	 * 
-	 * @return
+	 * @return {@code true} if one or both of the constraints match the given
+	 *  prefixed field {@code prefixedField}, {@code false} otherwise
 	 */
 	@Override
 	public boolean matches(PrefixedField prefixedField) {
@@ -143,17 +170,20 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * equals checks if this abstract sub constraint and the given object are
+	 *  equal.
 	 * 
-	 * @param obj
+	 * @param object the object to check for equality
 	 * 
-	 * @return
+	 * @return {@code true} if the given object matches this abstract
+	 *  sub constraint, {@code false} otherwise
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof AbstractSubConstraint))
+	public boolean equals(Object object) {
+		if(!(object instanceof AbstractSubConstraint))
 			return false;
 		
-		AbstractSubConstraint subConstraint = (AbstractSubConstraint)obj;
+		AbstractSubConstraint subConstraint = (AbstractSubConstraint)object;
 		
 		return
 				this.constraint1.equals(subConstraint.constraint1) &&
@@ -162,13 +192,12 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * clone returns a copy of this abstract sub constraint.
 	 * 
-	 * @return
+	 * @return a copy of this abstract sub constraint
 	 */
 	@Override
 	public AbstractConstraint clone() {
-		List<PrefixedField> prefixedFields = new ArrayList<PrefixedField>();
-		prefixedFields.addAll(this.prefixedFields);
 		return new AbstractSubConstraint(
 				this.constraint1.clone(),
 				this.connector,
@@ -176,8 +205,10 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * toString returns the string representation of this abstract sub
+	 *  constraint.
 	 * 
-	 * @return
+	 * @return the string representation of this abstract sub constraint
 	 */
 	@Override
 	public String toString() {
@@ -196,11 +227,15 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	 * ----- ----- ----- ----- ----- */
 	
 	/**
+	 * evaluateConstraint evaluates the given boolean values considering the
+	 *  boolean connector of this abstract sub constraint.
 	 * 
-	 * @param value1
-	 * @param value2
+	 * @param value1 the first boolean value
+	 * @param value2 the second boolean value
 	 * 
-	 * @return
+	 * @return an abstract boolean constraint representing the calculated value
+	 *  of the given boolean values and the boolean connector of this abstract
+	 *  abstract sub constraint
 	 */
 	private AbstractConstraint evaluateConstraint(boolean value1, boolean value2) {
 		switch(this.connector) {
@@ -215,24 +250,27 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * evaluateConstraint evaluates the given boolean value and the given
+	 *  abstract constraint considering the boolean connector of this abstract
+	 *  sub constraint.
 	 * 
-	 * @param booleanValue
-	 * @param constraintValue
+	 * @param booleanValue the boolean value
+	 * @param constraint the abstract constraint
 	 * 
-	 * @return
+	 * @return an abstract boolean constraint representing a {@code false} if
+	 *  the boolean value is {@code false} and the boolean connector of this
+	 *  abstract constraint is {@code AND} or the constraint if the boolean
+	 *  value is {@code true} or an abstract boolean constraint representing a
+	 *  {@code true} if the boolean value is {@code false} and the boolean
+	 *  connector of this abstract constraint is {@code OR} or the constraint
+	 *  if the boolean value is {@code false}.
 	 */
-	private AbstractConstraint evaluateConstraint(boolean booleanValue, AbstractConstraint constraintValue) {
+	private AbstractConstraint evaluateConstraint(boolean booleanValue, AbstractConstraint constraint) {
 		switch(this.connector) {
 		case AND:
-			if(booleanValue)
-				return constraintValue;
-			else
-				return new AbstractBooleanConstraint(false);
+			return booleanValue ? constraint : new AbstractBooleanConstraint(false);
 		case OR:
-			if(booleanValue)
-				return new AbstractBooleanConstraint(true);
-			else
-				return constraintValue;
+			return booleanValue ? new AbstractBooleanConstraint(true) : constraint;
 		default:
 			Logger.getLogger(AbstractSubConstraint.class).fatal("boolean connector " + (this.connector == null ? "null" : "\"" + this.connector.code + "\"") + " is not known");
 			throw new UnknownBooleanConnectorException(this.connector);
@@ -240,11 +278,18 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	}
 	
 	/**
+	 * evaluateEqualConstraints evaluates the given constraint operators
+	 *  considering the boolean connector of this abstract sub constraint.
 	 * 
-	 * @param operator1
-	 * @param operator2
+	 * @param operator1 the first constraint operator
+	 * @param operator2 the second constraint operator
 	 * 
-	 * @return
+	 * @return an abstract boolean constraint representing a {@code false} if
+	 *  the boolean connector of this abstract sub constraint is an {@code AND}
+	 *  and the given constraint operators do not match, an abstract boolean
+	 *  constraint representing a {@code true} if the boolean connector of this
+	 *  abstract sub constraint is an {@code OR} and the given constraint
+	 *  operators match 
 	 */
 	private AbstractConstraint evaluateEqualConstraints(ConstraintOperator operator1, ConstraintOperator operator2) {
 		switch(this.connector) {

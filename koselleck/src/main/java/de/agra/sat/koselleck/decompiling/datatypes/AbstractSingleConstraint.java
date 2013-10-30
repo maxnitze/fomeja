@@ -17,7 +17,7 @@ import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 public class AbstractSingleConstraint extends AbstractConstraint {
 	/** the first value */
 	public AbstractConstraintValue value1;
-	/** the constraint operator */
+	/** the constraint operator of the values */
 	public final ConstraintOperator operator;
 	/** the second value */
 	public AbstractConstraintValue value2;
@@ -26,7 +26,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	 * Constructor for a new abstract single constraint.
 	 * 
 	 * @param value1 the new first value
-	 * @param operator the new constraint operator
+	 * @param operator the new constraint operator of the values
 	 * @param value2 the new second value
 	 */
 	public AbstractSingleConstraint(AbstractConstraintValue value1, ConstraintOperator operator, AbstractConstraintValue value2, List<PrefixedField> prefixedFields) {
