@@ -32,7 +32,7 @@ import de.agra.sat.koselleck.exceptions.UnknownOpcodeException;
 import de.agra.sat.koselleck.exceptions.UnknownSwitchCaseException;
 
 /**
- * Decompiler represents decompiler for java byte code.
+ * Decompiler implements a decompiler for java byte code.
  * 
  * @author Max Nitze
  */
@@ -332,7 +332,7 @@ public class Decompiler {
 					throw new ClassCastException("could not return given value \"" + returnLiteral + "\" as integer.");
 				}
 				
-				return new AbstractBooleanConstraint(((Integer)returnLiteral.value).equals(1) ? true : false); 
+				return new AbstractBooleanConstraint(((Integer)returnLiteral.value).equals(0) ? false : true); 
 				
 			default:
 				Logger.getLogger(Decompiler.class).fatal("Opcode " + (bytecodeLine.opcode == null ? "null" : "\"" + bytecodeLine.opcode.name + "\"") + " is not known");

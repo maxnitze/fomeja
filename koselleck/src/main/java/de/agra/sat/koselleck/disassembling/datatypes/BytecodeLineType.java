@@ -8,15 +8,12 @@ import java.lang.reflect.Method;
 import de.agra.sat.koselleck.exceptions.MissformattedBytecodeLineException;
 
 /**
+ * BytecodeLineType represents a type of a byte code line.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public class BytecodeLineType {
-	/**  */
-	private static final String bytecodeLineTypeRegex = "^\\d+: \\S+ #?\\d+ // (\\S+) (\\S+)$";
-	/**  */
-	private static final String bytecodeLineTypeMethodFieldRegex = "^\\d+: \\S+ #?\\d+ // (\\S+) (\\S+):(\\S+)$";
-	
 	/**  */
 	public final String fullLine;
 	/**  */
@@ -39,15 +36,15 @@ public class BytecodeLineType {
 	public BytecodeLineType(Object component, String fullLine) throws MissformattedBytecodeLineException {
 		this.fullLine = fullLine.trim().replaceAll("\\s+", " ");
 		
-		if(!this.fullLine.matches(bytecodeLineTypeRegex))
+		if(!this.fullLine.matches(BytecodeLineRegexes.typeRegex))
 			throw new MissformattedBytecodeLineException("no type and/or class/method/field given");
 		
-		this.typeText = this.fullLine.replaceAll(bytecodeLineTypeRegex, "$1 $2");
+		this.typeText = this.fullLine.replaceAll(BytecodeLineRegexes.typeRegex, "${type} ${qfield}");
 		
-		this.type = EBytecodeLineType.fromString(this.fullLine.replaceAll(bytecodeLineTypeRegex, "$1"));
+		this.type = EBytecodeLineType.fromString(this.fullLine.replaceAll(BytecodeLineRegexes.typeRegex, "${type}"));
 		
 		if(this.type == EBytecodeLineType.FIELD) {
-			String field = this.fullLine.replaceAll(bytecodeLineTypeMethodFieldRegex, "$2");
+			String field = this.fullLine.replaceAll(BytecodeLineRegexes.typeMethodFieldRegex, "${qfield}");
 			if(field.contains(".")) {
 				String[] splittedField = field.split("\\.");
 				try {
@@ -66,7 +63,7 @@ public class BytecodeLineType {
 			
 			this.clazz = null;
 		} else if(this.type == EBytecodeLineType.METHOD) {
-			String[] splittedField = this.fullLine.replaceAll(bytecodeLineTypeMethodFieldRegex, "$2").split("\\.");
+			String[] splittedField = this.fullLine.replaceAll(BytecodeLineRegexes.typeMethodFieldRegex, "${qfield}").split("\\.");
 			try {
 				this.accessibleObject = Class.forName(splittedField[0].replaceAll("/", ".")).getDeclaredMethod(splittedField[1]);
 			} catch (NoSuchMethodException | SecurityException | ClassNotFoundException e) {
@@ -80,7 +77,7 @@ public class BytecodeLineType {
 			this.accessibleObjectType = null;
 			
 			try {
-				this.clazz = Class.forName(this.fullLine.replaceAll(bytecodeLineTypeRegex, "$2").replaceAll("/", "."));
+				this.clazz = Class.forName(this.fullLine.replaceAll(BytecodeLineRegexes.typeRegex, "${qfield}").replaceAll("/", "."));
 			} catch (ClassNotFoundException e) {
 				throw new MissformattedBytecodeLineException("unknown class: " + e.getMessage());
 			}
@@ -106,6 +103,9 @@ public class BytecodeLineType {
 		}
 	}
 	
+	/** private methods
+	 * ----- ----- ----- ----- */
+	
 	/**
 	 * 
 	 * @param disassembledString
@@ -113,7 +113,7 @@ public class BytecodeLineType {
 	 * @return
 	 */
 	private static Class<?> getClassFromDisassembledString(String disassembledString) {
-		String classString = disassembledString.replaceAll(bytecodeLineTypeMethodFieldRegex, "$3");
+		String classString = disassembledString.replaceAll(BytecodeLineRegexes.typeMethodFieldRegex, "${class}");
 		
 		if(classString != null && classString.equals("I"))
 			return Integer.class;

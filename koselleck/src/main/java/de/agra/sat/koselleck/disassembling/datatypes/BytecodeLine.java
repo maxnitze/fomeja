@@ -7,33 +7,36 @@ import java.util.Map;
 import de.agra.sat.koselleck.exceptions.MissformattedBytecodeLineException;
 
 /**
+ * BytecodeLine represents a disassembled byte code line.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public class BytecodeLine {	
-	/**  */
+	/** the line */
 	public final String line;
 	
-	/**  */
+	/** the number of the line */
 	public final int lineNumber;
-	/**  */
+	/** the opcode of the byte code line */
 	public final Opcode opcode;
-	/**  */
+	/** the number of the next line */
 	public final int followingLineNumber;
-	/**  */
+	/** the value of the byte code line */
 	public final int value;
-	/**  */
+	/** the offset of the byte code  line */
 	public final int offset;
-	/**  */
+	/** the constant table index of the byte code line */
 	public final int constantTableIndex;
-	/**  */
+	/** the type of the byte code line */
 	public final BytecodeLineType type;
-	/**  */
+	/** the map of offsets of a table switch */
 	public final Map<String, Integer> switchOffsets;
 	
 	/**
+	 * Constructor for a new byte code line.
 	 * 
-	 * @param line
+	 * @param line the line of the disassembled method
 	 */
 	public BytecodeLine(Object component, String line) {
 		this.line = line.trim().replaceAll("\\s+", " ");
@@ -79,8 +82,9 @@ public class BytecodeLine {
 	}
 	
 	/**
+	 * toString returns a string representation of this byte code line.
 	 * 
-	 * @return
+	 * @return a string representation of this byte code line
 	 */
 	@Override
 	public String toString() {

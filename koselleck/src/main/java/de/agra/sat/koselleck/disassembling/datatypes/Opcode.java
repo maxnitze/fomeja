@@ -18,16 +18,16 @@ public enum Opcode {
 	
 	checkcast("checkcast", 3, "^checkcast$", OpcodeType.CONSTANT_TABLE_INDEX, "checkcast"),
 	
-	add("add", 1, "^[i]add$", OpcodeType.NULL, ""),
-	sub("sub", 1, "^[i]sub$", OpcodeType.NULL, ""),
-	mul("mul", 1, "^[i]mul$", OpcodeType.NULL, ""),
-	div("div", 1, "^[i]div$", OpcodeType.NULL, ""),
+	add("add", 1, "^[i]add$", null, ""),
+	sub("sub", 1, "^[i]sub$", null, ""),
+	mul("mul", 1, "^[i]mul$", null, ""),
+	div("div", 1, "^[i]div$", null, ""),
 	
-	invokevirtual("invokevirtual", 3, "^invokevirtual$", OpcodeType.NULL, ""),
+	invokevirtual("invokevirtual", 3, "^invokevirtual$", null, ""),
 	
 	tableswitch("tableswitch", 0, "^tableswitch$", OpcodeType.SWITCH, "tableswitch"),
 	
-	_goto("goto", 1, "^goto$", OpcodeType.NULL, ""),
+	_goto("goto", 1, "^goto$", null, ""),
 
 	iload("iload", 1, "^iload(_\\d+)?$", OpcodeType.VALUE, "iload(_|\\s)"),
 	istore("istore", 1, "^istore(_\\d+)?$", OpcodeType.VALUE, "istore(_|\\s)"),
@@ -42,10 +42,10 @@ public enum Opcode {
 	if_icmplt("if_icmplt", 3, "^if_icmplt$", OpcodeType.OFFSET, "if_icmplt"),		/** less */
 	if_icmpne("if_icmpne", 3, "^if_icmpne$", OpcodeType.OFFSET, "if_icmpne"),		/** not equal */
 	
-	ireturn("ireturn", 1, "^ireturn$", OpcodeType.NULL, "");
+	ireturn("ireturn", 1, "^ireturn$", null, "");
 	
 	/**  */
-	private enum OpcodeType { NULL, VALUE, OFFSET, CONSTANT_TABLE_INDEX, SWITCH };
+	private enum OpcodeType { VALUE, OFFSET, CONSTANT_TABLE_INDEX, SWITCH };
 	
 	/**  */
 	public final String name;
