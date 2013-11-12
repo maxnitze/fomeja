@@ -1,16 +1,20 @@
 package de.agra.sat.koselleck.disassembling.datatypes;
 
+/** imports */
 import org.apache.log4j.Logger;
 
 /**
+ * Opcode is an enumeration of all used opcodes that occur in the byte code
+ *  lines (needs to be extended for new data types or functionalities).
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public enum Opcode {
 	aload_0("aload_0", 1, "^aload_0$", OpcodeType.VALUE, "aload_"),
 	aload("aload", 1, "^aload(_[1-5])?$", OpcodeType.VALUE, "aload(_|\\s)"),
 	
-	iconst("iconst", 1, "^iconst_\\d+$", OpcodeType.VALUE, "iconst_"),
+	iconst("iconst", 1, "^iconst(_\\d+)?$", OpcodeType.VALUE, "iconst(_|\\s)"),
 	bipush("bipush", 2, "^bipush$", OpcodeType.VALUE, "bipush\\s"),
 	
 	getfield("getfield", 3, "^getfield$", OpcodeType.CONSTANT_TABLE_INDEX, "getfield"),
@@ -44,27 +48,28 @@ public enum Opcode {
 	
 	ireturn("ireturn", 1, "^ireturn$", null, "");
 	
-	/**  */
+	/** enumeration of the types of an opcode */
 	private enum OpcodeType { VALUE, OFFSET, CONSTANT_TABLE_INDEX, SWITCH };
 	
-	/**  */
+	/** the name */
 	public final String name;
-	/**  */
+	/** the offset to the following line */
 	public final int followingLineOffset;
-	/**  */
+	/** the regular expression representing this opcode */
 	public final String opcodeRegex;
-	/**  */
+	/** the type */
 	private final OpcodeType type;
-	/**  */
+	/** the regular expression for this opcode */
 	private final String typeRegex;
 	
 	/**
+	 * Constructor for a new opcode.
 	 * 
-	 * @param name
-	 * @param followingLineOffset
-	 * @param opcodeRegex
-	 * @param type
-	 * @param typeRegex
+	 * @param name the new name
+	 * @param followingLineOffset the new offset to the following line
+	 * @param opcodeRegex the new regular expression representing this opcode
+	 * @param type the new type
+	 * @param typeRegex the new regular expression for this opcode
 	 */
 	Opcode(String name, int followingLineOffset, String opcodeRegex, OpcodeType type, String typeRegex) {
 		this.name= name;
@@ -75,10 +80,14 @@ public enum Opcode {
 	}
 	
 	/**
+	 * fromString returns the opcode thats representing regular expression
+	 *  matches the given opcode name.
 	 * 
-	 * @param opcode
+	 * @param opcode the opcode name to get the matching opcode, thats
+	 *  representing regular expression matches, for
 	 * 
-	 * @return
+	 * @return the opcode thats representing regular expression matches the
+	 *  given opcode name
 	 */
 	public static Opcode fromString(String opcode) {
 		for(Opcode oc : values())
@@ -89,8 +98,11 @@ public enum Opcode {
 	}
 	
 	/**
+	 * getValueTypeGroup returns the '|'-separated list of the regular
+	 *  expressions of the opcodes thats types are value.
 	 * 
-	 * @return
+	 * @return the '|'-separated list of the regular expressions of the opcodes
+	 *  thats types are value
 	 */
 	public static String getValueTypeGroup() {
 		StringBuilder valueTypeGroup = new StringBuilder("");
@@ -105,50 +117,60 @@ public enum Opcode {
 	}
 	
 	/**
+	 * getOffsetTypeGroup returns the '|'-separated list of the regular
+	 *  expressions of the opcodes thats types are offset.
 	 * 
-	 * @return
+	 * @return the '|'-separated list of the regular expressions of the opcodes
+	 *  thats types are offset
 	 */
 	public static String getOffsetTypeGroup() {
-		StringBuilder valueTypeGroup = new StringBuilder("");
+		StringBuilder offsetTypeGroup = new StringBuilder("");
 		for(Opcode opcode : values()) {
 			if(opcode.type == OpcodeType.OFFSET) {
-				if(valueTypeGroup.length() > 0)
-					valueTypeGroup.append("|");
-				valueTypeGroup.append(opcode.typeRegex);
+				if(offsetTypeGroup.length() > 0)
+					offsetTypeGroup.append("|");
+				offsetTypeGroup.append(opcode.typeRegex);
 			}
 		}
-		return valueTypeGroup.toString();
+		return offsetTypeGroup.toString();
 	}
 	
 	/**
+	 * getConstantTableIndexTypeGroup returns the '|'-separated list of the
+	 *  regular expressions of the opcodes thats types are constant table
+	 *  index.
 	 * 
-	 * @return
+	 * @return the '|'-separated list of the regular expressions of the opcodes
+	 *  thats types are constant table index
 	 */
 	public static String getConstantTableIndexTypeGroup() {
-		StringBuilder valueTypeGroup = new StringBuilder("");
+		StringBuilder constantTableIndexTypeGroup = new StringBuilder("");
 		for(Opcode opcode : values()) {
 			if(opcode.type == OpcodeType.CONSTANT_TABLE_INDEX) {
-				if(valueTypeGroup.length() > 0)
-					valueTypeGroup.append("|");
-				valueTypeGroup.append(opcode.typeRegex);
+				if(constantTableIndexTypeGroup.length() > 0)
+					constantTableIndexTypeGroup.append("|");
+				constantTableIndexTypeGroup.append(opcode.typeRegex);
 			}
 		}
-		return valueTypeGroup.toString();
+		return constantTableIndexTypeGroup.toString();
 	}
 	
 	/**
+	 * getConstantSwitchGroup returns the '|'-separated list of the regular
+	 *  expressions of the opcodes thats types are switch.
 	 * 
-	 * @return
+	 * @return the '|'-separated list of the regular expressions of the opcodes
+	 *  thats types are switch
 	 */
 	public static String getConstantSwitchGroup() {
-		StringBuilder valueTypeGroup = new StringBuilder("");
+		StringBuilder constantSwitchGroup = new StringBuilder("");
 		for(Opcode opcode : values()) {
 			if(opcode.type == OpcodeType.SWITCH) {
-				if(valueTypeGroup.length() > 0)
-					valueTypeGroup.append("|");
-				valueTypeGroup.append(opcode.typeRegex);
+				if(constantSwitchGroup.length() > 0)
+					constantSwitchGroup.append("|");
+				constantSwitchGroup.append(opcode.typeRegex);
 			}
 		}
-		return valueTypeGroup.toString();
+		return constantSwitchGroup.toString();
 	}
 }

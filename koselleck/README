@@ -7,3 +7,5 @@
 -- decompiling.datatypes.AbstractSingleConstraint.evaluate()
 -- decompiling.datatypes.AbstractConstraintFormula.calculateValue(T, ArithmeticOperator, U)
 -- decompiling.datatypes.ConstraintValueType
+-- disassembling.datatypes.BytecodeLineType.getClassFromDisassembledString(String)
+-- disassembling.datatypes.Opcode (new Opcodes)

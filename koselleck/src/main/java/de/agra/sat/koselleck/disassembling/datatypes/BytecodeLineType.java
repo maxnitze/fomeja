@@ -8,30 +8,33 @@ import java.lang.reflect.Method;
 import de.agra.sat.koselleck.exceptions.MissformattedBytecodeLineException;
 
 /**
- * BytecodeLineType represents a type of a byte code line.
+ * BytecodeLineType represents the type of a byte code line.
  * 
  * @version 1.0.0
  * @author Max Nitze
  */
 public class BytecodeLineType {
-	/**  */
+	/** the full line */
 	public final String fullLine;
-	/**  */
+	/** the string of the type */
 	public final String typeText;
-	/**  */
+	/** the type */
 	public final EBytecodeLineType type;
-	/**  */
+	/** the accessible object */
 	public final AccessibleObject accessibleObject;
-	/**  */
+	/** the type of the accessible object */
 	public final Class<?> accessibleObjectType;
-	/**  */
+	/** the class */
 	public final Class<?> clazz;
 	
 	/**
+	 * Constructor for a new byte code line type.
 	 * 
-	 * @param fullLine
+	 * @param component the current component
+	 * @param fullLine the full byte code line
 	 * 
-	 * @throws MissformattedBytecodeLineException
+	 * @throws MissformattedBytecodeLineException if the byte code line does
+	 *  not fit the expected format
 	 */
 	public BytecodeLineType(Object component, String fullLine) throws MissformattedBytecodeLineException {
 		this.fullLine = fullLine.trim().replaceAll("\\s+", " ");
@@ -86,8 +89,9 @@ public class BytecodeLineType {
 	}
 	
 	/**
+	 * toString returns a string representation of the byte code line type.
 	 * 
-	 * @return
+	 * @return a string representation of this byte code line type
 	 */
 	@Override
 	public String toString() {
@@ -107,12 +111,15 @@ public class BytecodeLineType {
 	 * ----- ----- ----- ----- */
 	
 	/**
+	 * getClassFromDisassembledString returns the class of the the field of the
+	 *  given disassembled string.
 	 * 
-	 * @param disassembledString
+	 * @param disassembledString the disassembled string to get the class of
+	 *  the field from
 	 * 
-	 * @return
+	 * @return the class of the field of the given disassembled string
 	 */
-	private static Class<?> getClassFromDisassembledString(String disassembledString) {
+	private Class<?> getClassFromDisassembledString(String disassembledString) {
 		String classString = disassembledString.replaceAll(BytecodeLineRegexes.typeMethodFieldRegex, "${class}");
 		
 		if(classString != null && classString.equals("I"))
