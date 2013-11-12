@@ -1,5 +1,7 @@
 package de.agra.sat.koselleck;
 
+import java.io.IOException;
+
 import de.agra.sat.koselleck.examples.colorgraph.CGGraph;
 import de.agra.sat.koselleck.utils.IOUtils;
 
@@ -12,7 +14,12 @@ public class Main {
 		
 		String graphfile = "graph_250_15668.col";
 		CGGraph graph = new CGGraph();
-		graph.parse(IOUtils.readFromFile("/graphs/" + graphfile));
+		try {
+			graph.parse(IOUtils.readFromFile("/graphs/" + graphfile));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if(testValidate) {
 			if(I2AL.validate(graph))

@@ -4,6 +4,7 @@ package de.agra.sat.koselleck.utils;
 import java.util.List;
 
 /**
+ * ListUtils provides (mainly comparing) functions for lists and arrays.
  * 
  * @author Max Nitze
  */
@@ -11,13 +12,13 @@ public abstract class ListUtils {
 	/**
 	 * identsAny compares a given element with all elements of a given array.
 	 *  If an array element is identical to the given element {@code true} is
-	 *  returned, else the return value is {@code false}.
+	 *  returned, otherwise the return value is {@code false}.
 	 * 
 	 * @param element the element to look for
 	 * @param array the array to look over
 	 * 
 	 * @return {@code true} if there is an element in the array, that is
-	 *  identical to the given element, {@code false} else
+	 *  identical to the given element, {@code false} otherwise
 	 */
 	public static <T> boolean identsAny(T element, T[] array){
 		for(T e : array)
@@ -29,13 +30,13 @@ public abstract class ListUtils {
 	/**
 	 * identsAny compares a given element with all elements of a given list.
 	 *  If a list element is identical to the given element {@code true} is
-	 *  returned, else the return value is {@code false}.
+	 *  returned, otherwise the return value is {@code false}.
 	 * 
 	 * @param element the element to look for
 	 * @param list the list to look over
 	 * 
 	 * @return {@code true} if there is an element in the list, that is
-	 *  identical to the given element, {@code false} else
+	 *  identical to the given element, {@code false} otherwise
 	 */
 	public static <T> boolean identsAny(T element, List<T> list){
 		for(T e : list)
@@ -47,13 +48,13 @@ public abstract class ListUtils {
 	/**
 	 * equalsAny compares a given element with all elements of a given array.
 	 *  If an array element is equal to the given element {@code true} is
-	 *  returned, else the return value is {@code false}.
+	 *  returned, otherwise the return value is {@code false}.
 	 * 
 	 * @param element the element to look for
 	 * @param array the array to look over
 	 * 
 	 * @return {@code true} if there is an element in the array, that is
-	 *  equal to the given element, {@code false} else
+	 *  equal to the given element, {@code false} otherwise
 	 */
 	public static <T> boolean equalsAny(T element, T[] array) {
 		for(T e : array)
@@ -65,13 +66,13 @@ public abstract class ListUtils {
 	/**
 	 * equalsAny compares a given element with all elements of a given list.
 	 *  If a list element is equal to the given element {@code true} is
-	 *  returned, else the return value is {@code false}.
+	 *  returned, otherwise the return value is {@code false}.
 	 * 
 	 * @param element the element to look for
 	 * @param list the list to look over
 	 * 
 	 * @return {@code true} if there is an element in the list, that is
-	 *  equal to the given element, {@code false} else
+	 *  equal to the given element, {@code false} otherwise
 	 */
 	public static <T> boolean equalsAny(T element, List<T> list) {
 		for(T e : list)
@@ -81,11 +82,14 @@ public abstract class ListUtils {
 	}
 	
 	/**
+	 * instanceofAny checks if the given object is instance of any of the
+	 *  classes given by the classes array.
 	 * 
-	 * @param object
-	 * @param classes
+	 * @param object the object to check
+	 * @param classes the array of classes to check the object against
 	 * 
-	 * @return
+	 * @return {@code true} if the object is instance of any of the classes
+	 *  of the given classes array, {@code false} otherwise
 	 */
 	public static boolean instanceofAny(Object object, Class<?>[] classes) {
 		for(Class<?> clazz : classes)
@@ -95,11 +99,14 @@ public abstract class ListUtils {
 	}
 	
 	/**
+	 * instanceofAny checks if the given object is instance of any of the
+	 *  classes given by the classes list.
 	 * 
-	 * @param object
-	 * @param classes
+	 * @param object the object to check
+	 * @param classes the list of classes to check the object against
 	 * 
-	 * @return
+	 * @return {@code true} if the object is instance of any of the classes
+	 *  of the given classes list, {@code false} otherwise
 	 */
 	public static boolean instanceofAny(Object object, List<Class<?>> classes) {
 		for(Class<?> clazz : classes)

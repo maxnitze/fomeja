@@ -22,19 +22,25 @@ import de.agra.sat.koselleck.annotations.Variable;
 import de.agra.sat.koselleck.backends.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.disassembling.Disassembler;
 import de.agra.sat.koselleck.disassembling.datatypes.DisassembledMethod;
+import de.agra.sat.koselleck.exceptions.NoCollectionFieldException;
+import de.agra.sat.koselleck.exceptions.NoConstraintMethodException;
+import de.agra.sat.koselleck.exceptions.NoSuchFieldForClassException;
 
 /**
+ * KoseleckUtils is a collection of helper methods for this project.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public abstract class KoselleckUtils {
 	/** pattern for the inner text of two angle brackets */
-	private static final Pattern genericPattern = Pattern.compile("(?i)(<)(.*)(>)");
-	/** pattern for a text enclosed by angle brackets */
-;	private static final Pattern bracketPattern = Pattern.compile("(?i)(<.*>)");
-	/**  */
+	private static final Pattern genericPattern = Pattern.compile("(?i)(<)(?<genericClass>.*)(>)");
+	
+	/** regular expression for a text enclosed by angle brackets */
+	private static final String bracketRegex = "(?i)(<.*>)";
+	/** regular expression for a generic collection type */
 	private static final String collectionTypeRegex = "^.*([^<]+)<(?<genericType>.*)>$";
-	/**  */
+	/** regular expression for a generic class type */
 	private static final String genericTypeRegex = "^(class )?(?<genericType>.*)$";
 	
 	/**
@@ -43,7 +49,7 @@ public abstract class KoselleckUtils {
 	 * 
 	 * @param clazz the class to get the Constraint-Methods from
 	 * 
-	 * @return a list of all Methods of the given class that are annotated as
+	 * @return a list of all methods of the given class that are annotated as
 	 *  Constraints
 	 */
 	public static List<Method> getConstraintMethods(Class<?> clazz) {
@@ -63,23 +69,27 @@ public abstract class KoselleckUtils {
 	 * 
 	 * @param clazz the class to get the Variable-Fields from
 	 * 
-	 * @return a list of all Fields of the given class and the classes of its
+	 * @return a list of all fields of the given class and the classes of its
 	 *  attributes that are annotated as Variables
 	 */
 	public static List<Field> getVariableFields(Class<?> clazz) {
 		List<Field> fields = new ArrayList<Field>();
 		
+		/** already visited classes */
 		Set<Class<?>> visitedClasses = new HashSet<Class<?>>();
+		/** new classes found in the last while-loop */
 		List<Class<?>> lastClasses = new ArrayList<Class<?>>();
 		
 		lastClasses.add(clazz);
 		
+		/** as long as there are new classes found */
 		while(lastClasses.size() > 0) {
 			List<Class<?>> currentClasses = new ArrayList<Class<?>>();
 			
 			for(Class<?> cls : lastClasses) {
 				visitedClasses.add(cls);
 				
+				/** add all field types and generic types of those */
 				for(Field field : cls.getDeclaredFields()) {
 					currentClasses.add(field.getType());
 					
@@ -90,11 +100,13 @@ public abstract class KoselleckUtils {
 			
 			lastClasses.clear();
 			
+			/** add classes to lastClasses if not already visited */
 			for(Class<?> cls : currentClasses)
 				if(!visitedClasses.contains(cls))
 					lastClasses.add(cls);
 		}
 		
+		/** get variable fields of all visited classes */
 		for(Class<?> cls : visitedClasses)
 			for(Field field : cls.getDeclaredFields())
 				if(field.getAnnotation(Variable.class) != null)
@@ -107,7 +119,7 @@ public abstract class KoselleckUtils {
 	 * getGenericClasses returns a list of classes given in the generic type
 	 *  declaration.
 	 * 
-	 * @param genericType the type generic declaration to extract the classes
+	 * @param genericType the generic type declaration to extract the classes
 	 *  from
 	 * 
 	 * @return a list of classes given in the generic type declaration
@@ -116,42 +128,53 @@ public abstract class KoselleckUtils {
 		List<Class<?>> classes = new ArrayList<Class<?>>();
 		
 		Matcher matcher = genericPattern.matcher(genericType);
-		
 		while(matcher.find()) {
-			String replacedMatch = matcher.group(2).replaceAll(bracketPattern.pattern(), "");
+			String replacedMatch = matcher.group("genericClass").replaceAll(bracketRegex, "");
 			
 			String[] genericClasses = replacedMatch.split(",");
 			for(String genericClass : genericClasses) {
 				try {
 					classes.add(Class.forName(genericClass.trim()));
 				} catch (ClassNotFoundException e) {
-					System.err.println("class for name \""+ genericClass.trim() +"\" could not be found.\n" + e.getMessage()); // TODO logging
+					Logger.getLogger(KoselleckUtils.class).error("class for name \""+ genericClass.trim() +"\" could not be found.");
 				}
 			}
 			
-			if(matcher.group(2).matches(bracketPattern.pattern()))
-				classes.addAll(getGenericClasses(matcher.group(2)));
+			if(matcher.group("genericClass").matches(bracketRegex))
+				classes.addAll(getGenericClasses(matcher.group("genericClass")));
 		}
 		
 		return classes;
 	}
 	
 	/**
+	 * getCollectionFieldsForMethod returns an array of lists of the collection
+	 *  fields that match the single parameters of the given method. If the
+	 *  constraint annotation specifies fields those are exclusively added to
+	 *  the list. Otherwise all matching collection fields are added.
 	 * 
-	 * @param method
+	 * @param method the method to get the collection fields for
 	 * 
-	 * @return
+	 * @return an array of lists of the collection fields that match the single
+	 *  parameters of the given method. If the constraint annotation specifies
+	 *  fields those are exclusively added to the list. Otherwise all matching
+	 *  collection fields are added.
 	 */
 	public static List<Field>[] getCollectionFieldsForMethod(Method method) {
 		Constraint constraintAnnotation = method.getAnnotation(Constraint.class);
-		if(constraintAnnotation == null)
-			throw new IllegalArgumentException("no constraint method"); // TODO other exception
+		if(constraintAnnotation == null) {
+			Logger.getLogger(KoselleckUtils.class).fatal("method \"" + method.toGenericString() + "\" is not a constraint method");
+			throw new NoConstraintMethodException(method);
+		}
 		
 		Type[] methodParameterTypes = method.getGenericParameterTypes();
 		
 		Constraint.Field[] constraintFields = constraintAnnotation.fields();
-		if(methodParameterTypes.length != constraintFields.length)
-			throw new IllegalArgumentException("different parameter counts"); // TODO other exception
+		if(methodParameterTypes.length != constraintFields.length) {
+			String message = "count of annotated fields of method \"" + method.toGenericString() + "\" does not match its parameter count";
+			Logger.getLogger(KoselleckUtils.class).fatal(message);
+			throw new IllegalArgumentException(message);
+		}
 		
 		Class<?> declaringClass = method.getDeclaringClass();
 		int parameterCount = method.getParameterTypes().length;
@@ -159,26 +182,36 @@ public abstract class KoselleckUtils {
 		List<Field>[] methodCollectionFields = new FieldList[parameterCount];
 		for(int i=0; i<parameterCount; i++) {
 			String constraintFieldName = constraintFields[i].value();
+			/** empty field name */
 			if(constraintFieldName == null || constraintFieldName.equals(""))
 				methodCollectionFields[i] = getCollectionFields(declaringClass, methodParameterTypes[i]);
+			/** field name set */
 			else {
 				Field collectionField = null;
 				try {
 					collectionField = declaringClass.getDeclaredField(constraintFieldName);
 				} catch (NoSuchFieldException | SecurityException e) {
-					throw new IllegalArgumentException("no such field \"" + constraintFieldName + "\""); // TODO other exception
+					Logger.getLogger(KoselleckUtils.class).fatal("no such field \"" + constraintFieldName + "\" for declaring class \"" + declaringClass.getCanonicalName() + "\"");
+					throw new NoSuchFieldForClassException(constraintFieldName, declaringClass);
 				}
 				
-				if(collectionField == null)
-					throw new IllegalArgumentException("no such field \"" + constraintFieldName + "\""); // TODO other exception
+				if(collectionField == null) {
+					Logger.getLogger(KoselleckUtils.class).fatal("no such field \"" + constraintFieldName + "\" for declaring class \"" + declaringClass.getCanonicalName() + "\"");
+					throw new NoSuchFieldForClassException(constraintFieldName, declaringClass);
+				}
 				
-				if(!Collection.class.isAssignableFrom(collectionField.getType()))
-					throw new IllegalArgumentException("no collection field"); // TODO other exception
+				if(!Collection.class.isAssignableFrom(collectionField.getType())) {
+					Logger.getLogger(KoselleckUtils.class).fatal("field \"" + collectionField.getName() + "\" is not a collection field (assignable from Collection)");
+					throw new NoCollectionFieldException(collectionField);
+				}
 				
 				String genericCollectionFieldType = collectionField.getGenericType().toString().replaceAll(collectionTypeRegex, "${genericType}");
 				String methodParameterType = methodParameterTypes[i].toString().replaceAll(genericTypeRegex, "${genericType}");
-				if(!genericCollectionFieldType.equals(methodParameterType))
-					throw new IllegalArgumentException("not a collecton of parameter type"); // TODO other exception
+				if(!genericCollectionFieldType.equals(methodParameterType)) {
+					String message = "\"" + genericCollectionFieldType + "\" is not a collection of \"" + methodParameterType + "\"";
+					Logger.getLogger(KoselleckUtils.class).fatal(message);
+					throw new IllegalArgumentException(message);
+				}
 				
 				methodCollectionFields[i] = new FieldList(collectionField);
 			}
@@ -188,23 +221,29 @@ public abstract class KoselleckUtils {
 	}
 	
 	/**
-	 * getCollectionFields returns a list of {@link Field}s of the given class
-	 *  that are assignable from the class {@link Collection}.
+	 * getCollectionFields returns a list of fields of the given class that are
+	 *  assignable from the class Collection and, if type is not {@code null},
+	 *  thats type equals the given type.
 	 * 
 	 * @param clazz the class to get the fields from
-	 * @param type
+	 * @param type the type of the collection field ({@code null} for all
+	 *  types)
 	 * 
 	 * @return a list of Fields of the given class that are assignable from the
-	 *  class Collection
+	 *  class Collection and, if type is not {@code null}, thats type equals
+	 *  the given type
 	 */
 	public static FieldList getCollectionFields(Class<?> clazz, Type type) {
 		FieldList collectionFields = new FieldList();
 		
 		for(Field field : clazz.getDeclaredFields()) {
 			if(Collection.class.isAssignableFrom(field.getType())) {
-				String genericCollectionFieldTypeName = field.getGenericType().toString().replaceAll(collectionTypeRegex, "${genericType}");
-				String genericTypeName = type.toString().replaceAll(genericTypeRegex, "${genericType}");
-				if(genericCollectionFieldTypeName.equals(genericTypeName))
+				if(type != null) {
+					String genericCollectionFieldTypeName = field.getGenericType().toString().replaceAll(collectionTypeRegex, "${genericType}");
+					String genericTypeName = type.toString().replaceAll(genericTypeRegex, "${genericType}");
+					if(genericCollectionFieldTypeName.equals(genericTypeName))
+						collectionFields.add(field);
+				} else
 					collectionFields.add(field);
 			}
 		}
@@ -213,23 +252,33 @@ public abstract class KoselleckUtils {
 	}
 	
 	/**
+	 * increment indices increments the indices of the given array of
+	 *  constraint parameters.
 	 * 
-	 * @param constraintParameters
+	 * @param constraintParameters the array of constraint parameters thats
+	 *  indices have to be incremented
 	 * 
-	 * @return
+	 * @return {@code true} if an index was incremented, {@code false} if there
+	 *  is no more index to increment
 	 */
 	public static boolean incrementIndices(ConstraintParameter[] constraintParameters) {
 		return incrementIndices(constraintParameters, constraintParameters.length-1);
 	}
 	
 	/**
+	 * increment indices increments the indices of the given array of
+	 *  constraint parameters at the position index. If this specific
+	 *  constraint parameter can not be incremented anymore the indices at the
+	 *  current index are reseted and the next index is incremented.
 	 * 
-	 * @param constraintParameters
+	 * @param constraintParameters the array of constraint parameters thats
+	 *  indices have to be incremented
 	 * @param index
 	 * 
-	 * @return
+	 * @return {@code true} if an index was incremented, {@code false} if there
+	 *  is no more index to increment
 	 */
-	public static boolean incrementIndices(ConstraintParameter[] constraintParameters, int index) {
+	private static boolean incrementIndices(ConstraintParameter[] constraintParameters, int index) {
 		if(!constraintParameters[index].incrementIndex()) {
 			if(index > 0) {
 				constraintParameters[index].resetIndex();
@@ -242,13 +291,14 @@ public abstract class KoselleckUtils {
 	
 	/**
 	 * getDisassembledConstraintMethods returns a map of method signatures to
-	 *  {@link DisassembledMethod}s, containing the disassembled java bytecode
+	 *  disassembled methods containing the disassembled java byte code
 	 *  (disassembled by javap) of the methods of the given class.
 	 *  
-	 * @param component
+	 * @param component the component to disassemble the constraint methods
+	 *  from
 	 * 
 	 * @return a map of method signatures to DisassembledMethods, containing
-	 *  the disassembled java bytecode (disassembled by javap) of the methods
+	 *  the disassembled java byte code (disassembled by javap) of the methods
 	 *  of the given class.
 	 */
 	public static Map<String, DisassembledMethod> getDisassembledConstraintMethods(Object component) {
@@ -260,15 +310,15 @@ public abstract class KoselleckUtils {
 		command.append(component.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 		command.append(component.getClass().getName().replaceAll("\\.", "/"));
 
-		Process p = null;
+		String disassembledCode = null;
 		try {
-			p = Runtime.getRuntime().exec(command.toString());
+			Process p = Runtime.getRuntime().exec(command.toString());
+			disassembledCode = IOUtils.readFromStream(p.getInputStream());
 		} catch (IOException e) {
 			String message = "could not read class file for class \"" + component.getClass().getSimpleName() + "\"";
 			Logger.getLogger(KoselleckUtils.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}
-		String disassembledCode = IOUtils.readFromStream(p.getInputStream());
 		
 		for(String methodCode : disassembledCode.toString().split("\n\n")) {
 			String trimmedMethodSignature = "";
@@ -302,16 +352,19 @@ public abstract class KoselleckUtils {
 	}
 	
 	/**
+	 * FieldList is a wrapper class for an array list of fields.
 	 * 
+	 * @version 1.0.0
 	 * @author Max Nitze
 	 */
-	public static class FieldList extends ArrayList<Field> {
-		/**  */
+	private static class FieldList extends ArrayList<Field> {
+		/** serial id */
 		private static final long serialVersionUID = 9039339410227929904L;
 		
 		/**
+		 * Constructor for a new field list.
 		 * 
-		 * @param fields
+		 * @param fields the fields to add to the list initially
 		 */
 		public FieldList(Field... fields) {
 			for(Field f : fields)
