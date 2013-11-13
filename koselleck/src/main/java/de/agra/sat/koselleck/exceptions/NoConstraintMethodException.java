@@ -4,16 +4,20 @@ package de.agra.sat.koselleck.exceptions;
 import java.lang.reflect.Method;
 
 /**
+ * NoConstraintMethodExcpetion is a runtime exception that is thrown if the
+ *  method is not, as expected, annotated with Constraint.
  * 
+ * @version 1.0.0
  * @author Max Nitze
  */
 public class NoConstraintMethodException extends RuntimeException {
-	/**  */
+	/** serial id */
 	private static final long serialVersionUID = -887113639393430230L;
 	
 	/**
+	 * COnstructor for a new NoConstraintMethodException.
 	 * 
-	 * @param message
+	 * @param message the message of the exception
 	 */
 	public NoConstraintMethodException(Method method) {
 		super("method \"" + method.toGenericString() + "\" is not a constraint method");

@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import de.agra.sat.koselleck.exceptions.IllegalFieldAccessException;
+
 /**
  * ConstraintParameter describes a parameter of a constraint with a list of all
  *  collections to iterate over and the current indices of that.
@@ -49,7 +53,8 @@ public class ConstraintParameter {
 			try {
 				parameterCollection = (Collection<?>)fields.get(i).get(component);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				throw new IllegalArgumentException("could not access field \"" + fields.get(i) +"\""); // TODO other exception
+				Logger.getLogger(ConstraintParameter.class).fatal("could not access field \"" + fields.get(i).getName() +"\"");
+				throw new IllegalFieldAccessException(fields.get(i));
 			}
 			this.collections.add(i, parameterCollection);
 			this.indices[i] = 0;

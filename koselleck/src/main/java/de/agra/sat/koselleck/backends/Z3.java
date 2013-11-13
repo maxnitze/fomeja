@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
+import de.agra.sat.koselleck.exceptions.ExecutionErrorException;
 import de.agra.sat.koselleck.exceptions.UnsupportedDialectTypeException;
 import de.agra.sat.koselleck.utils.IOUtils;
 
@@ -56,9 +57,8 @@ public class Z3 extends Prover {
 				process = Runtime.getRuntime().exec(this.pathToBinary + " -dimacs -in");
 				break;
 			default:
-				String message = "the dialect type \"" + this.dialect.dialectType.name() + "\" is not supported by the z3 theorem prover.";
-				Logger.getLogger(Z3.class).error(message);
-				throw new UnsupportedDialectTypeException(message);
+				Logger.getLogger(Z3.class).error("the dialect type \"" + this.dialect.dialectType.name() + "\" is not supported by the z3 theorem prover.");
+				throw new UnsupportedDialectTypeException(this.dialect, "z3 theorem prover");
 			}
 			
 			IOUtils.writeToStream(process.getOutputStream(), smt2theorem);
@@ -67,7 +67,7 @@ public class Z3 extends Prover {
 		} catch (IOException e) {
 			String message = "could not execute z3 (\"" + this.pathToBinary + "\") with the given file";
 			Logger.getLogger(SMTII.class).fatal(message);
-			throw new IllegalArgumentException(message); // TODO other exception type
+			throw new ExecutionErrorException(message);
 		} finally {
 			if(process != null)
 				process.destroy();

@@ -20,6 +20,7 @@ import de.agra.sat.koselleck.decompiling.datatypes.BooleanConnector;
 import de.agra.sat.koselleck.decompiling.datatypes.ConstraintOperator;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
+import de.agra.sat.koselleck.exceptions.UnsupportedVariableTypeException;
 
 /**
  * SMTII implements the smt2 pseudo boolean dialect.
@@ -86,9 +87,8 @@ public class SMTII extends Dialect {
 						resultMatcher.group("name"),
 						new Integer(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
 			else {
-				String message = "could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.";
-				Logger.getLogger(SMTII.class).fatal(message);
-				throw new IllegalArgumentException(message); // TODO other exception
+				Logger.getLogger(SMTII.class).fatal("could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.");
+				throw new UnsupportedVariableTypeException(resultMatcher.group("type"));
 			}
 		}
 		
