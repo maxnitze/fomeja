@@ -17,7 +17,7 @@ public class Main {
 		try {
 			graph.parse(IOUtils.readFromFile("/graphs/" + graphfile));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.err.println("could not read from file \"graphs/" + graphfile + "\"");
 			e.printStackTrace();
 		}
 		
