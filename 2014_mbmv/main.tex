@@ -16,7 +16,7 @@ numbers=endperiod,abstracton,pdftex]{scrartcl}
 
 \maketitle
 \begin{abstract}
-  Formale Methoden können verwendet werden, um schwierige Probleme effizient zu
+  Formale Methoden können verwendet werden, um schwierige Probleme exakt zu
   lösen.  Ihre Anwendung ist jedoch nicht trivial und erfordert in der Regel
   Expertenwissen.  Wir stellen einen Ansatz vor, der formale Methoden näher an
   Programmierer bringt, mit dem Ziel die Komplexität der Verwendung formaler
@@ -25,6 +25,9 @@ numbers=endperiod,abstracton,pdftex]{scrartcl}
 
 \begin{figure}[t!]
 \begin{minted}[fontsize=\footnotesize,bgcolor=bg,linenos=true]{java}
+import DIAB;
+...
+
 public class Vertex {
   private int id;
 
@@ -82,25 +85,25 @@ vollständigen Programmcode abzudrucken~(vgl.~beispielsweise~\cite{Gib:75}).
 Durch die Entwicklung von Sprachen wie \textsc{Pascal} oder \textsc{C} Anfang
 der 70er Jahre wurde die Disziplin zunächst einem breiteren Publikum zugänglich
 gemacht.  Heutzutage ist die Entwicklung von Computerprogrammen für viele
-einfach möglich durch
+durch
 \begin{itemize}
 \item Integration in den Schulunterricht,
 \item zahlreiche domänenorientierte Sprachen für dedizierte Probleme, und
 \item soziale Netzwerke zum Thema Programmierung wie
   GitHub,\footnote{github.org} Stack Overflow\footnote{stackoverflow.com} oder
-  Code School.\footnote{codeschool.com}
+  Code School\footnote{codeschool.com}
 \end{itemize}
-All dies erlaubt steile Lernkurven, so dass sich mit wenig Aufwand Webseiten,
-Apps für Smart Phones oder Mikrocontroller auch durch Nicht-Experten
-programmieren lassen.
+einfach möglich.  All dies erlaubt steile Lernkurven, so dass sich mit wenig
+Aufwand Webseiten, Apps für Smart Phones oder Mikrocontroller auch durch
+Nicht-Experten programmieren lassen.
 
 Formale Methoden befinden sich heute in etwa dem Zustand in dem sich
 Programmiersprachen vor 50~Jahren befanden.  Mithilfe von formalen Methoden
-lassen sich zwar viele schwierige Probleme effizient lösen, vorhandene Werkzeuge
-sind jedoch nicht trivial und ihre Anwendung benötigt insbesondere oft auch ein
-gutes Verständnis der zugrundeliegenden Algorithmen.  Die Eigenschaft, dass
-formale Methoden oft in externen Tools mit eigenen neuen Programmiersprachen
-ausgelagert sind, erschwert ihre Verwendung zusätzlich.
+lassen sich zwar viele schwierige Probleme lösen, vorhandene Werkzeuge sind
+jedoch nicht trivial und ihre Anwendung benötigt insbesondere auch ein gutes
+Verständnis der zugrundeliegenden Algorithmen.  Die Eigenschaft, dass formale
+Methoden in externen Tools mit eigenen neuen Programmiersprachen ausgelagert
+sind, erschwert ihre Verwendung zusätzlich.
 
 In dieser erweiterten Zusammenfassung wird ein Ansatz illustriert, der
 Programmierern formale Methoden zugänglich macht, ohne dass sie direkt sichtbar
@@ -110,8 +113,8 @@ nicht verlassen werden muss.
 
 Das Problem und die Lösungsidee sollen im Folgenden am Beispiel von
 Graphenfärben verdeutlicht werden.  Ein Graph ist genau dann \emph{$k$-färbbar},
-wenn alle Knoten mit einer von $k$ Farben gefärbt sind und alle benachbarten
-Knoten unterschiedlich gefärbte Knoten haben.  Es soll ein Programm entwickelt
+wenn alle Knoten mit einer von $k$ Farben gefärbt sind und benachbarten Knoten
+unterschiedliche Farben zugeordnet sind.  Es soll ein Programm entwickelt
 werden, dass einen Graphen ohne Färbung einliest und anschließend den Graphen
 mit~$k$ Farben färbt, falls eine solche Färbung existiert.  Viele praktisch
 relevante Probleme lassen sich auf das Färben von Graphen
@@ -123,24 +126,28 @@ Implementierungen würden eine \emph{branch and bound} Variante mit
 \emph{backtracking} verwenden.
 
 Mithilfe des von uns entwickelten Ansatzes \textsc{DIAB} lässt sich das Problem
-wie in Abbildung~\ref{fig:diab-idea} umsetzen.  Der Graph verwendet zwei weitere
+wie in Abbildung~\ref{fig:diab-idea} umsetzen.  Der Graph verwendet zwei
 Datenstrukturen für Knoten und Kanten, wobei der Knoten eine Feldvariable
 \mintinline{java}|color| enthält, die durch die Annotation
 \mintinline{java}|@Variable| gekennzeichnet ist.  Die \mintinline{java}|Graph|
 Klasse hat eine Methode zum Parsen von Dateien.  Die anderen Methoden sind als
-\mintinline{java}|@Condition| annotiert und beschreiben die Bedingungen für eine
-valide Graphfärbung.  Dies ist eine direkte Übersetzung der Definition in
-\textsc{Java} Quellcode.  Der Code ist ausreichend für die Implementierung (alle
-durch `\mintinline{java}|...|' ausgelassenen Zeilen beschreiben Methoden zum
-Aufbauen des Graphen).  In der \mintinline{java}|main| Methode wird eine Instanz
-des Graphen erzeugt und eine Datei eingelesen. Danach ist der Graph zunächst
-ungefärbt.  Der Aufruf von \mintinline{java}|DIAB.satisfy(g)| belegt alle mit
-\mintinline{java}|@Variable| annotierten Feldvariablen, die über die
-Graphinstanz erreicht werden können, so dass alle Methoden die als
-\mintinline{java}|@Constraint| annotiert sind, erfüllt werden.
+\mintinline{java}|@Constraint| annotiert und beschreiben die Bedingungen für
+eine valide Graphfärbung.  Dies ist eine direkte Übersetzung der Definition für
+eine Graphfärbung in \textsc{Java} Quellcode.  Der Code ist ausreichend für die
+Implementierung (alle durch `\mintinline{java}|...|' ausgelassenen Zeilen
+beschreiben Methoden zum Aufbauen des Graphen).  In der \mintinline{java}|main|
+Methode wird eine Instanz des Graphen erzeugt und eine Datei eingelesen. Danach
+ist der Graph zunächst ungefärbt.  Der Aufruf von
+\mintinline{java}|DIAB.satisfy(g)| belegt alle mit \mintinline{java}|@Variable|
+annotierten Feldvariablen, die über die Graphinstanz erreicht werden können, so
+dass alle Bedingungen der Methoden, die als \mintinline{java}|@Constraint|
+annotiert sind, erfüllt werden.
 
 Ein ähnlicher Ansatz ist im Tool Pex~\cite{TS:05} implementiert, der formale
-Methoden für \emph{white box testing} in~.NET Sprachen nutzt.
+Methoden für \emph{white box testing} in~.NET Sprachen nutzt.  Die
+Programmiersprache \textsc{Eiffel}~\cite{Meyer:88} bindet durch das
+\emph{Design-by-contract} Paradigma formale Methoden auf Syntaxebene an die
+Sprache.
 
 \section{Implementierung}
 In diesem Abschnitt soll die Implementierung des Algorithmus illustriert werden.
@@ -159,11 +166,11 @@ sich aus den Parametern der Methoden.  In der Constraint Methode
 über den Graphen erreicht werden können.  Diese können direkt über die
 Feldvariable \mintinline{java}|vertices| und indirekt über die Feldvariable
 \mintinline{java}|edges| erreicht werden.  Die Constraint Methoden werden
-disassembliert und über den \textsc{Java} Bytecode in prädikatenlogische Formeln
-erster Ordnung übersetzt, wobei die freien Variablen über die
-\mintinline{java}|@Variable| Annotation ermittelt werden.  Alle Formeln werden
-in einer Konjunktion zusammengeführt und das resultierende Erfüllbarkeitsproblem
-wird mit einem SMT Beweiser, im konkreten Fall Z3~\cite{MB:08}, gelöst.  Aus
+dis\-as\-sem\-bliert und über den \textsc{Java} Bytecode in prädikatenlogische
+Formeln erster Ordnung übersetzt.  Die freien Variablen werden über die
+\mintinline{java}|@Variable| Annotation ermittelt.  Alle Formeln werden in einer
+Konjunktion zusammengeführt und das resultierende Erfüllbarkeitsproblem wird mit
+einem externen SMT Beweiser, im konkreten Fall Z3~\cite{MB:08}, gelöst.  Aus
 einer möglichen erfüllenden Belegung können dann die konkreten Werte für die mit
 \mintinline{java}|@Variable| annotierten Feldvariablen ausgelesen und zugewiesen
 werden.
@@ -215,9 +222,9 @@ welche Vorteile funktionale JVM Sprachen wie \textsc{clojure} oder
 \textsc{Scala} bei der Übersetzung in prädikatenlogische Formeln haben.  Formale
 Methoden sind nicht nur zum Lösen von Erfüllbarkeitsproblemen hilfreich, sondern
 auch für Optimierungsprobleme.  Dies soll auch untersucht werden.  Denkbar sind
-dann Programmkonstrukte wie in Abbildung~\ref{fig:optimization} illustriert.
-Hier wird die Methode \mintinline{java}|numColors| als Optimierungskriterium
-durch die Annotation \mintinline{java}|@Objective| gekennzeichnet.  In der
+Programmkonstrukte wie in Abbildung~\ref{fig:optimization} illustriert.  Hier
+wird die Methode \mintinline{java}|numColors| als Optimierungskriterium durch
+die Annotation \mintinline{java}|@Objective| gekennzeichnet.  In der
 \mintinline{java}|main| Methode wird anstatt \mintinline{java}|satisfy| die
 Funktion \mintinline{java}|minimize| aufgerufen, um die Anzahl der Farben im
 gefärbten Graph zu minimieren.
