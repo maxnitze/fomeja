@@ -94,17 +94,17 @@ All dies erlaubt steile Lernkurven, so dass sich mit wenig Aufwand Webseiten,
 Apps für Smart Phones oder Mikrocontroller auch durch Nicht-Experten
 programmieren lassen.
 
-Formale Methoden befinden sich heute in etwa im Zustand in dem sich
+Formale Methoden befinden sich heute in etwa dem Zustand in dem sich
 Programmiersprachen vor 50~Jahren befanden.  Mithilfe von formalen Methoden
 lassen sich zwar viele schwierige Probleme effizient lösen, vorhandene Werkzeuge
 sind jedoch nicht trivial und ihre Anwendung benötigt insbesondere oft auch ein
 gutes Verständnis der zugrundeliegenden Algorithmen.  Die Eigenschaft, dass
-formale Methoden oft in externe Tools mit eigenen neuen Programmiersprachen
+formale Methoden oft in externen Tools mit eigenen neuen Programmiersprachen
 ausgelagert sind, erschwert ihre Verwendung zusätzlich.
 
-In dieser erweiterten Zusammenfassung wird ein Algorithmus illustriert, der
+In dieser erweiterten Zusammenfassung wird ein Ansatz illustriert, der
 Programmierern formale Methoden zugänglich macht, ohne dass sie direkt sichtbar
-sind.  Darüberhinaus ist der Algorithmus in eine vorhandene Programmiersprachen
+sind.  Darüberhinaus ist der Algorithmus in eine existierende Programmiersprache
 eingebettet, in diesem Fall \textsc{Java}, so dass die gewohnte Arbeitsumgebung
 nicht verlassen werden muss.
 
@@ -118,7 +118,7 @@ relevante Probleme lassen sich auf das Färben von Graphen
 abbilden~(z.B.~Registerallokation~\cite{CAC+:81}).
 
 Eine naive Umsetzung für dieses NP-vollständige Problem~\cite{Kar:72} könnte
-alle Färbungen aufzählen bis eine valide gefunden worden ist.  Aufwändigere
+alle Färbungen aufzählen bis eine valide gefunden worden ist.  Aufwendigere
 Implementierungen würden eine \emph{branch and bound} Variante mit
 \emph{backtracking} verwenden.
 
@@ -165,7 +165,8 @@ erster Ordnung übersetzt, wobei die freien Variablen über die
 in einer Konjunktion zusammengeführt und das resultierende Erfüllbarkeitsproblem
 wird mit einem SMT Beweiser, im konkreten Fall Z3~\cite{MB:08}, gelöst.  Aus
 einer möglichen erfüllenden Belegung können dann die konkreten Werte für die mit
-\mintinline{java}|@Variable| annotierten Feldvariablen ausgelesen werden.
+\mintinline{java}|@Variable| annotierten Feldvariablen ausgelesen und zugewiesen
+werden.
 
 \subsection{Aktueller Stand und nächste Schritte}
 Unsere Implementierung unterstützt aktuell Programme im Stil des Programms aus
@@ -189,9 +190,9 @@ public class Graph {
 
   @Objective
   public int numColors() {
-    Set<int> colors = new HashSet<int>();
+    final Set<int> colors = new HashSet<int>();
     for (Vertex v : vertices) {
-      colors.append(v.getColor());
+      colors.add(v.getColor());
     }
     return colors.size();
   }
@@ -224,7 +225,7 @@ gefärbten Graph zu minimieren.
 
 \section{Zusammenfassung}
 Wir haben den Ansatz \textsc{DIAB} illustriert, der formale Methoden näher an
-Programmierer bringt.  Anstatt wie bisher auf externe Tools mit neuen
+Programmierer bringt.  Anstatt wie bisher auf externe Tools mit eigenen
 dedizierten Sprachen angewiesen zu sein, ist der vorgestellte Ansatz direkt in
 die Programmiersprache \textsc{Java} eingebettet.  Dabei sind die Algorithmen
 als Klassenbibliothek implementiert worden ohne die Sprache ändern zu müssen.
