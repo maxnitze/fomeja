@@ -1,0 +1,88 @@
+\usepackage[left=0.98in,top=0.79in,right=0.79in,bottom=1.18in,includefoot]{geometry}
+\usepackage[ngerman]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{caption}
+\usepackage{ifthen}
+\usepackage[T1]{fontenc} % T1-Schriften verwenden
+\usepackage{ae,aecompl}
+\usepackage{textcomp}
+\usepackage{times}
+\usepackage{booktabs}
+\usepackage{moredefs}
+\usepackage{url}
+\usepackage{babelbib}
+\usepackage{minted}
+\usepackage{xcolor}
+
+\definecolor{bg}{rgb}{.95,.95,.95}
+
+\newboolean{blindauthors} \setboolean{blindauthors}{false}
+\newboolean{german}       \setboolean{german}{false}
+\DeclareOption{blinded}{\setboolean{blindauthors}{true}}
+\DeclareOption{ngerman}{\setboolean{german}{true}}
+\DeclareOption{german}{\setboolean{german}{true}}
+\DeclareOption{english}{\setboolean{german}{false}}
+\ProcessOptions
+
+
+\ifthenelse{\boolean{german}}
+  {\newcommand{\sectionname}{Abschnitt}}
+  {\newcommand{\sectionname}{Section}}
+
+
+\makeatletter
+\def\url@smallstyle{%
+\@ifundefined{selectfont}{%
+\def\UrlFont{\sf}}{\def\UrlFont{\small\ttfamily}}}
+\makeatother
+\urlstyle{small}
+
+
+\makeatletter
+\prependto@macro{\maketitle}{%
+\let\huge\Large\let\Large\normalsize\let\large\normalsize}
+\makeatother
+
+
+\ifthenelse{\boolean{blindauthors}}{%
+\newcommand{\authorblock}[1]{%
+\ldots blinded for review \ldots \\
+\ldots \\
+\ldots \\
+\ldots
+}}{%
+\newcommand{\authorblock}[1]{ #1 }
+}
+
+
+\newcommand{\refsec}[1]{\sectionname~\ref{sec:#1}}    % -> Section X
+\newcommand{\reffig}[1]{\figurename~\ref{fig:#1}}      % -> Figure  X
+\newcommand{\reftab}[1]{\tablename~\ref{tab:#1}}       % -> Table X
+\newcommand{\refeq}[1]{\equationname~\ref{eq:#1}}      % -> Equation X
+\newcommand{\refdef}[1]{Def.~\ref{def:#1}}             % -> Definition X
+
+\bibliographystyle{babalpha}
+
+
+%\setlength\parindent{0pt}
+
+
+\setkomafont{disposition}{\normalfont\bfseries}
+\setkomafont{caption}{\small}
+\setkomafont{captionlabel}{\bfseries\small}
+
+
+\setlength{\abovecaptionskip}{-.75ex}
+\setlength{\belowcaptionskip}{-.75ex}
+
+
+\renewcommand*{\titlepagestyle}{empty}
+\pagestyle{empty}
+
+\date{}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

@@ -1,0 +1,246 @@
+\documentclass[a4paper,fontsize=12pt,headings=small,captions=tableheading,%
+numbers=endperiod,abstracton,pdftex]{scrartcl}
+
+\input{mainmac}
+
+\title{Formale Methoden für Alle} \subtitle{(Erweiterte Zusammenfassung)}
+\author{%
+  \authorblock{%
+    Mathias Soeken$^{\rm 1,2}$ \qquad Max Nitze$^{\rm 1}$ \qquad Rolf Drechsler$^{\rm 1,2}$ \\
+    $^{\rm 1}$Arbeitsgruppe Rechnerarchitektur, Universität Bremen \\
+    $^{\rm 2}$Cyber-Physical Systems, DFKI GmbH, Bremen \\
+    \url{{msoeken,maxnitze,drechsle}@informatik.uni-bremen.de}}
+}
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+  Formale Methoden können verwendet werden, um schwierige Probleme effizient zu
+  lösen.  Ihre Anwendung ist jedoch nicht trivial und erfordert in der Regel
+  Expertenwissen.  Wir stellen einen Ansatz vor, der formale Methoden näher an
+  Programmierer bringt, mit dem Ziel die Komplexität der Verwendung formaler
+  Methoden an die der Implementierung von Programmen anzunähern.
+\end{abstract}
+
+\begin{figure}[t!]
+\begin{minted}[fontsize=\footnotesize,bgcolor=bg,linenos=true]{java}
+public class Vertex {
+  private int id;
+
+  @Variable
+  private int color;
+
+  public int getColor() { return color; }
+  ...
+}
+
+public class Edge {
+  private Vertex first, second;
+
+  public Vertex getFirst() { return first; }
+  public Vertex getSecond() { return second; }
+  ...
+}
+
+public class Graph {
+  private Collection<Vertex> vertices;
+  private Collection<Edge> edges;
+  private int k;
+  ...
+
+  public void parse(final String filename) { ... }
+
+  @Constraint
+  public boolean maximumColor(final Vertex vertex) {
+    return vertex.color >= 0 && vertex.color < k;
+  }
+
+  @Constraint
+  public boolean differentColor(final Edge edge) {
+    return edge.getFirst().getColor() != edge.getSecond().getColor();
+  }
+
+  public static void main(String[] args) {
+    Graph g = new Graph();
+    g.parse("some_graph.col");
+    DIAB.satisfy(g);
+  }
+}
+\end{minted}
+\medskip
+\caption{Illustration für die direkte Einbettung formaler Methoden zum Finden
+  einer Färbung}
+\label{fig:diab-idea}
+\end{figure}
+
+\section{Einleitung und Motivation}
+Für die Entwicklung eines einfachen Computerprogramms war vor einem halben
+Jahrhundert ein sehr spezielles Expertenwissen unumgänglich.  Beispielsweise war
+es üblich in den frühen Ausgaben der \textsl{Communications of the ACM}
+vollständigen Programmcode abzudrucken~(vgl.~beispielsweise~\cite{Gib:75}).
+Durch die Entwicklung von Sprachen wie \textsc{Pascal} oder \textsc{C} Anfang
+der 70er Jahre wurde die Disziplin zunächst einem breiteren Publikum zugänglich
+gemacht.  Heutzutage ist die Entwicklung von Computerprogrammen für viele
+einfach möglich durch
+\begin{itemize}
+\item Integration in den Schulunterricht,
+\item zahlreiche domänenorientierte Sprachen für dedizierte Probleme, und
+\item soziale Netzwerke zum Thema Programmierung wie
+  GitHub,\footnote{github.org} Stack Overflow\footnote{stackoverflow.com} oder
+  Code School.\footnote{codeschool.com}
+\end{itemize}
+All dies erlaubt steile Lernkurven, so dass sich mit wenig Aufwand Webseiten,
+Apps für Smart Phones oder Mikrocontroller auch durch Nicht-Experten
+programmieren lassen.
+
+Formale Methoden befinden sich heute in etwa im Zustand in dem sich
+Programmiersprachen vor 50~Jahren befanden.  Mithilfe von formalen Methoden
+lassen sich zwar viele schwierige Probleme effizient lösen, vorhandene Werkzeuge
+sind jedoch nicht trivial und ihre Anwendung benötigt insbesondere oft auch ein
+gutes Verständnis der zugrundeliegenden Algorithmen.  Die Eigenschaft, dass
+formale Methoden oft in externe Tools mit eigenen neuen Programmiersprachen
+ausgelagert sind, erschwert ihre Verwendung zusätzlich.
+
+In dieser erweiterten Zusammenfassung wird ein Algorithmus illustriert, der
+Programmierern formale Methoden zugänglich macht, ohne dass sie direkt sichtbar
+sind.  Darüberhinaus ist der Algorithmus in eine vorhandene Programmiersprachen
+eingebettet, in diesem Fall \textsc{Java}, so dass die gewohnte Arbeitsumgebung
+nicht verlassen werden muss.
+
+Das Problem und die Lösungsidee sollen im Folgenden am Beispiel von
+Graphenfärben verdeutlicht werden.  Ein Graph ist genau dann \emph{$k$-färbbar},
+wenn alle Knoten mit einer von $k$ Farben gefärbt sind und alle benachbarten
+Knoten unterschiedlich gefärbte Knoten haben.  Es soll ein Programm entwickelt
+werden, dass einen Graphen ohne Färbung einliest und anschließend den Graphen
+mit~$k$ Farben färbt, falls eine solche Färbung existiert.  Viele praktisch
+relevante Probleme lassen sich auf das Färben von Graphen
+abbilden~(z.B.~Registerallokation~\cite{CAC+:81}).
+
+Eine naive Umsetzung für dieses NP-vollständige Problem~\cite{Kar:72} könnte
+alle Färbungen aufzählen bis eine valide gefunden worden ist.  Aufwändigere
+Implementierungen würden eine \emph{branch and bound} Variante mit
+\emph{backtracking} verwenden.
+
+Mithilfe des von uns entwickelten Ansatzes \textsc{DIAB} lässt sich das Problem
+wie in Abbildung~\ref{fig:diab-idea} umsetzen.  Der Graph verwendet zwei weitere
+Datenstrukturen für Knoten und Kanten, wobei der Knoten eine Feldvariable
+\mintinline{java}|color| enthält, die durch die Annotation
+\mintinline{java}|@Variable| gekennzeichnet ist.  Die \mintinline{java}|Graph|
+Klasse hat eine Methode zum Parsen von Dateien.  Die anderen Methoden sind als
+\mintinline{java}|@Condition| annotiert und beschreiben die Bedingungen für eine
+valide Graphfärbung.  Dies ist eine direkte Übersetzung der Definition in
+\textsc{Java} Quellcode.  Der Code ist ausreichend für die Implementierung (alle
+durch `\mintinline{java}|...|' ausgelassenen Zeilen beschreiben Methoden zum
+Aufbauen des Graphen).  In der \mintinline{java}|main| Methode wird eine Instanz
+des Graphen erzeugt und eine Datei eingelesen. Danach ist der Graph zunächst
+ungefärbt.  Der Aufruf von \mintinline{java}|DIAB.satisfy(g)| belegt alle mit
+\mintinline{java}|@Variable| annotierten Feldvariablen, die über die
+Graphinstanz erreicht werden können, so dass alle Methoden die als
+\mintinline{java}|@Constraint| annotiert sind, erfüllt werden.
+
+Ein ähnlicher Ansatz ist im Tool Pex~\cite{TS:05} implementiert, der formale
+Methoden für \emph{white box testing} in~.NET Sprachen nutzt.
+
+\section{Implementierung}
+In diesem Abschnitt soll die Implementierung des Algorithmus illustriert werden.
+Zunächst wird beschrieben wie durch \mintinline{java}{@Constraint} annotierte
+Methoden, im Folgenden \emph{Constraint Methoden} genannt, übersetzt werden, so
+dass formale Methoden angewandt werden können.  Im Anschluss werden die aktuell
+implementierten und geplanten Features diskutiert.
+
+\subsection{Übersetzung der Constraint Methoden}
+Die Implementierung der \mintinline{java}|satisfy| Methode, wie sie in
+Abbildung~\ref{fig:diab-idea} angewendet wird, ist abstrakt wie folgt
+realisiert.  Zunächst werden alle annotierten Constraint Methoden mithilfe der
+\textsc{Java} \emph{Reflection API} ermittelt.  Der Bezug der Bedingungen ergibt
+sich aus den Parametern der Methoden.  In der Constraint Methode
+\mintinline{java}|maximumColor| muss die Bedingung für alle Knoten gelten, die
+über den Graphen erreicht werden können.  Diese können direkt über die
+Feldvariable \mintinline{java}|vertices| und indirekt über die Feldvariable
+\mintinline{java}|edges| erreicht werden.  Die Constraint Methoden werden
+disassembliert und über den \textsc{Java} Bytecode in prädikatenlogische Formeln
+erster Ordnung übersetzt, wobei die freien Variablen über die
+\mintinline{java}|@Variable| Annotation ermittelt werden.  Alle Formeln werden
+in einer Konjunktion zusammengeführt und das resultierende Erfüllbarkeitsproblem
+wird mit einem SMT Beweiser, im konkreten Fall Z3~\cite{MB:08}, gelöst.  Aus
+einer möglichen erfüllenden Belegung können dann die konkreten Werte für die mit
+\mintinline{java}|@Variable| annotierten Feldvariablen ausgelesen werden.
+
+\subsection{Aktueller Stand und nächste Schritte}
+Unsere Implementierung unterstützt aktuell Programme im Stil des Programms aus
+Abbildung~\ref{fig:diab-idea}.  Das zu lösende Problem muss ein
+Erfüllbarkeitsproblem sein.  Es ist auch möglich externe Bibliotheken in der
+Implementierung zu verwenden.  Beispielsweise haben wir das
+Graphenfärbenbeispiel auf Basis der JUNG\footnote{jung.sourceforge.net}
+Bibliothek implementiert, anstatt eine eigene Graphklasse zu definieren.  Als
+Datentypen für freie Variablen werden derzeit \mintinline{java}|int| und
+\mintinline{java}|boolean| unterstützt.  Es ist möglich lokale Variablen in den
+Constraint Methoden zu verwenden, so lange sie \mintinline{java}|final|
+deklariert sind, d.h.~ihr Wert lässt sich nach initialer Zuweisung nicht mehr
+verändern.  Operationsaufrufe in Constraint Methoden sind möglich, solange die
+aufrufenden Methoden keine Seiteneffekte haben.
+
+\begin{figure}[t]
+  \centering
+  \begin{minted}[fontsize=\footnotesize,bgcolor=bg,linenos=true]{java}
+public class Graph {
+  ...
+
+  @Objective
+  public int numColors() {
+    Set<int> colors = new HashSet<int>();
+    for (Vertex v : vertices) {
+      colors.append(v.getColor());
+    }
+    return colors.size();
+  }
+
+  public static void main(String[] args) {
+    Graph g = new Graph();
+    g.parse("some_graph.col");
+    DIAB.minimize(g);
+  }
+}
+  \end{minted}
+  \medskip
+  \caption{Unterstützung von Optimierungsproblemen}
+  \label{fig:optimization}
+\end{figure}
+
+In den nächsten Schritten sollen weitere Basisdatentypen wie beispielsweise
+\mintinline{java}|float| unterstützt werden.  Außerdem soll untersucht werden,
+welche Vorteile funktionale JVM Sprachen wie \textsc{clojure} oder
+\textsc{Scala} bei der Übersetzung in prädikatenlogische Formeln haben.  Formale
+Methoden sind nicht nur zum Lösen von Erfüllbarkeitsproblemen hilfreich, sondern
+auch für Optimierungsprobleme.  Dies soll auch untersucht werden.  Denkbar sind
+dann Programmkonstrukte wie in Abbildung~\ref{fig:optimization} illustriert.
+Hier wird die Methode \mintinline{java}|numColors| als Optimierungskriterium
+durch die Annotation \mintinline{java}|@Objective| gekennzeichnet.  In der
+\mintinline{java}|main| Methode wird anstatt \mintinline{java}|satisfy| die
+Funktion \mintinline{java}|minimize| aufgerufen, um die Anzahl der Farben im
+gefärbten Graph zu minimieren.
+
+
+\section{Zusammenfassung}
+Wir haben den Ansatz \textsc{DIAB} illustriert, der formale Methoden näher an
+Programmierer bringt.  Anstatt wie bisher auf externe Tools mit neuen
+dedizierten Sprachen angewiesen zu sein, ist der vorgestellte Ansatz direkt in
+die Programmiersprache \textsc{Java} eingebettet.  Dabei sind die Algorithmen
+als Klassenbibliothek implementiert worden ohne die Sprache ändern zu müssen.
+
+\bibliography{literatur}
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% mode: fci
+%%% mode: reftex
+%%% mode: whitespace
+%%% mode: auto-fill
+%%% mode: flyspell
+%%% eval: (ispell-change-dictionary "deutsch8")
+%%% End:
