@@ -3,8 +3,8 @@
 - data types
 -- decompiling.Decompiler.getCalculatedValue(AbstractConstraintValue, ArithmeticOperator, AbstractConstraintValue)
 -- decompiling.Decompiler.getSingleConstraint(AbstractConstraintValue, ConstraintOperator, AbstractConstraintValue, List<PrefixedField>)
--- decompiling.datatypes.ConstraintValueType
 -- decompiling.datatypes.AbstractSingleConstraint.evaluate()
+-- decompiling.datatypes.AbstractConstraintFormula.evaluate()
 -- decompiling.datatypes.AbstractConstraintFormula.calculateValue(T, ArithmeticOperator, U)
 -- decompiling.datatypes.ConstraintValueType
 -- disassembling.datatypes.BytecodeLineType.getClassFromDisassembledString(String)

@@ -6,7 +6,7 @@ public class CGVertex {
 	public final int id;
 	
 	@Variable
-	public int color;
+	public double color;
 	
 	public CGVertex(int id) {
 		this.id = id;

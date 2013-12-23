@@ -95,13 +95,73 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 		
 		/** evaluate to boolean if both values are integer */
 		if(
-				constraintLiteral1.valueType == ConstraintValueType.INTEGER &&
-				constraintLiteral2.valueType == ConstraintValueType.INTEGER)
-			return evaluateConstraint(
-						(Integer)constraintLiteral1.value,
-						(Integer)constraintLiteral2.value);
+				constraintLiteral1.valueType.isNumberType &&
+				constraintLiteral2.valueType.isNumberType) {
+			switch(constraintLiteral1.valueType) {
+			case DOUBLE:
+				switch(constraintLiteral2.valueType) {
+				case DOUBLE:
+					return evaluateConstraint(
+							(Double)constraintLiteral1.value,
+							(Double)constraintLiteral2.value);
+				case FLOAT:
+					return evaluateConstraint(
+							(Double)constraintLiteral1.value,
+							new Double(((Float)constraintLiteral2.value).doubleValue()));
+				case INTEGER:
+					return evaluateConstraint(
+							(Double)constraintLiteral1.value,
+							new Double(((Integer)constraintLiteral2.value).doubleValue()));
+				default:
+					/** should never happen! */
+					Logger.getLogger(AbstractSingleConstraint.class).error("evaluation of abstract single constraint does not support number type \"" + constraintLiteral2.valueType.name + "\"");
+					return this;
+				}
+			case FLOAT:
+				switch(constraintLiteral2.valueType) {
+				case DOUBLE:
+					return evaluateConstraint(
+							new Double(((Float)constraintLiteral2.value).doubleValue()),
+							(Double)constraintLiteral2.value);
+				case FLOAT:
+					return evaluateConstraint(
+							(Float)constraintLiteral1.value,
+							(Float)constraintLiteral2.value);
+				case INTEGER:
+					return evaluateConstraint(
+							new Float(((Integer)constraintLiteral2.value).floatValue()),
+							(Float)constraintLiteral2.value);
+				default:
+					/** should never happen! */
+					Logger.getLogger(AbstractSingleConstraint.class).error("evaluation of abstract single constraint does not support number type \"" + constraintLiteral2.valueType.name + "\"");
+					return this;
+				}
+			case INTEGER:
+				switch(constraintLiteral2.valueType) {
+				case DOUBLE:
+					return evaluateConstraint(
+							new Double(((Integer)constraintLiteral1.value).doubleValue()),
+							(Double)constraintLiteral2.value);
+				case FLOAT:
+					return evaluateConstraint(
+							new Float(((Integer)constraintLiteral1.value).floatValue()),
+							(Float)constraintLiteral2.value);
+				case INTEGER:
+					return evaluateConstraint(
+							(Integer)constraintLiteral1.value,
+							(Integer)constraintLiteral2.value);
+				default:
+					/** should never happen! */
+					Logger.getLogger(AbstractSingleConstraint.class).error("evaluation of abstract single constraint does not support number type \"" + constraintLiteral2.valueType.name + "\"");
+					return this;
+				}
+			default:
+				/** should never happen! */
+				Logger.getLogger(AbstractSingleConstraint.class).error("evaluation of abstract single constraint does not support number type \"" + constraintLiteral1.valueType.name + "\"");
+				return this;
+			}
 		/** evaluate to boolean if both values are equal strings */
-		else if(
+		} else if(
 				constraintLiteral1.valueType == ConstraintValueType.STRING &&
 				constraintLiteral2.valueType == ConstraintValueType.STRING &&
 				((String)constraintLiteral1.value).equals((String)constraintLiteral2.value)) {

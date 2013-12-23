@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
 import de.agra.sat.koselleck.exceptions.UnsupportedNumberTypeException;
+import de.agra.sat.koselleck.utils.ListUtils;
 
 /**
  * AbstractConstraintFormula represents a formula in a constraint value.
@@ -81,16 +82,37 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 			AbstractConstraintLiteral constraintLiteral1 = (AbstractConstraintLiteral)this.value1;
 			AbstractConstraintLiteral constraintLiteral2 = (AbstractConstraintLiteral)this.value2;
 			if(
-					constraintLiteral1.valueType == ConstraintValueType.INTEGER &&
-					constraintLiteral2.valueType == ConstraintValueType.INTEGER)
-				return new AbstractConstraintLiteral(
-						calculateValue(
-								(Integer)constraintLiteral1.value,
-								this.operator,
-								(Integer)constraintLiteral2.value),
-						ConstraintValueType.INTEGER,
-						false);
-			else
+					constraintLiteral1.valueType.isNumberType &&
+					constraintLiteral2.valueType.isNumberType) {
+				if(
+						constraintLiteral1.valueType == ConstraintValueType.DOUBLE ||
+						constraintLiteral2.valueType == ConstraintValueType.DOUBLE)
+					return new AbstractConstraintLiteral(
+							calculateValue(
+									(Number)constraintLiteral1.value,
+									this.operator,
+									(Number)constraintLiteral2.value),
+							ConstraintValueType.DOUBLE,
+							false);
+				else if(
+						constraintLiteral1.valueType == ConstraintValueType.FLOAT ||
+						constraintLiteral2.valueType == ConstraintValueType.FLOAT)
+					return new AbstractConstraintLiteral(
+							calculateValue(
+									(Number)constraintLiteral1.value,
+									this.operator,
+									(Number)constraintLiteral2.value),
+							ConstraintValueType.FLOAT,
+							false);
+				else
+					return new AbstractConstraintLiteral(
+							calculateValue(
+									(Number)constraintLiteral1.value,
+									this.operator,
+									(Number)constraintLiteral2.value),
+							ConstraintValueType.INTEGER,
+							false);
+			} else
 				return this;
 		} else
 			return this;
@@ -191,163 +213,59 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	 * @return a new number for the calculation considering the arithmetic
 	 *  operator
 	 */
-	private <T extends Number, U extends Number> Number calculateValue(T value1, ArithmeticOperator operator, U value2) {
-		switch(operator) {
-		case ADD:
-			if(value1 instanceof Integer) {
-				if(value2 instanceof Integer)
-					return new Integer(value1.intValue() + value2.intValue());
-				else if(value2 instanceof Double)
-					return new Double(value1.intValue() + value2.doubleValue());
-				else if(value2 instanceof Float)
-					return new Float(value1.intValue() + value2.floatValue());
-				else {
-					Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-					throw new UnsupportedNumberTypeException(value2);
-				}
-			} else if(value1 instanceof Double) {
-				if(value2 instanceof Integer)
-					return new Double(value1.doubleValue() + value2.intValue());
-				else if(value2 instanceof Double)
-					return new Double(value1.doubleValue() + value2.doubleValue());
-				else if(value2 instanceof Float)
-					return new Float(value1.doubleValue() + value2.floatValue());
-				else {
-					Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-					throw new UnsupportedNumberTypeException(value2);
-				}
-			} else if(value1 instanceof Float) {
-				if(value2 instanceof Integer)
-					return new Float(value1.floatValue() + value2.intValue());
-				else if(value2 instanceof Double)
-					return new Float(value1.floatValue() + value2.doubleValue());
-				else if(value2 instanceof Float)
-					return new Float(value1.floatValue() + value2.floatValue());
-				else {
-					Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-					throw new UnsupportedNumberTypeException(value2);
-				}
-			} else {
-				Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value1 == null ? "null" : value1.getClass().getSimpleName()) + "\" is not supported");
-				throw new UnsupportedNumberTypeException(value1);
+	private Number calculateValue(Number value1, ArithmeticOperator operator, Number value2) {
+		if(!ListUtils.instanceofAny(value1, ConstraintValueType.getNumberTypeClasses())) {
+			Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value1 == null ? "null" : value1.getClass().getSimpleName()) + "\" is not supported");
+			throw new UnsupportedNumberTypeException(value1);
+		}
+		
+		if(!ListUtils.instanceofAny(value2, ConstraintValueType.getNumberTypeClasses())) {
+			Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
+			throw new UnsupportedNumberTypeException(value2);
+		}
+		
+		if(value1 instanceof Double || value2 instanceof Double) {
+			switch(operator) {
+			case ADD:
+				return new Double(value1.doubleValue() + value2.doubleValue());
+			case SUB:
+				return new Double(value1.doubleValue() - value2.doubleValue());
+			case MUL:
+				return new Double(value1.doubleValue() * value2.doubleValue());
+			case DIV:
+				return new Double(value1.doubleValue() / value2.doubleValue());
+			default:
+				Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+				throw new UnknownArithmeticOperatorException(operator);
 			}
-		case SUB:
-			if(value1 instanceof Integer) {
-				if(value2 instanceof Integer)
-					return new Integer(value1.intValue() - value2.intValue());
-				else if(value2 instanceof Double)
-					return new Double(value1.intValue() - value2.doubleValue());
-				else if(value2 instanceof Float)
-					return new Float(value1.intValue() - value2.floatValue());
-				else {
-					Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-					throw new UnsupportedNumberTypeException(value2);
-				}
-			} else if(value1 instanceof Double) {
-				if(value2 instanceof Integer)
-					return new Double(value1.doubleValue() - value2.intValue());
-				else if(value2 instanceof Double)
-					return new Double(value1.doubleValue() - value2.doubleValue());
-				else if(value2 instanceof Float)
-					return new Float(value1.doubleValue() - value2.floatValue());
-				else {
-					Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-					throw new UnsupportedNumberTypeException(value2);
-				}
-			} else if(value1 instanceof Float) {
-				if(value2 instanceof Integer)
-					return new Float(value1.floatValue() - value2.intValue());
-				else if(value2 instanceof Double)
-					return new Float(value1.floatValue() - value2.doubleValue());
-				else if(value2 instanceof Float)
-					return new Float(value1.floatValue() - value2.floatValue());
-				else {
-					Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-					throw new UnsupportedNumberTypeException(value2);
-				}
-			} else {
-				Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value1 == null ? "null" : value1.getClass().getSimpleName()) + "\" is not supported");
-				throw new UnsupportedNumberTypeException(value1);
+		} else if(value1 instanceof Float || value2 instanceof Float) {
+			switch(operator) {
+			case ADD:
+				return new Float(value1.floatValue() + value2.floatValue());
+			case SUB:
+				return new Float(value1.floatValue() - value2.floatValue());
+			case MUL:
+				return new Float(value1.floatValue() * value2.floatValue());
+			case DIV:
+				return new Float(value1.floatValue() / value2.floatValue());
+			default:
+				Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+				throw new UnknownArithmeticOperatorException(operator);
 			}
-		case MUL:
-			if(value1 instanceof Integer) {
-				if(value2 instanceof Integer)
-					return new Integer(value1.intValue() * value2.intValue());
-				else if(value2 instanceof Double)
-					return new Double(value1.intValue() * value2.doubleValue());
-				else if(value2 instanceof Float)
-					return new Float(value1.intValue() * value2.floatValue());
-				else {
-					Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-					throw new UnsupportedNumberTypeException(value2);
-				}
-			} else if(value1 instanceof Double) {
-				if(value2 instanceof Integer)
-					return new Double(value1.doubleValue() * value2.intValue());
-				else if(value2 instanceof Double)
-					return new Double(value1.doubleValue() * value2.doubleValue());
-				else if(value2 instanceof Float)
-					return new Float(value1.doubleValue() * value2.floatValue());
-				else {
-					Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-					throw new UnsupportedNumberTypeException(value2);
-				}
-			} else if(value1 instanceof Float) {
-				if(value2 instanceof Integer)
-					return new Float(value1.floatValue() * value2.intValue());
-				else if(value2 instanceof Double)
-					return new Float(value1.floatValue() * value2.doubleValue());
-				else if(value2 instanceof Float)
-					return new Float(value1.floatValue() * value2.floatValue());
-				else {
-					Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-					throw new UnsupportedNumberTypeException(value2);
-				}
-			} else {
-				Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value1 == null ? "null" : value1.getClass().getSimpleName()) + "\" is not supported");
-				throw new UnsupportedNumberTypeException(value1);
+		} else {
+			switch(operator) {
+			case ADD:
+				return new Integer(value1.intValue() + value2.intValue());
+			case SUB:
+				return new Integer(value1.intValue() - value2.intValue());
+			case MUL:
+				return new Integer(value1.intValue() * value2.intValue());
+			case DIV:
+				return new Integer(value1.intValue() / value2.intValue());
+			default:
+				Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+				throw new UnknownArithmeticOperatorException(operator);
 			}
-		case DIV:
-			if(value1 instanceof Integer) {
-				if(value2 instanceof Integer)
-					return new Integer(value1.intValue() / value2.intValue());
-				else if(value2 instanceof Double)
-					return new Double(value1.intValue() / value2.doubleValue());
-				else if(value2 instanceof Float)
-					return new Float(value1.intValue() / value2.floatValue());
-				else {
-					Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-					throw new UnsupportedNumberTypeException(value2);
-				}
-			} else if(value1 instanceof Double) {
-				if(value2 instanceof Integer)
-					return new Double(value1.doubleValue() / value2.intValue());
-				else if(value2 instanceof Double)
-					return new Double(value1.doubleValue() / value2.doubleValue());
-				else if(value2 instanceof Float)
-					return new Float(value1.doubleValue() / value2.floatValue());
-				else {
-					Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-					throw new UnsupportedNumberTypeException(value2);
-				}
-			} else if(value1 instanceof Float) {
-				if(value2 instanceof Integer)
-					return new Float(value1.floatValue() / value2.intValue());
-				else if(value2 instanceof Double)
-					return new Float(value1.floatValue() / value2.doubleValue());
-				else if(value2 instanceof Float)
-					return new Float(value1.floatValue() / value2.floatValue());
-				else {
-					Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-					throw new UnsupportedNumberTypeException(value2);
-				}
-			} else {
-				Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value1 == null ? "null" : value1.getClass().getSimpleName()) + "\" is not supported");
-				throw new UnsupportedNumberTypeException(value1);
-			}
-		default:
-			Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-			throw new UnknownArithmeticOperatorException(operator);
 		}
 	}
 }

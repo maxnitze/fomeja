@@ -71,7 +71,7 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	
 	@Objective
 	public int numberOfColors() {
-		Collection<Integer> colors = new HashSet<Integer>();
+		Collection<Double> colors = new HashSet<Double>();
 		for(CGVertex v : this.vertices)
 			colors.add(v.color);
 		

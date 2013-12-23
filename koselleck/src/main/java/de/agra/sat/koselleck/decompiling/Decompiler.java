@@ -366,27 +366,165 @@ public class Decompiler {
 			AbstractConstraintLiteral constraintLiteral1 = (AbstractConstraintLiteral)constraintValue1;
 			AbstractConstraintLiteral constraintLiteral2 = (AbstractConstraintLiteral)constraintValue2;
 			
-			if(
-					constraintLiteral1.valueType == ConstraintValueType.INTEGER &&
-					constraintLiteral2.valueType == ConstraintValueType.INTEGER) {
-				switch(operator) {
-				case ADD:
-					return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() + ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.INTEGER, false);
-				case SUB:
-					return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() - ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.INTEGER, false);
-				case MUL:
-					return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() * ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.INTEGER, false);
-				case DIV:
-					return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() / ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.INTEGER, false);
+			switch(constraintLiteral1.valueType) {
+			case DOUBLE:
+				switch(constraintLiteral2.valueType) {
+				case DOUBLE:
+					switch(operator) {
+					case ADD:
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() + ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case SUB:
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() - ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case MUL:
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() * ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case DIV:
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() / ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					default:
+						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+						throw new UnknownArithmeticOperatorException(operator);
+					}
+				case FLOAT:
+					switch(operator) {
+					case ADD:
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() + ((Float)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case SUB:
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() - ((Float)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case MUL:
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() * ((Float)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case DIV:
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() / ((Float)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					default:
+						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+						throw new UnknownArithmeticOperatorException(operator);
+					}
+				case INTEGER:
+					switch(operator) {
+					case ADD:
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() + ((Integer)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case SUB:
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() - ((Integer)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case MUL:
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() * ((Integer)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case DIV:
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() / ((Integer)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					default:
+						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+						throw new UnknownArithmeticOperatorException(operator);
+					}
 				default:
-					Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-					throw new UnknownArithmeticOperatorException(operator);
+					return new AbstractConstraintFormula(
+							constraintValue1,
+							operator,
+							constraintValue2);
 				}
-			} else
+
+			case FLOAT:
+				switch(constraintLiteral2.valueType) {
+				case DOUBLE:
+					switch(operator) {
+					case ADD:
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).doubleValue() + ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case SUB:
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).doubleValue() - ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case MUL:
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).doubleValue() * ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case DIV:
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).doubleValue() / ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					default:
+						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+						throw new UnknownArithmeticOperatorException(operator);
+					}
+				case FLOAT:
+					switch(operator) {
+					case ADD:
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() + ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+					case SUB:
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() - ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+					case MUL:
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() * ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+					case DIV:
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() / ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+					default:
+						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+						throw new UnknownArithmeticOperatorException(operator);
+					}
+				case INTEGER:
+					switch(operator) {
+					case ADD:
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() + ((Integer)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+					case SUB:
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() - ((Integer)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+					case MUL:
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() * ((Integer)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+					case DIV:
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() / ((Integer)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+					default:
+						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+						throw new UnknownArithmeticOperatorException(operator);
+					}
+				default:
+					return new AbstractConstraintFormula(
+							constraintValue1,
+							operator,
+							constraintValue2);
+				}
+			case INTEGER:
+				switch(constraintLiteral2.valueType) {
+				case DOUBLE:
+					switch(operator) {
+					case ADD:
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).doubleValue() + ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case SUB:
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).doubleValue() - ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case MUL:
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).doubleValue() * ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					case DIV:
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).doubleValue() / ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+					default:
+						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+						throw new UnknownArithmeticOperatorException(operator);
+					}
+				case FLOAT:
+					switch(operator) {
+					case ADD:
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).floatValue() + ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+					case SUB:
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).floatValue() - ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+					case MUL:
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).floatValue() * ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+					case DIV:
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).floatValue() / ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+					default:
+						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+						throw new UnknownArithmeticOperatorException(operator);
+					}
+				case INTEGER:
+					switch(operator) {
+					case ADD:
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() + ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.INTEGER, false);
+					case SUB:
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() - ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.INTEGER, false);
+					case MUL:
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() * ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.INTEGER, false);
+					case DIV:
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() / ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.INTEGER, false);
+					default:
+						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+						throw new UnknownArithmeticOperatorException(operator);
+					}
+				default:
+					return new AbstractConstraintFormula(
+							constraintValue1,
+							operator,
+							constraintValue2);
+				}
+				
+			default:
 				return new AbstractConstraintFormula(
 						constraintValue1,
 						operator,
 						constraintValue2);
+			}
 		} else
 			return new AbstractConstraintFormula(
 					constraintValue1,

@@ -125,7 +125,9 @@ public class BytecodeLineType {
 		if(classString != null && classString.equals("I"))
 			return Integer.class;
 		
-		else
+		else {
+			System.err.println("classString = " + classString);
 			return null;
+		}
 	}
 }
