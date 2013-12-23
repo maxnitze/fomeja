@@ -8,9 +8,14 @@ import de.agra.sat.koselleck.utils.IOUtils;
 public class Main {
 	public static void main(String[] args) {
 		boolean testValidate	= false;
-		boolean testSatisfy		= true;
+		boolean testSatisfy		= false;
 		boolean testMinimize	= false;
 		boolean testMaximize	= false;
+		
+		Number d = new Double(0);
+		Number i = new Integer(0);
+		
+		System.out.println(d.doubleValue() == i.doubleValue());
 		
 		String graphfile = "graph_250_15668.col";
 		CGGraph graph = new CGGraph();

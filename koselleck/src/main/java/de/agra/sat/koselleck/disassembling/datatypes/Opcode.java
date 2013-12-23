@@ -46,6 +46,8 @@ public enum Opcode {
 	if_icmplt("if_icmplt", 3, "^if_icmplt$", OpcodeType.OFFSET, "if_icmplt"),		/** less */
 	if_icmpne("if_icmpne", 3, "^if_icmpne$", OpcodeType.OFFSET, "if_icmpne"),		/** not equal */
 	
+	dcmpl("dcmpl", 1, "^dcmpl$", null, ""),
+	
 	ireturn("ireturn", 1, "^ireturn$", null, "");
 	
 	/** enumeration of the types of an opcode */

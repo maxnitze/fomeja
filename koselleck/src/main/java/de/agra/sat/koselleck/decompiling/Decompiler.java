@@ -113,6 +113,7 @@ public class Decompiler {
 		
 		AbstractConstraintValue constraintValue = null;
 		AbstractConstraintLiteral constraintLiteral = null;
+		AbstractConstraintFormula constraintFormula = null;
 		AbstractConstraintValue constraintValue1 = null;
 		AbstractConstraintValue constraintValue2 = null;
 		
@@ -259,36 +260,29 @@ public class Decompiler {
 				break;
 			
 			case ifeq:
-				constraintValue = this.stack.pop();
-				if(!(constraintValue instanceof AbstractConstraintLiteral)) {
-					Logger.getLogger(Decompiler.class).fatal("could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.");
-					throw new ClassCastException("could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.");
-				}
-				
-				constraintLiteral = (AbstractConstraintLiteral)constraintValue;
-				if(constraintLiteral.valueType != ConstraintValueType.INTEGER) {
-					Logger.getLogger(Decompiler.class).fatal("could not cast given value \"" + constraintLiteral + "\" to integer.");
-					throw new ClassCastException("could not cast given value \"" + constraintLiteral + "\" to integer.");
-				}
-				
-				if((Integer)constraintLiteral.value == 0)
-					nextOffset = bytecodeLine.offset;
-				break;
 			case ifne:
 				constraintValue = this.stack.pop();
-				if(!(constraintValue instanceof AbstractConstraintLiteral)) {
+				
+				if(constraintValue instanceof AbstractConstraintLiteral) {
+					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
+					
+					if(constraintLiteral.valueType.isNumberType) {
+						Logger.getLogger(Decompiler.class).fatal("could not cast given value \"" + constraintLiteral + "\" to number.");
+						throw new ClassCastException("could not cast given value \"" + constraintLiteral + "\" to number.");
+					}
+					
+					if((bytecodeLine.opcode == Opcode.ifeq && ((Number)constraintLiteral.value).intValue() == 0) ||
+							(bytecodeLine.opcode == Opcode.ifne && ((Number)constraintLiteral.value).intValue() != 0))
+						nextOffset = bytecodeLine.offset;
+				} else if(constraintValue instanceof AbstractConstraintFormula) {
+					constraintFormula = (AbstractConstraintFormula)constraintValue;
+					
+					// TODO implement
+				} else {
 					Logger.getLogger(Decompiler.class).fatal("could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.");
 					throw new ClassCastException("could not cast given value \"" + constraintLiteral + "\" to AbstractConstraintLiteral.");
 				}
 				
-				constraintLiteral = (AbstractConstraintLiteral)constraintValue;
-				if(constraintLiteral.valueType != ConstraintValueType.INTEGER) {
-					Logger.getLogger(Decompiler.class).fatal("could not cast given value \"" + constraintLiteral + "\" to integer.");
-					throw new ClassCastException("could not cast given value \"" + constraintLiteral + "\" to integer.");
-				}
-				
-				if((Integer)constraintLiteral.value != 0)
-					nextOffset = bytecodeLine.offset;
 				break;
 				
 			case if_icmpne:
@@ -318,7 +312,11 @@ public class Decompiler {
 										prefixedFields),
 								BooleanConnector.AND,
 								getConstraint(bytecodeLine.followingLineNumber)));
+			
+			case dcmpl:
 				
+				break;
+			
 			case ireturn:
 				AbstractConstraintValue returnValue = this.stack.pop();
 				if(!(returnValue instanceof AbstractConstraintLiteral)) {

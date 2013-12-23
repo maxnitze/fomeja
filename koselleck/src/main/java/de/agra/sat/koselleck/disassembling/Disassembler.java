@@ -77,6 +77,9 @@ public class Disassembler {
 	 * @return the disassembled method object of the given method
 	 */
 	public static DisassembledMethod disassemble(Object component, Method method, String methodSignature, String disassembledMethod) {
+		
+		System.out.println(disassembledMethod); // TODO delete
+		
 		Disassembler disassembler = new Disassembler(component, method, methodSignature, disassembledMethod);
 		return disassembler.disassemble();
 	}

@@ -122,11 +122,23 @@ public class BytecodeLineType {
 	private Class<?> getClassFromDisassembledString(String disassembledString) {
 		String classString = disassembledString.replaceAll(BytecodeLineRegexes.typeMethodFieldRegex, "${class}");
 		
-		if(classString != null && classString.equals("I"))
-			return Integer.class;
-		
-		else {
-			System.err.println("classString = " + classString);
+		if(classString != null) {
+			if(classString.equals("D"))
+				return Double.class;
+			
+			else if(classString.equals("F"))
+				return Float.class;
+			
+			else if(classString.equals("I"))
+				return Integer.class;
+			
+			else {
+				System.err.println("classString = \"" + classString + "\"");
+				return null;
+			}
+				
+		} else {
+			System.err.println("classString = null");
 			return null;
 		}
 	}
