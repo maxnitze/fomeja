@@ -15,16 +15,23 @@ numbers=endperiod,abstracton,pdftex]{scrartcl}
 \begin{document}
 
 \maketitle
+
+\vspace{-1.5cm}
+
 \begin{abstract}
   Formale Methoden können verwendet werden, um schwierige Probleme exakt zu
   lösen.  Ihre Anwendung ist jedoch nicht trivial und erfordert in der Regel
-  Expertenwissen.  Wir stellen einen Ansatz vor, der formale Methoden näher an
-  Programmierer bringt, mit dem Ziel die Komplexität der Verwendung formaler
-  Methoden an die der Implementierung von Programmen anzunähern.
+  Expertenwissen.  Wir stellen das Werkzeug \textsc{DIAB} vor, das formale
+  Methoden näher an Programmierer bringt, mit dem Ziel die Komplexität der
+  Verwendung formaler Methoden an die der Implementierung von Programmen
+  anzunähern.  Konkret werden in dieser Arbeit Erfüllbarkeitsbeweisern
+  verwendet, um algorithmische Probleme automatisch aus einer Programmiersprache
+  heraus zu lösen.  Die Transformation in das Erfüllbarkeitsproblem übernimmt
+  dabei das Werkzeug.
 \end{abstract}
 
 \begin{figure}[t!]
-\begin{minted}[fontsize=\footnotesize,bgcolor=bg,linenos=true]{java}
+\begin{minted}[fontsize=\fontsize{10pt}{10pt}\selectfont,bgcolor=bg]{java}
 import DIAB;
 ...
 
@@ -33,7 +40,6 @@ public class Vertex {
 
   @Variable
   private int color;
-
   public int getColor() { return color; }
   ...
 }
@@ -78,24 +84,24 @@ public class Graph {
 \end{figure}
 
 \section{Einleitung und Motivation}
-Für die Entwicklung eines einfachen Computerprogramms war vor einem halben
-Jahrhundert ein sehr spezielles Expertenwissen unumgänglich.  Beispielsweise war
-es üblich in den frühen Ausgaben der \textsl{Communications of the ACM}
-vollständigen Programmcode abzudrucken~(vgl.~beispielsweise~\cite{Gib:75}).
-Durch die Entwicklung von Sprachen wie \textsc{Pascal} oder \textsc{C} Anfang
-der 70er Jahre wurde die Disziplin zunächst einem breiteren Publikum zugänglich
-gemacht.  Heutzutage ist die Entwicklung von Computerprogrammen für viele
-durch
-\begin{itemize}
-\item Integration in den Schulunterricht,
-\item zahlreiche domänenorientierte Sprachen für dedizierte Probleme, und
-\item soziale Netzwerke zum Thema Programmierung wie
-  GitHub,\footnote{github.org} Stack Overflow\footnote{stackoverflow.com} oder
-  Code School\footnote{codeschool.com}
-\end{itemize}
-einfach möglich.  All dies erlaubt steile Lernkurven, so dass sich mit wenig
-Aufwand Webseiten, Apps für Smart Phones oder Mikrocontroller auch durch
-Nicht-Experten programmieren lassen.
+% Für die Entwicklung eines einfachen Computerprogramms war vor einem halben
+% Jahrhundert ein sehr spezielles Expertenwissen unumgänglich.  Beispielsweise war
+% es üblich in den frühen Ausgaben der \textsl{Communications of the ACM}
+% vollständigen Programmcode abzudrucken~(vgl.~beispielsweise~\cite{Gib:75}).
+% Durch die Entwicklung von Sprachen wie \textsc{Pascal} oder \textsc{C} Anfang
+% der 70er Jahre wurde die Disziplin zunächst einem breiteren Publikum zugänglich
+% gemacht.  Heutzutage ist die Entwicklung von Computerprogrammen für viele
+% durch
+% \begin{inparaenum}[(i)]
+% \item Integration in den Schulunterricht,
+% \item zahlreiche domänenorientierte Sprachen für dedizierte Probleme, und
+% \item soziale Netzwerke zum Thema Programmierung wie
+%   GitHub,\footnote{github.org} Stack Overflow\footnote{stackoverflow.com} oder
+%   Code School\footnote{codeschool.com}
+% \end{inparaenum}
+% einfach möglich.  All dies erlaubt steile Lernkurven, so dass sich mit wenig
+% Aufwand Webseiten, Apps für Smart Phones oder Mikrocontroller auch durch
+% Nicht-Experten programmieren lassen.
 
 Formale Methoden befinden sich heute in etwa dem Zustand in dem sich
 Programmiersprachen vor 50~Jahren befanden.  Mithilfe von formalen Methoden
@@ -112,8 +118,9 @@ eingebettet, in diesem Fall \textsc{Java}, so dass die gewohnte Arbeitsumgebung
 nicht verlassen werden muss.
 
 Das Problem und die Lösungsidee sollen im Folgenden am Beispiel von
-Graphenfärben verdeutlicht werden.  Ein Graph ist genau dann \emph{$k$-färbbar},
-wenn alle Knoten mit einer von $k$ Farben gefärbt sind und benachbarten Knoten
+Graphenfärben verdeutlicht werden, der Ansatz lässt sich aber analog auch auf
+andere Probleme anwenden.  Ein Graph ist genau dann \emph{$k$-färbbar}, wenn
+alle Knoten mit einer von $k$ Farben gefärbt sind und benachbarten Knoten
 unterschiedliche Farben zugeordnet sind.  Es soll ein Programm entwickelt
 werden, dass einen Graphen ohne Färbung einliest und anschließend den Graphen
 mit~$k$ Farben färbt, falls eine solche Färbung existiert.  Viele praktisch
@@ -165,13 +172,15 @@ sich aus den Parametern der Methoden.  In der Constraint Methode
 \mintinline{java}|maximumColor| muss die Bedingung für alle Knoten gelten, die
 über den Graphen erreicht werden können.  Diese können direkt über die
 Feldvariable \mintinline{java}|vertices| und indirekt über die Feldvariable
-\mintinline{java}|edges| erreicht werden.  Die Constraint Methoden werden
-dis\-as\-sem\-bliert und über den \textsc{Java} Bytecode in prädikatenlogische
-Formeln erster Ordnung übersetzt.  Die freien Variablen werden über die
-\mintinline{java}|@Variable| Annotation ermittelt.  Alle Formeln werden in einer
-Konjunktion zusammengeführt und das resultierende Erfüllbarkeitsproblem wird mit
-einem externen SMT Beweiser, im konkreten Fall Z3~\cite{MB:08}, gelöst.  Aus
-einer möglichen erfüllenden Belegung können dann die konkreten Werte für die mit
+\mintinline{java}|edges| erreicht werden.  Da dies per Reflection API erfolgt,
+muss satisfy keine Eigenschaften der Datenstruktur kennen.  Die Constraint
+Methoden werden zur Laufzeit dis\-as\-sem\-bliert und automatisch über den
+\textsc{Java} Bytecode in prädikatenlogische Formeln erster Ordnung übersetzt.
+Die freien Variablen werden über die \mintinline{java}|@Variable| Annotation
+ermittelt.  Alle Formeln werden in einer Konjunktion zusammengeführt und das
+resultierende Erfüllbarkeitsproblem wird mit einem externen SMT Beweiser, im
+konkreten Fall Z3~\cite{MB:08}, gelöst.  Aus einer möglichen erfüllenden
+Belegung können dann die konkreten Werte für die mit
 \mintinline{java}|@Variable| annotierten Feldvariablen ausgelesen und zugewiesen
 werden.
 
@@ -191,7 +200,7 @@ aufrufenden Methoden keine Seiteneffekte haben.
 
 \begin{figure}[t]
   \centering
-  \begin{minted}[fontsize=\footnotesize,bgcolor=bg,linenos=true]{java}
+  \begin{minted}[fontsize=\fontsize{10pt}{10pt}\selectfont,bgcolor=bg]{java}
 public class Graph {
   ...
 
