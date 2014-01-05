@@ -4,8 +4,6 @@ package de.agra.sat.koselleck.decompiling.datatypes;
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
-import de.agra.sat.koselleck.exceptions.UnsupportedNumberTypeException;
-import de.agra.sat.koselleck.utils.ListUtils;
 
 /**
  * AbstractConstraintFormula represents a formula in a constraint value.
@@ -82,16 +80,16 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 			AbstractConstraintLiteral constraintLiteral1 = (AbstractConstraintLiteral)this.value1;
 			AbstractConstraintLiteral constraintLiteral2 = (AbstractConstraintLiteral)this.value2;
 			if(
-					constraintLiteral1.valueType.isNumberType &&
-					constraintLiteral2.valueType.isNumberType) {
+					constraintLiteral1.valueType.isComparableNumberType &&
+					constraintLiteral2.valueType.isComparableNumberType) {
 				if(
 						constraintLiteral1.valueType == ConstraintValueType.DOUBLE ||
 						constraintLiteral2.valueType == ConstraintValueType.DOUBLE)
 					return new AbstractConstraintLiteral(
 							calculateValue(
-									(Number)constraintLiteral1.value,
+									(Double)constraintLiteral1.value,
 									this.operator,
-									(Number)constraintLiteral2.value),
+									(Double)constraintLiteral2.value),
 							ConstraintValueType.DOUBLE,
 							false);
 				else if(
@@ -99,19 +97,23 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 						constraintLiteral2.valueType == ConstraintValueType.FLOAT)
 					return new AbstractConstraintLiteral(
 							calculateValue(
-									(Number)constraintLiteral1.value,
+									(Float)constraintLiteral1.value,
 									this.operator,
-									(Number)constraintLiteral2.value),
+									(Float)constraintLiteral2.value),
 							ConstraintValueType.FLOAT,
 							false);
-				else
+				else if(
+						constraintLiteral1.valueType == ConstraintValueType.INTEGER ||
+						constraintLiteral2.valueType == ConstraintValueType.INTEGER)
 					return new AbstractConstraintLiteral(
 							calculateValue(
-									(Number)constraintLiteral1.value,
+									(Integer)constraintLiteral1.value,
 									this.operator,
-									(Number)constraintLiteral2.value),
+									(Integer)constraintLiteral2.value),
 							ConstraintValueType.INTEGER,
 							false);
+				else
+					return this;
 			} else
 				return this;
 		} else
@@ -203,69 +205,86 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	 * ----- ----- ----- ----- ----- */
 	
 	/**
-	 * calculateValue calculates the value of the two given numbers and returns
-	 *  the calculation of those considering the given arithmetic operator.
+	 * calculateValue calculates the value of the two given doubles and
+	 *  returns the calculation of those considering the given arithmetic
+	 *  operator.
 	 * 
-	 * @param value1 the first number
+	 * @param value1 the first double
 	 * @param operator the arithmetic operator
-	 * @param value2 the second number
+	 * @param value2 the second double
 	 * 
-	 * @return a new number for the calculation considering the arithmetic
+	 * @return a new double for the calculation considering the arithmetic
 	 *  operator
 	 */
-	private Number calculateValue(Number value1, ArithmeticOperator operator, Number value2) {
-		if(!ListUtils.instanceofAny(value1, ConstraintValueType.getNumberTypeClasses())) {
-			Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value1 == null ? "null" : value1.getClass().getSimpleName()) + "\" is not supported");
-			throw new UnsupportedNumberTypeException(value1);
+	private Double calculateValue(Double value1, ArithmeticOperator operator, Double value2) {
+		switch(operator) {
+		case ADD:
+			return value1 + value2;
+		case SUB:
+			return value1 - value2;
+		case MUL:
+			return value1 * value2;
+		case DIV:
+			return value1 / value2;
+		default:
+			Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+			throw new UnknownArithmeticOperatorException(operator);
 		}
-		
-		if(!ListUtils.instanceofAny(value2, ConstraintValueType.getNumberTypeClasses())) {
-			Logger.getLogger(AbstractConstraintFormula.class).fatal("number type \"" + (value2 == null ? "null" : value2.getClass().getSimpleName()) + "\" is not supported");
-			throw new UnsupportedNumberTypeException(value2);
+	}
+	
+	/**
+	 * calculateValue calculates the value of the two given floats and
+	 *  returns the calculation of those considering the given arithmetic
+	 *  operator.
+	 * 
+	 * @param value1 the first float
+	 * @param operator the arithmetic operator
+	 * @param value2 the second float
+	 * 
+	 * @return a new float for the calculation considering the arithmetic
+	 *  operator
+	 */
+	private Float calculateValue(Float value1, ArithmeticOperator operator, Float value2) {
+		switch(operator) {
+		case ADD:
+			return value1 + value2;
+		case SUB:
+			return value1 - value2;
+		case MUL:
+			return value1 * value2;
+		case DIV:
+			return value1 / value2;
+		default:
+			Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+			throw new UnknownArithmeticOperatorException(operator);
 		}
-		
-		if(value1 instanceof Double || value2 instanceof Double) {
-			switch(operator) {
-			case ADD:
-				return new Double(value1.doubleValue() + value2.doubleValue());
-			case SUB:
-				return new Double(value1.doubleValue() - value2.doubleValue());
-			case MUL:
-				return new Double(value1.doubleValue() * value2.doubleValue());
-			case DIV:
-				return new Double(value1.doubleValue() / value2.doubleValue());
-			default:
-				Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-				throw new UnknownArithmeticOperatorException(operator);
-			}
-		} else if(value1 instanceof Float || value2 instanceof Float) {
-			switch(operator) {
-			case ADD:
-				return new Float(value1.floatValue() + value2.floatValue());
-			case SUB:
-				return new Float(value1.floatValue() - value2.floatValue());
-			case MUL:
-				return new Float(value1.floatValue() * value2.floatValue());
-			case DIV:
-				return new Float(value1.floatValue() / value2.floatValue());
-			default:
-				Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-				throw new UnknownArithmeticOperatorException(operator);
-			}
-		} else {
-			switch(operator) {
-			case ADD:
-				return new Integer(value1.intValue() + value2.intValue());
-			case SUB:
-				return new Integer(value1.intValue() - value2.intValue());
-			case MUL:
-				return new Integer(value1.intValue() * value2.intValue());
-			case DIV:
-				return new Integer(value1.intValue() / value2.intValue());
-			default:
-				Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-				throw new UnknownArithmeticOperatorException(operator);
-			}
+	}
+	
+	/**
+	 * calculateValue calculates the value of the two given integers and
+	 *  returns the calculation of those considering the given arithmetic
+	 *  operator.
+	 * 
+	 * @param value1 the first integer
+	 * @param operator the arithmetic operator
+	 * @param value2 the second integer
+	 * 
+	 * @return a new integer for the calculation considering the arithmetic
+	 *  operator
+	 */
+	private Integer calculateValue(Integer value1, ArithmeticOperator operator, Integer value2) {
+		switch(operator) {
+		case ADD:
+			return value1 + value2;
+		case SUB:
+			return value1 - value2;
+		case MUL:
+			return value1 * value2;
+		case DIV:
+			return value1 / value2;
+		default:
+			Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+			throw new UnknownArithmeticOperatorException(operator);
 		}
 	}
 }

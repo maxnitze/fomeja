@@ -46,7 +46,11 @@ public enum Opcode {
 	if_icmplt("if_icmplt", 3, "^if_icmplt$", OpcodeType.OFFSET, "if_icmplt"),		/** less */
 	if_icmpne("if_icmpne", 3, "^if_icmpne$", OpcodeType.OFFSET, "if_icmpne"),		/** not equal */
 	
+	dcmpg("dcmpg", 1, "^dcmpg$", null, ""),
 	dcmpl("dcmpl", 1, "^dcmpl$", null, ""),
+	
+	fcmpg("fcmpg", 1, "^fcmpg$", null, ""),
+	fcmpl("fcmpl", 1, "^fcmpl$", null, ""),
 	
 	ireturn("ireturn", 1, "^ireturn$", null, "");
 	

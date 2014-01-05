@@ -86,6 +86,10 @@ public class SMTII extends Dialect {
 				resultMap.put(
 						resultMatcher.group("name"),
 						new Integer(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
+			else if(resultMatcher.group("type").equals("Real"))
+				resultMap.put(
+						resultMatcher.group("name"),
+						new Float(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
 			else {
 				Logger.getLogger(SMTII.class).fatal("could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.");
 				throw new UnsupportedVariableTypeException(resultMatcher.group("type"));
@@ -291,7 +295,11 @@ public class SMTII extends Dialect {
 		variableDeclaration.append("(declare-const ");
 		variableDeclaration.append(variableField.variableName);
 		
-		if(variableField.fieldType.equals(Integer.class))
+		if(variableField.fieldType.equals(Double.class))
+			variableDeclaration.append(" Real)");
+		else if(variableField.fieldType.equals(Float.class))
+			variableDeclaration.append(" Real)");
+		else if(variableField.fieldType.equals(Integer.class))
 			variableDeclaration.append(" Int)");
 		else {
 			String message = "could not translate class \"" + variableField.fieldType.getName() + "\" to Z3 syntax.";

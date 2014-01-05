@@ -116,6 +116,10 @@ public class Decompiler {
 		AbstractConstraintFormula constraintFormula = null;
 		AbstractConstraintValue constraintValue1 = null;
 		AbstractConstraintValue constraintValue2 = null;
+		AbstractConstraintLiteral constraintLiteral1 = null;
+		AbstractConstraintLiteral constraintLiteral2 = null;
+		
+		ConstraintOperator constraintOperator = null;
 		
 		Opcode fieldCode = null;
 		int value = 0;
@@ -261,23 +265,61 @@ public class Decompiler {
 			
 			case ifeq:
 			case ifne:
+				if(bytecodeLine.opcode == Opcode.ifeq)
+					constraintOperator = ConstraintOperator.EQUAL;
+				else if(bytecodeLine.opcode == Opcode.ifne)
+					constraintOperator = ConstraintOperator.NOT_EQUAL;
+				
 				constraintValue = this.stack.pop();
 				
 				if(constraintValue instanceof AbstractConstraintLiteral) {
 					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
 					
-					if(constraintLiteral.valueType.isNumberType) {
-						Logger.getLogger(Decompiler.class).fatal("could not cast given value \"" + constraintLiteral + "\" to number.");
-						throw new ClassCastException("could not cast given value \"" + constraintLiteral + "\" to number.");
-					}
-					
-					if((bytecodeLine.opcode == Opcode.ifeq && ((Number)constraintLiteral.value).intValue() == 0) ||
-							(bytecodeLine.opcode == Opcode.ifne && ((Number)constraintLiteral.value).intValue() != 0))
-						nextOffset = bytecodeLine.offset;
+					if(constraintLiteral.valueType.isComparableNumberType) {
+						if(constraintOperator.compare((Integer)constraintLiteral.value, 0))
+							nextOffset = bytecodeLine.offset;
+						else
+							nextOffset = bytecodeLine.followingLineNumber;
+					} else
+						return new AbstractSubConstraint(
+								new AbstractSubConstraint(
+										new AbstractSingleConstraint(
+												constraintLiteral,
+												constraintOperator,
+												new AbstractConstraintLiteral(0, ConstraintValueType.INTEGER, false),
+												prefixedFields),
+										BooleanConnector.AND,
+										getConstraint(bytecodeLine.offset)),
+								BooleanConnector.OR,
+								new AbstractSubConstraint(
+										new AbstractSingleConstraint(
+												constraintLiteral,
+												ConstraintOperator.fromOppositeAsciiName(constraintOperator.asciiName),
+												new AbstractConstraintLiteral(0, ConstraintValueType.INTEGER, false),
+												prefixedFields),
+										BooleanConnector.AND,
+										getConstraint(bytecodeLine.followingLineNumber)));
 				} else if(constraintValue instanceof AbstractConstraintFormula) {
 					constraintFormula = (AbstractConstraintFormula)constraintValue;
 					
-					// TODO implement
+					return new AbstractSubConstraint(
+							new AbstractSubConstraint(
+									new AbstractSingleConstraint(
+											constraintFormula,
+											constraintOperator,
+											new AbstractConstraintLiteral(0, ConstraintValueType.INTEGER, false),
+											prefixedFields),
+									BooleanConnector.AND,
+									getConstraint(bytecodeLine.offset)),
+							BooleanConnector.OR,
+							new AbstractSubConstraint(
+									new AbstractSingleConstraint(
+											constraintFormula,
+											ConstraintOperator.fromOppositeAsciiName(constraintOperator.asciiName),
+											new AbstractConstraintLiteral(0, ConstraintValueType.INTEGER, false),
+											prefixedFields),
+									BooleanConnector.AND,
+									getConstraint(bytecodeLine.followingLineNumber)));
 				} else {
 					Logger.getLogger(Decompiler.class).fatal("could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.");
 					throw new ClassCastException("could not cast given value \"" + constraintLiteral + "\" to AbstractConstraintLiteral.");
@@ -313,7 +355,44 @@ public class Decompiler {
 								BooleanConnector.AND,
 								getConstraint(bytecodeLine.followingLineNumber)));
 			
+			case fcmpg:
+			case fcmpl:
+			case dcmpg:
 			case dcmpl:
+				constraintValue2 = this.stack.pop();
+				constraintValue1 = this.stack.pop();
+				
+				if((constraintValue1 instanceof AbstractConstraintLiteral) &&
+						(constraintValue1 instanceof AbstractConstraintLiteral)) {
+					constraintLiteral1 = (AbstractConstraintLiteral)constraintValue1;
+					constraintLiteral2 = (AbstractConstraintLiteral)constraintValue2;
+					
+					if((bytecodeLine.opcode == Opcode.dcmpg || bytecodeLine.opcode == Opcode.dcmpl) &&
+							constraintLiteral1.valueType == ConstraintValueType.DOUBLE &&
+							constraintLiteral2.valueType == ConstraintValueType.DOUBLE) {
+						this.stack.push(new AbstractConstraintLiteral(
+								((Double)constraintLiteral.value).compareTo((Double)constraintLiteral2.value),
+								ConstraintValueType.INTEGER,
+								false));
+					} else if((bytecodeLine.opcode == Opcode.fcmpg || bytecodeLine.opcode == Opcode.fcmpl) &&
+							constraintLiteral1.valueType == ConstraintValueType.FLOAT &&
+							constraintLiteral2.valueType == ConstraintValueType.FLOAT) {
+						this.stack.push(new AbstractConstraintLiteral(
+								((Float)constraintLiteral.value).compareTo((Float)constraintLiteral2.value),
+								ConstraintValueType.INTEGER,
+								false));
+					} else
+						this.stack.push(
+								new AbstractConstraintFormula(
+										constraintValue1,
+										ArithmeticOperator.SUB,
+										constraintValue2));
+				} else
+					this.stack.push(
+							new AbstractConstraintFormula(
+									constraintValue1,
+									ArithmeticOperator.SUB,
+									constraintValue2));
 				
 				break;
 			
@@ -555,7 +634,7 @@ public class Decompiler {
 			
 			if(
 					constraintLiteral1.valueType == ConstraintValueType.INTEGER &&
-					constraintLiteral2.valueType == ConstraintValueType.INTEGER) {
+					constraintLiteral2.valueType == ConstraintValueType.INTEGER) { // TODO isComparableNumber
 				Integer value1 = (Integer)constraintLiteral1.value;
 				Integer value2 = (Integer)constraintLiteral2.value;
 				

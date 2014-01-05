@@ -16,7 +16,7 @@ public enum ConstraintOperator {
 	
 	/** the ascii name */
 	public final String asciiName;
-	/** the oppsite ascii name */
+	/** the opposite ascii name */
 	public final String oppositeAsciiName;
 	/** the swapped ascii name */
 	public final String swappedAsciiName;
@@ -104,7 +104,7 @@ public enum ConstraintOperator {
 	 * fromOpcode returns the constraint operator with the given opposite
 	 *  opcode.
 	 * 
-	 * @param opcode the oposite opcode to look for
+	 * @param opcode the opposite opcode to look for
 	 * 
 	 * @return the constraint operator with the given opposite opcode
 	 */
@@ -113,5 +113,34 @@ public enum ConstraintOperator {
 			if(oppositeOpcode.matches(co.oppositeOpcode))
 				return co;
 		throw new IllegalArgumentException("no constant with opposite opcode \"" + oppositeOpcode + "\" found");
+	}
+	
+	/**
+	 * compare compares the two given numbers by this constraint operator.
+	 * 
+	 * @param number1 the first number to compare
+	 * @param number2 the second number to compare
+	 * 
+	 * @return {@code true} if the comparison of the two given numbers
+	 *  evaluates to {@code true} applying this constraint operator, {@code
+	 *  false} otherwise
+	 */
+	public <T extends Comparable<T>> boolean compare(T number1, T number2) {
+		switch(this) {
+		case EQUAL:
+			return number1.compareTo(number2) == 0;
+		case GREATER:
+			return number1.compareTo(number2) > 0;
+		case GREATER_EQUAL:
+			return number1.compareTo(number2) >= 0;
+		case LESS:
+			return number1.compareTo(number2) < 0;
+		case LESS_EQUAL:
+			return number1.compareTo(number2) <= 0;
+		case NOT_EQUAL:
+			return number1.compareTo(number2) != 0;
+		default:
+			return false;
+		}
 	}
 }

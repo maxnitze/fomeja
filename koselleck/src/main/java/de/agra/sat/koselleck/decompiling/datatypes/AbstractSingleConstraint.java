@@ -95,8 +95,8 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 		
 		/** evaluate to boolean if both values are integer */
 		if(
-				constraintLiteral1.valueType.isNumberType &&
-				constraintLiteral2.valueType.isNumberType) {
+				constraintLiteral1.valueType.isComparableNumberType &&
+				constraintLiteral2.valueType.isComparableNumberType) {
 			switch(constraintLiteral1.valueType) {
 			case DOUBLE:
 				switch(constraintLiteral2.valueType) {

@@ -8,16 +8,11 @@ import de.agra.sat.koselleck.utils.IOUtils;
 public class Main {
 	public static void main(String[] args) {
 		boolean testValidate	= false;
-		boolean testSatisfy		= false;
+		boolean testSatisfy		= true;
 		boolean testMinimize	= false;
 		boolean testMaximize	= false;
 		
-		Number d = new Double(0);
-		Number i = new Integer(0);
-		
-		System.out.println(d.doubleValue() == i.doubleValue());
-		
-		String graphfile = "graph_250_15668.col";
+		String graphfile = "graph_100_2530.col";
 		CGGraph graph = new CGGraph();
 		try {
 			graph.parse(IOUtils.readFromFile("/graphs/" + graphfile));
@@ -35,9 +30,9 @@ public class Main {
 		
 		if(testSatisfy) {
 			if(I2AL.satisfy(graph))
-				System.out.println("the graph \"" + graphfile + "\" is satisfiable");
+				System.out.println("the graph \"" + graphfile + "\" is assigned with a satisfying assignment");
 			else
-				System.out.println("the graph \"" + graphfile + "\" is not satisfiable");
+				System.out.println("the graph \"" + graphfile + "\" is not assigned with a satisfying assignment");
 		}
 		
 		if(testMinimize) {

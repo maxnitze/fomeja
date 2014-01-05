@@ -7,16 +7,16 @@ package de.agra.sat.koselleck.exceptions;
  * @version 1.0.0
  * @author Max Nitze
  */
-public class UnsupportedNumberTypeException extends RuntimeException {
+public class UnsupportedComparableNumberTypeException extends RuntimeException {
 	/** serial id */
 	private static final long serialVersionUID = -5546321011556996377L;
 
 	/**
 	 * Constructor for a new UnsupportedNumberTypeException.
 	 * 
-	 * @param number the unsupported number
+	 * @param number the unsupported comparable number
 	 */
-	public UnsupportedNumberTypeException(Number number) {
+	public <T extends Number> UnsupportedComparableNumberTypeException(T number) {
 		super("number type \"" + (number == null ? "null" : number.getClass().getSimpleName()) + "\" is not supported");
 	}
 }

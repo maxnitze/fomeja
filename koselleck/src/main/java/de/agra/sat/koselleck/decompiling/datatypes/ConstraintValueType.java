@@ -23,20 +23,20 @@ public enum ConstraintValueType {
 	/** the class */
 	public final Class<?> clazz;
 	
-	/** flag that indicates that the type is a number type */
-	public final boolean isNumberType;
+	/** flag that indicates that the type is a comparable number type */
+	public final boolean isComparableNumberType;
 	
 	/**
 	 * Constructor for a new constraint value type.
 	 * 
 	 * @param name the new name
 	 * @param clazz the new class
-	 * @param isNumberType the new number type flag
+	 * @param isComparableNumberType the new comparable number type flag
 	 */
-	ConstraintValueType(String name, Class<?> clazz, boolean isNumberType) {
+	ConstraintValueType(String name, Class<?> clazz, boolean isComparableNumberType) {
 		this.name = name;
 		this.clazz = clazz;
-		this.isNumberType = isNumberType;
+		this.isComparableNumberType = isComparableNumberType;
 	}
 	
 	/**
@@ -54,17 +54,17 @@ public enum ConstraintValueType {
 	}
 	
 	/**
-	 * getNumberTypeClasses returns the list of the classes of this enumeration
-	 *  that are assignable from number.
+	 * getComparableNumberTypeClasses returns the list of the classes of this
+	 *  enumeration that are assignable from number.
 	 * 
 	 * @return the list of the classes of this enumeration that are assignable
-	 *  from number
+	 *  from a comparable number type
 	 */
-	public static List<Class<?>> getNumberTypeClasses() {
+	public static List<Class<?>> getComparableNumberTypeClasses() {
 		List<Class<?>> numberTypeClasses = new ArrayList<Class<?>>();
 		
 		for(ConstraintValueType cvt : values())
-			if(cvt.isNumberType)
+			if(cvt.isComparableNumberType)
 				numberTypeClasses.add(cvt.clazz);
 		
 		return numberTypeClasses;
