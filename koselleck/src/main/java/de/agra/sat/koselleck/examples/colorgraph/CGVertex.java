@@ -12,7 +12,7 @@ public class CGVertex {
 		this.id = id;
 	}
 	
-	public int getColor() {
+	public int getColor(Integer d, Integer i) { // TODO !
 		return this.color;
 	}
 }

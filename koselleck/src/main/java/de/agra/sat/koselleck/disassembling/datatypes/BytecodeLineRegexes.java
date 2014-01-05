@@ -28,5 +28,5 @@ public abstract class BytecodeLineRegexes {
 	/** regular expression for a valued byte code line */
 	public static final String typeRegex = "^\\d+: \\S+ #?\\d+ // (?<type>\\S+) (?<qfield>\\S+)$";
 	/** regular expression for a valued byte code line */
-	public static final String typeMethodFieldRegex = "^\\d+: \\S+ #?\\d+ // (?<type>\\S+) (?<qfield>\\S+):(?<class>\\S+)$";
+	public static final String typeMethodFieldRegex = "^\\d+: \\S+ #?\\d+ // (?<type>\\S+) (?<qfield>\\S+):(\\((?<paramtypes>\\S+)\\))?(?<rtype>\\S+)$";
 }

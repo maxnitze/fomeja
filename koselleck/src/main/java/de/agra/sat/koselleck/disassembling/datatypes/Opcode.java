@@ -13,7 +13,9 @@ import org.apache.log4j.Logger;
 public enum Opcode {
 	aload_0("aload_0", 1, "^aload_0$", OpcodeType.VALUE, "aload_"),
 	aload("aload", 1, "^aload(_[1-5])?$", OpcodeType.VALUE, "aload(_|\\s)"),
-	
+
+	bconst("bconst", 1, "^bconst(_\\d+)?$", OpcodeType.VALUE, "bconst(_|\\s)"),
+	fconst("fconst", 1, "^fconst(_\\d+)?$", OpcodeType.VALUE, "fconst(_|\\s)"),
 	iconst("iconst", 1, "^iconst(_\\d+)?$", OpcodeType.VALUE, "iconst(_|\\s)"),
 	bipush("bipush", 2, "^bipush$", OpcodeType.VALUE, "bipush\\s"),
 	
@@ -27,7 +29,8 @@ public enum Opcode {
 	mul("mul", 1, "^[i]mul$", null, ""),
 	div("div", 1, "^[i]div$", null, ""),
 	
-	invokevirtual("invokevirtual", 3, "^invokevirtual$", null, ""),
+	invokestatic("invokestatic", 3, "^invokestatic$", OpcodeType.CONSTANT_TABLE_INDEX, "invokestatic"),
+	invokevirtual("invokevirtual", 3, "^invokevirtual$", OpcodeType.CONSTANT_TABLE_INDEX, "invokevirtual"),
 	
 	tableswitch("tableswitch", 0, "^tableswitch$", OpcodeType.SWITCH, "tableswitch"),
 	
@@ -78,7 +81,7 @@ public enum Opcode {
 	 * @param typeRegex the new regular expression for this opcode
 	 */
 	Opcode(String name, int followingLineOffset, String opcodeRegex, OpcodeType type, String typeRegex) {
-		this.name= name;
+		this.name = name;
 		this.followingLineOffset = followingLineOffset;
 		this.opcodeRegex = opcodeRegex;
 		this.type = type;

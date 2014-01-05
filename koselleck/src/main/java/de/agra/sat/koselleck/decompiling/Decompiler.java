@@ -1,5 +1,10 @@
 package de.agra.sat.koselleck.decompiling;
 
+/** TODO List:
+ * - handle dconst and fconst
+ * - implement behaviour for invokestatic
+ * ----- ----- ----- ----- ----- */
+
 /** imports */
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -249,6 +254,14 @@ public class Decompiler {
 						nextOffset = caseOffset;
 				} else
 					nextOffset = caseOffset;
+				break;
+				
+			case invokestatic:
+				// TODO implement
+				break;
+				
+			case invokevirtual:
+				System.out.println(bytecodeLine.type); // TODO !
 				break;
 				
 			case _goto:

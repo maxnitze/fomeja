@@ -18,7 +18,7 @@ import de.agra.sat.koselleck.disassembling.datatypes.Opcode;
  */
 public class Disassembler {
 	/** the component */
-	private final Object component;
+	private final Class<?> componentClass;
 	/** the method to disassemble */
 	private final Method method;
 	/** the signature of the method */
@@ -29,13 +29,13 @@ public class Disassembler {
 	/**
 	 * Constructor for a new disassembler.
 	 * 
-	 * @param component the new component
+	 * @param componentClass the class of the new component
 	 * @param method the new method
 	 * @param methodSignature the new method signature
 	 * @param disassembledMethod the new java byte code of the method
 	 */
-	private Disassembler(Object component, Method method, String methodSignature, String disassembledMethod) {
-		this.component = component;
+	private Disassembler(Class<?> componentClass, Method method, String methodSignature, String disassembledMethod) {
+		this.componentClass = componentClass;
 		this.method = method;
 		this.methodSignature = methodSignature;
 		this.disassembledMethod = disassembledMethod;
@@ -49,9 +49,9 @@ public class Disassembler {
 	 */
 	private DisassembledMethod disassemble() {
 		Map<Integer, BytecodeLine> bytecodeLines = new HashMap<Integer, BytecodeLine>();
-		String[] methodLines = disassembledMethod.split("\n");
+		String[] methodLines = this.disassembledMethod.split("\n");
 		for(int i=0; i<methodLines.length; i++) {
-			BytecodeLine bytecodeLine = new BytecodeLine(this.component, methodLines[i]);
+			BytecodeLine bytecodeLine = new BytecodeLine(this.componentClass, methodLines[i]);
 			bytecodeLines.put(bytecodeLine.lineNumber, bytecodeLine);
 			if(bytecodeLine.opcode == Opcode.tableswitch)
 				while(methodLines[i+1].matches(BytecodeLineRegexes.switchCase))
@@ -70,14 +70,14 @@ public class Disassembler {
 	 * disassemble instantiates a new disassembler with the given method and
 	 *  returns the disassembled method.
 	 * 
-	 * @param component the component for the method
+	 * @param componentClass the class of the component for the method
 	 * @param methodSignature the signature of the method
 	 * @param disassembledMethod the disassembled method
 	 * 
 	 * @return the disassembled method object of the given method
 	 */
-	public static DisassembledMethod disassemble(Object component, Method method, String methodSignature, String disassembledMethod) {
-		Disassembler disassembler = new Disassembler(component, method, methodSignature, disassembledMethod);
+	public static DisassembledMethod disassemble(Class<?> componentClass, Method method, String methodSignature, String disassembledMethod) {
+		Disassembler disassembler = new Disassembler(componentClass, method, methodSignature, disassembledMethod);
 		return disassembler.disassemble();
 	}
 }

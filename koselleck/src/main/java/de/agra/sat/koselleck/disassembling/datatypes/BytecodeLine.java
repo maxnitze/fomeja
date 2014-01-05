@@ -23,7 +23,7 @@ public class BytecodeLine {
 	/** the number of the next line */
 	public final int followingLineNumber;
 	/** the value of the byte code line */
-	public final int value;
+	public final Integer value;
 	/** the offset of the byte code  line */
 	public final int offset;
 	/** the constant table index of the byte code line */
@@ -36,9 +36,10 @@ public class BytecodeLine {
 	/**
 	 * Constructor for a new byte code line.
 	 * 
+	 * @param componentClass the class of the current component
 	 * @param line the line of the disassembled method
 	 */
-	public BytecodeLine(Object component, String line) {
+	public BytecodeLine(Class<?> componentClass, String line) {
 		this.line = line.trim().replaceAll("\\s+", " ");
 		
 		if(!this.line.matches(BytecodeLineRegexes.opcode))
@@ -64,7 +65,7 @@ public class BytecodeLine {
 			this.value = -1;
 			this.offset = -1;
 			this.constantTableIndex = Integer.parseInt(this.line.replaceAll(BytecodeLineRegexes.constantTableIndex, "${index}"));
-			this.type = new BytecodeLineType(component, this.line);
+			this.type = new BytecodeLineType(componentClass, this.line);
 			this.switchOffsets = null;
 		} else if(this.line.matches(BytecodeLineRegexes.tableswitch)) {
 			this.value = -1;

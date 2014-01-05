@@ -96,7 +96,7 @@ public abstract class I2AL {
 		
 		List<Field> variableFields = KoselleckUtils.getVariableFields(component.getClass());
 		if(variableFields.size() > 0) {
-			Map<String, DisassembledMethod> disassembledMethods = KoselleckUtils.getDisassembledConstraintMethods(component);
+			Map<String, DisassembledMethod> disassembledMethods = KoselleckUtils.getDisassembledConstraintMethods(component.getClass());
 			
 			List<AbstractSingleTheorem> singleTheorems = new ArrayList<AbstractSingleTheorem>();
 			
@@ -106,7 +106,7 @@ public abstract class I2AL {
 				String methodSignature = (method.toGenericString().replaceFirst("^public boolean .*\\(", "public boolean "+ method.getName() +"(") + ";").replaceAll(", ", ",");;
 				DisassembledMethod disassembledMethod = disassembledMethods.get(methodSignature);
 				
-//				System.out.println(disassembledMethod.toString() + "\n"); // TODO delete output of disassembled method
+				System.out.println(disassembledMethod.toString() + "\n"); // TODO delete output of disassembled method
 				
 				if(disassembledMethod != null)
 					singleTheorems.add(new AbstractSingleTheorem(Decompiler.decompile(disassembledMethod), paramFields));

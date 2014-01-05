@@ -289,38 +289,33 @@ public abstract class KoselleckUtils {
 			return true;
 	}
 	
+//	public static DisassembledMethod getDisassembledMethodBySignature(Class<?> componentClass, String methodSignature) {
+//		String disassembledClass = getDisassembledClass(componentClass);
+//		
+//		Method method = componentClass.getDeclaredMethod(name, parameterTypes);
+//		
+//		// TODO implement
+//	}
+	
 	/**
 	 * getDisassembledConstraintMethods returns a map of method signatures to
 	 *  disassembled methods containing the disassembled java byte code
 	 *  (disassembled by javap) of the methods of the given class.
 	 *  
-	 * @param component the component to disassemble the constraint methods
+	 * @param componentClass the class to disassemble the constraint methods
 	 *  from
 	 * 
 	 * @return a map of method signatures to DisassembledMethods, containing
 	 *  the disassembled java byte code (disassembled by javap) of the methods
 	 *  of the given class.
 	 */
-	public static Map<String, DisassembledMethod> getDisassembledConstraintMethods(Object component) {
-		List<Method> constraintMethods = getConstraintMethods(component.getClass());
+	public static Map<String, DisassembledMethod> getDisassembledConstraintMethods(Class<?> componentClass) {
+		String disassembledClass = getDisassembledClass(componentClass);
 		
+		List<Method> constraintMethods = getConstraintMethods(componentClass);
 		Map<String, DisassembledMethod> disassembledMethods = new HashMap<String, DisassembledMethod>();
 		
-		StringBuilder command = new StringBuilder("javap -classpath / -c ");
-		command.append(component.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-		command.append(component.getClass().getName().replaceAll("\\.", "/"));
-
-		String disassembledCode = null;
-		try {
-			Process p = Runtime.getRuntime().exec(command.toString());
-			disassembledCode = IOUtils.readFromStream(p.getInputStream());
-		} catch (IOException e) {
-			String message = "could not read class file for class \"" + component.getClass().getSimpleName() + "\"";
-			Logger.getLogger(KoselleckUtils.class).fatal(message);
-			throw new IllegalArgumentException(message);
-		}
-		
-		for(String methodCode : disassembledCode.toString().split("\n\n")) {
+		for(String methodCode : disassembledClass.toString().split("\n\n")) {
 			String trimmedMethodSignature = "";
 			StringBuilder trimmedMethod = new StringBuilder();
 			for(String methodCodeLine : methodCode.split("\n")) {
@@ -344,12 +339,46 @@ public abstract class KoselleckUtils {
 				}
 			}
 			
+			System.out.println(trimmedMethodSignature); // TODO !
+			
 			if(!skip && trimmedMethodSignature != "")
-				disassembledMethods.put(trimmedMethodSignature, Disassembler.disassemble(component, method, trimmedMethodSignature, trimmedMethod.toString()));
+				disassembledMethods.put(trimmedMethodSignature, Disassembler.disassemble(componentClass, method, trimmedMethodSignature, trimmedMethod.toString()));
 		}
 		
 		return disassembledMethods;
 	}
+	
+	/** private methods
+	 * ----- ----- ----- ----- ----- */
+	
+	/**
+	 * getDisassembledClass returns class disassembled by javap.
+	 * 
+	 * @param componentClass the class to disassemble
+	 * 
+	 * @return the class disassembled by javap
+	 */
+	private static String getDisassembledClass(Class<?> componentClass) {
+		StringBuilder command = new StringBuilder("javap -classpath / -c ");
+		command.append(componentClass.getProtectionDomain().getCodeSource().getLocation().getPath());
+		command.append(componentClass.getName().replaceAll("\\.", "/"));
+		
+		Process p = null;
+		try {
+			p = Runtime.getRuntime().exec(command.toString());
+			return IOUtils.readFromStream(p.getInputStream());
+		} catch (IOException e) {
+			String message = "could not read class file for class \"" + componentClass.getSimpleName() + "\"";
+			Logger.getLogger(KoselleckUtils.class).fatal(message);
+			throw new IllegalArgumentException(message);
+		} finally {
+			if(p != null)
+				p.destroy();
+		}
+	}
+	
+	/** inherited classes
+	 * ----- ----- ----- ----- ----- */
 	
 	/**
 	 * FieldList is a wrapper class for an array list of fields.
