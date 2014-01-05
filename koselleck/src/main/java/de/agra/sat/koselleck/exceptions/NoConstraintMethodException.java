@@ -15,9 +15,9 @@ public class NoConstraintMethodException extends RuntimeException {
 	private static final long serialVersionUID = -887113639393430230L;
 	
 	/**
-	 * COnstructor for a new NoConstraintMethodException.
+	 * Constructor for a new NoConstraintMethodException.
 	 * 
-	 * @param message the message of the exception
+	 * @param method the method of the exception
 	 */
 	public NoConstraintMethodException(Method method) {
 		super("method \"" + method.toGenericString() + "\" is not a constraint method");

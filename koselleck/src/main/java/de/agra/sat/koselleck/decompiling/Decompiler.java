@@ -626,42 +626,40 @@ public class Decompiler {
 	 *  constraint values and the constraint operator otherwise
 	 */
 	private AbstractConstraint getSingleConstraint(AbstractConstraintValue constraintValue1, ConstraintOperator constraintOperator, AbstractConstraintValue constraintValue2, List<PrefixedField> prefixedFields) {
-		if(
-				constraintValue1 instanceof AbstractConstraintLiteral &&
+		if(constraintValue1 instanceof AbstractConstraintLiteral &&
 				constraintValue2 instanceof AbstractConstraintLiteral) {
 			AbstractConstraintLiteral constraintLiteral1 = (AbstractConstraintLiteral)constraintValue1;
 			AbstractConstraintLiteral constraintLiteral2 = (AbstractConstraintLiteral)constraintValue2;
 			
-			if(
-					constraintLiteral1.valueType == ConstraintValueType.INTEGER &&
-					constraintLiteral2.valueType == ConstraintValueType.INTEGER) { // TODO isComparableNumber
-				Integer value1 = (Integer)constraintLiteral1.value;
-				Integer value2 = (Integer)constraintLiteral2.value;
-				
+			if(constraintLiteral1.valueType.isComparableNumberType && constraintLiteral2.valueType.isComparableNumberType) {
 				switch(constraintOperator) {
 				case EQUAL:
-					return new AbstractBooleanConstraint(value1.compareTo(value2) == 0);
+					return new AbstractBooleanConstraint(constraintLiteral1.compareTo(constraintLiteral2) == 0);
 				case GREATER:
-					return new AbstractBooleanConstraint(value1.compareTo(value2) > 0);
+					return new AbstractBooleanConstraint(constraintLiteral1.compareTo(constraintLiteral2) > 0);
 				case GREATER_EQUAL:
-					return new AbstractBooleanConstraint(value1.compareTo(value2) >= 0);
+					return new AbstractBooleanConstraint(constraintLiteral1.compareTo(constraintLiteral2) >= 0);
 				case LESS:
-					return new AbstractBooleanConstraint(value1.compareTo(value2) < 0);
+					return new AbstractBooleanConstraint(constraintLiteral1.compareTo(constraintLiteral2) < 0);
 				case LESS_EQUAL:
-					return new AbstractBooleanConstraint(value1.compareTo(value2) <= 0);
+					return new AbstractBooleanConstraint(constraintLiteral1.compareTo(constraintLiteral2) <= 0);
 				case NOT_EQUAL:
-					return new AbstractBooleanConstraint(value1.compareTo(value2) != 0);
+					return new AbstractBooleanConstraint(constraintLiteral1.compareTo(constraintLiteral2) != 0);
 				default:
 					Logger.getLogger(Decompiler.class).fatal("constraint operator " + (constraintOperator == null ? "null" : "\"" + constraintOperator.asciiName + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(constraintOperator);
 				}
-			}
-		}
-		
-		return new AbstractSingleConstraint(
-				constraintValue1,
-				constraintOperator,
-				constraintValue2,
-				prefixedFields);
+			} else
+				return new AbstractSingleConstraint(
+						constraintValue1,
+						constraintOperator,
+						constraintValue2,
+						prefixedFields);
+		} else
+			return new AbstractSingleConstraint(
+					constraintValue1,
+					constraintOperator,
+					constraintValue2,
+					prefixedFields);
 	}
 }

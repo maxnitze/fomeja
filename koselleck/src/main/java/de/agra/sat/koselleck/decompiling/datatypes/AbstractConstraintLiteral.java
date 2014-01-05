@@ -2,6 +2,7 @@ package de.agra.sat.koselleck.decompiling.datatypes;
 
 import org.apache.log4j.Logger;
 
+import de.agra.sat.koselleck.exceptions.NoComparableNumberTypeException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintValueTypeException;
 
 /**
@@ -10,7 +11,7 @@ import de.agra.sat.koselleck.exceptions.UnknownConstraintValueTypeException;
  * @version 1.0.0
  * @author Max Nitze
  */
-public class AbstractConstraintLiteral extends AbstractConstraintValue {
+public class AbstractConstraintLiteral extends AbstractConstraintValue implements Comparable<AbstractConstraintLiteral> {
 	/** the object */
 	public Object value;
 	/** the type of the object */
@@ -189,6 +190,62 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue {
 		default:
 			Logger.getLogger(AbstractConstraintLiteral.class).fatal("constraint value type " + (this.valueType == null ? "null" : "\"" + this.valueType.name + "\"") + " is not known");
 			throw new UnknownConstraintValueTypeException(this.valueType);
+		}
+	}
+	
+	/**
+	 * compareTo compares this abstract constraint literal to the given one. if
+	 *  this or the given abstract constraint literal has no comparable number
+	 *  type an exception is thrown.
+	 * 
+	 * @param constraintLiteral the abstract constraint literal to compare to
+	 * 
+	 * @return 0 if the comparable number type of this and the given abstract
+	 *  constraint literal are equal, 1 if this or -1 if the given is greater
+	 */
+	@Override
+	public int compareTo(AbstractConstraintLiteral constraintLiteral) {
+		switch(this.valueType) {
+		case DOUBLE:
+			switch(constraintLiteral.valueType) {
+			case DOUBLE:
+			case FLOAT:
+			case INTEGER:
+				return ((Double)this.value).compareTo((Double)constraintLiteral.value);
+			default:
+				NoComparableNumberTypeException exception = new NoComparableNumberTypeException(constraintLiteral);
+				Logger.getLogger(AbstractConstraintLiteral.class).fatal(exception.getMessage());
+				throw exception;
+			}
+		case FLOAT:
+			switch(constraintLiteral.valueType) {
+			case DOUBLE:
+				return ((Double)this.value).compareTo((Double)constraintLiteral.value);
+			case FLOAT:
+			case INTEGER:
+				return ((Float)this.value).compareTo((Float)constraintLiteral.value);
+			default:
+				NoComparableNumberTypeException exception = new NoComparableNumberTypeException(constraintLiteral);
+				Logger.getLogger(AbstractConstraintLiteral.class).fatal(exception.getMessage());
+				throw exception;
+			}
+		case INTEGER:
+			switch(constraintLiteral.valueType) {
+			case DOUBLE:
+				return ((Double)this.value).compareTo((Double)constraintLiteral.value);
+			case FLOAT:
+				return ((Float)this.value).compareTo((Float)constraintLiteral.value);
+			case INTEGER:
+				return ((Integer)this.value).compareTo((Integer)constraintLiteral.value);
+			default:
+				NoComparableNumberTypeException exception = new NoComparableNumberTypeException(constraintLiteral);
+				Logger.getLogger(AbstractConstraintLiteral.class).fatal(exception.getMessage());
+				throw exception;
+			}
+		default:
+			NoComparableNumberTypeException exception = new NoComparableNumberTypeException(this);
+			Logger.getLogger(AbstractConstraintLiteral.class).fatal(exception.getMessage());
+			throw exception;
 		}
 	}
 }
