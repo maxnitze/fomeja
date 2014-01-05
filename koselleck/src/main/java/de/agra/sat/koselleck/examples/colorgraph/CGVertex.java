@@ -11,4 +11,8 @@ public class CGVertex {
 	public CGVertex(int id) {
 		this.id = id;
 	}
+	
+	public int getColor() {
+		return this.color;
+	}
 }
