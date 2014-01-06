@@ -4,6 +4,7 @@ package de.agra.sat.koselleck.utils;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -289,13 +290,64 @@ public abstract class KoselleckUtils {
 			return true;
 	}
 	
-//	public static DisassembledMethod getDisassembledMethodBySignature(Class<?> componentClass, String methodSignature) {
-//		String disassembledClass = getDisassembledClass(componentClass);
-//		
-//		Method method = componentClass.getDeclaredMethod(name, parameterTypes);
-//		
-//		// TODO implement
-//	}
+	public static DisassembledMethod getDisassembledMethod(Method method) {
+		String disassembledClass = getDisassembledClass(method.getDeclaringClass());
+		
+		StringBuilder methodSignature = new StringBuilder();
+		methodSignature.append(Modifier.toString(method.getModifiers()));
+		methodSignature.append(" ");
+		methodSignature.append(method.getReturnType().getCanonicalName());
+		methodSignature.append(" ");
+		methodSignature.append(method.getName());
+		methodSignature.append("(");
+		boolean firstParameterType = true;
+		for(Class<?> cls : method.getParameterTypes()) {
+			if(!firstParameterType)
+				methodSignature.append(", ");
+			else
+				firstParameterType = false;
+			
+			methodSignature.append(cls.getCanonicalName());
+		}
+		methodSignature.append(");");
+		
+		/** split methods */
+		for(String methodCode : disassembledClass.toString().split("\n\n")) {
+			StringBuilder trimmedMethod = new StringBuilder();
+			/** split lines of the method */
+			boolean signatureLine = true;
+			for(String methodCodeLine : methodCode.split("\n")) {
+				if(methodCodeLine.trim().matches("^(class|public class|}|Code:|Compiled).*"))
+					continue;
+				
+				if(signatureLine) {
+					if(!methodCodeLine.trim().equals(methodSignature.toString()))
+						break;
+					else {
+						signatureLine = false;
+						continue;
+					}
+				}
+				
+				trimmedMethod.append(methodCodeLine.trim());
+				trimmedMethod.append("\n");
+			}
+			
+			if(!signatureLine) {
+				System.out.println(methodSignature.toString() + "\n" + trimmedMethod.toString());
+				
+				return Disassembler.disassemble(
+						method.getDeclaringClass(),
+						method,
+						methodSignature.toString(),
+						trimmedMethod.toString());
+			}
+		}
+		
+		/** could never happen, because the method defines the class to
+		 * disassemble */
+		throw new RuntimeException("something went terribly wrong!");
+	}
 	
 	/**
 	 * getDisassembledConstraintMethods returns a map of method signatures to
@@ -320,7 +372,7 @@ public abstract class KoselleckUtils {
 			StringBuilder trimmedMethod = new StringBuilder();
 			for(String methodCodeLine : methodCode.split("\n")) {
 				if(!(methodCodeLine.trim().matches("^(class|public class|}|Code:).*"))) {
-					if(methodCodeLine.trim().matches("^(public )?(boolean|int) .*"))
+					if(methodCodeLine.trim().matches("^(public )?boolean .*"))
 						trimmedMethodSignature = methodCodeLine.trim().replaceAll(", ", ",");
 					else {
 						trimmedMethod.append(methodCodeLine.trim());
@@ -338,8 +390,6 @@ public abstract class KoselleckUtils {
 					break;
 				}
 			}
-			
-			System.out.println(trimmedMethodSignature); // TODO !
 			
 			if(!skip && trimmedMethodSignature != "")
 				disassembledMethods.put(trimmedMethodSignature, Disassembler.disassemble(componentClass, method, trimmedMethodSignature, trimmedMethod.toString()));
