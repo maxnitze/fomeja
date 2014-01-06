@@ -290,9 +290,19 @@ public abstract class KoselleckUtils {
 			return true;
 	}
 	
+	/**
+	 * getDisassembledMethod disassembles the given method and returns the byte
+	 *  code (disassembled by javap).
+	 * 
+	 * @param method the method to disassemble
+	 * 
+	 * @return the disassembled method (disassembled by javap)
+	 */
 	public static DisassembledMethod getDisassembledMethod(Method method) {
+		/** disassemble class */
 		String disassembledClass = getDisassembledClass(method.getDeclaringClass());
 		
+		/** create method signature string */
 		StringBuilder methodSignature = new StringBuilder();
 		methodSignature.append(Modifier.toString(method.getModifiers()));
 		methodSignature.append(" ");
@@ -320,15 +330,15 @@ public abstract class KoselleckUtils {
 				if(methodCodeLine.trim().matches("^(class|public class|}|Code:|Compiled).*"))
 					continue;
 				
-				if(signatureLine) {
-					if(!methodCodeLine.trim().equals(methodSignature.toString()))
-						break;
-					else {
-						signatureLine = false;
-						continue;
-					}
+				/** check for method with right signature */
+				if(signatureLine && !methodCodeLine.trim().equals(methodSignature.toString()))
+					break;
+				else if(signatureLine) {
+					signatureLine = false;
+					continue;
 				}
 				
+				/** append line of bytecode */
 				trimmedMethod.append(methodCodeLine.trim());
 				trimmedMethod.append("\n");
 			}
@@ -410,6 +420,10 @@ public abstract class KoselleckUtils {
 	 */
 	private static String getDisassembledClass(Class<?> componentClass) {
 		StringBuilder command = new StringBuilder("javap -classpath / -c ");
+		if(componentClass.getProtectionDomain().getCodeSource() == null) {
+			System.out.println(KoselleckUtils.class.getResource(""));
+		}
+		
 		command.append(componentClass.getProtectionDomain().getCodeSource().getLocation().getPath());
 		command.append(componentClass.getName().replaceAll("\\.", "/"));
 		

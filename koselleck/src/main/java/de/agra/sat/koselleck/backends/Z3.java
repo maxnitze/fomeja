@@ -41,6 +41,8 @@ public class Z3 extends Prover {
 	 */
 	@Override
 	public String solve(String smt2theorem) {
+//		System.out.println(smt2theorem); // TODO delete
+		
 		Process process = null;
 		try {
 			switch(this.dialect.dialectType) {
