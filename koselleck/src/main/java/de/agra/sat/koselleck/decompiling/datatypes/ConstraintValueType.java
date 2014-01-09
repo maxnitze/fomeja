@@ -11,18 +11,20 @@ import java.util.List;
  * @author Max Nitze
  */
 public enum ConstraintValueType {
-	DOUBLE("Double", Double.class, true),
-	FLOAT("Float", Float.class, true),
-	INTEGER("Integer", Integer.class, true),
+	Double("Double", Double.class, true, true),
+	Float("Float", Float.class, true, true),
+	Integer("Integer", Integer.class, true, true),
 	
-	STRING("String", String.class, false),
-	PREFIXED_FIELD("PrefixedField", PrefixedField.class, false);
+	STRING("String", String.class, false, true),
+	PREFIXED_FIELD("PrefixedField", PrefixedField.class, false, true);
 	
 	/** the name */
 	public final String name;
 	/** the class */
 	public final Class<?> clazz;
 	
+	/** flag that indicates that the type is finished */
+	public final boolean isFinishedType;
 	/** flag that indicates that the type is a comparable number type */
 	public final boolean isComparableNumberType;
 	
@@ -31,11 +33,13 @@ public enum ConstraintValueType {
 	 * 
 	 * @param name the new name
 	 * @param clazz the new class
+	 * @param isFinished the new finished flag
 	 * @param isComparableNumberType the new comparable number type flag
 	 */
-	ConstraintValueType(String name, Class<?> clazz, boolean isComparableNumberType) {
+	ConstraintValueType(String name, Class<?> clazz, boolean isFinished, boolean isComparableNumberType) {
 		this.name = name;
 		this.clazz = clazz;
+		this.isFinishedType = isFinished;
 		this.isComparableNumberType = isComparableNumberType;
 	}
 	

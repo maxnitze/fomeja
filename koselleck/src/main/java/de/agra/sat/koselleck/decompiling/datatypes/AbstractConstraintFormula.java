@@ -82,38 +82,76 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 			if(
 					constraintLiteral1.valueType.isComparableNumberType &&
 					constraintLiteral2.valueType.isComparableNumberType) {
-				if(
-						constraintLiteral1.valueType == ConstraintValueType.DOUBLE ||
-						constraintLiteral2.valueType == ConstraintValueType.DOUBLE)
-					return new AbstractConstraintLiteral(
-							calculateValue(
-									(Double)constraintLiteral1.value,
-									this.operator,
-									(Double)constraintLiteral2.value),
-							ConstraintValueType.DOUBLE,
-							false);
-				else if(
-						constraintLiteral1.valueType == ConstraintValueType.FLOAT ||
-						constraintLiteral2.valueType == ConstraintValueType.FLOAT)
-					return new AbstractConstraintLiteral(
-							calculateValue(
-									(Float)constraintLiteral1.value,
-									this.operator,
-									(Float)constraintLiteral2.value),
-							ConstraintValueType.FLOAT,
-							false);
-				else if(
-						constraintLiteral1.valueType == ConstraintValueType.INTEGER ||
-						constraintLiteral2.valueType == ConstraintValueType.INTEGER)
-					return new AbstractConstraintLiteral(
-							calculateValue(
-									(Integer)constraintLiteral1.value,
-									this.operator,
-									(Integer)constraintLiteral2.value),
-							ConstraintValueType.INTEGER,
-							false);
-				else
+				switch(constraintLiteral1.valueType) {
+				case Double:
+					switch(constraintLiteral2.valueType) {
+					case Double:
+					case Float:
+					case Integer:
+						return new AbstractConstraintLiteral(
+								calculateValue(
+										(Double)constraintLiteral1.value,
+										this.operator,
+										(Double)constraintLiteral2.value),
+								ConstraintValueType.Double,
+								false);
+					default:
+						return this;
+					}
+				case Float:
+					switch(constraintLiteral2.valueType) {
+					case Double:
+						return new AbstractConstraintLiteral(
+								calculateValue(
+										(Double)constraintLiteral1.value,
+										this.operator,
+										(Double)constraintLiteral2.value),
+								ConstraintValueType.Double,
+								false);
+					case Float:
+					case Integer:
+						return new AbstractConstraintLiteral(
+								calculateValue(
+										(Float)constraintLiteral1.value,
+										this.operator,
+										(Float)constraintLiteral2.value),
+								ConstraintValueType.Float,
+								false);
+					default:
+						return this;
+					}
+				case Integer:
+					switch(constraintLiteral2.valueType) {
+					case Double:
+						return new AbstractConstraintLiteral(
+								calculateValue(
+										(Double)constraintLiteral1.value,
+										this.operator,
+										(Double)constraintLiteral2.value),
+								ConstraintValueType.Double,
+								false);
+					case Float:
+						return new AbstractConstraintLiteral(
+								calculateValue(
+										(Float)constraintLiteral1.value,
+										this.operator,
+										(Float)constraintLiteral2.value),
+								ConstraintValueType.Float,
+								false);
+					case Integer:
+						return new AbstractConstraintLiteral(
+								calculateValue(
+										(Integer)constraintLiteral1.value,
+										this.operator,
+										(Integer)constraintLiteral2.value),
+								ConstraintValueType.Integer,
+								false);
+					default:
+						return this;
+					}
+				default:
 					return this;
+				}
 			} else
 				return this;
 		} else

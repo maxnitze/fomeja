@@ -13,6 +13,7 @@ public class CGVertex {
 	}
 	
 	public int getColor(Integer d, Integer i) { // TODO !
-		return this.color + 2 + d;
+		int x = 2;
+		return this.color + x + d;
 	}
 }

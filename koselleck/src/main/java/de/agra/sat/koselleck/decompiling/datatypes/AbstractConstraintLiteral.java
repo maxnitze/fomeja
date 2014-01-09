@@ -29,7 +29,7 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	public AbstractConstraintLiteral(Object value, ConstraintValueType valueType, boolean isVariable) {
 		if(valueType == ConstraintValueType.STRING && ((String)value).matches("\\d+")) {
 			this.value = Integer.parseInt((String)value);
-			this.valueType = ConstraintValueType.INTEGER;
+			this.valueType = ConstraintValueType.Integer;
 		} else {
 			this.value = value;
 			this.valueType = valueType;
@@ -50,13 +50,13 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 		if(this.valueType == ConstraintValueType.STRING && ((String)this.value).matches(regex)) {
 			if(replacement.matches("\\d+")) {
 				this.value = Integer.parseInt(replacement);
-				this.valueType = ConstraintValueType.INTEGER;
+				this.valueType = ConstraintValueType.Integer;
 			} else
 				((String)this.value).replaceAll(regex, replacement);
 		} else if(this.valueType == ConstraintValueType.PREFIXED_FIELD && ((PrefixedField)this.value).prefixedName.matches(regex)) {
 			if(replacement.matches("\\d+")) {
 				this.value = Integer.parseInt(replacement);
-				this.valueType = ConstraintValueType.INTEGER;
+				this.valueType = ConstraintValueType.Integer;
 			} else {
 				this.value = new String(replacement);
 				this.valueType = ConstraintValueType.STRING;
@@ -78,7 +78,7 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 		if(this.valueType == ConstraintValueType.PREFIXED_FIELD && ((PrefixedField)this.value).equals(prefixedField)) {
 			if(replacement.matches("\\d+")) {
 				this.value = Integer.parseInt(replacement);
-				this.valueType = ConstraintValueType.INTEGER;
+				this.valueType = ConstraintValueType.Integer;
 			} else {
 				this.value = new String(replacement);
 				this.valueType = ConstraintValueType.STRING;
@@ -96,10 +96,10 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	public AbstractConstraintValue evaluate() {
 		if(this.valueType == ConstraintValueType.STRING && ((String)this.value).matches("\\d+")) {
 			this.value = Integer.parseInt((String)this.value);
-			this.valueType = ConstraintValueType.INTEGER;
+			this.valueType = ConstraintValueType.Integer;
 		} else if(this.valueType == ConstraintValueType.PREFIXED_FIELD && ((PrefixedField)this.value).prefixedName.matches("\\d+")) {
 			this.value = Integer.parseInt(((PrefixedField)this.value).prefixedName);
-			this.valueType = ConstraintValueType.INTEGER;
+			this.valueType = ConstraintValueType.Integer;
 		}
 		
 		return this;
@@ -157,7 +157,8 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 		
 		AbstractConstraintLiteral constraintValue = (AbstractConstraintLiteral)object;
 		
-		return this.value.equals(constraintValue.value);
+		return this.value.equals(constraintValue.value) &&
+				this.valueType == constraintValue.valueType;
 	}
 	
 	/**
@@ -182,7 +183,9 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	@Override
 	public String toString() {
 		switch(this.valueType) {
-		case INTEGER:
+		case Integer:
+		case Double:
+		case Float:
 		case STRING:
 			return this.value.toString();
 		case PREFIXED_FIELD:
@@ -206,37 +209,14 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	@Override
 	public int compareTo(AbstractConstraintLiteral constraintLiteral) {
 		switch(this.valueType) {
-		case DOUBLE:
+		case Double:
+		case Float:
+		case Integer:
 			switch(constraintLiteral.valueType) {
-			case DOUBLE:
-			case FLOAT:
-			case INTEGER:
+			case Double:
+			case Float:
+			case Integer:
 				return ((Double)this.value).compareTo((Double)constraintLiteral.value);
-			default:
-				NoComparableNumberTypeException exception = new NoComparableNumberTypeException(constraintLiteral);
-				Logger.getLogger(AbstractConstraintLiteral.class).fatal(exception.getMessage());
-				throw exception;
-			}
-		case FLOAT:
-			switch(constraintLiteral.valueType) {
-			case DOUBLE:
-				return ((Double)this.value).compareTo((Double)constraintLiteral.value);
-			case FLOAT:
-			case INTEGER:
-				return ((Float)this.value).compareTo((Float)constraintLiteral.value);
-			default:
-				NoComparableNumberTypeException exception = new NoComparableNumberTypeException(constraintLiteral);
-				Logger.getLogger(AbstractConstraintLiteral.class).fatal(exception.getMessage());
-				throw exception;
-			}
-		case INTEGER:
-			switch(constraintLiteral.valueType) {
-			case DOUBLE:
-				return ((Double)this.value).compareTo((Double)constraintLiteral.value);
-			case FLOAT:
-				return ((Float)this.value).compareTo((Float)constraintLiteral.value);
-			case INTEGER:
-				return ((Integer)this.value).compareTo((Integer)constraintLiteral.value);
 			default:
 				NoComparableNumberTypeException exception = new NoComparableNumberTypeException(constraintLiteral);
 				Logger.getLogger(AbstractConstraintLiteral.class).fatal(exception.getMessage());

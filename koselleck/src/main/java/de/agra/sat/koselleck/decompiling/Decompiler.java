@@ -30,15 +30,16 @@ import de.agra.sat.koselleck.decompiling.datatypes.ArithmeticOperator;
 import de.agra.sat.koselleck.decompiling.datatypes.BooleanConnector;
 import de.agra.sat.koselleck.decompiling.datatypes.ConstraintOperator;
 import de.agra.sat.koselleck.decompiling.datatypes.ConstraintValueType;
+import de.agra.sat.koselleck.decompiling.datatypes.DecompiledMethod;
 import de.agra.sat.koselleck.decompiling.datatypes.PrefixedField;
 import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLine;
 import de.agra.sat.koselleck.disassembling.datatypes.DisassembledMethod;
 import de.agra.sat.koselleck.disassembling.datatypes.Opcode;
+import de.agra.sat.koselleck.exceptions.MissformattedBytecodeLineException;
 import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 import de.agra.sat.koselleck.exceptions.UnknownOpcodeException;
 import de.agra.sat.koselleck.exceptions.UnknownSwitchCaseException;
-import de.agra.sat.koselleck.utils.KoselleckUtils;
 
 /**
  * Decompiler implements a decompiler for java byte code.
@@ -64,19 +65,19 @@ public class Decompiler {
 	 *  constraint starting at index 0 of the byte code lines.
 	 * 
 	 * @param bytecodeLines the byte code lines to process
-	 * @param startingValues the initial elements on the stack
+	 * @param argumentValues the initial elements on the stack
 	 * 
 	 * @return the abstract constraint starting at index 0 of the byte code
 	 *  lines
 	 */
-	private AbstractConstraint decompile(Map<Integer, BytecodeLine> bytecodeLines, AbstractConstraintValue... startingValues) {
-		this.stack.clear();
-		this.store.clear();
+	private DecompiledMethod decompile(Map<Integer, BytecodeLine> bytecodeLines, AbstractConstraintValue... argumentValues) {
+//		this.stack.clear(); TODO delete?
+//		this.store.clear(); TODO delete?
 		
-		for(AbstractConstraintValue startingValue : startingValues)
-			this.stack.push(startingValue);
+		for(int i=0; i<argumentValues.length; i++)
+			this.store.put(i, argumentValues[i]);
 		
-		return getConstraint(bytecodeLines, 0);
+		return parseMethodBytecode(bytecodeLines, 0);
 	}
 	
 	/** static methods
@@ -87,20 +88,20 @@ public class Decompiler {
 	 *  method and returns the decompiled abstract constraint.
 	 * 
 	 * @param disassembledMethod the disassembled method to decompile
-	 * @param startingValues the initial elements on the stack
+	 * @param argumentValues the initial elements on the stack
 	 * 
 	 * @return the decompiled abstract constraint of the disassembled method
 	 */
-	public static AbstractConstraint decompile(DisassembledMethod disassembledMethod, AbstractConstraintValue... startingValues) {
+	public static DecompiledMethod decompile(DisassembledMethod disassembledMethod, AbstractConstraintValue... argumentValues) {
 		Decompiler decompiler = new Decompiler();
-		return decompiler.decompile(disassembledMethod.bytecodeLines, startingValues);
+		return decompiler.decompile(disassembledMethod.bytecodeLines, argumentValues);
 	}
 	
 	/** constraint value methods
 	 * ----- ----- ----- ----- ----- */
 	
 	/**
-	 * getConstraint returns the constraint starting at the given index of the
+	 * parseBytecode returns the constraint starting at the given index of the
 	 *  map of byte code lines. Recursively every single constraint is added to
 	 *  the abstract constraint.
 	 * 
@@ -109,17 +110,17 @@ public class Decompiler {
 	 * 
 	 * @return the abstract constraint starting at the given index
 	 */
-	private AbstractConstraint getConstraint(Map<Integer, BytecodeLine> bytecodeLines, int offset) {
+	private DecompiledMethod parseMethodBytecode(Map<Integer, BytecodeLine> bytecodeLines, int offset) {
 		BytecodeLine bytecodeLine = bytecodeLines.get(offset);
 		if(bytecodeLine == null)
-			return new AbstractBooleanConstraint(false);
+			return new DecompiledMethod(new AbstractBooleanConstraint(false), null);
 		
 		int nextOffset;
 		
 		List<PrefixedField> prefixedFields = new ArrayList<PrefixedField>();
 		
-		Field field = null;
 		PrefixedField prefixedField = null;
+		PrefixedField newPrefixedField = null;
 		
 		AbstractConstraintValue constraintValue = null;
 		AbstractConstraintLiteral constraintLiteral = null;
@@ -132,11 +133,8 @@ public class Decompiler {
 		ConstraintOperator constraintOperator = null;
 		
 		Method method = null;
-		List<AbstractConstraintValue> parameterValues = null;
+		List<AbstractConstraintValue> argumentValues = null;
 		
-		Opcode fieldCode = null;
-		int value = 0;
-		StringBuilder fieldname = null;
 		List<PrefixedField> preFields = null;
 		
 		do {
@@ -145,113 +143,118 @@ public class Decompiler {
 			switch(bytecodeLine.opcode) {
 			case aload_0:
 			case aload:
-				fieldCode = bytecodeLine.opcode;
-				value = bytecodeLine.value;
-				fieldname = new StringBuilder("v");
 				preFields = new ArrayList<PrefixedField>();
-				prefixedField = null;
+				
+				newPrefixedField = new PrefixedField(
+						null, null, bytecodeLine.opcode, bytecodeLine.value, preFields, "v");
+				this.stack.push(new AbstractConstraintLiteral(
+						newPrefixedField, ConstraintValueType.PREFIXED_FIELD, newPrefixedField.isVariable));
 				break;
 				
 			case iconst:
 			case bipush:
-				this.stack.push(new AbstractConstraintLiteral(bytecodeLine.value, ConstraintValueType.INTEGER, false));
+				this.stack.push(new AbstractConstraintLiteral(bytecodeLine.value, ConstraintValueType.Integer, false));
 				break;
 				
 			case getfield:
-				field = (Field)bytecodeLine.type.accessibleObject;
-				fieldname.append(bytecodeLine.constantTableIndex);
-				fieldname.append("_");
-				if(prefixedField != null) {
-					preFields.add(prefixedField);
-					this.stack.pop();
+				constraintValue = this.stack.pop();
+				if(!(constraintValue instanceof AbstractConstraintLiteral) ||
+						((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.PREFIXED_FIELD) {
+					String message = "could not get field";
+					Logger.getLogger(Decompiler.class).fatal(message);
+					throw new MissformattedBytecodeLineException(message);
 				}
 				
-				prefixedField = new PrefixedField(field, bytecodeLine.type.accessibleObjectType, fieldCode, value, preFields, fieldname.toString());
+				prefixedField = (PrefixedField)(((AbstractConstraintLiteral)constraintValue).value);
+				if(prefixedField.field != null)
+					preFields.add(prefixedField);
 				
-				preFields = new ArrayList<PrefixedField>(preFields);
-				prefixedFields.add(prefixedField);
-				this.stack.push(new AbstractConstraintLiteral(prefixedField, ConstraintValueType.PREFIXED_FIELD, prefixedField.isVariable));
+				newPrefixedField = new PrefixedField(
+						(Field)bytecodeLine.type.accessibleObject,
+						bytecodeLine.type.accessibleObjectType,
+						prefixedField.fieldCode,
+						bytecodeLine.value, preFields,
+						prefixedField.prefix + bytecodeLine.constantTableIndex + "_");
+				
+				prefixedFields.add(newPrefixedField);
+				this.stack.push(new AbstractConstraintLiteral(
+						newPrefixedField, ConstraintValueType.PREFIXED_FIELD, newPrefixedField.isVariable));
 				break;
 			case getstatic:
-				field = (Field)bytecodeLine.type.accessibleObject;
-				fieldname.append(bytecodeLine.constantTableIndex);
-				fieldname.append("_");
-				if(prefixedField != null) {
-					preFields.add(prefixedField);
-					this.stack.pop();
+				constraintValue = this.stack.pop();
+				if(!(constraintValue instanceof AbstractConstraintLiteral) ||
+						((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.PREFIXED_FIELD) {
+					String message = "could not get field";
+					Logger.getLogger(Decompiler.class).fatal(message);
+					throw new MissformattedBytecodeLineException(message);
 				}
 				
+				prefixedField = (PrefixedField)(((AbstractConstraintLiteral)constraintValue).value);
+				if(prefixedField.field != null)
+					preFields.add(prefixedField);
+				
+				Field field = (Field)bytecodeLine.type.accessibleObject;
 				if(field.getAnnotation(Variable.class) != null) {
-					prefixedField = new PrefixedField(field, bytecodeLine.type.accessibleObjectType, fieldCode, value, preFields, fieldname.toString());
-					preFields = new ArrayList<PrefixedField>(preFields);
-					prefixedFields.add(prefixedField);
-					this.stack.push(new AbstractConstraintLiteral(prefixedField, ConstraintValueType.PREFIXED_FIELD, true));
+					newPrefixedField = new PrefixedField(
+							field,
+							bytecodeLine.type.accessibleObjectType,
+							prefixedField.fieldCode,
+							bytecodeLine.value, preFields,
+							prefixedField.prefix + bytecodeLine.constantTableIndex + "_");
+					
+					prefixedFields.add(newPrefixedField);
+					this.stack.push(new AbstractConstraintLiteral(
+							newPrefixedField, ConstraintValueType.PREFIXED_FIELD, newPrefixedField.isVariable));
 				} else {
 					field.setAccessible(true);
 					try {
-						this.stack.push(new AbstractConstraintLiteral(field.get(null), ConstraintValueType.fromClass(bytecodeLine.type.accessibleObjectType), false));
+						this.stack.push(new AbstractConstraintLiteral(
+								field.get(null), ConstraintValueType.fromClass(bytecodeLine.type.accessibleObjectType), false));
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						Logger.getLogger(Decompiler.class).fatal("could not access static field \"" + field.getName() +"\"");
-						throw new IllegalArgumentException("could not access static field \"" + field.getName() +"\"");
+						String message = "could not access static field \"" + field.getName() +"\"";
+						Logger.getLogger(Decompiler.class).fatal(message);
+						throw new IllegalArgumentException(message);
 					}
 				}
 				break;
 				
 			case checkcast:
 				constraintValue = this.stack.pop();
-				if(!(constraintValue instanceof AbstractConstraintLiteral)) {
-					Logger.getLogger(Decompiler.class).fatal("could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.");
-					throw new ClassCastException("could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.");
+				if(!(constraintValue instanceof AbstractConstraintLiteral) ||
+						((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.PREFIXED_FIELD) {
+					String message = "could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral";
+					Logger.getLogger(Decompiler.class).fatal(message);
+					throw new ClassCastException(message);
 				}
 				
-				constraintLiteral = (AbstractConstraintLiteral)constraintValue;
-				if(constraintLiteral.valueType != ConstraintValueType.PREFIXED_FIELD) {
-					Logger.getLogger(Decompiler.class).fatal("could not cast given value \"" + constraintLiteral + "\" to \"" + bytecodeLine.type.clazz.getSimpleName() + "\"");
-					throw new ClassCastException("could not cast given value \"" + constraintLiteral + "\" to \"" + bytecodeLine.type.clazz.getSimpleName() + "\"");
-				}
-				
-				Field cField = ((PrefixedField)constraintLiteral.value).field;
+				Field cField = ((PrefixedField)((AbstractConstraintLiteral)constraintValue).value).field;
 				if(!cField.getType().isAssignableFrom(bytecodeLine.type.clazz)) {
-					Logger.getLogger(Decompiler.class).fatal("could not cast from \"" + cField.getType().getSimpleName() + "\" to \"" + bytecodeLine.type.clazz.getSimpleName() + "\"");
-					throw new ClassCastException("could not cast from \"" + cField.getType().getSimpleName() + "\" to \"" + bytecodeLine.type.clazz.getSimpleName() + "\"");
+					String message = "could not cast from \"" + cField.getType().getSimpleName() + "\" to \"" + bytecodeLine.type.clazz.getSimpleName() + "\"";
+					Logger.getLogger(Decompiler.class).fatal(message);
+					throw new ClassCastException(message);
 				}
 				break;
 				
 			case add:
-				constraintValue2 = this.stack.pop();
-				constraintValue1 = this.stack.pop();
-				this.stack.push(getCalculatedValue(constraintValue1, ArithmeticOperator.ADD, constraintValue2));
-				break;
 			case sub:
-				constraintValue2 = this.stack.pop();
-				constraintValue1 = this.stack.pop();
-				this.stack.push(getCalculatedValue(constraintValue1, ArithmeticOperator.SUB, constraintValue2));
-				break;
 			case mul:
-				constraintValue2 = this.stack.pop();
-				constraintValue1 = this.stack.pop();
-				this.stack.push(getCalculatedValue(constraintValue1, ArithmeticOperator.MUL, constraintValue2));
-				break;
 			case div:
 				constraintValue2 = this.stack.pop();
 				constraintValue1 = this.stack.pop();
-				this.stack.push(getCalculatedValue(constraintValue1, ArithmeticOperator.DIV, constraintValue2));
+				this.stack.push(getCalculatedValue(
+						constraintValue1, ArithmeticOperator.fromOpcode(bytecodeLine.opcode), constraintValue2));
 				break;
 				
 			case tableswitch:
 				constraintValue = this.stack.pop();
-				if(!(constraintValue instanceof AbstractConstraintLiteral)) {
-					Logger.getLogger(Decompiler.class).fatal("could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.");
-					throw new ClassCastException("could not cast given value \"" + constraintLiteral + "\" to AbstractConstraintLiteral.");
+				if(!(constraintValue instanceof AbstractConstraintLiteral) ||
+						((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.Integer) {
+					String message = "could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.";
+					Logger.getLogger(Decompiler.class).fatal(message);
+					throw new ClassCastException(message);
 				}
 				
-				constraintLiteral = (AbstractConstraintLiteral)constraintValue;
-				if(constraintLiteral.valueType != ConstraintValueType.INTEGER) {
-					Logger.getLogger(Decompiler.class).fatal("could not cast given value \"" + constraintLiteral + "\" to integer.");
-					throw new ClassCastException("could not cast given value \"" + constraintLiteral + "\" to integer.");
-				}
-				
-				Integer caseOffset = bytecodeLine.switchOffsets.get(((Integer)constraintLiteral.value).toString());
+				Integer caseOffset = bytecodeLine.switchOffsets.get(((Integer)((AbstractConstraintLiteral)constraintValue).value).toString());
 				if(caseOffset == null) {
 					caseOffset = bytecodeLine.switchOffsets.get("default");
 					if(caseOffset == null) {
@@ -267,31 +270,27 @@ public class Decompiler {
 			case invokestatic:
 				method = (Method)bytecodeLine.type.accessibleObject;
 				
-				parameterValues = new ArrayList<AbstractConstraintValue>();
-				for(int i=0; i<method.getParameterTypes().length; i++) {
-					AbstractConstraintValue parameterType = this.stack.pop();
-					if(!(parameterType instanceof AbstractConstraintLiteral) ||
-							!(((AbstractConstraintLiteral)parameterType).valueType.isComparableNumberType)) {
-						IllegalArgumentException exception = new IllegalArgumentException("could not invoke method \"" + method.getName() +"\" because of missing argument");
-						Logger.getLogger(Decompiler.class).fatal(exception.getMessage());
-						throw exception;
-					}
-					
-					parameterValues.add(parameterType);
-				}
-				Collections.reverse(parameterValues);
+				argumentValues = new ArrayList<AbstractConstraintValue>();
+				for(int i=0; i<method.getParameterTypes().length; i++)
+					argumentValues.add(this.stack.pop());
+				Collections.reverse(argumentValues);
 				
-				Object[] args = new Object[parameterValues.size()];
-				for(int i=0; i<parameterValues.size(); i++)
-					args[i] = ((AbstractConstraintLiteral)parameterValues.get(i)).value;
+				Object[] args = new Object[argumentValues.size()];
+				for(int i=0; i<argumentValues.size(); i++)
+					args[i] = ((AbstractConstraintLiteral)argumentValues.get(i)).value;
 				
 				try {
 					this.stack.push(new AbstractConstraintLiteral(
-							method.invoke(null, args),
-							ConstraintValueType.fromClass(method.getReturnType()),
-							false));
+							method.invoke(null, args), ConstraintValueType.fromClass(method.getReturnType()), false));
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					String message = "could not access static method \"" + method.getName() +"\"";
+					StringBuilder arguments = new StringBuilder();
+					for(Object argument : args) {
+						if(arguments.length() != 0)
+							arguments.append(", ");
+						arguments.append(argument);
+					}
+					
+					String message = "could not access static method \"" + method.getName() +"(" + arguments + ")\"";
 					Logger.getLogger(Decompiler.class).fatal(message);
 					throw new IllegalArgumentException(message);
 				}
@@ -301,17 +300,68 @@ public class Decompiler {
 			case invokevirtual:
 				method = (Method)bytecodeLine.type.accessibleObject;
 				
-				parameterValues = new ArrayList<AbstractConstraintValue>();
+				argumentValues = new ArrayList<AbstractConstraintValue>();
 				for(int i=0; i<method.getParameterTypes().length; i++)
-					parameterValues.add(this.stack.pop());
-				Collections.reverse(parameterValues);
+					argumentValues.add(this.stack.pop());
+				Collections.reverse(argumentValues);
 				
 				constraintValue = this.stack.pop();
-				if(method.getDeclaringClass().getClassLoader() == null) {
-					// TODO
-				} else
-					getConstraint(
-							KoselleckUtils.getDisassembledMethod(method).bytecodeLines, 0);
+				
+				// TODO handle premature argument types
+				
+				if(constraintValue instanceof AbstractConstraintLiteral &&
+						((AbstractConstraintLiteral)constraintValue).valueType.clazz.equals(method.getDeclaringClass())) {
+					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
+					try {
+						this.stack.push(new AbstractConstraintLiteral(
+								method.invoke(constraintLiteral.value, argumentValues),
+								ConstraintValueType.fromClass(method.getReturnType()), false));
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						StringBuilder arguments = new StringBuilder();
+						for(Object argument : argumentValues) {
+							if(arguments.length() != 0)
+								arguments.append(", ");
+							arguments.append(argument);
+						}
+						
+						String message = "could not invoke method \"" + method.getName() +"(" + arguments.toString() + ")\"";
+						Logger.getLogger(Decompiler.class).fatal(message);
+						throw new IllegalArgumentException(message);
+					}
+				} else {
+					
+				}
+				
+//				if(method.getDeclaringClass().getClassLoader() == null) {
+//					if(this.constraintValue instanceof AbstractConstraintLiteral) {
+//						AbstractConstraintLiteral constraintLiteral = (AbstractConstraintLiteral)this.constraintValue;
+//						
+//						if(constraintLiteral.valueType.clazz.equals(this.method.getDeclaringClass())) {
+//							try {
+//								return new AbstractConstraintLiteral(
+//										this.method.invoke(constraintLiteral.value, this.methodArguments),
+//										ConstraintValueType.fromClass(this.method.getReturnType()), false);
+//							} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+//								StringBuilder arguments = new StringBuilder();
+//								for(Object argument : this.methodArguments) {
+//									if(arguments.length() != 0)
+//										arguments.append(", ");
+//									arguments.append(argument);
+//								}
+//								
+//								String message = "could not invoke method \"" + method.getName() +"(" + arguments.toString() + ")\"";
+//								Logger.getLogger(Decompiler.class).fatal(message);
+//								throw new IllegalArgumentException(message);
+//							}
+//						} else
+//							return this;
+//					} else
+//						return this;
+//				} else {
+//					// TODO implement
+//					this.decompile(
+//							KoselleckUtils.getDisassembledMethod(method).bytecodeLines, argumentValues.toArray(new AbstractConstraintValue[0]));
+//				}
 				
 				break;
 				
@@ -345,48 +395,53 @@ public class Decompiler {
 						else
 							nextOffset = bytecodeLine.followingLineNumber;
 					} else
-						return new AbstractSubConstraint(
+						return new DecompiledMethod(
 								new AbstractSubConstraint(
-										new AbstractSingleConstraint(
-												constraintLiteral,
-												constraintOperator,
-												new AbstractConstraintLiteral(0, ConstraintValueType.INTEGER, false),
-												prefixedFields),
-										BooleanConnector.AND,
-										this.getConstraint(bytecodeLines, bytecodeLine.offset)),
-								BooleanConnector.OR,
-								new AbstractSubConstraint(
-										new AbstractSingleConstraint(
-												constraintLiteral,
-												ConstraintOperator.fromOppositeAsciiName(constraintOperator.asciiName),
-												new AbstractConstraintLiteral(0, ConstraintValueType.INTEGER, false),
-												prefixedFields),
-										BooleanConnector.AND,
-										this.getConstraint(bytecodeLines, bytecodeLine.followingLineNumber)));
+										new AbstractSubConstraint(
+												new AbstractSingleConstraint(
+														constraintLiteral,
+														constraintOperator,
+														new AbstractConstraintLiteral(0, ConstraintValueType.Integer, false),
+														prefixedFields),
+												BooleanConnector.AND,
+												this.parseMethodBytecode(bytecodeLines, bytecodeLine.offset).constraint),
+										BooleanConnector.OR,
+										new AbstractSubConstraint(
+												new AbstractSingleConstraint(
+														constraintLiteral,
+														ConstraintOperator.fromOppositeAsciiName(constraintOperator.asciiName),
+														new AbstractConstraintLiteral(0, ConstraintValueType.Integer, false),
+														prefixedFields),
+												BooleanConnector.AND,
+												this.parseMethodBytecode(bytecodeLines, bytecodeLine.followingLineNumber).constraint)),
+								null);
 				} else if(constraintValue instanceof AbstractConstraintFormula) {
 					constraintFormula = (AbstractConstraintFormula)constraintValue;
 					
-					return new AbstractSubConstraint(
+					return new DecompiledMethod(
 							new AbstractSubConstraint(
-									new AbstractSingleConstraint(
-											constraintFormula,
-											constraintOperator,
-											new AbstractConstraintLiteral(0, ConstraintValueType.INTEGER, false),
-											prefixedFields),
-									BooleanConnector.AND,
-									this.getConstraint(bytecodeLines, bytecodeLine.offset)),
-							BooleanConnector.OR,
-							new AbstractSubConstraint(
-									new AbstractSingleConstraint(
-											constraintFormula,
-											ConstraintOperator.fromOppositeAsciiName(constraintOperator.asciiName),
-											new AbstractConstraintLiteral(0, ConstraintValueType.INTEGER, false),
-											prefixedFields),
-									BooleanConnector.AND,
-									this.getConstraint(bytecodeLines, bytecodeLine.followingLineNumber)));
+									new AbstractSubConstraint(
+											new AbstractSingleConstraint(
+													constraintFormula,
+													constraintOperator,
+													new AbstractConstraintLiteral(0, ConstraintValueType.Integer, false),
+													prefixedFields),
+											BooleanConnector.AND,
+											this.parseMethodBytecode(bytecodeLines, bytecodeLine.offset).constraint),
+									BooleanConnector.OR,
+									new AbstractSubConstraint(
+											new AbstractSingleConstraint(
+													constraintFormula,
+													ConstraintOperator.fromOppositeAsciiName(constraintOperator.asciiName),
+													new AbstractConstraintLiteral(0, ConstraintValueType.Integer, false),
+													prefixedFields),
+											BooleanConnector.AND,
+											this.parseMethodBytecode(bytecodeLines, bytecodeLine.followingLineNumber).constraint)),
+							null);
 				} else {
-					Logger.getLogger(Decompiler.class).fatal("could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.");
-					throw new ClassCastException("could not cast given value \"" + constraintLiteral + "\" to AbstractConstraintLiteral.");
+					String message = "could not cast given value \"" + constraintLiteral + "\" to AbstractConstraintLiteral.";
+					Logger.getLogger(Decompiler.class).fatal(message);
+					throw new ClassCastException(message);
 				}
 				
 				break;
@@ -400,24 +455,26 @@ public class Decompiler {
 				constraintValue2 = this.stack.pop();
 				constraintValue1 = this.stack.pop();
 				
-				return new AbstractSubConstraint(
+				return new DecompiledMethod(
 						new AbstractSubConstraint(
-								getSingleConstraint(
-										constraintValue1,
-										ConstraintOperator.fromOpcode(bytecodeLine.opcode.name),
-										constraintValue2,
-										prefixedFields),
-								BooleanConnector.AND,
-								getConstraint(bytecodeLines, bytecodeLine.offset)),
-						BooleanConnector.OR,
-						new AbstractSubConstraint(
-								getSingleConstraint(
-										constraintValue1,
-										ConstraintOperator.fromOppositeOpcode(bytecodeLine.opcode.name),
-										constraintValue2,
-										prefixedFields),
-								BooleanConnector.AND,
-								getConstraint(bytecodeLines, bytecodeLine.followingLineNumber)));
+								new AbstractSubConstraint(
+										getSingleConstraint(
+												constraintValue1,
+												ConstraintOperator.fromOpcode(bytecodeLine.opcode.name),
+												constraintValue2,
+												prefixedFields),
+										BooleanConnector.AND,
+										this.parseMethodBytecode(bytecodeLines, bytecodeLine.offset).constraint),
+								BooleanConnector.OR,
+								new AbstractSubConstraint(
+										getSingleConstraint(
+												constraintValue1,
+												ConstraintOperator.fromOppositeOpcode(bytecodeLine.opcode.name),
+												constraintValue2,
+												prefixedFields),
+										BooleanConnector.AND,
+										this.parseMethodBytecode(bytecodeLines, bytecodeLine.followingLineNumber).constraint)),
+						null);
 			
 			case fcmpg:
 			case fcmpl:
@@ -432,71 +489,58 @@ public class Decompiler {
 					constraintLiteral2 = (AbstractConstraintLiteral)constraintValue2;
 					
 					if((bytecodeLine.opcode == Opcode.dcmpg || bytecodeLine.opcode == Opcode.dcmpl) &&
-							constraintLiteral1.valueType == ConstraintValueType.DOUBLE &&
-							constraintLiteral2.valueType == ConstraintValueType.DOUBLE) {
+							constraintLiteral1.valueType == ConstraintValueType.Double &&
+							constraintLiteral2.valueType == ConstraintValueType.Double) {
 						this.stack.push(new AbstractConstraintLiteral(
 								((Double)constraintLiteral.value).compareTo((Double)constraintLiteral2.value),
-								ConstraintValueType.INTEGER,
-								false));
+								ConstraintValueType.Integer, false));
 					} else if((bytecodeLine.opcode == Opcode.fcmpg || bytecodeLine.opcode == Opcode.fcmpl) &&
-							constraintLiteral1.valueType == ConstraintValueType.FLOAT &&
-							constraintLiteral2.valueType == ConstraintValueType.FLOAT) {
+							constraintLiteral1.valueType == ConstraintValueType.Float &&
+							constraintLiteral2.valueType == ConstraintValueType.Float) {
 						this.stack.push(new AbstractConstraintLiteral(
 								((Float)constraintLiteral.value).compareTo((Float)constraintLiteral2.value),
-								ConstraintValueType.INTEGER,
-								false));
+								ConstraintValueType.Integer, false));
 					} else
 						this.stack.push(
 								new AbstractConstraintFormula(
-										constraintValue1,
-										ArithmeticOperator.SUB,
-										constraintValue2));
+										constraintValue1, ArithmeticOperator.SUB, constraintValue2));
 				} else
 					this.stack.push(
 							new AbstractConstraintFormula(
-									constraintValue1,
-									ArithmeticOperator.SUB,
-									constraintValue2));
+									constraintValue1, ArithmeticOperator.SUB, constraintValue2));
 				
 				break;
 			
-			case ireturn: // TODO returnValue has to be numeric literal!
+			case ireturn:
 				AbstractConstraintValue returnValue = this.stack.pop();
 				
 				if(returnValue instanceof AbstractConstraintLiteral) {
 					AbstractConstraintLiteral returnLiteral = (AbstractConstraintLiteral)returnValue;
 					switch(returnLiteral.valueType) {
-					case DOUBLE:
-						return new AbstractBooleanConstraint(((Double)returnLiteral.value).equals(0) ? false : true);
-					case FLOAT:
-						return new AbstractBooleanConstraint(((Float)returnLiteral.value).equals(0) ? false : true);
-					case INTEGER:
-						return new AbstractBooleanConstraint(((Integer)returnLiteral.value).equals(0) ? false : true);
+					case Double:
+					case Float:
+					case Integer:
+						return new DecompiledMethod(
+								new AbstractBooleanConstraint(returnLiteral.value.equals(0) ? false : true), returnValue);
 					default:
-						return new AbstractSingleConstraint(
-								returnLiteral,
-								ConstraintOperator.NOT_EQUAL,
-								new AbstractConstraintLiteral(
-										0, ConstraintValueType.INTEGER, false),
-								prefixedFields);
+						return new DecompiledMethod(
+								new AbstractBooleanConstraint(true), returnValue);
 					}
 				} else
-					return new AbstractSingleConstraint(
-							returnValue,
-							ConstraintOperator.NOT_EQUAL,
-							new AbstractConstraintLiteral(
-									0, ConstraintValueType.INTEGER, false),
-							prefixedFields);
+					return new DecompiledMethod(
+							new AbstractBooleanConstraint(true), returnValue);
 				
 			default:
-				Logger.getLogger(Decompiler.class).fatal("Opcode " + (bytecodeLine.opcode == null ? "null" : "\"" + bytecodeLine.opcode.name + "\"") + " is not known");
-				throw new UnknownOpcodeException(bytecodeLine.opcode);
+				UnknownOpcodeException exception = new UnknownOpcodeException(bytecodeLine.opcode);
+				Logger.getLogger(Decompiler.class).fatal(exception.getMessage());
+				throw exception;
 			}
 			
 			bytecodeLine = bytecodeLines.get(nextOffset);
 		} while(nextOffset > 0);
 		
-		return new AbstractBooleanConstraint(true);
+		return new DecompiledMethod(
+				new AbstractBooleanConstraint(true), null);
 	}
 	
 	/**
@@ -521,169 +565,168 @@ public class Decompiler {
 			AbstractConstraintLiteral constraintLiteral2 = (AbstractConstraintLiteral)constraintValue2;
 			
 			switch(constraintLiteral1.valueType) {
-			case DOUBLE:
+			case Double:
 				switch(constraintLiteral2.valueType) {
-				case DOUBLE:
+				case Double:
 					switch(operator) {
 					case ADD:
-						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() + ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() + ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case SUB:
-						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() - ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() - ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case MUL:
-						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() * ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() * ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case DIV:
-						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() / ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() / ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					default:
-						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-						throw new UnknownArithmeticOperatorException(operator);
+						UnknownArithmeticOperatorException exception = new UnknownArithmeticOperatorException(operator);
+						Logger.getLogger(Decompiler.class).fatal(exception.getMessage());
+						throw exception;
 					}
-				case FLOAT:
+				case Float:
 					switch(operator) {
 					case ADD:
-						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() + ((Float)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() + ((Float)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case SUB:
-						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() - ((Float)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() - ((Float)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case MUL:
-						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() * ((Float)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() * ((Float)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case DIV:
-						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() / ((Float)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() / ((Float)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					default:
-						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-						throw new UnknownArithmeticOperatorException(operator);
+						UnknownArithmeticOperatorException exception = new UnknownArithmeticOperatorException(operator);
+						Logger.getLogger(Decompiler.class).fatal(exception.getMessage());
+						throw exception;
 					}
-				case INTEGER:
+				case Integer:
 					switch(operator) {
 					case ADD:
-						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() + ((Integer)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() + ((Integer)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case SUB:
-						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() - ((Integer)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() - ((Integer)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case MUL:
-						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() * ((Integer)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() * ((Integer)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case DIV:
-						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() / ((Integer)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Double)constraintLiteral1.value).doubleValue() / ((Integer)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					default:
-						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-						throw new UnknownArithmeticOperatorException(operator);
+						UnknownArithmeticOperatorException exception = new UnknownArithmeticOperatorException(operator);
+						Logger.getLogger(Decompiler.class).fatal(exception.getMessage());
+						throw exception;
 					}
 				default:
 					return new AbstractConstraintFormula(
-							constraintValue1,
-							operator,
-							constraintValue2);
+							constraintValue1, operator, constraintValue2);
 				}
 
-			case FLOAT:
+			case Float:
 				switch(constraintLiteral2.valueType) {
-				case DOUBLE:
+				case Double:
 					switch(operator) {
 					case ADD:
-						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).doubleValue() + ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).doubleValue() + ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case SUB:
-						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).doubleValue() - ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).doubleValue() - ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case MUL:
-						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).doubleValue() * ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).doubleValue() * ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case DIV:
-						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).doubleValue() / ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).doubleValue() / ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					default:
-						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-						throw new UnknownArithmeticOperatorException(operator);
+						UnknownArithmeticOperatorException exception = new UnknownArithmeticOperatorException(operator);
+						Logger.getLogger(Decompiler.class).fatal(exception.getMessage());
+						throw exception;
 					}
-				case FLOAT:
+				case Float:
 					switch(operator) {
 					case ADD:
-						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() + ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() + ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.Float, false);
 					case SUB:
-						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() - ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() - ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.Float, false);
 					case MUL:
-						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() * ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() * ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.Float, false);
 					case DIV:
-						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() / ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() / ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.Float, false);
 					default:
-						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-						throw new UnknownArithmeticOperatorException(operator);
+						UnknownArithmeticOperatorException exception = new UnknownArithmeticOperatorException(operator);
+						Logger.getLogger(Decompiler.class).fatal(exception.getMessage());
+						throw exception;
 					}
-				case INTEGER:
+				case Integer:
 					switch(operator) {
 					case ADD:
-						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() + ((Integer)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() + ((Integer)constraintLiteral2.value).floatValue(), ConstraintValueType.Float, false);
 					case SUB:
-						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() - ((Integer)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() - ((Integer)constraintLiteral2.value).floatValue(), ConstraintValueType.Float, false);
 					case MUL:
-						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() * ((Integer)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() * ((Integer)constraintLiteral2.value).floatValue(), ConstraintValueType.Float, false);
 					case DIV:
-						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() / ((Integer)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+						return new AbstractConstraintLiteral(((Float)constraintLiteral1.value).floatValue() / ((Integer)constraintLiteral2.value).floatValue(), ConstraintValueType.Float, false);
 					default:
-						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-						throw new UnknownArithmeticOperatorException(operator);
+						UnknownArithmeticOperatorException exception = new UnknownArithmeticOperatorException(operator);
+						Logger.getLogger(Decompiler.class).fatal(exception.getMessage());
+						throw exception;
 					}
 				default:
 					return new AbstractConstraintFormula(
-							constraintValue1,
-							operator,
-							constraintValue2);
+							constraintValue1, operator, constraintValue2);
 				}
-			case INTEGER:
+			case Integer:
 				switch(constraintLiteral2.valueType) {
-				case DOUBLE:
+				case Double:
 					switch(operator) {
 					case ADD:
-						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).doubleValue() + ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).doubleValue() + ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case SUB:
-						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).doubleValue() - ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).doubleValue() - ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case MUL:
-						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).doubleValue() * ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).doubleValue() * ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					case DIV:
-						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).doubleValue() / ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.DOUBLE, false);
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).doubleValue() / ((Double)constraintLiteral2.value).doubleValue(), ConstraintValueType.Double, false);
 					default:
-						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-						throw new UnknownArithmeticOperatorException(operator);
+						UnknownArithmeticOperatorException exception = new UnknownArithmeticOperatorException(operator);
+						Logger.getLogger(Decompiler.class).fatal(exception.getMessage());
+						throw exception;
 					}
-				case FLOAT:
+				case Float:
 					switch(operator) {
 					case ADD:
-						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).floatValue() + ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).floatValue() + ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.Float, false);
 					case SUB:
-						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).floatValue() - ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).floatValue() - ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.Float, false);
 					case MUL:
-						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).floatValue() * ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).floatValue() * ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.Float, false);
 					case DIV:
-						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).floatValue() / ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.FLOAT, false);
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).floatValue() / ((Float)constraintLiteral2.value).floatValue(), ConstraintValueType.Float, false);
 					default:
-						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-						throw new UnknownArithmeticOperatorException(operator);
+						UnknownArithmeticOperatorException exception = new UnknownArithmeticOperatorException(operator);
+						Logger.getLogger(Decompiler.class).fatal(exception.getMessage());
+						throw exception;
 					}
-				case INTEGER:
+				case Integer:
 					switch(operator) {
 					case ADD:
-						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() + ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.INTEGER, false);
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() + ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.Integer, false);
 					case SUB:
-						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() - ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.INTEGER, false);
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() - ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.Integer, false);
 					case MUL:
-						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() * ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.INTEGER, false);
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() * ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.Integer, false);
 					case DIV:
-						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() / ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.INTEGER, false);
+						return new AbstractConstraintLiteral(((Integer)constraintLiteral1.value).intValue() / ((Integer)constraintLiteral2.value).intValue(), ConstraintValueType.Integer, false);
 					default:
-						Logger.getLogger(Decompiler.class).fatal("ArithmeticOperator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-						throw new UnknownArithmeticOperatorException(operator);
+						UnknownArithmeticOperatorException exception = new UnknownArithmeticOperatorException(operator);
+						Logger.getLogger(Decompiler.class).fatal(exception.getMessage());
+						throw exception;
 					}
 				default:
 					return new AbstractConstraintFormula(
-							constraintValue1,
-							operator,
-							constraintValue2);
+							constraintValue1, operator, constraintValue2);
 				}
 				
 			default:
 				return new AbstractConstraintFormula(
-						constraintValue1,
-						operator,
-						constraintValue2);
+						constraintValue1, operator, constraintValue2);
 			}
 		} else
 			return new AbstractConstraintFormula(
-					constraintValue1,
-					operator,
-					constraintValue2);
+					constraintValue1, operator, constraintValue2);
 	}
 	
 	/**

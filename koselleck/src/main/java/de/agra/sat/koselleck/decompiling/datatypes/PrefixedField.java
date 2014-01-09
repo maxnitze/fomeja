@@ -2,6 +2,7 @@ package de.agra.sat.koselleck.decompiling.datatypes;
 
 /** imports */
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.agra.sat.koselleck.annotations.Variable;
@@ -48,22 +49,28 @@ public class PrefixedField {
 		this.fieldType = fieldType;
 		this.fieldCode = fieldCode;
 		this.value = value;
-		this.preFields = preFields;
+		this.preFields = new ArrayList<PrefixedField>(preFields);
 		
 		this.prefix = prefix;
-		this.prefixedName = prefix + field.getName();
 		
-		StringBuilder prefieldsPrefixedNameBuilder = new StringBuilder("v_");
-		for(PrefixedField preField : preFields) {
-			prefieldsPrefixedNameBuilder.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1"));
+		if(this.field != null) {
+			this.prefixedName = prefix + field.getName();
+			
+			StringBuilder prefieldsPrefixedNameBuilder = new StringBuilder("v_");
+			for(PrefixedField preField : preFields) {
+				prefieldsPrefixedNameBuilder.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1"));
+				prefieldsPrefixedNameBuilder.append("_");
+			}
+			prefieldsPrefixedNameBuilder.append(field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1"));
 			prefieldsPrefixedNameBuilder.append("_");
+			prefieldsPrefixedNameBuilder.append(field.getName());
+			this.prefieldsPrefixedName = prefieldsPrefixedNameBuilder.toString();
+		} else {
+			this.prefixedName = "";
+			this.prefieldsPrefixedName = "";
 		}
-		prefieldsPrefixedNameBuilder.append(field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1"));
-		prefieldsPrefixedNameBuilder.append("_");
-		prefieldsPrefixedNameBuilder.append(field.getName());
-		this.prefieldsPrefixedName = prefieldsPrefixedNameBuilder.toString();
 		
-		if(this.field.getAnnotation(Variable.class) != null)
+		if(this.field != null && this.field.getAnnotation(Variable.class) != null)
 			this.isVariable = true;
 		else
 			this.isVariable = false;
