@@ -24,14 +24,10 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	
 	public final Collection<CGVertex> vertices;
 	public final Collection<CGEdge> edges;
-	
-	private int x;
 
 	public CGGraph() {
 		this.vertices = new ArrayList<CGVertex>();
 		this.edges = new ArrayList<CGEdge>();
-		
-		this.x = 0;
 	}
 	
 	public void parse(String graph) {
@@ -70,7 +66,7 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	
 	@Constraint(fields = { @Constraint.Field("") })
 	public boolean adjacentHaveDifferentColors(CGEdge edge) {
-		return edge.vertex1.getColor(0, 0) + this.x != edge.vertex2.getColor(0, 0); // TODO !
+		return edge.vertex1.getColor() != edge.vertex2.getColor();
 	}
 	
 	@Objective
