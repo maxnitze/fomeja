@@ -176,7 +176,6 @@ public class Decompiler {
 				}
 				constraintLiteral = (AbstractConstraintLiteral)constraintValue;
 				
-				// TODO aload_0 + aload ... what to do?
 				if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD) {
 					prefixedField = (PrefixedField)constraintLiteral.value;
 					preFields.add(prefixedField);
