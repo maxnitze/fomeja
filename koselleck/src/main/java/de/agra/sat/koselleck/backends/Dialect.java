@@ -19,6 +19,7 @@ import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintValue;
+import de.agra.sat.koselleck.decompiling.datatypes.AbstractPrematureConstraintValue;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.PrefixedField;
@@ -129,6 +130,16 @@ public abstract class Dialect {
 	 */
 	public abstract String prepareAbstractConstraintFormula(AbstractConstraintFormula constraintFormula);
 	
+	/**
+	 * prepareAbstractPrematureConstraintValue returns the string
+	 *  representation of a given abstract premature constraint value.
+	 * 
+	 * @param prematureConstraintValue the abstract premature constraint value to proceed
+	 * 
+	 * @return the string representation of the abstract constraint formula
+	 */
+	public abstract String prepareAbstractPrematureConstraintValue(AbstractPrematureConstraintValue prematureConstraintValue);
+	
 	/** protected methods
 	 * ----- ----- ----- ----- ----- */
 	
@@ -148,8 +159,9 @@ public abstract class Dialect {
 		else if(constraint instanceof AbstractSubConstraint)
 			return prepareAbstractSubConstraint((AbstractSubConstraint)constraint);
 		else {
-			Logger.getLogger(Dialect.class).fatal("partial constraint type \"" + (constraint == null ? "null" : constraint.getClass().getSimpleName()) + "\" is not supported");
-			throw new UnsupportedConstraintException(constraint);
+			UnsupportedConstraintException exception = new UnsupportedConstraintException(constraint);
+			Logger.getLogger(Dialect.class).fatal(exception.getMessage());
+			throw exception;
 		}
 	}
 	
@@ -166,9 +178,12 @@ public abstract class Dialect {
 			return prepareAbstractConstraintLiteral((AbstractConstraintLiteral)constraintValue);
 		else if(constraintValue instanceof AbstractConstraintFormula)
 			return prepareAbstractConstraintFormula((AbstractConstraintFormula)constraintValue);
+		else if(constraintValue instanceof AbstractPrematureConstraintValue)
+			return prepareAbstractPrematureConstraintValue((AbstractPrematureConstraintValue)constraintValue);
 		else {
-			Logger.getLogger(Dialect.class).fatal("constraint value type \"" + (constraintValue == null ? "null" : constraintValue.getClass().getSimpleName()) + "\" is not supported");
-			throw new UnsupportedConstraintValueException(constraintValue);
+			UnsupportedConstraintValueException exception = new UnsupportedConstraintValueException(constraintValue);
+			Logger.getLogger(Dialect.class).fatal(exception.getMessage());
+			throw exception;
 		}
 	}
 	

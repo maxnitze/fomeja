@@ -2,6 +2,7 @@ package de.agra.sat.koselleck.decompiling.datatypes;
 
 /** imports */
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -11,17 +12,20 @@ import java.util.List;
  * @author Max Nitze
  */
 public enum ConstraintValueType {
-	Double("Double", Double.class, true, true),
-	Float("Float", Float.class, true, true),
-	Integer("Integer", Integer.class, true, true),
+	Double("Double", new ArrayList<Class<?>>(Arrays.asList(Double.class, double.class)), true, true),
+	Float("Float", new ArrayList<Class<?>>(Arrays.asList(Float.class, float.class)), true, true),
+	Integer("Integer", new ArrayList<Class<?>>(Arrays.asList(Integer.class, int.class)), true, true),
 	
-	STRING("String", String.class, false, true),
-	PREFIXED_FIELD("PrefixedField", PrefixedField.class, false, true);
+	STRING("String", new ArrayList<Class<?>>(Arrays.asList(String.class)), false, false),
+	PREFIXED_FIELD("PrefixedField", new ArrayList<Class<?>>(Arrays.asList(PrefixedField.class)), false, false),
+	PREFIXED_CLASS("PrefixedClass", new ArrayList<Class<?>>(Arrays.asList(PrefixedClass.class)), false, false),
+	
+	NULL("null", null, true, false);
 	
 	/** the name */
 	public final String name;
 	/** the class */
-	public final Class<?> clazz;
+	public final List<Class<?>> classes;
 	
 	/** flag that indicates that the type is finished */
 	public final boolean isFinishedType;
@@ -36,11 +40,25 @@ public enum ConstraintValueType {
 	 * @param isFinished the new finished flag
 	 * @param isComparableNumberType the new comparable number type flag
 	 */
-	ConstraintValueType(String name, Class<?> clazz, boolean isFinished, boolean isComparableNumberType) {
+	ConstraintValueType(String name, List<Class<?>> classes, boolean isFinished, boolean isComparableNumberType) {
 		this.name = name;
-		this.clazz = clazz;
+		this.classes = classes;
 		this.isFinishedType = isFinished;
 		this.isComparableNumberType = isComparableNumberType;
+	}
+	
+	/**
+	 * 
+	 * @param clazz
+	 * 
+	 * @return
+	 */
+	public boolean hasClass(Class<?> clazz) {
+		for(Class<?> cls : this.classes)
+			if(cls.equals(clazz))
+				return true;
+		
+		return false;
 	}
 	
 	/**
@@ -52,8 +70,10 @@ public enum ConstraintValueType {
 	 */
 	public static ConstraintValueType fromClass(Class<?> clazz) {
 		for(ConstraintValueType cvt : values())
-			if(cvt.clazz.equals(clazz))
-				return cvt;
+			for(Class<?> cls : cvt.classes)
+				if(cls != null && cls.equals(clazz))
+					return cvt;
+		
 		throw new IllegalArgumentException("no constant with class \"" + clazz.getName() + "\" found");
 	}
 	
@@ -69,7 +89,7 @@ public enum ConstraintValueType {
 		
 		for(ConstraintValueType cvt : values())
 			if(cvt.isComparableNumberType)
-				numberTypeClasses.add(cvt.clazz);
+				numberTypeClasses.addAll(cvt.classes);
 		
 		return numberTypeClasses;
 	}

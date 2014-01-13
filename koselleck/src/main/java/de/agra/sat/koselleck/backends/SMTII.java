@@ -14,6 +14,7 @@ import de.agra.sat.koselleck.decompiling.datatypes.AbstractBooleanConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintLiteral;
+import de.agra.sat.koselleck.decompiling.datatypes.AbstractPrematureConstraintValue;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.BooleanConnector;
@@ -201,6 +202,20 @@ public class SMTII extends Dialect {
 		constraintFormulaString.append(")");
 		
 		return constraintFormulaString.toString();
+	}
+	
+	/**
+	 * prepareAbstractPrematureConstraintValue returns the string
+	 *  representation of a given abstract premature constraint value.
+	 * 
+	 * @param prematureConstraintValue the abstract premature constraint value to proceed
+	 * 
+	 * @return the string representation of the abstract constraint formula
+	 */
+	public String prepareAbstractPrematureConstraintValue(AbstractPrematureConstraintValue prematureConstraintValue) {
+		System.out.println(prematureConstraintValue.toString());
+		
+		throw new RuntimeException("PREMATURE");
 	}
 	
 	/** private methods

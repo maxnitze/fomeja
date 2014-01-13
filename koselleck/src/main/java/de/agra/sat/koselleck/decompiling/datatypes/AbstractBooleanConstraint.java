@@ -9,6 +9,20 @@ package de.agra.sat.koselleck.decompiling.datatypes;
 public class AbstractBooleanConstraint extends AbstractConstraint {
 	/** the boolean value */
 	public final boolean value;
+	/** the return value of the method evaluated to {@code value} */
+	public AbstractConstraintValue returnValue;
+	
+	/**
+	 * Constructor for a new AbstractBooleanConstraint.
+	 * 
+	 * @param value the new boolean value
+	 * @param returnValue the new return value of the method evaluated to {@code
+	 *  value}
+	 */
+	public AbstractBooleanConstraint(boolean value, AbstractConstraintValue returnValue) {
+		this.value = value;
+		this.returnValue = returnValue;
+	}
 	
 	/**
 	 * Constructor for a new AbstractBooleanConstraint.
@@ -17,6 +31,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 */
 	public AbstractBooleanConstraint(boolean value) {
 		this.value = value;
+		this.returnValue = new AbstractConstraintLiteral(value);
 	}
 	
 	/**
@@ -26,7 +41,9 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 * @param replacement is ignored
 	 */
 	@Override
-	public void replaceAll(String regex, String replacement) {}
+	public void replaceAll(String regex, String replacement) {
+		this.returnValue.replaceAll(regex, replacement);
+	}
 	
 	/**
 	 * replaceAll does nothing.
@@ -35,7 +52,9 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 * @param replacement is ignored
 	 */
 	@Override
-	public void replaceAll(PrefixedField prefixedField, String replacement) {}
+	public void replaceAll(PrefixedField prefixedField, String replacement) {
+		this.returnValue.replaceAll(prefixedField, replacement);
+	}
 	
 	/**
 	 * evaluate returns this object.
@@ -44,6 +63,8 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 */
 	@Override
 	public AbstractConstraint evaluate() {
+		this.returnValue = this.returnValue.evaluate();
+		
 		return this;
 	}
 	
@@ -56,7 +77,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 */
 	@Override
 	public boolean matches(String regex) {
-		return false;
+		return this.returnValue.matches(regex);
 	}
 	
 	/**
@@ -68,7 +89,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 */
 	@Override
 	public boolean matches(PrefixedField prefixedField) {
-		return false;
+		return this.returnValue.matches(prefixedField);
 	}
 	
 	/**
@@ -85,7 +106,10 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 		if(!(object instanceof AbstractBooleanConstraint))
 			return false;
 		
-		return this.value == ((AbstractBooleanConstraint)object).value;
+		AbstractBooleanConstraint booleanConstraint = (AbstractBooleanConstraint)object;
+		
+		return this.value == booleanConstraint.value &&
+				this.returnValue.equals(booleanConstraint.returnValue);
 	}
 	
 	/**
@@ -96,7 +120,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 */
 	@Override
 	public AbstractBooleanConstraint clone() {
-		return new AbstractBooleanConstraint(this.value);
+		return new AbstractBooleanConstraint(this.value, this.returnValue);
 	}
 	
 	/**
@@ -107,6 +131,6 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 */
 	@Override
 	public String toString() {
-		return this.value ? "true" : "false";
+		return this.value ? "true" : "false" + " [" + this.returnValue.toString() + "]";
 	}
 }

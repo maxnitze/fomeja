@@ -109,7 +109,7 @@ public abstract class I2AL {
 				System.out.println(disassembledMethod.toString() + "\n"); // TODO delete output of disassembled method
 				
 				if(disassembledMethod != null)
-					singleTheorems.add(new AbstractSingleTheorem(Decompiler.decompile(disassembledMethod).constraint, paramFields));
+					singleTheorems.add(new AbstractSingleTheorem(Decompiler.decompile(disassembledMethod), paramFields));
 			}
 			
 			try {

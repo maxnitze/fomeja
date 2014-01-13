@@ -38,6 +38,17 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	}
 	
 	/**
+	 * Constructor for a new AbstractConstraintLiteral.
+	 * 
+	 * @param value the new boolean value (false --> 0, true --> 1)
+	 */
+	public AbstractConstraintLiteral(boolean value) {
+		this.value = value ? 1 : 0;
+		this.valueType = ConstraintValueType.Integer;
+		this.isVariable = false;
+	}
+	
+	/**
 	 * replaceAll replaces all occurrences of the given regular expression
 	 *  {@code regex} with the given {@code replacement}. if the replacement is
 	 *  an integer type the type of this literal is changed to integer.
@@ -94,10 +105,10 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	 */
 	@Override
 	public AbstractConstraintValue evaluate() {
-		if(this.valueType == ConstraintValueType.STRING && ((String)this.value).matches("\\d+")) {
+		if(this.value != null && this.valueType == ConstraintValueType.STRING && ((String)this.value).matches("\\d+")) {
 			this.value = Integer.parseInt((String)this.value);
 			this.valueType = ConstraintValueType.Integer;
-		} else if(this.valueType == ConstraintValueType.PREFIXED_FIELD && ((PrefixedField)this.value).prefixedName.matches("\\d+")) {
+		} else if(this.value != null && this.valueType == ConstraintValueType.PREFIXED_FIELD && ((PrefixedField)this.value).prefixedName.matches("\\d+")) {
 			this.value = Integer.parseInt(((PrefixedField)this.value).prefixedName);
 			this.valueType = ConstraintValueType.Integer;
 		}
@@ -190,6 +201,8 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 			return this.value.toString();
 		case PREFIXED_FIELD:
 			return ((PrefixedField)this.value).prefieldsPrefixedName;
+		case NULL:
+			return "NULL";
 		default:
 			Logger.getLogger(AbstractConstraintLiteral.class).fatal("constraint value type " + (this.valueType == null ? "null" : "\"" + this.valueType.name + "\"") + " is not known");
 			throw new UnknownConstraintValueTypeException(this.valueType);

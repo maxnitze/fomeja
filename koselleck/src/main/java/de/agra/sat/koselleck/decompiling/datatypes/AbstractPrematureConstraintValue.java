@@ -66,22 +66,34 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	@Override
 	public AbstractConstraintValue evaluate() {
 		this.constraintValue = this.constraintValue.evaluate();
+		for(int i=0; i<this.methodArguments.size(); i++)
+			this.methodArguments.set(i, this.methodArguments.get(i).evaluate());
 		
-		Object[] arguments = new Object[this.methodArguments.size()];
-		for(int i=0; i<this.methodArguments.size(); i++) {
-			if(!((AbstractConstraintLiteral)this.methodArguments.get(i)).valueType.isFinishedType)
-				return this;
-			
-			arguments[i] = ((AbstractConstraintLiteral)this.methodArguments.get(i)).value;
-		}
-		
-		if(this.constraintValue instanceof AbstractConstraintLiteral &&
-				((AbstractConstraintLiteral)this.constraintValue).valueType.clazz.equals(this.method.getDeclaringClass())) {
+		if(this.constraintValue instanceof AbstractConstraintLiteral) {
 			AbstractConstraintLiteral constraintLiteral = (AbstractConstraintLiteral)this.constraintValue;
+			
+			Object[] arguments = new Object[this.methodArguments.size()];
+			for(int i=0; i<this.methodArguments.size(); i++) {
+				if(!(this.methodArguments.get(i) instanceof AbstractConstraintLiteral) ||
+						!((AbstractConstraintLiteral)this.methodArguments.get(i)).valueType.isFinishedType)
+					return this;
+				
+				arguments[i] = ((AbstractConstraintLiteral)this.methodArguments.get(i)).value;
+			}
+			
 			try {
-				return new AbstractConstraintLiteral(
+				if(constraintLiteral.valueType != ConstraintValueType.NULL &&
+						((AbstractConstraintLiteral)this.constraintValue).valueType.hasClass(this.method.getDeclaringClass()))
+					return new AbstractConstraintLiteral(
 						this.method.invoke(constraintLiteral.value, this.methodArguments),
 						ConstraintValueType.fromClass(this.method.getReturnType()), false);
+				else if(constraintLiteral.valueType == ConstraintValueType.NULL)
+					return new AbstractConstraintLiteral(
+							this.method.invoke(null, this.methodArguments),
+							ConstraintValueType.fromClass(this.method.getReturnType()), false);
+				else
+					return this;
+					
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				StringBuilder argumentsString = new StringBuilder();
 				for(Object argument : this.methodArguments) {
@@ -153,6 +165,6 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	 */
 	@Override
 	public String toString() {
-		return this.constraintValue.toString();
+		return "asdasd " + ((AbstractConstraintLiteral)this.constraintValue).valueType + " method = " + this.method;
 	}
 }
