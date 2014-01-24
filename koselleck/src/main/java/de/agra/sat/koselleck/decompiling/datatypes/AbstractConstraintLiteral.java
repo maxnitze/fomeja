@@ -49,6 +49,17 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	}
 	
 	/**
+	 * Constructor for a new AbstractConstraintLiteral.
+	 * 
+	 * @param prefixedField the new prefixed field
+	 */
+	public AbstractConstraintLiteral(PrefixedField prefixedField) {
+		this.value = prefixedField;
+		this.valueType = ConstraintValueType.PREFIXED_FIELD;
+		this.isVariable = prefixedField.isVariable;
+	}
+	
+	/**
 	 * replaceAll replaces all occurrences of the given regular expression
 	 *  {@code regex} with the given {@code replacement}. if the replacement is
 	 *  an integer type the type of this literal is changed to integer.
@@ -200,7 +211,9 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 		case STRING:
 			return this.value.toString();
 		case PREFIXED_FIELD:
-			return ((PrefixedField)this.value).prefieldsPrefixedName;
+			return ((PrefixedField)this.value).prefixedName;
+		case PREFIXED_CLASS:
+			return ((PrefixedClass)this.value).clazz.getSimpleName();
 		case NULL:
 			return "NULL";
 		default:

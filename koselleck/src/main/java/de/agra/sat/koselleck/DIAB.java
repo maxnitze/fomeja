@@ -27,7 +27,7 @@ import de.agra.sat.koselleck.utils.KoselleckUtils;
  * @version 0.9.5
  * @author Max Nitze
  */
-public abstract class I2AL {
+public abstract class DIAB {
 	/** instance of the theorem prover to use */
 	private static final Prover prover = new Z3("z3", new SMTII());
 	
@@ -71,7 +71,7 @@ public abstract class I2AL {
 					if(!(Boolean)method.invoke(component, methodParams))
 						return false;
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					Logger.getLogger(I2AL.class).fatal("could not invoke method \"" + method.getName() + "\"");
+					Logger.getLogger(DIAB.class).fatal("could not invoke method \"" + method.getName() + "\"");
 					throw new IllegalArgumentException("could not invoke method \"" + method.getName() + "\"");
 				}
 			} while(KoselleckUtils.incrementIndices(constraintParameters));
@@ -106,7 +106,7 @@ public abstract class I2AL {
 				String methodSignature = (method.toGenericString().replaceFirst("^public boolean .*\\(", "public boolean "+ method.getName() +"(") + ";").replaceAll(", ", ",");;
 				DisassembledMethod disassembledMethod = disassembledMethods.get(methodSignature);
 				
-				System.out.println(disassembledMethod.toString() + "\n"); // TODO delete output of disassembled method
+//				System.out.println(disassembledMethod.toString() + "\n"); // TODO delete output of disassembled method
 				
 				if(disassembledMethod != null)
 					singleTheorems.add(new AbstractSingleTheorem(Decompiler.decompile(disassembledMethod), paramFields));

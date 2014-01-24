@@ -344,8 +344,7 @@ public abstract class KoselleckUtils {
 			}
 			
 			if(!signatureLine) {
-				System.out.println(methodSignature.toString() + "\n" + trimmedMethod.toString());
-				
+				System.out.println(trimmedMethod.toString()); // TODO delete
 				return Disassembler.disassemble(
 						method.getDeclaringClass(),
 						method,
@@ -421,7 +420,9 @@ public abstract class KoselleckUtils {
 	private static String getDisassembledClass(Class<?> componentClass) {
 		StringBuilder command = new StringBuilder("javap -classpath / -c ");
 		if(componentClass.getProtectionDomain().getCodeSource() == null) {
-			System.out.println(KoselleckUtils.class.getResource(""));
+			String message = "could not read class file for class \"" + componentClass.getSimpleName() + "\"";
+			Logger.getLogger(KoselleckUtils.class).fatal(message);
+			throw new IllegalArgumentException(message);
 		}
 		
 		command.append(componentClass.getProtectionDomain().getCodeSource().getLocation().getPath());

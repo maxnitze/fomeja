@@ -132,14 +132,16 @@ public class Decompiler {
 		
 		int nextOffset;
 		
-		List<PrefixedField> prefixedFields = new ArrayList<PrefixedField>();
-		
 		PrefixedField prefixedField = null;
-		PrefixedClass prefixedClass = null;
+		PrefixedField innerPrefixedField = null;
 		PrefixedField newPrefixedField = null;
 		
+		List<PrefixedField> prefixedFields = new ArrayList<PrefixedField>();
+		
 		AbstractConstraintValue constraintValue = null;
+		AbstractConstraintValue innerConstraintValue = null;
 		AbstractConstraintLiteral constraintLiteral = null;
+		AbstractConstraintLiteral innerConstraintLiteral = null;
 		AbstractConstraintFormula constraintFormula = null;
 		AbstractConstraintValue constraintValue1 = null;
 		AbstractConstraintValue constraintValue2 = null;
@@ -151,20 +153,20 @@ public class Decompiler {
 		Method lineMethod = null;
 		List<AbstractConstraintValue> argumentValues = null;
 		
-		List<PrefixedField> preFields = null;
-		
 		do {
 			nextOffset = bytecodeLine.followingLineNumber;
 			
 			switch(bytecodeLine.opcode) {
 			case aload_0:
 			case aload:
-				this.stack.push(this.store.get(bytecodeLine.value));
+				this.stack.push(
+						this.store.get(bytecodeLine.value));
 				break;
 				
 			case iconst:
 			case bipush:
-				this.stack.push(new AbstractConstraintLiteral(bytecodeLine.value, ConstraintValueType.Integer, false));
+				this.stack.push(
+						new AbstractConstraintLiteral(bytecodeLine.value, ConstraintValueType.Integer, false));
 				break;
 				
 			case getfield:
@@ -174,40 +176,9 @@ public class Decompiler {
 					Logger.getLogger(Decompiler.class).fatal(message);
 					throw new MissformattedBytecodeLineException(message);
 				}
-				constraintLiteral = (AbstractConstraintLiteral)constraintValue;
+				System.out.println("getfield " + constraintValue);
 				
-				if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD) {
-					prefixedField = (PrefixedField)constraintLiteral.value;
-					preFields.add(prefixedField);
-					
-					newPrefixedField = new PrefixedField(
-							(Field)bytecodeLine.type.accessibleObject,
-							bytecodeLine.type.accessibleObjectType,
-							prefixedField.fieldCode,
-							bytecodeLine.value, preFields,
-							prefixedField.prefix + bytecodeLine.constantTableIndex + "_");
-					
-				} else if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_CLASS) {
-					prefixedClass = (PrefixedClass)constraintLiteral.value;
-					
-					preFields = new ArrayList<PrefixedField>();
-					
-					newPrefixedField = new PrefixedField(
-							(Field)bytecodeLine.type.accessibleObject,
-							bytecodeLine.type.accessibleObjectType,
-							prefixedClass.fieldCode,
-							bytecodeLine.value, preFields,
-							"v" + bytecodeLine.constantTableIndex + "_");
-					
-				} else {
-					String message = "could not get field";
-					Logger.getLogger(Decompiler.class).fatal(message);
-					throw new MissformattedBytecodeLineException(message);
-				}
-				
-				prefixedFields.add(newPrefixedField);
-				this.stack.push(new AbstractConstraintLiteral(
-						newPrefixedField, ConstraintValueType.PREFIXED_FIELD, newPrefixedField.isVariable));
+				this.stack.push(this.getField(bytecodeLine, (AbstractConstraintLiteral)constraintValue, prefixedFields));
 				break;
 			case getstatic:
 				constraintValue = this.stack.pop();
@@ -217,34 +188,9 @@ public class Decompiler {
 					Logger.getLogger(Decompiler.class).fatal(message);
 					throw new MissformattedBytecodeLineException(message);
 				}
+				System.out.println("getstatic " + constraintValue);
 				
-				prefixedField = (PrefixedField)(((AbstractConstraintLiteral)constraintValue).value);
-				if(prefixedField.field != null)
-					preFields.add(prefixedField);
-				
-				Field field = (Field)bytecodeLine.type.accessibleObject;
-				if(field.getAnnotation(Variable.class) != null) {
-					newPrefixedField = new PrefixedField(
-							field,
-							bytecodeLine.type.accessibleObjectType,
-							prefixedField.fieldCode,
-							bytecodeLine.value, preFields,
-							prefixedField.prefix + bytecodeLine.constantTableIndex + "_");
-					
-					prefixedFields.add(newPrefixedField);
-					this.stack.push(new AbstractConstraintLiteral(
-							newPrefixedField, ConstraintValueType.PREFIXED_FIELD, newPrefixedField.isVariable));
-				} else {
-					field.setAccessible(true);
-					try {
-						this.stack.push(new AbstractConstraintLiteral(
-								field.get(null), ConstraintValueType.fromClass(bytecodeLine.type.accessibleObjectType), false));
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						String message = "could not access static field \"" + field.getName() +"\"";
-						Logger.getLogger(Decompiler.class).fatal(message);
-						throw new IllegalArgumentException(message);
-					}
-				}
+				this.stack.push(this.getStaticField(bytecodeLine, (AbstractConstraintLiteral)constraintValue, prefixedFields));
 				break;
 				
 			case checkcast:
@@ -341,6 +287,7 @@ public class Decompiler {
 			case invokevirtual:
 				lineMethod = (Method)bytecodeLine.type.accessibleObject;
 				
+				/** pop argument values from stack */
 				argumentValues = new ArrayList<AbstractConstraintValue>();
 				boolean isVirtualPremature = false;
 				for(int i=0; i<lineMethod.getParameterTypes().length; i++) {
@@ -353,21 +300,18 @@ public class Decompiler {
 				}
 				Collections.reverse(argumentValues);
 				
+				/** pop value from stack */
 				constraintValue = this.stack.pop();
 				
+				/** no premature value, so the method can get invoked */
 				if(!isVirtualPremature && constraintValue instanceof AbstractConstraintLiteral &&
 						((AbstractConstraintLiteral)constraintValue).valueType.hasClass(lineMethod.getDeclaringClass())) {
 					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
 					try {
-						System.out.println("Literal = " + constraintLiteral.value.getClass() + " : " + argumentValues.size());
-						
 						this.stack.push(new AbstractConstraintLiteral(
 								lineMethod.invoke(constraintLiteral.value, argumentValues.toArray(new Object[0])),
 								ConstraintValueType.fromClass(lineMethod.getReturnType()), false));
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						
-						System.out.println(e);
-						
 						StringBuilder arguments = new StringBuilder();
 						for(Object argument : argumentValues) {
 							if(arguments.length() != 0)
@@ -379,16 +323,51 @@ public class Decompiler {
 						Logger.getLogger(Decompiler.class).fatal(message);
 						throw new IllegalArgumentException(message);
 					}
-				} else if(lineMethod.getDeclaringClass().getClassLoader() != null) {
+				}
+				/** class file can get loaded from the classloader */
+				else if(lineMethod.getDeclaringClass().getClassLoader() != null) {
 					DisassembledMethod disassembledSubMethod = KoselleckUtils.getDisassembledMethod(lineMethod);
 					AbstractConstraint abstractConstraint = new Decompiler().decompile(
 							disassembledSubMethod.method, disassembledSubMethod.bytecodeLines,
 							argumentValues.toArray(new AbstractConstraintValue[0]));
 					
 					if(abstractConstraint instanceof AbstractBooleanConstraint &&
-							((AbstractBooleanConstraint)abstractConstraint).value == true)
-						this.stack.push(((AbstractBooleanConstraint)abstractConstraint).returnValue);
-				} else
+							((AbstractBooleanConstraint)abstractConstraint).value == true) {
+						innerConstraintValue = ((AbstractBooleanConstraint)abstractConstraint).returnValue;
+						
+						if(constraintValue instanceof AbstractConstraintLiteral &&
+								innerConstraintValue instanceof AbstractConstraintLiteral) {
+							constraintLiteral = (AbstractConstraintLiteral)constraintValue;
+							innerConstraintLiteral = (AbstractConstraintLiteral)innerConstraintValue; 
+							
+							if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD && 
+									innerConstraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD) {
+								prefixedField = (PrefixedField)constraintLiteral.value;
+								innerPrefixedField = (PrefixedField)innerConstraintLiteral.value;
+								
+								List<PrefixedField> preFields = new ArrayList<PrefixedField>();
+								preFields.addAll(prefixedField.preFields);
+								preFields.addAll(innerPrefixedField.preFields);
+								
+								newPrefixedField = new PrefixedField(
+									innerPrefixedField.field,
+									innerPrefixedField.fieldType,
+									innerPrefixedField.fieldCode,
+									innerPrefixedField.value,
+									preFields,
+									prefixedField.prefix + innerPrefixedField.prefix.substring(1));
+								prefixedFields.add(newPrefixedField);
+								
+								this.stack.push(new AbstractConstraintLiteral(newPrefixedField));
+							} else
+								throw new RuntimeException("TODO no prefixed field"); // TODO implement
+						} else
+							throw new RuntimeException("TODO no abstract constraint literal"); // TODO implement
+					} else
+						throw new RuntimeException("TODO no abstract boolean constraint"); // TODO implement
+				}
+				/** class file can not get loaded from the classloader (e.g. java.lang classes) */
+				else
 					this.stack.push(new AbstractPrematureConstraintValue(
 							constraintValue, lineMethod, argumentValues));
 				
@@ -801,5 +780,83 @@ public class Decompiler {
 					constraintOperator,
 					constraintValue2,
 					prefixedFields);
+	}
+	
+	/**
+	 * TODO comment
+	 * 
+	 * @param bytecodeLine
+	 * @param constraintLiteral
+	 * @param preFields
+	 * 
+	 * @return
+	 */
+	private AbstractConstraintValue getField(BytecodeLine bytecodeLine, AbstractConstraintLiteral constraintLiteral, List<PrefixedField> prefixedFields) {
+		if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD) {
+			System.out.println("is prefixed field " + constraintLiteral.value);
+			
+			PrefixedField prefixedField = (PrefixedField)constraintLiteral.value;
+			
+			List<PrefixedField> preFields = new ArrayList<PrefixedField>(prefixedField.preFields);
+			preFields.add(prefixedField);
+			
+			PrefixedField newPrefixedField = new PrefixedField(
+					(Field)bytecodeLine.type.accessibleObject,
+					bytecodeLine.type.accessibleObjectType,
+					prefixedField.fieldCode,
+					bytecodeLine.value, preFields,
+					prefixedField.prefieldsPrefixedName + bytecodeLine.constantTableIndex + "_");
+			prefixedFields.add(newPrefixedField);
+			
+			return new AbstractConstraintLiteral(newPrefixedField);
+			
+		} else if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_CLASS) {
+			System.out.println("is prefixed class " + constraintLiteral.value);
+			
+			PrefixedClass prefixedClass = (PrefixedClass)constraintLiteral.value;
+			
+			PrefixedField newPrefixedField = new PrefixedField(
+					(Field)bytecodeLine.type.accessibleObject,
+					bytecodeLine.type.accessibleObjectType,
+					prefixedClass.fieldCode,
+					bytecodeLine.value, new ArrayList<PrefixedField>(),
+					"v" + bytecodeLine.constantTableIndex + "_");
+			prefixedFields.add(newPrefixedField);
+			
+			return new AbstractConstraintLiteral(newPrefixedField);
+			
+		} else {
+			String message = "could not get field";
+			Logger.getLogger(Decompiler.class).fatal(message);
+			throw new MissformattedBytecodeLineException(message);
+		}
+	}
+	
+	/**
+	 * TODO comment
+	 * 
+	 * @param bytecodeLine
+	 * @param constraintLiteral
+	 * @param prefixedFields
+	 * 
+	 * @return
+	 */
+	private AbstractConstraintValue getStaticField(BytecodeLine bytecodeLine, AbstractConstraintLiteral constraintLiteral, List<PrefixedField> prefixedFields) {
+		Field field = (Field)bytecodeLine.type.accessibleObject;
+		/** non-variable static field */
+		if(field.getAnnotation(Variable.class) == null) {
+			field.setAccessible(true);
+			try {
+				return new AbstractConstraintLiteral(
+						field.get(null), ConstraintValueType.fromClass(bytecodeLine.type.accessibleObjectType), false);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				String message = "could not access static field \"" + field.getName() +"\"";
+				Logger.getLogger(Decompiler.class).fatal(message);
+				throw new IllegalArgumentException(message);
+			}
+		}
+		/** variable static field */
+		else
+			return this.getField(bytecodeLine, constraintLiteral, prefixedFields);
 	}
 }

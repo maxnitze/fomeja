@@ -12,7 +12,7 @@ public class Main {
 		boolean testMinimize	= false;
 		boolean testMaximize	= false;
 		
-		String graphfile = "graph_100_2530.col";
+		String graphfile = "fullgraph_20.col";
 		CGGraph graph = new CGGraph();
 		try {
 			graph.parse(IOUtils.readFromFile("/graphs/" + graphfile));
@@ -22,25 +22,25 @@ public class Main {
 		}
 		
 		if(testValidate) {
-			if(I2AL.validate(graph))
+			if(DIAB.validate(graph))
 				System.out.println("the current configuration for graph \"" + graphfile + "\" is valid");
 			else
 				System.out.println("the current configuration for graph \"" + graphfile + "\" is not valid");
 		}
 		
 		if(testSatisfy) {
-			if(I2AL.satisfy(graph))
+			if(DIAB.satisfy(graph))
 				System.out.println("the graph \"" + graphfile + "\" is assigned with a satisfying assignment");
 			else
 				System.out.println("the graph \"" + graphfile + "\" is not assigned with a satisfying assignment");
 		}
 		
 		if(testMinimize) {
-			I2AL.minimize(graph);
+			DIAB.minimize(graph);
 		}
 		
 		if(testMaximize) {
-			I2AL.maximize(graph);
+			DIAB.maximize(graph);
 		}
 	}
 }
