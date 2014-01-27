@@ -217,12 +217,10 @@ public abstract class Dialect {
 					if(!prefixedFieldsList.contains(prefixedField))
 						prefixedFieldsList.add(prefixedField);
 			}
-		
-			int parameterCount = singleTheorem.fields.length;
 			
-			ConstraintParameter[] constraintParameters = new ConstraintParameter[parameterCount];
+			ConstraintParameter[] constraintParameters = new ConstraintParameter[singleTheorem.fields.length];
 			List<Field>[] parameterFields = singleTheorem.fields;
-			for(int i=0; i<parameterCount; i++)
+			for(int i=0; i<singleTheorem.fields.length; i++)
 				constraintParameters[i] = new ConstraintParameter(component, i, parameterFields[i]);
 			
 			boolean skipTheorem = false;

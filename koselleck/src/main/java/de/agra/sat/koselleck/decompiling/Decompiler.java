@@ -76,8 +76,8 @@ public class Decompiler {
 		this.stack.clear();
 		this.store.clear();
 		
-		this.store.put(0, new  AbstractConstraintLiteral(
-				new PrefixedClass(method.getDeclaringClass(), Opcode.aload_0), ConstraintValueType.PREFIXED_CLASS, false));
+		this.store.put(0, new AbstractConstraintLiteral(
+				new PrefixedClass(method.getDeclaringClass(), Opcode.aload_0, 0), ConstraintValueType.PREFIXED_CLASS, false));
 		
 		for(int i=0; i<argumentValues.length; i++)
 			this.store.put(i+1, argumentValues[i]);
@@ -103,7 +103,7 @@ public class Decompiler {
 			arguments = new AbstractConstraintValue[disassembledMethod.method.getParameterTypes().length];
 			for(int i=0; i<arguments.length; i++)
 				arguments[i] = new AbstractConstraintLiteral(
-						new PrefixedClass(disassembledMethod.method.getParameterTypes()[i], Opcode.aload),
+						new PrefixedClass(disassembledMethod.method.getParameterTypes()[i], Opcode.aload, i+1),
 						ConstraintValueType.PREFIXED_CLASS, false);
 		} else
 			arguments = argumentValues;
@@ -176,7 +176,6 @@ public class Decompiler {
 					Logger.getLogger(Decompiler.class).fatal(message);
 					throw new MissformattedBytecodeLineException(message);
 				}
-				System.out.println("getfield " + constraintValue);
 				
 				this.stack.push(this.getField(bytecodeLine, (AbstractConstraintLiteral)constraintValue, prefixedFields));
 				break;
@@ -188,7 +187,6 @@ public class Decompiler {
 					Logger.getLogger(Decompiler.class).fatal(message);
 					throw new MissformattedBytecodeLineException(message);
 				}
-				System.out.println("getstatic " + constraintValue);
 				
 				this.stack.push(this.getStaticField(bytecodeLine, (AbstractConstraintLiteral)constraintValue, prefixedFields));
 				break;
@@ -793,8 +791,6 @@ public class Decompiler {
 	 */
 	private AbstractConstraintValue getField(BytecodeLine bytecodeLine, AbstractConstraintLiteral constraintLiteral, List<PrefixedField> prefixedFields) {
 		if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD) {
-			System.out.println("is prefixed field " + constraintLiteral.value);
-			
 			PrefixedField prefixedField = (PrefixedField)constraintLiteral.value;
 			
 			List<PrefixedField> preFields = new ArrayList<PrefixedField>(prefixedField.preFields);
@@ -804,22 +800,20 @@ public class Decompiler {
 					(Field)bytecodeLine.type.accessibleObject,
 					bytecodeLine.type.accessibleObjectType,
 					prefixedField.fieldCode,
-					bytecodeLine.value, preFields,
+					prefixedField.value, preFields,
 					prefixedField.prefieldsPrefixedName + bytecodeLine.constantTableIndex + "_");
 			prefixedFields.add(newPrefixedField);
 			
 			return new AbstractConstraintLiteral(newPrefixedField);
 			
 		} else if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_CLASS) {
-			System.out.println("is prefixed class " + constraintLiteral.value);
-			
 			PrefixedClass prefixedClass = (PrefixedClass)constraintLiteral.value;
 			
 			PrefixedField newPrefixedField = new PrefixedField(
 					(Field)bytecodeLine.type.accessibleObject,
 					bytecodeLine.type.accessibleObjectType,
 					prefixedClass.fieldCode,
-					bytecodeLine.value, new ArrayList<PrefixedField>(),
+					prefixedClass.value, new ArrayList<PrefixedField>(),
 					"v" + bytecodeLine.constantTableIndex + "_");
 			prefixedFields.add(newPrefixedField);
 			
