@@ -13,7 +13,7 @@ public class VertexColor {
 		boolean testMinimize	= false;
 		boolean testMaximize	= false;
 		
-		String graphfile = "fullgraph_20.col";
+		String graphfile = "graph_250_15668.col";
 		CGGraph graph = new CGGraph();
 		try {
 			graph.parse(IOUtils.readFromFile("/graphs/" + graphfile));

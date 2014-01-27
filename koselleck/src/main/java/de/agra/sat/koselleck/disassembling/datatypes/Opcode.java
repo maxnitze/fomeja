@@ -55,7 +55,8 @@ public enum Opcode {
 	fcmpg("fcmpg", 1, "^fcmpg$", null, ""),
 	fcmpl("fcmpl", 1, "^fcmpl$", null, ""),
 	
-	ireturn("ireturn", 1, "^ireturn$", null, "");
+	ireturn("ireturn", 1, "^ireturn$", null, ""),
+	areturn("", 1, "^areturn$", null, "");
 	
 	/** enumeration of the types of an opcode */
 	private enum OpcodeType { VALUE, OFFSET, CONSTANT_TABLE_INDEX, SWITCH };

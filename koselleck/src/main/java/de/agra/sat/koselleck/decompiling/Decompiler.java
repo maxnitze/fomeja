@@ -135,6 +135,7 @@ public class Decompiler {
 		PrefixedField prefixedField = null;
 		PrefixedField innerPrefixedField = null;
 		PrefixedField newPrefixedField = null;
+		PrefixedClass prefixedClass = null;
 		
 		List<PrefixedField> prefixedFields = new ArrayList<PrefixedField>();
 		
@@ -147,6 +148,8 @@ public class Decompiler {
 		AbstractConstraintValue constraintValue2 = null;
 		AbstractConstraintLiteral constraintLiteral1 = null;
 		AbstractConstraintLiteral constraintLiteral2 = null;
+		
+		AbstractConstraintValue returnValue = null;
 		
 		ConstraintOperator constraintOperator = null;
 		
@@ -338,30 +341,47 @@ public class Decompiler {
 							constraintLiteral = (AbstractConstraintLiteral)constraintValue;
 							innerConstraintLiteral = (AbstractConstraintLiteral)innerConstraintValue; 
 							
-							if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD && 
-									innerConstraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD) {
-								prefixedField = (PrefixedField)constraintLiteral.value;
+							if(innerConstraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD) {
 								innerPrefixedField = (PrefixedField)innerConstraintLiteral.value;
 								
-								List<PrefixedField> preFields = new ArrayList<PrefixedField>();
-								preFields.addAll(prefixedField.preFields);
-								preFields.add(prefixedField);
-								preFields.addAll(innerPrefixedField.preFields);
-								
-								newPrefixedField = new PrefixedField(
-									innerPrefixedField.field,
-									innerPrefixedField.fieldType,
-									prefixedField.fieldCode,
-									prefixedField.value,
-									preFields,
-									prefixedField.prefix + innerPrefixedField.prefix.substring(1));
+								if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD) {
+									prefixedField = (PrefixedField)constraintLiteral.value;
+									
+									List<PrefixedField> preFields = new ArrayList<PrefixedField>();
+									preFields.addAll(prefixedField.preFields);
+									preFields.add(prefixedField);
+									preFields.addAll(innerPrefixedField.preFields);
+									
+									newPrefixedField = new PrefixedField(
+										innerPrefixedField.field,
+										innerPrefixedField.fieldType,
+										prefixedField.fieldCode,
+										prefixedField.value,
+										preFields,
+										prefixedField.prefix + innerPrefixedField.prefix.substring(1));
+									
+									prefixedFields.remove(prefixedField);
+									prefixedFields.add(newPrefixedField);
+								} else if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_CLASS) {
+									prefixedClass = (PrefixedClass)constraintLiteral.value;
+									
+									List<PrefixedField> preFields = new ArrayList<PrefixedField>(innerPrefixedField.preFields);
+									
+									newPrefixedField = new PrefixedField(
+										innerPrefixedField.field,
+										innerPrefixedField.fieldType,
+										prefixedClass.fieldCode,
+										prefixedClass.value,
+										preFields,
+										"v" + bytecodeLine.constantTableIndex + "_" + innerPrefixedField.prefix.substring(1));
+								} else
+									throw new RuntimeException("TODO outer literal is no prefixed field"); // TODO implement
 								
 								prefixedFields.remove(prefixedField);
 								prefixedFields.add(newPrefixedField);
-								
 								this.stack.push(new AbstractConstraintLiteral(newPrefixedField));
 							} else
-								throw new RuntimeException("TODO no prefixed field"); // TODO implement
+								throw new RuntimeException("TODO inner literal is no prefixed field"); // TODO implement
 						} else
 							throw new RuntimeException("TODO no abstract constraint literal"); // TODO implement
 					} else
@@ -515,7 +535,7 @@ public class Decompiler {
 				break;
 			
 			case ireturn:
-				AbstractConstraintValue returnValue = this.stack.pop();
+				returnValue = this.stack.pop();
 				
 				if(returnValue instanceof AbstractConstraintLiteral) {
 					AbstractConstraintLiteral returnLiteral = (AbstractConstraintLiteral)returnValue;
@@ -529,6 +549,11 @@ public class Decompiler {
 					}
 				} else
 					return new AbstractBooleanConstraint(true, returnValue);
+				
+			case areturn:
+				returnValue = this.stack.pop();
+				
+				return new AbstractBooleanConstraint(true, returnValue);
 				
 			default:
 				UnknownOpcodeException exception = new UnknownOpcodeException(bytecodeLine.opcode);
