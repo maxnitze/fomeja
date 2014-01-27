@@ -2,12 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>de.agra.sat</groupId>
-  <artifactId>i2al</artifactId>
-  <version>0.8.5</version>
+  <groupId>de.agra.koselleck</groupId>
+  <artifactId>diab</artifactId>
+  <version>0.9.0</version>
   <packaging>jar</packaging>
 
-  <name>i2al</name>
+  <name>diab</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -68,11 +68,6 @@
   		<groupId>log4j</groupId>
   		<artifactId>log4j</artifactId>
   		<version>1.2.17</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>net.sf.jung</groupId>
-  		<artifactId>jung-api</artifactId>
-  		<version>2.0.1</version>
   	</dependency>
   </dependencies>
 </project>

@@ -1,0 +1,14 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.agra.koselleck.diab</groupId>
+  <artifactId>example-registerallocation</artifactId>
+  <version>1.0.0</version>
+  <name>DIAB Register Allocation example</name>
+  <dependencies>
+  	<dependency>
+  		<groupId>de.agra.koselleck</groupId>
+  		<artifactId>diab</artifactId>
+  		<version>0.9.0</version>
+  	</dependency>
+  </dependencies>
+</project>
