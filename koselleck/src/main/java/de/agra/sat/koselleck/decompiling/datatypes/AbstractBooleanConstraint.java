@@ -131,6 +131,6 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 */
 	@Override
 	public String toString() {
-		return this.value ? "true" : "false" + " [" + this.returnValue.toString() + "]";
+		return (this.value ? "true" : "false") + " [" + this.returnValue.toString() + "]";
 	}
 }

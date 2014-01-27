@@ -345,15 +345,18 @@ public class Decompiler {
 								
 								List<PrefixedField> preFields = new ArrayList<PrefixedField>();
 								preFields.addAll(prefixedField.preFields);
+								preFields.add(prefixedField);
 								preFields.addAll(innerPrefixedField.preFields);
 								
 								newPrefixedField = new PrefixedField(
 									innerPrefixedField.field,
 									innerPrefixedField.fieldType,
-									innerPrefixedField.fieldCode,
-									innerPrefixedField.value,
+									prefixedField.fieldCode,
+									prefixedField.value,
 									preFields,
 									prefixedField.prefix + innerPrefixedField.prefix.substring(1));
+								
+								prefixedFields.remove(prefixedField);
 								prefixedFields.add(newPrefixedField);
 								
 								this.stack.push(new AbstractConstraintLiteral(newPrefixedField));
@@ -801,7 +804,7 @@ public class Decompiler {
 					bytecodeLine.type.accessibleObjectType,
 					prefixedField.fieldCode,
 					prefixedField.value, preFields,
-					prefixedField.prefieldsPrefixedName + bytecodeLine.constantTableIndex + "_");
+					prefixedField.prefieldsPrefixedName + "_" + bytecodeLine.constantTableIndex + "_");
 			prefixedFields.add(newPrefixedField);
 			
 			return new AbstractConstraintLiteral(newPrefixedField);

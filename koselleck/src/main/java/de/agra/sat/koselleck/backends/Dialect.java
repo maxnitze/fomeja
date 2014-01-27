@@ -263,6 +263,7 @@ public abstract class Dialect {
 							index = currentParameterObject.index;
 						}
 						String prefixedVariableName = prefixedField.prefieldsPrefixedName + "_" + index;
+						
 						variablesMap.put(prefixedVariableName, currentParameterObject);
 						VariableField variableField = new VariableField(prefixedVariableName, prefixedField.fieldType);
 						if(!variableFields.contains(variableField))
