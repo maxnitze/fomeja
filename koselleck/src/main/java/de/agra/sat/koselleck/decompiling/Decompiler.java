@@ -211,6 +211,29 @@ public class Decompiler {
 				}
 				break;
 				
+			case i2d:
+				constraintValue = this.stack.pop();
+				
+				/** check for abstract constraint literal */
+				if(constraintValue instanceof AbstractConstraintLiteral) {
+					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
+					
+					/** check for integer */
+					if(constraintLiteral.valueType == ConstraintValueType.Integer) {
+						/** push corresponding double to stack */
+						this.stack.push(
+								new AbstractConstraintLiteral(new Double((Integer)constraintLiteral.value), ConstraintValueType.Double, false));
+					} else if(constraintLiteral.valueType.isComparableNumberType) {
+						String message = "could not cast constraint value " + constraintLiteral.value + " to integer";
+						Logger.getLogger(Decompiler.class).fatal(message);
+						throw new MissformattedBytecodeLineException(message);
+					} else
+						this.stack.push(constraintLiteral);
+				} else
+					this.stack.push(constraintValue);
+				
+				break;
+				
 			case add:
 			case sub:
 			case mul:
@@ -865,6 +888,7 @@ public class Decompiler {
 	 */
 	private AbstractConstraintValue getStaticField(BytecodeLine bytecodeLine, AbstractConstraintLiteral constraintLiteral, List<PrefixedField> prefixedFields) {
 		Field field = (Field)bytecodeLine.type.accessibleObject;
+		
 		/** non-variable static field */
 		if(field.getAnnotation(Variable.class) == null) {
 			field.setAccessible(true);

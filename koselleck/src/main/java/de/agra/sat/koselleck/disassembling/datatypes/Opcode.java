@@ -24,9 +24,9 @@ public enum Opcode {
 	
 	checkcast("checkcast", 3, "^checkcast$", OpcodeType.CONSTANT_TABLE_INDEX, "checkcast"),
 	
-	i2d("i2d", 3, "^i2d$", null, ""),
+	i2d("i2d", 1, "^i2d$", null, ""),
 	
-	ldc2_w("ldc2_w", 1, "^ldc2_w$", null, ""),
+	ldc2_w("ldc2_w", 3, "^ldc2_w$", OpcodeType.CONSTANT_TABLE_INDEX, "ldc2_w"),
 	
 	add("add", 1, "^[i|d]add$", null, ""),
 	sub("sub", 1, "^[i|d]sub$", null, ""),
