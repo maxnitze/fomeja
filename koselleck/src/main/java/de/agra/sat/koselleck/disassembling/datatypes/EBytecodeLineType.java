@@ -8,9 +8,11 @@ package de.agra.sat.koselleck.disassembling.datatypes;
  * @author Max Nitze
  */
 public enum EBytecodeLineType {
-	FIELD("Field"),
-	METHOD("Method"),
-	CLASS("class");
+	FIELD("^Field$"),
+	METHOD("^Method$"),
+	CLASS("^class$"),
+	
+	VALUE("^(double|float)$");
 	
 	/** the name */
 	public final String name;
@@ -38,7 +40,7 @@ public enum EBytecodeLineType {
 	 */
 	public static EBytecodeLineType fromString(String name) {
 		for(EBytecodeLineType t : values())
-			if(t.name.equals(name))
+			if(name.matches(t.name))
 				return t;
 		throw new IllegalArgumentException("no constant with name \"" + name + "\" found");
 	}

@@ -233,6 +233,60 @@ public class Decompiler {
 					this.stack.push(constraintValue);
 				
 				break;
+			case i2f:
+				constraintValue = this.stack.pop();
+				
+				/** check for abstract constraint literal */
+				if(constraintValue instanceof AbstractConstraintLiteral) {
+					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
+					
+					/** check for integer */
+					if(constraintLiteral.valueType == ConstraintValueType.Integer) {
+						/** push corresponding double to stack */
+						this.stack.push(
+								new AbstractConstraintLiteral(new Float((Integer)constraintLiteral.value), ConstraintValueType.Float, false));
+					} else if(constraintLiteral.valueType.isComparableNumberType) {
+						String message = "could not cast constraint value " + constraintLiteral.value + " to integer";
+						Logger.getLogger(Decompiler.class).fatal(message);
+						throw new MissformattedBytecodeLineException(message);
+					} else
+						this.stack.push(constraintLiteral);
+				} else
+					this.stack.push(constraintValue);
+				
+				break;
+				
+			case f2d:
+				constraintValue = this.stack.pop();
+				
+				/** check for abstract constraint literal */
+				if(constraintValue instanceof AbstractConstraintLiteral) {
+					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
+					
+					/** check for integer */
+					if(constraintLiteral.valueType == ConstraintValueType.Float) {
+						/** push corresponding double to stack */
+						this.stack.push(
+								new AbstractConstraintLiteral(new Double((Float)constraintLiteral.value), ConstraintValueType.Double, false));
+					} else if(constraintLiteral.valueType.isComparableNumberType) {
+						String message = "could not cast constraint value " + constraintLiteral.value + " to float";
+						Logger.getLogger(Decompiler.class).fatal(message);
+						throw new MissformattedBytecodeLineException(message);
+					} else
+						this.stack.push(constraintLiteral);
+				} else
+					this.stack.push(constraintValue);
+				
+				break;
+				
+			case ldc:
+				this.stack.push(
+						new AbstractConstraintLiteral(bytecodeLine.type.value, ConstraintValueType.fromClass(bytecodeLine.type.clazz), false));
+				break;
+			case ldc2_w:
+				this.stack.push(
+						new AbstractConstraintLiteral(bytecodeLine.type.value, ConstraintValueType.fromClass(bytecodeLine.type.clazz), false));
+				break;
 				
 			case add:
 			case sub:
@@ -421,11 +475,15 @@ public class Decompiler {
 				nextOffset = bytecodeLine.offset;
 				break;
 				
-			case iload:
+			case load_:
+			case load:
+				System.out.println(bytecodeLine.opcode.name + " -- " + bytecodeLine.value + "\n\t" + this.store.get(bytecodeLine.value));
+				
 				this.stack.push(this.store.get(bytecodeLine.value));
 				break;
 				
-			case istore:
+			case store_:
+			case store:
 				this.store.put(bytecodeLine.value, this.stack.pop());
 				break;
 			
@@ -536,17 +594,17 @@ public class Decompiler {
 					
 					if((bytecodeLine.opcode == Opcode.dcmpg || bytecodeLine.opcode == Opcode.dcmpl) &&
 							constraintLiteral1.valueType == ConstraintValueType.Double &&
-							constraintLiteral2.valueType == ConstraintValueType.Double) {
+							constraintLiteral2.valueType == ConstraintValueType.Double)
 						this.stack.push(new AbstractConstraintLiteral(
 								((Double)constraintLiteral.value).compareTo((Double)constraintLiteral2.value),
 								ConstraintValueType.Integer, false));
-					} else if((bytecodeLine.opcode == Opcode.fcmpg || bytecodeLine.opcode == Opcode.fcmpl) &&
+					else if((bytecodeLine.opcode == Opcode.fcmpg || bytecodeLine.opcode == Opcode.fcmpl) &&
 							constraintLiteral1.valueType == ConstraintValueType.Float &&
-							constraintLiteral2.valueType == ConstraintValueType.Float) {
+							constraintLiteral2.valueType == ConstraintValueType.Float)
 						this.stack.push(new AbstractConstraintLiteral(
 								((Float)constraintLiteral.value).compareTo((Float)constraintLiteral2.value),
 								ConstraintValueType.Integer, false));
-					} else
+					else
 						this.stack.push(
 								new AbstractConstraintFormula(
 										constraintValue1, ArithmeticOperator.SUB, constraintValue2));
@@ -557,7 +615,7 @@ public class Decompiler {
 				
 				break;
 			
-			case ireturn:
+			case _return:
 				returnValue = this.stack.pop();
 				
 				if(returnValue instanceof AbstractConstraintLiteral) {
@@ -572,11 +630,6 @@ public class Decompiler {
 					}
 				} else
 					return new AbstractBooleanConstraint(true, returnValue);
-				
-			case areturn:
-				returnValue = this.stack.pop();
-				
-				return new AbstractBooleanConstraint(true, returnValue);
 				
 			default:
 				UnknownOpcodeException exception = new UnknownOpcodeException(bytecodeLine.opcode);

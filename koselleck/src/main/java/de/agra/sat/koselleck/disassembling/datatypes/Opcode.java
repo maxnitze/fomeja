@@ -25,23 +25,31 @@ public enum Opcode {
 	checkcast("checkcast", 3, "^checkcast$", OpcodeType.CONSTANT_TABLE_INDEX, "checkcast"),
 	
 	i2d("i2d", 1, "^i2d$", null, ""),
+	i2f("i2f", 1, "^i2f$", null, ""),
 	
+	f2d("f2d", 1, "^f2d$", null, ""),
+	
+	ldc("ldc", 2, "^ldc", OpcodeType.CONSTANT_TABLE_INDEX, "ldc"),
 	ldc2_w("ldc2_w", 3, "^ldc2_w$", OpcodeType.CONSTANT_TABLE_INDEX, "ldc2_w"),
 	
-	add("add", 1, "^[i|d]add$", null, ""),
-	sub("sub", 1, "^[i|d]sub$", null, ""),
-	mul("mul", 1, "^[i|d]mul$", null, ""),
-	div("div", 1, "^[i|d]div$", null, ""),
+	add("add", 1, "^[i|d|f]add$", null, ""),
+	sub("sub", 1, "^[i|d|f]sub$", null, ""),
+	mul("mul", 1, "^[i|d|f]mul$", null, ""),
+	div("div", 1, "^[i|d|f]div$", null, ""),
 	
 	invokestatic("invokestatic", 3, "^invokestatic$", OpcodeType.CONSTANT_TABLE_INDEX, "invokestatic"),
 	invokevirtual("invokevirtual", 3, "^invokevirtual$", OpcodeType.CONSTANT_TABLE_INDEX, "invokevirtual"),
 	
+//	_new("new", 1, "^new$", null, ""),
+	
 	tableswitch("tableswitch", 0, "^tableswitch$", OpcodeType.SWITCH, "tableswitch"),
 	
 	_goto("goto", 1, "^goto$", null, ""),
-
-	iload("iload", 1, "^iload(_\\d+)?$", OpcodeType.VALUE, "iload(_|\\s)"),
-	istore("istore", 1, "^istore(_\\d+)?$", OpcodeType.VALUE, "istore(_|\\s)"),
+	
+	load_("load_", 1, "^[i|f|d]load_\\d+$", OpcodeType.VALUE, "[i|f|d]load_"),
+	store_("store_", 1, "^[i|f|d]store_\\d+$", OpcodeType.VALUE, "[i|f|d]store_"),
+	load("load", 2, "^[i|f|d]load(\\s+\\d+)?$", OpcodeType.VALUE, "[i|f|d]load\\s"),
+	store("store", 2, "^[i|f|d]store(\\s+\\d+)?$", OpcodeType.VALUE, "[i|f|d]store\\s"),
 	
 	ifeq("ifeq", 3, "^ifeq$", OpcodeType.OFFSET, "ifeq"),							/** jump if zero */
 	ifne("ifne", 3, "^ifne$", OpcodeType.OFFSET, "ifne"),							/** jump if nonzero */
@@ -59,8 +67,7 @@ public enum Opcode {
 	fcmpg("fcmpg", 1, "^fcmpg$", null, ""),
 	fcmpl("fcmpl", 1, "^fcmpl$", null, ""),
 	
-	ireturn("ireturn", 1, "^ireturn$", null, ""),
-	areturn("", 1, "^areturn$", null, "");
+	_return("return", 1, "^[i|f|d|a]return$", null, "");
 	
 	/** enumeration of the types of an opcode */
 	private enum OpcodeType { VALUE, OFFSET, CONSTANT_TABLE_INDEX, SWITCH };

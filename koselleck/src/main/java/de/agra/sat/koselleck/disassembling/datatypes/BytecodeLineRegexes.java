@@ -26,7 +26,7 @@ public abstract class BytecodeLineRegexes {
 	public static final String tableswitch = "^\\d+: (" + Opcode.getConstantSwitchGroup() + ")\\s+\\{\\s// \\d+ to \\d+$";
 
 	/** regular expression for a valued byte code line */
-	public static final String typeRegex = "^\\d+: \\S+ #?\\d+ // (?<type>\\S+) (?<qfield>\\S+)$";
+	public static final String typeRegex = "^\\d+: \\S+ #?\\d+ // (?<type>\\S+) (?<value>\\S+)$";
 	/** regular expression for a valued byte code line */
-	public static final String typeMethodFieldRegex = "^\\d+: \\S+ #?\\d+ // (?<type>\\S+) (?<qfield>\\S+):(\\((?<paramtypes>\\S+)\\))?(?<rtype>\\S+)$";
+	public static final String typeMethodFieldRegex = "^\\d+: \\S+ #?\\d+ // (?<type>\\S+) (?<value>\\S+):(\\((?<paramtypes>\\S+)\\))?(?<rtype>\\S+)$";
 }
