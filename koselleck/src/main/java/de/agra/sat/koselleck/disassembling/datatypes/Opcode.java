@@ -24,10 +24,14 @@ public enum Opcode {
 	
 	checkcast("checkcast", 3, "^checkcast$", OpcodeType.CONSTANT_TABLE_INDEX, "checkcast"),
 	
-	add("add", 1, "^[i]add$", null, ""),
-	sub("sub", 1, "^[i]sub$", null, ""),
-	mul("mul", 1, "^[i]mul$", null, ""),
-	div("div", 1, "^[i]div$", null, ""),
+	i2d("i2d", 3, "^i2d$", null, ""),
+	
+	ldc2_w("ldc2_w", 1, "^ldc2_w$", null, ""),
+	
+	add("add", 1, "^[i|d]add$", null, ""),
+	sub("sub", 1, "^[i|d]sub$", null, ""),
+	mul("mul", 1, "^[i|d]mul$", null, ""),
+	div("div", 1, "^[i|d]div$", null, ""),
 	
 	invokestatic("invokestatic", 3, "^invokestatic$", OpcodeType.CONSTANT_TABLE_INDEX, "invokestatic"),
 	invokevirtual("invokevirtual", 3, "^invokevirtual$", OpcodeType.CONSTANT_TABLE_INDEX, "invokevirtual"),

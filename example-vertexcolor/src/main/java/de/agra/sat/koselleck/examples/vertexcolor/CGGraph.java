@@ -69,9 +69,9 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 //		return edge.vertex1.color != edge.vertex2.color;
 //		return edge.vertex1.getColor() != edge.vertex2.getColor();
 //		return edge.getVertex1().color != edge.getVertex2().color;
-		return edge.getVertex1().getColor() != edge.getVertex2().getColor();
+//		return edge.getVertex1().getColor() != edge.getVertex2().getColor();
 //		return edge.getVertex1().getColor() - 4 != edge.getVertex2().getColor() + 3;
-//		return edge.getVertex1().getColor() - 1.2 != edge.getVertex2().getColor() + 2.6; // TODO does not work!
+		return edge.vertex1.color - 1.2 != edge.vertex2.color + 2.6; // TODO does not work!
 	}
 	
 	@Objective
