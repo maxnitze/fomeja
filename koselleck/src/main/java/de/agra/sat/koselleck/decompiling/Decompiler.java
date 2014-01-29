@@ -5,6 +5,7 @@ package de.agra.sat.koselleck.decompiling;
  * ----- ----- ----- ----- ----- */
 
 /** imports */
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -157,7 +158,7 @@ public class Decompiler {
 		
 		Method lineMethod = null;
 		Constructor<?> lineConstructor = null;
-		List<AbstractConstraintValue> argumentValues = null;
+		ArgumentList argumentValues = null;
 		
 		do {
 			nextOffset = bytecodeLine.followingLineNumber;
@@ -320,19 +321,10 @@ public class Decompiler {
 			case invokestatic:
 				lineMethod = (Method)bytecodeLine.type.accessibleObject;
 				
-				argumentValues = new ArrayList<AbstractConstraintValue>();
-				boolean isStaticPremature = false;
-				for(int i=0; i<lineMethod.getParameterTypes().length; i++) {
-					AbstractConstraintValue argument = this.stack.pop();
-					if(!isStaticPremature &&
-							(!(argument instanceof AbstractConstraintLiteral) ||
-									!((AbstractConstraintLiteral)argument).valueType.isFinishedType))
-						isStaticPremature = true;
-					argumentValues.add(argument);
-				}
-				Collections.reverse(argumentValues);
+				/** get argument list */
+				argumentValues = this.getArgumentList(bytecodeLine.type.accessibleObject);
 				
-				if(isStaticPremature)
+				if(argumentValues.hasPrematureArgument)
 					this.stack.push(new AbstractPrematureConstraintValue(
 							new AbstractConstraintLiteral(null, ConstraintValueType.NULL, false), lineMethod, argumentValues));
 				else {
@@ -362,24 +354,14 @@ public class Decompiler {
 			case invokevirtual:
 				lineMethod = (Method)bytecodeLine.type.accessibleObject;
 				
-				/** pop argument values from stack */
-				argumentValues = new ArrayList<AbstractConstraintValue>();
-				boolean isVirtualPremature = false;
-				for(int i=0; i<lineMethod.getParameterTypes().length; i++) {
-					AbstractConstraintValue argument = this.stack.pop();
-					if(!isVirtualPremature &&
-							(!(argument instanceof AbstractConstraintLiteral) ||
-									!((AbstractConstraintLiteral)argument).valueType.isFinishedType))
-						isVirtualPremature = true;
-					argumentValues.add(argument);
-				}
-				Collections.reverse(argumentValues);
+				/** get arguments for method */
+				argumentValues = this.getArgumentList(bytecodeLine.type.accessibleObject);
 				
 				/** pop value from stack */
 				constraintValue = this.stack.pop();
 				
 				/** no premature value, so the method can get invoked */
-				if(!isVirtualPremature && constraintValue instanceof AbstractConstraintLiteral &&
+				if(!argumentValues.hasPrematureArgument && constraintValue instanceof AbstractConstraintLiteral &&
 						((AbstractConstraintLiteral)constraintValue).valueType.hasClass(lineMethod.getDeclaringClass())) {
 					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
 					try {
@@ -469,25 +451,8 @@ public class Decompiler {
 				break;
 				
 			case invokespecial:
-				/** get count of parameters */
-				int parameterCount = 0;
-				if(bytecodeLine.type.accessibleObject instanceof Constructor<?>)
-					parameterCount = ((Constructor<?>)bytecodeLine.type.accessibleObject).getParameterTypes().length;
-				else
-					throw new RuntimeException("TODO invokespecial --> not a constructor"); // TODO implement
-				
-				/** pop argument values from stack */
-				argumentValues = new ArrayList<AbstractConstraintValue>();
-				boolean isSpecialPremature = false;
-				for(int i=0; i<parameterCount; i++) {
-					AbstractConstraintValue argument = this.stack.pop();
-					if(!isSpecialPremature &&
-							(!(argument instanceof AbstractConstraintLiteral) ||
-									!((AbstractConstraintLiteral)argument).valueType.isFinishedType))
-						isSpecialPremature = true;
-					argumentValues.add(argument);
-				}
-				Collections.reverse(argumentValues);
+				/** get argument list */
+				argumentValues = this.getArgumentList(bytecodeLine.type.accessibleObject);
 				
 				/** pop value from stack */
 				constraintValue = this.stack.pop();
@@ -496,7 +461,7 @@ public class Decompiler {
 				if(bytecodeLine.type.accessibleObject instanceof Constructor<?>) {
 					lineConstructor = (Constructor<?>)bytecodeLine.type.accessibleObject;
 					
-					if(isSpecialPremature) {
+					if(!argumentValues.hasPrematureArgument) {
 						// TODO
 					} else {
 						
@@ -1006,5 +971,56 @@ public class Decompiler {
 		/** variable static field */
 		else
 			return this.getField(bytecodeLine, constraintLiteral, prefixedFields);
+	}
+	
+	/**
+	 * 
+	 * @param accessibleObject
+	 * 
+	 * @return
+	 */
+	private ArgumentList getArgumentList(AccessibleObject accessibleObject) {
+		/** get count of parameters */
+		int parameterCount = 0;
+		if(accessibleObject instanceof Method)
+			parameterCount = ((Method)accessibleObject).getParameterTypes().length;
+		else if(accessibleObject instanceof Constructor<?>)
+			parameterCount = ((Constructor<?>)accessibleObject).getParameterTypes().length;
+		else {
+			String message = "accessible object needs to be method or constructor but is \"" + accessibleObject.getClass().getName() + "\"";
+			Logger.getLogger(Decompiler.class).fatal(message);
+			throw new IllegalArgumentException(message);
+		}
+		
+		/** pop argument values from stack */
+		ArgumentList argumentValues = new ArgumentList();
+		for(int i=0; i<parameterCount; i++) {
+			AbstractConstraintValue argument = this.stack.pop();
+			if(!argumentValues.hasPrematureArgument &&
+					(!(argument instanceof AbstractConstraintLiteral) ||
+							!((AbstractConstraintLiteral)argument).valueType.isFinishedType))
+				argumentValues.hasPrematureArgument = true;
+			argumentValues.add(argument);
+		}
+		Collections.reverse(argumentValues);
+		
+		return argumentValues;
+	}
+	
+	/**
+	 * 
+	 * @author Max Nitze
+	 */
+	private class ArgumentList extends ArrayList<AbstractConstraintValue> {
+		/**  */
+		private static final long serialVersionUID = 4116003574027287498L;
+		
+		/**  */
+		public boolean hasPrematureArgument;
+		
+		public ArgumentList() {
+			super();
+			this.hasPrematureArgument = false;
+		}
 	}
 }
