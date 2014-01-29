@@ -5,6 +5,7 @@ package de.agra.sat.koselleck.decompiling;
  * ----- ----- ----- ----- ----- */
 
 /** imports */
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,6 +35,7 @@ import de.agra.sat.koselleck.decompiling.datatypes.PrefixedClass;
 import de.agra.sat.koselleck.decompiling.datatypes.PrefixedField;
 import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLine;
 import de.agra.sat.koselleck.disassembling.datatypes.DisassembledMethod;
+import de.agra.sat.koselleck.disassembling.datatypes.EBytecodeLineType;
 import de.agra.sat.koselleck.disassembling.datatypes.Opcode;
 import de.agra.sat.koselleck.exceptions.MissformattedBytecodeLineException;
 import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
@@ -77,7 +79,7 @@ public class Decompiler {
 		this.store.clear();
 		
 		this.store.put(0, new AbstractConstraintLiteral(
-				new PrefixedClass(method.getDeclaringClass(), Opcode.aload_0, 0), ConstraintValueType.PREFIXED_CLASS, false));
+				new PrefixedClass(method.getDeclaringClass(), Opcode.load, 0), ConstraintValueType.PREFIXED_CLASS, false));
 		
 		for(int i=0; i<argumentValues.length; i++)
 			this.store.put(i+1, argumentValues[i]);
@@ -103,7 +105,7 @@ public class Decompiler {
 			arguments = new AbstractConstraintValue[disassembledMethod.method.getParameterTypes().length];
 			for(int i=0; i<arguments.length; i++)
 				arguments[i] = new AbstractConstraintLiteral(
-						new PrefixedClass(disassembledMethod.method.getParameterTypes()[i], Opcode.aload, i+1),
+						new PrefixedClass(disassembledMethod.method.getParameterTypes()[i], Opcode.load, i+1),
 						ConstraintValueType.PREFIXED_CLASS, false);
 		} else
 			arguments = argumentValues;
@@ -154,16 +156,21 @@ public class Decompiler {
 		ConstraintOperator constraintOperator = null;
 		
 		Method lineMethod = null;
+		Constructor<?> lineConstructor = null;
 		List<AbstractConstraintValue> argumentValues = null;
 		
 		do {
 			nextOffset = bytecodeLine.followingLineNumber;
 			
 			switch(bytecodeLine.opcode) {
-			case aload_0:
-			case aload:
-				this.stack.push(
-						this.store.get(bytecodeLine.value));
+			case load_:
+			case load:
+				this.stack.push(this.store.get(bytecodeLine.value));
+				break;
+				
+			case store_:
+			case store:
+				this.store.put(bytecodeLine.value, this.stack.pop());
 				break;
 				
 			case iconst:
@@ -298,26 +305,16 @@ public class Decompiler {
 						constraintValue1, ArithmeticOperator.fromOpcode(bytecodeLine.opcode), constraintValue2));
 				break;
 				
-			case tableswitch:
-				constraintValue = this.stack.pop();
-				if(!(constraintValue instanceof AbstractConstraintLiteral) ||
-						((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.Integer) {
-					String message = "could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.";
-					Logger.getLogger(Decompiler.class).fatal(message);
-					throw new ClassCastException(message);
-				}
 				
-				Integer caseOffset = bytecodeLine.switchOffsets.get(((Integer)((AbstractConstraintLiteral)constraintValue).value).toString());
-				if(caseOffset == null) {
-					caseOffset = bytecodeLine.switchOffsets.get("default");
-					if(caseOffset == null) {
-						String message = "no case for value \"" + ((Integer)constraintLiteral.value).toString() + "\" and no default case";
-						Logger.getLogger(Decompiler.class).fatal(message);
-						throw new UnknownSwitchCaseException(message);
-					} else
-						nextOffset = caseOffset;
-				} else
-					nextOffset = caseOffset;
+			case _new:
+				if(bytecodeLine.type.type != EBytecodeLineType.CLASS) {
+					String message = "could not instantiate type \"" + bytecodeLine.type.type.name + "\"";
+					Logger.getLogger(Decompiler.class).fatal(message);
+					throw new MissformattedBytecodeLineException(message);
+				} else 
+					this.stack.push(new AbstractConstraintLiteral(
+							new PrefixedClass(bytecodeLine.type.clazz, null, -1), ConstraintValueType.PREFIXED_CLASS, false));
+				
 				break;
 				
 			case invokestatic:
@@ -458,11 +455,11 @@ public class Decompiler {
 								prefixedFields.add(newPrefixedField);
 								this.stack.push(new AbstractConstraintLiteral(newPrefixedField));
 							} else
-								throw new RuntimeException("TODO inner literal is no prefixed field"); // TODO implement
+								throw new RuntimeException("TODO invokevirtual --> inner literal is no prefixed field"); // TODO implement
 						} else
-							throw new RuntimeException("TODO no abstract constraint literal"); // TODO implement
+							throw new RuntimeException("TODO invokevirtual --> no abstract constraint literal"); // TODO implement
 					} else
-						throw new RuntimeException("TODO no abstract boolean constraint"); // TODO implement
+						throw new RuntimeException("TODO invokevirtual --> no abstract boolean constraint"); // TODO implement
 				}
 				/** class file can not get loaded from the classloader (e.g. java.lang classes) */
 				else
@@ -471,20 +468,72 @@ public class Decompiler {
 				
 				break;
 				
+			case invokespecial:
+				/** get count of parameters */
+				int parameterCount = 0;
+				if(bytecodeLine.type.accessibleObject instanceof Constructor<?>)
+					parameterCount = ((Constructor<?>)bytecodeLine.type.accessibleObject).getParameterTypes().length;
+				else
+					throw new RuntimeException("TODO invokespecial --> not a constructor"); // TODO implement
+				
+				/** pop argument values from stack */
+				argumentValues = new ArrayList<AbstractConstraintValue>();
+				boolean isSpecialPremature = false;
+				for(int i=0; i<parameterCount; i++) {
+					AbstractConstraintValue argument = this.stack.pop();
+					if(!isSpecialPremature &&
+							(!(argument instanceof AbstractConstraintLiteral) ||
+									!((AbstractConstraintLiteral)argument).valueType.isFinishedType))
+						isSpecialPremature = true;
+					argumentValues.add(argument);
+				}
+				Collections.reverse(argumentValues);
+				
+				/** pop value from stack */
+				constraintValue = this.stack.pop();
+				
+				/** invoke accessible object */
+				if(bytecodeLine.type.accessibleObject instanceof Constructor<?>) {
+					lineConstructor = (Constructor<?>)bytecodeLine.type.accessibleObject;
+					
+					if(isSpecialPremature) {
+						// TODO
+					} else {
+						
+					}
+				} else
+					throw new RuntimeException("TODO invokespecial --> not a constructor"); // TODO implement
+				
+				break;
+				
+			case tableswitch:
+				constraintValue = this.stack.pop();
+				if(!(constraintValue instanceof AbstractConstraintLiteral) ||
+						((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.Integer) {
+					String message = "could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.";
+					Logger.getLogger(Decompiler.class).fatal(message);
+					throw new ClassCastException(message);
+				}
+				
+				Integer caseOffset = bytecodeLine.switchOffsets.get(((Integer)((AbstractConstraintLiteral)constraintValue).value).toString());
+				if(caseOffset == null) {
+					caseOffset = bytecodeLine.switchOffsets.get("default");
+					if(caseOffset == null) {
+						String message = "no case for value \"" + ((Integer)constraintLiteral.value).toString() + "\" and no default case";
+						Logger.getLogger(Decompiler.class).fatal(message);
+						throw new UnknownSwitchCaseException(message);
+					} else
+						nextOffset = caseOffset;
+				} else
+					nextOffset = caseOffset;
+				break;
+				
+			case dup:
+				this.stack.push(this.stack.peek().clone());
+				break;
+				
 			case _goto:
 				nextOffset = bytecodeLine.offset;
-				break;
-				
-			case load_:
-			case load:
-				System.out.println(bytecodeLine.opcode.name + " -- " + bytecodeLine.value + "\n\t" + this.store.get(bytecodeLine.value));
-				
-				this.stack.push(this.store.get(bytecodeLine.value));
-				break;
-				
-			case store_:
-			case store:
-				this.store.put(bytecodeLine.value, this.stack.pop());
 				break;
 			
 			case ifeq:

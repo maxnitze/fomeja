@@ -1,5 +1,6 @@
 package de.agra.sat.koselleck.decompiling.datatypes;
 
+/** imports */
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -7,7 +8,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.decompiling.Decompiler;
-/** imports */
 
 /**
  * 

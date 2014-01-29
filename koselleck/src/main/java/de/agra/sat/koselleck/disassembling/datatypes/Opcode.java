@@ -11,8 +11,10 @@ import org.apache.log4j.Logger;
  * @author Max Nitze
  */
 public enum Opcode {
-	aload_0("aload_0", 1, "^aload_0$", OpcodeType.VALUE, "aload_"),
-	aload("aload", 1, "^aload(_[1-5])?$", OpcodeType.VALUE, "aload(_|\\s)"),
+	load_("load_", 1, "^[i|f|d|a]load_\\d+$", OpcodeType.VALUE, "[i|f|d]load_"),
+	store_("store_", 1, "^[i|f|d|a]store_\\d+$", OpcodeType.VALUE, "[i|f|d]store_"),
+	load("load", 2, "^[i|f|d|a]load(\\s+\\d+)?$", OpcodeType.VALUE, "[i|f|d]load\\s"),
+	store("store", 2, "^[i|f|d|a]store(\\s+\\d+)?$", OpcodeType.VALUE, "[i|f|d]store\\s"),
 
 	bconst("bconst", 1, "^bconst(_\\d+)?$", OpcodeType.VALUE, "bconst(_|\\s)"),
 	fconst("fconst", 1, "^fconst(_\\d+)?$", OpcodeType.VALUE, "fconst(_|\\s)"),
@@ -26,7 +28,6 @@ public enum Opcode {
 	
 	i2d("i2d", 1, "^i2d$", null, ""),
 	i2f("i2f", 1, "^i2f$", null, ""),
-	
 	f2d("f2d", 1, "^f2d$", null, ""),
 	
 	ldc("ldc", 2, "^ldc", OpcodeType.CONSTANT_TABLE_INDEX, "ldc"),
@@ -37,19 +38,17 @@ public enum Opcode {
 	mul("mul", 1, "^[i|d|f]mul$", null, ""),
 	div("div", 1, "^[i|d|f]div$", null, ""),
 	
+	_new("new", 3, "^new$", OpcodeType.CONSTANT_TABLE_INDEX, "new"),
+	
 	invokestatic("invokestatic", 3, "^invokestatic$", OpcodeType.CONSTANT_TABLE_INDEX, "invokestatic"),
 	invokevirtual("invokevirtual", 3, "^invokevirtual$", OpcodeType.CONSTANT_TABLE_INDEX, "invokevirtual"),
+	invokespecial("invokespecial", 3, "^invokespecial$", OpcodeType.CONSTANT_TABLE_INDEX, "invokespecial"),
 	
-//	_new("new", 1, "^new$", null, ""),
+	dup("dup", 1, "^dup$", null, ""),
 	
 	tableswitch("tableswitch", 0, "^tableswitch$", OpcodeType.SWITCH, "tableswitch"),
 	
 	_goto("goto", 1, "^goto$", null, ""),
-	
-	load_("load_", 1, "^[i|f|d]load_\\d+$", OpcodeType.VALUE, "[i|f|d]load_"),
-	store_("store_", 1, "^[i|f|d]store_\\d+$", OpcodeType.VALUE, "[i|f|d]store_"),
-	load("load", 2, "^[i|f|d]load(\\s+\\d+)?$", OpcodeType.VALUE, "[i|f|d]load\\s"),
-	store("store", 2, "^[i|f|d]store(\\s+\\d+)?$", OpcodeType.VALUE, "[i|f|d]store\\s"),
 	
 	ifeq("ifeq", 3, "^ifeq$", OpcodeType.OFFSET, "ifeq"),							/** jump if zero */
 	ifne("ifne", 3, "^ifne$", OpcodeType.OFFSET, "ifne"),							/** jump if nonzero */

@@ -48,6 +48,8 @@ public class Disassembler {
 	 * @return a disassembled method with a map of the single byte code lines
 	 */
 	private DisassembledMethod disassemble() {
+		System.out.println(this.disassembledMethod); // TODO delete println
+		
 		Map<Integer, BytecodeLine> bytecodeLines = new HashMap<Integer, BytecodeLine>();
 		String[] methodLines = this.disassembledMethod.split("\n");
 		for(int i=0; i<methodLines.length; i++) {

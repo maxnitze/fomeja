@@ -211,9 +211,9 @@ public abstract class Dialect {
 			AbstractConstraint constraint = singleTheorem.constraint;
 			
 			for(PrefixedField prefixedField : constraint.prefixedFields) {
-				if(prefixedField.fieldCode == Opcode.aload_0 && !prefixedField.isVariable && constraint.matches(prefixedField.prefixedName))
+				if(prefixedField.fieldCode == Opcode.load && prefixedField.value == 0 && !prefixedField.isVariable && constraint.matches(prefixedField.prefixedName))
 					constraint.replaceAll(prefixedField, getAttributeReplacement(component, prefixedField));
-				else if(prefixedField.fieldCode == Opcode.aload && constraint.matches(prefixedField))
+				else if(prefixedField.fieldCode == Opcode.load && constraint.matches(prefixedField))
 					if(!prefixedFieldsList.contains(prefixedField))
 						prefixedFieldsList.add(prefixedField);
 			}
@@ -301,7 +301,7 @@ public abstract class Dialect {
 	 * @see Dialect#getParameterObject(PrefixedField, Object)
 	 */
 	private String getAttributeReplacement(Object component, PrefixedField prefixedField) {
-		if(prefixedField.fieldCode != Opcode.aload_0) {
+		if(prefixedField.fieldCode != Opcode.load || prefixedField.value != 0) {
 			Logger.getLogger(Dialect.class).fatal("given field \"" + prefixedField.field.getName() + "\" is no attribute field");
 			throw new IllegalArgumentException("given field \"" + prefixedField.field.getName() + "\" is no attribute field");
 		}

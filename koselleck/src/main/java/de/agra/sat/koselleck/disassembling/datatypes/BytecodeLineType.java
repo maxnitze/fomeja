@@ -57,13 +57,14 @@ public class BytecodeLineType {
 				this.fullLine.replaceAll(BytecodeLineRegexes.typeRegex, "${type}"));
 		
 		String className = null;
+		String methodName = null;
 		String value = null;
 		switch(this.type) {
 		case CLASS:
 			this.accessibleObject = null;
 			this.accessibleObjectType = null;
 			
-			className = this.fullLine.replaceAll(BytecodeLineRegexes.typeRegex, "${type}").replaceAll("/", ".");
+			className = this.fullLine.replaceAll(BytecodeLineRegexes.typeRegex, "${value}").replaceAll("/", ".");
 			try {
 				this.clazz = Class.forName(className);
 			} catch (ClassNotFoundException e) {
@@ -132,8 +133,12 @@ public class BytecodeLineType {
 			}
 			
 			className = splittedField[0].replaceAll("/", ".");
+			methodName = splittedField[1];
 			try {
-				this.accessibleObject = Class.forName(className).getDeclaredMethod(splittedField[1], paramTypesList.toArray(new Class[] {}));
+				if(methodName.equals("\"<init>\""))
+					this.accessibleObject = Class.forName(className).getDeclaredConstructor(paramTypesList.toArray(new Class[] {}));
+				else
+					this.accessibleObject = Class.forName(className).getDeclaredMethod(methodName, paramTypesList.toArray(new Class[] {}));
 			} catch (NoSuchMethodException | SecurityException | ClassNotFoundException e) {
 				StringBuilder methodArguments = new StringBuilder();
 				for(Class<?> cls : paramTypesList) {
@@ -142,7 +147,7 @@ public class BytecodeLineType {
 					methodArguments.append(cls.getName());
 				}
 				
-				String message = "could not find method \"" + splittedField[1] + "(" + methodArguments.toString() + ")\" for class \"" + className + "\"";
+				String message = "could not find method \"" + methodName + "(" + methodArguments.toString() + ")\" for class \"" + className + "\"";
 				Logger.getLogger(BytecodeLineType.class).fatal(message);
 				throw new MissformattedBytecodeLineException(message);
 			}
