@@ -80,7 +80,7 @@ public class Decompiler {
 		this.store.clear();
 		
 		this.store.put(0, new AbstractConstraintLiteral(
-				new PrefixedClass(method.getDeclaringClass(), Opcode.load, 0), ConstraintValueType.PREFIXED_CLASS, false));
+				new PrefixedClass(method.getDeclaringClass(), Opcode.load, 0), ConstraintValueType.PrefixedClass, false));
 		
 		for(int i=0; i<argumentValues.length; i++)
 			this.store.put(i+1, argumentValues[i]);
@@ -107,7 +107,7 @@ public class Decompiler {
 			for(int i=0; i<arguments.length; i++)
 				arguments[i] = new AbstractConstraintLiteral(
 						new PrefixedClass(disassembledMethod.method.getParameterTypes()[i], Opcode.load, i+1),
-						ConstraintValueType.PREFIXED_CLASS, false);
+						ConstraintValueType.PrefixedClass, false);
 		} else
 			arguments = argumentValues;
 		
@@ -193,7 +193,7 @@ public class Decompiler {
 			case getstatic:
 				constraintValue = this.stack.pop();
 				if(!(constraintValue instanceof AbstractConstraintLiteral) ||
-						((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.PREFIXED_FIELD) {
+						((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.PrefixedField) {
 					String message = "could not get field";
 					Logger.getLogger(Decompiler.class).fatal(message);
 					throw new MissformattedBytecodeLineException(message);
@@ -205,7 +205,7 @@ public class Decompiler {
 			case checkcast:
 				constraintValue = this.stack.pop();
 				if(!(constraintValue instanceof AbstractConstraintLiteral) ||
-						((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.PREFIXED_FIELD) {
+						((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.PrefixedField) {
 					String message = "could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral";
 					Logger.getLogger(Decompiler.class).fatal(message);
 					throw new ClassCastException(message);
@@ -314,76 +314,82 @@ public class Decompiler {
 					throw new MissformattedBytecodeLineException(message);
 				} else 
 					this.stack.push(new AbstractConstraintLiteral(
-							new PrefixedClass(bytecodeLine.type.clazz, null, -1), ConstraintValueType.PREFIXED_CLASS, false));
+							new PrefixedClass(bytecodeLine.type.clazz, null, -1), ConstraintValueType.PrefixedClass, false));
 				
 				break;
 				
 			case invokestatic:
-				lineMethod = (Method)bytecodeLine.type.accessibleObject;
-				
-				/** get argument list */
-				argumentValues = this.getArgumentList(bytecodeLine.type.accessibleObject);
-				
-				if(argumentValues.hasPrematureArgument)
-					this.stack.push(new AbstractPrematureConstraintValue(
-							new AbstractConstraintLiteral(null, ConstraintValueType.NULL, false), lineMethod, argumentValues));
-				else {
-					Object[] args = new Object[argumentValues.size()];
-					for(int i=0; i<argumentValues.size(); i++)
-						args[i] = ((AbstractConstraintLiteral)argumentValues.get(i)).value;
-					
-					try {
-						this.stack.push(new AbstractConstraintLiteral(
-								lineMethod.invoke(null, args), ConstraintValueType.fromClass(lineMethod.getReturnType()), false));
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						StringBuilder arguments = new StringBuilder();
-						for(Object argument : args) {
-							if(arguments.length() != 0)
-								arguments.append(", ");
-							arguments.append(argument);
-						}
-						
-						String message = "could not access static method \"" + lineMethod.getDeclaringClass().getCanonicalName() + "." + lineMethod.getName() +"(" + arguments + ")\"";
-						Logger.getLogger(Decompiler.class).fatal(message);
-						throw new IllegalArgumentException(message);
-					}
-				}
-				
-				break;
-				
 			case invokevirtual:
-				lineMethod = (Method)bytecodeLine.type.accessibleObject;
-				
-				/** get arguments for method */
+			case invokespecial:
+				/** get arguments for method or constructor */
 				argumentValues = this.getArgumentList(bytecodeLine.type.accessibleObject);
 				
 				/** pop value from stack */
 				constraintValue = this.stack.pop();
 				
-				/** no premature value, so the method can get invoked */
+				System.out.println("opcode = " + bytecodeLine.opcode);
+				System.out.println("\tisPremature = " + argumentValues.hasPrematureArgument);
+				System.out.println("\tconstraintValue = " + constraintValue);
+				if(constraintValue instanceof AbstractConstraintLiteral) {
+					System.out.println("\tconstraintLiteral.value = " + ((AbstractConstraintLiteral)constraintValue).value);
+					System.out.println("\tconstraintLiteral.valueType = " + ((AbstractConstraintLiteral)constraintValue).valueType);
+				}
+				
+				/** no premature value and accessible object is a method that can get invoked */
 				if(!argumentValues.hasPrematureArgument && constraintValue instanceof AbstractConstraintLiteral &&
-						((AbstractConstraintLiteral)constraintValue).valueType.hasClass(lineMethod.getDeclaringClass())) {
+						(bytecodeLine.type.accessibleObject instanceof Method &&
+								((AbstractConstraintLiteral)constraintValue).valueType.hasClass(((Method)bytecodeLine.type.accessibleObject).getDeclaringClass()))) {
 					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
+					lineMethod = (Method)bytecodeLine.type.accessibleObject;
+					
+					/** get argument values from abstract constraint values in argument list */
+					Object[] arguments = new Object[argumentValues.size()];
+					for(int i=0; i<argumentValues.size(); i++)
+						arguments[i] = ((AbstractConstraintLiteral)argumentValues.get(i)).value;
+					
+					/** try to invoke method */
 					try {
+						/** push result of invoked method to stack */
 						this.stack.push(new AbstractConstraintLiteral(
-								lineMethod.invoke(constraintLiteral.value, argumentValues.toArray(new Object[0])),
+								lineMethod.invoke(bytecodeLine.opcode == Opcode.invokestatic ? null : constraintLiteral.value, arguments),
 								ConstraintValueType.fromClass(lineMethod.getReturnType()), false));
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						StringBuilder arguments = new StringBuilder();
-						for(Object argument : argumentValues) {
-							if(arguments.length() != 0)
-								arguments.append(", ");
-							arguments.append(argument);
-						}
-						
-						String message = "could not invoke method \"" + lineMethod.getName() +"(" + arguments.toString() + ")\"";
+						String message = "could not invoke method \"" + lineMethod.toGenericString().replaceAll(".*\\s(\\S+)$", "$1") + "\"";
 						Logger.getLogger(Decompiler.class).fatal(message);
 						throw new IllegalArgumentException(message);
 					}
 				}
-				/** class file can get loaded from the classloader */
-				else if(lineMethod.getDeclaringClass().getClassLoader() != null) {
-					DisassembledMethod disassembledSubMethod = KoselleckUtils.getDisassembledMethod(lineMethod);
+				/** no premature value and accessible object is a method that can get invoked */
+				else if(!argumentValues.hasPrematureArgument && constraintValue instanceof AbstractConstraintLiteral &&
+						bytecodeLine.type.accessibleObject instanceof Constructor<?> &&
+						((AbstractConstraintLiteral)constraintValue).valueType == ConstraintValueType.PrefixedClass &&
+								((PrefixedClass)((AbstractConstraintLiteral)constraintValue).value).clazz.equals(((Constructor<?>)bytecodeLine.type.accessibleObject).getDeclaringClass())) {
+					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
+					lineConstructor = (Constructor<?>)bytecodeLine.type.accessibleObject;
+					
+					/** get argument values from abstract constraint values in argument list */
+					Object[] arguments = new Object[argumentValues.size()];
+					for(int i=0; i<argumentValues.size(); i++)
+						arguments[i] = ((AbstractConstraintLiteral)argumentValues.get(i)).value;
+					
+					/** try to instantiate class */
+					try {
+//						/** pop duplicated class from stack */
+//						this.stack.pop(); // TODO ???
+						/** push new instantiation of class to stack */
+						this.stack.push(new AbstractConstraintLiteral(
+								lineConstructor.newInstance(arguments),
+								ConstraintValueType.fromClass(lineConstructor.getDeclaringClass()), false));
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
+						String message = "could not instantiate new \"" + lineConstructor.getDeclaringClass().getName() + "\" \"" + lineConstructor.getName() + "\"";
+						Logger.getLogger(Decompiler.class).fatal(message);
+						throw new IllegalArgumentException(message);
+					}
+				}
+				/** accessible object is a method and class file can get loaded from the classloader */
+				else if(bytecodeLine.type.accessibleObject instanceof Method &&
+						((Method)bytecodeLine.type.accessibleObject).getDeclaringClass().getClassLoader() != null) {
+					DisassembledMethod disassembledSubMethod = KoselleckUtils.getDisassembledMethod((Method)bytecodeLine.type.accessibleObject);
 					AbstractConstraint abstractConstraint = new Decompiler().decompile(
 							disassembledSubMethod.method, disassembledSubMethod.bytecodeLines,
 							argumentValues.toArray(new AbstractConstraintValue[0]));
@@ -397,10 +403,10 @@ public class Decompiler {
 							constraintLiteral = (AbstractConstraintLiteral)constraintValue;
 							innerConstraintLiteral = (AbstractConstraintLiteral)innerConstraintValue; 
 							
-							if(innerConstraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD) {
+							if(innerConstraintLiteral.valueType == ConstraintValueType.PrefixedField) {
 								innerPrefixedField = (PrefixedField)innerConstraintLiteral.value;
 								
-								if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD) {
+								if(constraintLiteral.valueType == ConstraintValueType.PrefixedField) {
 									prefixedField = (PrefixedField)constraintLiteral.value;
 									
 									List<PrefixedField> preFields = new ArrayList<PrefixedField>();
@@ -418,7 +424,7 @@ public class Decompiler {
 									
 									prefixedFields.remove(prefixedField);
 									prefixedFields.add(newPrefixedField);
-								} else if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_CLASS) {
+								} else if(constraintLiteral.valueType == ConstraintValueType.PrefixedClass) {
 									prefixedClass = (PrefixedClass)constraintLiteral.value;
 									
 									List<PrefixedField> preFields = new ArrayList<PrefixedField>(innerPrefixedField.preFields);
@@ -446,28 +452,7 @@ public class Decompiler {
 				/** class file can not get loaded from the classloader (e.g. java.lang classes) */
 				else
 					this.stack.push(new AbstractPrematureConstraintValue(
-							constraintValue, lineMethod, argumentValues));
-				
-				break;
-				
-			case invokespecial:
-				/** get argument list */
-				argumentValues = this.getArgumentList(bytecodeLine.type.accessibleObject);
-				
-				/** pop value from stack */
-				constraintValue = this.stack.pop();
-				
-				/** invoke accessible object */
-				if(bytecodeLine.type.accessibleObject instanceof Constructor<?>) {
-					lineConstructor = (Constructor<?>)bytecodeLine.type.accessibleObject;
-					
-					if(!argumentValues.hasPrematureArgument) {
-						// TODO
-					} else {
-						
-					}
-				} else
-					throw new RuntimeException("TODO invokespecial --> not a constructor"); // TODO implement
+							constraintValue, bytecodeLine.type.accessibleObject, argumentValues));
 				
 				break;
 				
@@ -494,7 +479,7 @@ public class Decompiler {
 				break;
 				
 			case dup:
-				this.stack.push(this.stack.peek().clone());
+				this.stack.push(this.stack.peek());
 				break;
 				
 			case _goto:
@@ -908,7 +893,7 @@ public class Decompiler {
 	 * @return
 	 */
 	private AbstractConstraintValue getField(BytecodeLine bytecodeLine, AbstractConstraintLiteral constraintLiteral, List<PrefixedField> prefixedFields) {
-		if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_FIELD) {
+		if(constraintLiteral.valueType == ConstraintValueType.PrefixedField) {
 			PrefixedField prefixedField = (PrefixedField)constraintLiteral.value;
 			
 			List<PrefixedField> preFields = new ArrayList<PrefixedField>(prefixedField.preFields);
@@ -924,7 +909,7 @@ public class Decompiler {
 			
 			return new AbstractConstraintLiteral(newPrefixedField);
 			
-		} else if(constraintLiteral.valueType == ConstraintValueType.PREFIXED_CLASS) {
+		} else if(constraintLiteral.valueType == ConstraintValueType.PrefixedClass) {
 			PrefixedClass prefixedClass = (PrefixedClass)constraintLiteral.value;
 			
 			PrefixedField newPrefixedField = new PrefixedField(

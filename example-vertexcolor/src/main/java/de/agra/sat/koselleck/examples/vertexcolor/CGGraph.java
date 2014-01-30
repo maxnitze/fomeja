@@ -79,8 +79,10 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 //		float a = 1.2f;
 //		float b = 2.6f;
 //		a = 4.3f;
-		Double a = new Double(1.2);
-		Double b = new Double(2.6);
+//		return edge.getVertex1().getColor() - a != edge.getVertex2().getColor() + b;
+		Float a = new Float(1.2);
+		Float b = new Float(2.6);
+		a = 22.3f;
 		return edge.getVertex1().getColor() - a != edge.getVertex2().getColor() + b;
 	}
 	

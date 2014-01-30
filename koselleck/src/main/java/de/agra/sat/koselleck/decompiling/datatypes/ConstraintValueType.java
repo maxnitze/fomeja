@@ -16,9 +16,11 @@ public enum ConstraintValueType {
 	Float("Float", new ArrayList<Class<?>>(Arrays.asList(Float.class, float.class)), true, true),
 	Integer("Integer", new ArrayList<Class<?>>(Arrays.asList(Integer.class, int.class)), true, true),
 	
-	STRING("String", new ArrayList<Class<?>>(Arrays.asList(String.class)), false, false),
-	PREFIXED_FIELD("PrefixedField", new ArrayList<Class<?>>(Arrays.asList(PrefixedField.class)), false, false),
-	PREFIXED_CLASS("PrefixedClass", new ArrayList<Class<?>>(Arrays.asList(PrefixedClass.class)), false, false),
+	String("String", new ArrayList<Class<?>>(Arrays.asList(String.class)), false, false),
+	PrefixedField("PrefixedField", new ArrayList<Class<?>>(Arrays.asList(PrefixedField.class)), false, false),
+	PrefixedClass("PrefixedClass", new ArrayList<Class<?>>(Arrays.asList(PrefixedClass.class)), false, false),
+	
+	Object("Object", new ArrayList<Class<?>>(), false, false),
 	
 	NULL("null", null, true, false);
 	
@@ -74,7 +76,7 @@ public enum ConstraintValueType {
 				if(cls != null && cls.equals(clazz))
 					return cvt;
 		
-		throw new IllegalArgumentException("no constant with class \"" + clazz.getName() + "\" found");
+		return Object;
 	}
 	
 	/**

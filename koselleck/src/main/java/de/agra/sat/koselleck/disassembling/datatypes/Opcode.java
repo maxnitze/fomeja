@@ -11,10 +11,10 @@ import org.apache.log4j.Logger;
  * @author Max Nitze
  */
 public enum Opcode {
-	load_("load_", 1, "^[i|f|d|a]load_\\d+$", OpcodeType.VALUE, "[i|f|d]load_"),
-	store_("store_", 1, "^[i|f|d|a]store_\\d+$", OpcodeType.VALUE, "[i|f|d]store_"),
-	load("load", 2, "^[i|f|d|a]load(\\s+\\d+)?$", OpcodeType.VALUE, "[i|f|d]load\\s"),
-	store("store", 2, "^[i|f|d|a]store(\\s+\\d+)?$", OpcodeType.VALUE, "[i|f|d]store\\s"),
+	load_("load_", 1, "^[i|f|d|a]load_\\d+$", OpcodeType.VALUE, "[i|f|d|a]load_"),
+	store_("store_", 1, "^[i|f|d|a]store_\\d+$", OpcodeType.VALUE, "[i|f|d|a]store_"),
+	load("load", 2, "^[i|f|d|a]load(\\s+\\d+)?$", OpcodeType.VALUE, "[i|f|d|a]load\\s"),
+	store("store", 2, "^[i|f|d|a]store(\\s+\\d+)?$", OpcodeType.VALUE, "[i|f|d|a]store\\s"),
 
 	bconst("bconst", 1, "^bconst(_\\d+)?$", OpcodeType.VALUE, "bconst(_|\\s)"),
 	fconst("fconst", 1, "^fconst(_\\d+)?$", OpcodeType.VALUE, "fconst(_|\\s)"),

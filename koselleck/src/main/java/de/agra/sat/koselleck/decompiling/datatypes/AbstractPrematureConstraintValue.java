@@ -1,13 +1,13 @@
 package de.agra.sat.koselleck.decompiling.datatypes;
 
 /** imports */
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-
-import de.agra.sat.koselleck.decompiling.Decompiler;
 
 /**
  * 
@@ -17,20 +17,20 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	/**  */
 	public AbstractConstraintValue constraintValue;
 	/**  */
-	public final Method method;
+	public final AccessibleObject accessibleObject;
 	/**  */
-	public final List<AbstractConstraintValue> methodArguments;
+	public final List<AbstractConstraintValue> objectArguments;
 	
 	/**
 	 * 
 	 * @param constraintValue
-	 * @param method
-	 * @param methodArguments
+	 * @param accessibleObject
+	 * @param objectArguments
 	 */
-	public AbstractPrematureConstraintValue(AbstractConstraintValue constraintValue, Method method, List<AbstractConstraintValue> methodArguments) {
+	public AbstractPrematureConstraintValue(AbstractConstraintValue constraintValue, AccessibleObject accessibleObject, List<AbstractConstraintValue> objectArguments) {
 		this.constraintValue = constraintValue;
-		this.method = method;
-		this.methodArguments = methodArguments;
+		this.accessibleObject = accessibleObject;
+		this.objectArguments = objectArguments;
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	public void replaceAll(String regex, String replacement) {
 		this.constraintValue.replaceAll(regex, replacement);
 		
-		for(AbstractConstraintValue methodArgument : this.methodArguments)
+		for(AbstractConstraintValue methodArgument : this.objectArguments)
 			methodArgument.replaceAll(regex, replacement);
 	}
 	
@@ -55,7 +55,7 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	public void replaceAll(PrefixedField prefixedField, String replacement) {
 		this.constraintValue.replaceAll(prefixedField, replacement);
 		
-		for(AbstractConstraintValue methodArgument : this.methodArguments)
+		for(AbstractConstraintValue methodArgument : this.objectArguments)
 			methodArgument.replaceAll(prefixedField, replacement);
 	}
 	
@@ -65,45 +65,57 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	 */
 	@Override
 	public AbstractConstraintValue evaluate() {
+		/** evaluate this constraint value */
 		this.constraintValue = this.constraintValue.evaluate();
-		for(int i=0; i<this.methodArguments.size(); i++)
-			this.methodArguments.set(i, this.methodArguments.get(i).evaluate());
+		/** evaluate the arguments for the arguments the method is called with */
+		for(int i=0; i<this.objectArguments.size(); i++)
+			this.objectArguments.set(i, this.objectArguments.get(i).evaluate());
 		
+		/** evaluated constraint value is a literal */
 		if(this.constraintValue instanceof AbstractConstraintLiteral) {
 			AbstractConstraintLiteral constraintLiteral = (AbstractConstraintLiteral)this.constraintValue;
 			
-			Object[] arguments = new Object[this.methodArguments.size()];
-			for(int i=0; i<this.methodArguments.size(); i++) {
-				if(!(this.methodArguments.get(i) instanceof AbstractConstraintLiteral) ||
-						!((AbstractConstraintLiteral)this.methodArguments.get(i)).valueType.isFinishedType)
+			/** check for unfinished argument values */
+			Object[] arguments = new Object[this.objectArguments.size()];
+			for(int i=0; i<this.objectArguments.size(); i++) {
+				if(!(this.objectArguments.get(i) instanceof AbstractConstraintLiteral) ||
+						!((AbstractConstraintLiteral)this.objectArguments.get(i)).valueType.isFinishedType)
 					return this;
 				
-				arguments[i] = ((AbstractConstraintLiteral)this.methodArguments.get(i)).value;
+				arguments[i] = ((AbstractConstraintLiteral)this.objectArguments.get(i)).value;
 			}
 			
+			/** try to invoke the accessible object (method or constructor) */
 			try {
-				if(constraintLiteral.valueType != ConstraintValueType.NULL &&
-						((AbstractConstraintLiteral)this.constraintValue).valueType.hasClass(this.method.getDeclaringClass()))
+				/** accessible object is a method */
+				if(this.accessibleObject instanceof Method &&
+						(constraintLiteral.valueType == ConstraintValueType.NULL ||
+						((AbstractConstraintLiteral)this.constraintValue).valueType.hasClass(((Method)this.accessibleObject).getDeclaringClass()))) {
+					Method method = (Method)this.accessibleObject;
 					return new AbstractConstraintLiteral(
-						this.method.invoke(constraintLiteral.value, this.methodArguments),
-						ConstraintValueType.fromClass(this.method.getReturnType()), false);
-				else if(constraintLiteral.valueType == ConstraintValueType.NULL)
+						method.invoke(constraintLiteral.valueType == ConstraintValueType.NULL ? null : constraintLiteral.value, this.objectArguments),
+						ConstraintValueType.fromClass(method.getReturnType()), false);
+				}
+				/** accessible object is a constructor */
+				else if(this.accessibleObject instanceof Constructor<?>) {
+					Constructor<?> constructor = (Constructor<?>)this.accessibleObject;
 					return new AbstractConstraintLiteral(
-							this.method.invoke(null, this.methodArguments),
-							ConstraintValueType.fromClass(this.method.getReturnType()), false);
+							constructor.newInstance(null, this.objectArguments),
+							ConstraintValueType.fromClass(constructor.getDeclaringClass()), false);
+				}
+				/** otherwise */
 				else
 					return this;
 					
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				StringBuilder argumentsString = new StringBuilder();
-				for(Object argument : this.methodArguments) {
-					if(argumentsString.length() != 0)
-						argumentsString.append(", ");
-					argumentsString.append(argument);
-				}
-				
-				String message = "could not invoke method \"" + method.getName() +"(" + argumentsString.toString() + ")\"";
-				Logger.getLogger(Decompiler.class).fatal(message);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
+				String message;
+				if(this.accessibleObject instanceof Method)
+					message = "could not invoke method \"" + ((Method)this.accessibleObject).toGenericString() + "\"";
+				else if(this.accessibleObject instanceof Constructor<?>)
+					message = "could not invoke constructor \"" + ((Constructor<?>)this.accessibleObject).toGenericString() + "\"";
+				else
+					message = "could not invoke accessible object type \"" + this.accessibleObject.toString() + "\"";
+				Logger.getLogger(AbstractPrematureConstraintValue.class).fatal(message);
 				throw new IllegalArgumentException(message);
 			}
 		} else
@@ -146,7 +158,7 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 		AbstractPrematureConstraintValue constraintValue = (AbstractPrematureConstraintValue)object;
 		
 		return this.constraintValue.equals(constraintValue.constraintValue) &&
-				this.method == constraintValue.method;
+				this.accessibleObject == constraintValue.accessibleObject;
 	}
 	
 	/**
@@ -156,7 +168,7 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	@Override
 	public AbstractConstraintValue clone() {
 		return new AbstractPrematureConstraintValue(
-				this.constraintValue.clone(), this.method, this.methodArguments);
+				this.constraintValue.clone(), this.accessibleObject, this.objectArguments);
 	}
 	
 	/**
@@ -165,6 +177,18 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	 */
 	@Override
 	public String toString() {
-		return "asdasd " + ((AbstractConstraintLiteral)this.constraintValue).valueType + " method = " + this.method;
+		StringBuilder argumentString = new StringBuilder();
+		for(AbstractConstraintValue argument : this.objectArguments) {
+			if(argumentString.length() > 0)
+				argumentString.append(", ");
+			argumentString.append(argument.toString());
+		}
+		
+		if(this.accessibleObject instanceof Method)
+			return this.constraintValue.toString() + "." + ((Method)this.accessibleObject).getName() + "(" + argumentString.toString() + ")";
+		else if(this.accessibleObject instanceof Constructor<?>)
+			return "new " + ((Class<?>)((AbstractConstraintLiteral)this.constraintValue).value).getName() + "(" + argumentString.toString() + ")";
+		else
+			return this.accessibleObject.toString();
 	}
 }

@@ -213,7 +213,7 @@ public class SMTII extends Dialect {
 	 * @return the string representation of the abstract constraint formula
 	 */
 	public String prepareAbstractPrematureConstraintValue(AbstractPrematureConstraintValue prematureConstraintValue) {
-		System.out.println(prematureConstraintValue.toString());
+		System.out.println("-- " + prematureConstraintValue.toString());
 		
 		throw new RuntimeException("PREMATURE");
 	}

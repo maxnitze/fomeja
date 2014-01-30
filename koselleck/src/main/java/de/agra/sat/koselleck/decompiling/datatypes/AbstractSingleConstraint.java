@@ -120,8 +120,8 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 			}
 		/** evaluate to boolean if both values are equal strings */
 		} else if(
-				constraintLiteral1.valueType == ConstraintValueType.STRING &&
-				constraintLiteral2.valueType == ConstraintValueType.STRING &&
+				constraintLiteral1.valueType == ConstraintValueType.String &&
+				constraintLiteral2.valueType == ConstraintValueType.String &&
 				((String)constraintLiteral1.value).equals((String)constraintLiteral2.value)) {
 			switch(this.operator) {
 			case EQUAL:

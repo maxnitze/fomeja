@@ -27,7 +27,7 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	 * @param isVariable the new variable flag for the value
 	 */
 	public AbstractConstraintLiteral(Object value, ConstraintValueType valueType, boolean isVariable) {
-		if(valueType == ConstraintValueType.STRING && ((String)value).matches("\\d+")) {
+		if(valueType == ConstraintValueType.String && ((String)value).matches("\\d+")) {
 			this.value = Integer.parseInt((String)value);
 			this.valueType = ConstraintValueType.Integer;
 		} else {
@@ -55,7 +55,7 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	 */
 	public AbstractConstraintLiteral(PrefixedField prefixedField) {
 		this.value = prefixedField;
-		this.valueType = ConstraintValueType.PREFIXED_FIELD;
+		this.valueType = ConstraintValueType.PrefixedField;
 		this.isVariable = prefixedField.isVariable;
 	}
 	
@@ -69,19 +69,19 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	 */
 	@Override
 	public void replaceAll(String regex, String replacement) {
-		if(this.valueType == ConstraintValueType.STRING && ((String)this.value).matches(regex)) {
+		if(this.valueType == ConstraintValueType.String && ((String)this.value).matches(regex)) {
 			if(replacement.matches("\\d+")) {
 				this.value = Integer.parseInt(replacement);
 				this.valueType = ConstraintValueType.Integer;
 			} else
 				((String)this.value).replaceAll(regex, replacement);
-		} else if(this.valueType == ConstraintValueType.PREFIXED_FIELD && ((PrefixedField)this.value).prefixedName.matches(regex)) {
+		} else if(this.valueType == ConstraintValueType.PrefixedField && ((PrefixedField)this.value).prefixedName.matches(regex)) {
 			if(replacement.matches("\\d+")) {
 				this.value = Integer.parseInt(replacement);
 				this.valueType = ConstraintValueType.Integer;
 			} else {
 				this.value = new String(replacement);
-				this.valueType = ConstraintValueType.STRING;
+				this.valueType = ConstraintValueType.String;
 			}
 		}
 	}
@@ -97,13 +97,13 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	 */
 	@Override
 	public void replaceAll(PrefixedField prefixedField, String replacement) {
-		if(this.valueType == ConstraintValueType.PREFIXED_FIELD && ((PrefixedField)this.value).equals(prefixedField)) {
+		if(this.valueType == ConstraintValueType.PrefixedField && ((PrefixedField)this.value).equals(prefixedField)) {
 			if(replacement.matches("\\d+")) {
 				this.value = Integer.parseInt(replacement);
 				this.valueType = ConstraintValueType.Integer;
 			} else {
 				this.value = new String(replacement);
-				this.valueType = ConstraintValueType.STRING;
+				this.valueType = ConstraintValueType.String;
 			}
 		}
 	}
@@ -116,10 +116,10 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	 */
 	@Override
 	public AbstractConstraintValue evaluate() {
-		if(this.value != null && this.valueType == ConstraintValueType.STRING && ((String)this.value).matches("\\d+")) {
+		if(this.value != null && this.valueType == ConstraintValueType.String && ((String)this.value).matches("\\d+")) {
 			this.value = Integer.parseInt((String)this.value);
 			this.valueType = ConstraintValueType.Integer;
-		} else if(this.value != null && this.valueType == ConstraintValueType.PREFIXED_FIELD && ((PrefixedField)this.value).prefixedName.matches("\\d+")) {
+		} else if(this.value != null && this.valueType == ConstraintValueType.PrefixedField && ((PrefixedField)this.value).prefixedName.matches("\\d+")) {
 			this.value = Integer.parseInt(((PrefixedField)this.value).prefixedName);
 			this.valueType = ConstraintValueType.Integer;
 		}
@@ -138,9 +138,9 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	 */
 	@Override
 	public boolean matches(String regex) {
-		if(this.valueType == ConstraintValueType.STRING)
+		if(this.valueType == ConstraintValueType.String)
 			return ((String)this.value).matches(regex);
-		else if(this.valueType == ConstraintValueType.PREFIXED_FIELD)
+		else if(this.valueType == ConstraintValueType.PrefixedField)
 			return (((PrefixedField)this.value).prefixedName).matches(regex);
 		else
 			return false;
@@ -157,7 +157,7 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 	 */
 	@Override
 	public boolean matches(PrefixedField prefixedField) {
-		if(this.valueType == ConstraintValueType.PREFIXED_FIELD)
+		if(this.valueType == ConstraintValueType.PrefixedField)
 			return (((PrefixedField)this.value).prefixedName).matches(prefixedField.prefixedName);
 		else
 			return false;
@@ -208,11 +208,11 @@ public class AbstractConstraintLiteral extends AbstractConstraintValue implement
 		case Integer:
 		case Double:
 		case Float:
-		case STRING:
+		case String:
 			return this.value.toString();
-		case PREFIXED_FIELD:
+		case PrefixedField:
 			return ((PrefixedField)this.value).prefixedName;
-		case PREFIXED_CLASS:
+		case PrefixedClass:
 			return ((PrefixedClass)this.value).clazz.getSimpleName();
 		case NULL:
 			return "NULL";
