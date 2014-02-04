@@ -69,7 +69,7 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 //		return edge.vertex1.color != edge.vertex2.color;
 //		return edge.vertex1.getColor() != edge.vertex2.getColor();
 //		return edge.getVertex1().color != edge.getVertex2().color;
-//		return edge.getVertex1().getColor() != edge.getVertex2().getColor();
+		return edge.getVertex1().getColor() != edge.getVertex2().getColor();
 //		return edge.getVertex1().getColor() - 4 != edge.getVertex2().getColor() + 3;
 //		return edge.vertex1.color - 1.2d != edge.vertex2.color + 2.6d;
 //		return edge.getVertex1().getColor() - 1.2d != edge.getVertex2().getColor() + 2.6d;
@@ -80,10 +80,10 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 //		float b = 2.6f;
 //		a = 4.3f;
 //		return edge.getVertex1().getColor() - a != edge.getVertex2().getColor() + b;
-		Float a = new Float(1.2);
-		Float b = new Float(2.6);
-		a = 22.3f;
-		return edge.getVertex1().getColor() - a != edge.getVertex2().getColor() + b;
+//		Float a = new Float(1.2);
+//		Float b = new Float(2.6);
+//		a = 22.3f;
+//		return edge.getVertex1().getColor() - a != edge.getVertex2().getColor() + b;
 	}
 	
 	@Objective

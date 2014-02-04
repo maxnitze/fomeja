@@ -327,61 +327,69 @@ public class Decompiler {
 				/** pop value from stack */
 				constraintValue = this.stack.pop();
 				
-				System.out.println("opcode = " + bytecodeLine.opcode);
-				System.out.println("\tisPremature = " + argumentValues.hasPrematureArgument);
-				System.out.println("\tconstraintValue = " + constraintValue);
-				if(constraintValue instanceof AbstractConstraintLiteral) {
-					System.out.println("\tconstraintLiteral.value = " + ((AbstractConstraintLiteral)constraintValue).value);
-					System.out.println("\tconstraintLiteral.valueType = " + ((AbstractConstraintLiteral)constraintValue).valueType);
-				}
-				
 				/** no premature value and accessible object is a method that can get invoked */
 				if(!argumentValues.hasPrematureArgument && constraintValue instanceof AbstractConstraintLiteral &&
-						(bytecodeLine.type.accessibleObject instanceof Method &&
-								((AbstractConstraintLiteral)constraintValue).valueType.hasClass(((Method)bytecodeLine.type.accessibleObject).getDeclaringClass()))) {
+						((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.PrefixedField &&
+						(bytecodeLine.opcode == Opcode.invokestatic || ((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.PrefixedClass)) {
 					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
-					lineMethod = (Method)bytecodeLine.type.accessibleObject;
 					
 					/** get argument values from abstract constraint values in argument list */
 					Object[] arguments = new Object[argumentValues.size()];
 					for(int i=0; i<argumentValues.size(); i++)
 						arguments[i] = ((AbstractConstraintLiteral)argumentValues.get(i)).value;
 					
-					/** try to invoke method */
-					try {
-						/** push result of invoked method to stack */
-						this.stack.push(new AbstractConstraintLiteral(
-								lineMethod.invoke(bytecodeLine.opcode == Opcode.invokestatic ? null : constraintLiteral.value, arguments),
-								ConstraintValueType.fromClass(lineMethod.getReturnType()), false));
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						String message = "could not invoke method \"" + lineMethod.toGenericString().replaceAll(".*\\s(\\S+)$", "$1") + "\"";
-						Logger.getLogger(Decompiler.class).fatal(message);
-						throw new IllegalArgumentException(message);
+					/**  */
+					if(bytecodeLine.type.accessibleObject instanceof Method && bytecodeLine.opcode != Opcode.invokestatic &&
+							constraintLiteral.valueType.hasClass(((Method)bytecodeLine.type.accessibleObject).getDeclaringClass())) {
+						lineMethod = (Method)bytecodeLine.type.accessibleObject;
+						/** try to invoke method */
+						try {
+							/** push result of invoked method to stack */
+							this.stack.push(new AbstractConstraintLiteral(
+									lineMethod.invoke(constraintLiteral.value, arguments),
+									ConstraintValueType.fromClass(lineMethod.getReturnType()), false));
+						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+							String message = "could not invoke method \"" + lineMethod.toGenericString().replaceAll(".*\\s(\\S+)$", "$1") + "\"";
+							Logger.getLogger(Decompiler.class).fatal(message);
+							throw new IllegalArgumentException(message);
+						}
 					}
-				}
-				/** no premature value and accessible object is a method that can get invoked */
-				else if(!argumentValues.hasPrematureArgument && constraintValue instanceof AbstractConstraintLiteral &&
-						bytecodeLine.type.accessibleObject instanceof Constructor<?> &&
-						((AbstractConstraintLiteral)constraintValue).valueType == ConstraintValueType.PrefixedClass &&
-								((PrefixedClass)((AbstractConstraintLiteral)constraintValue).value).clazz.equals(((Constructor<?>)bytecodeLine.type.accessibleObject).getDeclaringClass())) {
-					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
-					lineConstructor = (Constructor<?>)bytecodeLine.type.accessibleObject;
-					
-					/** get argument values from abstract constraint values in argument list */
-					Object[] arguments = new Object[argumentValues.size()];
-					for(int i=0; i<argumentValues.size(); i++)
-						arguments[i] = ((AbstractConstraintLiteral)argumentValues.get(i)).value;
-					
-					/** try to instantiate class */
-					try {
-//						/** pop duplicated class from stack */
-//						this.stack.pop(); // TODO ???
-						/** push new instantiation of class to stack */
-						this.stack.push(new AbstractConstraintLiteral(
-								lineConstructor.newInstance(arguments),
-								ConstraintValueType.fromClass(lineConstructor.getDeclaringClass()), false));
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
-						String message = "could not instantiate new \"" + lineConstructor.getDeclaringClass().getName() + "\" \"" + lineConstructor.getName() + "\"";
+					/**  */
+					else if(bytecodeLine.type.accessibleObject instanceof Method && bytecodeLine.opcode == Opcode.invokestatic &&
+							constraintLiteral.valueType == ConstraintValueType.PrefixedClass) {
+						lineMethod = (Method)bytecodeLine.type.accessibleObject;
+						/** try to invoke method */
+						try {
+							/** push result of invoked method to stack */
+							this.stack.push(new AbstractConstraintLiteral(
+									lineMethod.invoke(null, arguments),
+									ConstraintValueType.fromClass(lineMethod.getReturnType()), false));
+						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+							String message = "could not invoke static method \"" + lineMethod.toGenericString().replaceAll(".*\\s(\\S+)$", "$1") + "\"";
+							Logger.getLogger(Decompiler.class).fatal(message);
+							throw new IllegalArgumentException(message);
+						}
+					}
+					/**  */
+					else if(bytecodeLine.type.accessibleObject instanceof Constructor<?> && bytecodeLine.opcode != Opcode.invokestatic &&
+							constraintLiteral.valueType == ConstraintValueType.PrefixedClass &&
+							((PrefixedClass)(constraintLiteral.value)).clazz.equals(((Constructor<?>)bytecodeLine.type.accessibleObject).getDeclaringClass())) {
+						lineConstructor = (Constructor<?>)bytecodeLine.type.accessibleObject;
+						/** try to instantiate class */
+						try {
+							/** push new instantiation of class to stack */
+							this.stack.push(new AbstractConstraintLiteral(
+									lineConstructor.newInstance(arguments),
+									ConstraintValueType.fromClass(lineConstructor.getDeclaringClass()), false));
+						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
+							String message = "could not instantiate new \"" + lineConstructor.getDeclaringClass().getName() + "\" \"" + lineConstructor.getName() + "\"";
+							Logger.getLogger(Decompiler.class).fatal(message);
+							throw new IllegalArgumentException(message);
+						}
+					}
+					/**  */
+					else {
+						String message = "no valid access to accessible object \"" + bytecodeLine.type.accessibleObject + "\"";
 						Logger.getLogger(Decompiler.class).fatal(message);
 						throw new IllegalArgumentException(message);
 					}

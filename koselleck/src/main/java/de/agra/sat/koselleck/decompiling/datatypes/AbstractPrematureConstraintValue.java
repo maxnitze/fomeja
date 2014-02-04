@@ -87,20 +87,26 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 			
 			/** try to invoke the accessible object (method or constructor) */
 			try {
-				/** accessible object is a method */
 				if(this.accessibleObject instanceof Method &&
-						(constraintLiteral.valueType == ConstraintValueType.NULL ||
-						((AbstractConstraintLiteral)this.constraintValue).valueType.hasClass(((Method)this.accessibleObject).getDeclaringClass()))) {
+						((AbstractConstraintLiteral)this.constraintValue).valueType.hasClass(((Method)this.accessibleObject).getDeclaringClass())) {
 					Method method = (Method)this.accessibleObject;
 					return new AbstractConstraintLiteral(
-						method.invoke(constraintLiteral.valueType == ConstraintValueType.NULL ? null : constraintLiteral.value, this.objectArguments),
+						method.invoke(constraintLiteral.value, arguments),
+						ConstraintValueType.fromClass(method.getReturnType()), false);
+				}
+				/** accessible object is a method */
+				else if(this.accessibleObject instanceof Method &&
+						constraintLiteral.valueType == ConstraintValueType.NULL) {
+					Method method = (Method)this.accessibleObject;
+					return new AbstractConstraintLiteral(
+						method.invoke(null, arguments),
 						ConstraintValueType.fromClass(method.getReturnType()), false);
 				}
 				/** accessible object is a constructor */
 				else if(this.accessibleObject instanceof Constructor<?>) {
 					Constructor<?> constructor = (Constructor<?>)this.accessibleObject;
 					return new AbstractConstraintLiteral(
-							constructor.newInstance(null, this.objectArguments),
+							constructor.newInstance(arguments),
 							ConstraintValueType.fromClass(constructor.getDeclaringClass()), false);
 				}
 				/** otherwise */
@@ -108,13 +114,23 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 					return this;
 					
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
+				StringBuilder argumentString = new StringBuilder();
+				for(Object argument : arguments) {
+					if(argumentString.length() > 0)
+						argumentString.append(", ");
+					argumentString.append(argument.toString());
+					argumentString.append("(:");
+					argumentString.append(argument.getClass());
+					argumentString.append(")");
+				}
+				
 				String message;
 				if(this.accessibleObject instanceof Method)
-					message = "could not invoke method \"" + ((Method)this.accessibleObject).toGenericString() + "\"";
+					message = "could not invoke method \"" + ((Method)this.accessibleObject).toGenericString() + "\" with arguments \"(" + argumentString.toString() + ")\"";
 				else if(this.accessibleObject instanceof Constructor<?>)
-					message = "could not invoke constructor \"" + ((Constructor<?>)this.accessibleObject).toGenericString() + "\"";
+					message = "could not invoke constructor \"" + ((Constructor<?>)this.accessibleObject).toGenericString() + "\" with arguments \"(" + argumentString.toString() + ")\"";
 				else
-					message = "could not invoke accessible object type \"" + this.accessibleObject.toString() + "\"";
+					message = "could not invoke accessible object type \"" + this.accessibleObject.toString() + "\" with arguments \"(" + argumentString.toString() + ")\"";
 				Logger.getLogger(AbstractPrematureConstraintValue.class).fatal(message);
 				throw new IllegalArgumentException(message);
 			}
@@ -187,7 +203,7 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 		if(this.accessibleObject instanceof Method)
 			return this.constraintValue.toString() + "." + ((Method)this.accessibleObject).getName() + "(" + argumentString.toString() + ")";
 		else if(this.accessibleObject instanceof Constructor<?>)
-			return "new " + ((Class<?>)((AbstractConstraintLiteral)this.constraintValue).value).getName() + "(" + argumentString.toString() + ")";
+			return "new " + ((PrefixedClass)((AbstractConstraintLiteral)this.constraintValue).value).clazz.getName() + "(" + argumentString.toString() + ")";
 		else
 			return this.accessibleObject.toString();
 	}
