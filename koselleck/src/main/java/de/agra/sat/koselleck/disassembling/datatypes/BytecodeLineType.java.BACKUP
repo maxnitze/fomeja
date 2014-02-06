@@ -17,7 +17,7 @@ import de.agra.sat.koselleck.exceptions.MissformattedBytecodeLineException;
  * @version 1.0.0
  * @author Max Nitze
  */
-public class BytecodeLineType {
+public class BytecodeLineType_backup {
 	/** the full line */
 	public final String fullLine;
 	/** the string of the type */
@@ -42,7 +42,7 @@ public class BytecodeLineType {
 	 * @throws MissformattedBytecodeLineException if the byte code line does
 	 *  not fit the expected format
 	 */
-	public BytecodeLineType(Class<?> componentClass, String fullLine) throws MissformattedBytecodeLineException {
+	public BytecodeLineType_backup(Class<?> componentClass, String fullLine) throws MissformattedBytecodeLineException {
 		this.fullLine = fullLine.trim().replaceAll("\\s+", " ");
 		
 		if(!this.fullLine.matches(BytecodeLineRegexes.typeRegex)) {

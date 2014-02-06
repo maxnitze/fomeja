@@ -37,7 +37,6 @@ public class DisassembledMethod {
 		this.disassembledMethod = disassembledMethod;
 		
 		this.bytecodeLines = bytecodeLines;
-		
 	}
 	
 	/**

@@ -11,32 +11,30 @@ import org.apache.log4j.Logger;
  * @author Max Nitze
  */
 public enum Opcode {
-	load_("load_", 1, "^[i|f|d|a]load_\\d+$", OpcodeType.VALUE, "[i|f|d|a]load_"),
-	store_("store_", 1, "^[i|f|d|a]store_\\d+$", OpcodeType.VALUE, "[i|f|d|a]store_"),
-	load("load", 2, "^[i|f|d|a]load(\\s+\\d+)?$", OpcodeType.VALUE, "[i|f|d|a]load\\s"),
-	store("store", 2, "^[i|f|d|a]store(\\s+\\d+)?$", OpcodeType.VALUE, "[i|f|d|a]store\\s"),
+	load("load", 2, "^[i|f|d|a]load(_\\d+)?$", OpcodeType.VALUE, "[i|f|d|a]load"),
+	store("store", 2, "^[i|f|d|a]store(_\\d+)?$", OpcodeType.VALUE, "[i|f|d|a]store"),
 
-	bconst("bconst", 1, "^bconst(_\\d+)?$", OpcodeType.VALUE, "bconst(_|\\s)"),
-	fconst("fconst", 1, "^fconst(_\\d+)?$", OpcodeType.VALUE, "fconst(_|\\s)"),
-	iconst("iconst", 1, "^iconst(_\\d+)?$", OpcodeType.VALUE, "iconst(_|\\s)"),
-	bipush("bipush", 2, "^bipush$", OpcodeType.VALUE, "bipush\\s"),
+	bconst("bconst", 1, "^bconst(_\\d+)?$", OpcodeType.VALUE, "bconst"),
+	fconst("fconst", 1, "^fconst(_\\d+)?$", OpcodeType.VALUE, "fconst"),
+	iconst("iconst", 1, "^iconst(_\\d+)?$", OpcodeType.VALUE, "iconst"),
+	bipush("bipush", 2, "^bipush$", OpcodeType.VALUE, "bipush"),
 	
 	getfield("getfield", 3, "^getfield$", OpcodeType.CONSTANT_TABLE_INDEX, "getfield"),
 	getstatic("getstatic", 3, "^getstatic$", OpcodeType.CONSTANT_TABLE_INDEX, "getstatic"),
 	
 	checkcast("checkcast", 3, "^checkcast$", OpcodeType.CONSTANT_TABLE_INDEX, "checkcast"),
 	
-	i2d("i2d", 1, "^i2d$", null, ""),
-	i2f("i2f", 1, "^i2f$", null, ""),
-	f2d("f2d", 1, "^f2d$", null, ""),
+	i2d("i2d", 1, "^i2d$", OpcodeType.SIMPLE, "i2d"),
+	i2f("i2f", 1, "^i2f$", OpcodeType.SIMPLE, "i2f"),
+	f2d("f2d", 1, "^f2d$", OpcodeType.SIMPLE, "f2d"),
 	
 	ldc("ldc", 2, "^ldc", OpcodeType.CONSTANT_TABLE_INDEX, "ldc"),
 	ldc2_w("ldc2_w", 3, "^ldc2_w$", OpcodeType.CONSTANT_TABLE_INDEX, "ldc2_w"),
 	
-	add("add", 1, "^[i|d|f]add$", null, ""),
-	sub("sub", 1, "^[i|d|f]sub$", null, ""),
-	mul("mul", 1, "^[i|d|f]mul$", null, ""),
-	div("div", 1, "^[i|d|f]div$", null, ""),
+	add("add", 1, "^[i|d|f]add$", OpcodeType.SIMPLE, "[i|d|f]add"),
+	sub("sub", 1, "^[i|d|f]sub$", OpcodeType.SIMPLE, "[i|d|f]sub"),
+	mul("mul", 1, "^[i|d|f]mul$", OpcodeType.SIMPLE, "[i|d|f]mul"),
+	div("div", 1, "^[i|d|f]div$", OpcodeType.SIMPLE, "[i|d|f]div"),
 	
 	_new("new", 3, "^new$", OpcodeType.CONSTANT_TABLE_INDEX, "new"),
 	
@@ -44,11 +42,11 @@ public enum Opcode {
 	invokevirtual("invokevirtual", 3, "^invokevirtual$", OpcodeType.CONSTANT_TABLE_INDEX, "invokevirtual"),
 	invokespecial("invokespecial", 3, "^invokespecial$", OpcodeType.CONSTANT_TABLE_INDEX, "invokespecial"),
 	
-	dup("dup", 1, "^dup$", null, ""),
+	dup("dup", 1, "^dup$", OpcodeType.SIMPLE, ""),
 	
 	tableswitch("tableswitch", 0, "^tableswitch$", OpcodeType.SWITCH, "tableswitch"),
 	
-	_goto("goto", 1, "^goto$", null, ""),
+	_goto("goto", 1, "^goto$", OpcodeType.OFFSET, "goto"),
 	
 	ifeq("ifeq", 3, "^ifeq$", OpcodeType.OFFSET, "ifeq"),							/** jump if zero */
 	ifne("ifne", 3, "^ifne$", OpcodeType.OFFSET, "ifne"),							/** jump if nonzero */
@@ -60,16 +58,16 @@ public enum Opcode {
 	if_icmplt("if_icmplt", 3, "^if_icmplt$", OpcodeType.OFFSET, "if_icmplt"),		/** less */
 	if_icmpne("if_icmpne", 3, "^if_icmpne$", OpcodeType.OFFSET, "if_icmpne"),		/** not equal */
 	
-	dcmpg("dcmpg", 1, "^dcmpg$", null, ""),
-	dcmpl("dcmpl", 1, "^dcmpl$", null, ""),
+	dcmpg("dcmpg", 1, "^dcmpg$", OpcodeType.SIMPLE, ""),
+	dcmpl("dcmpl", 1, "^dcmpl$", OpcodeType.SIMPLE, ""),
 	
-	fcmpg("fcmpg", 1, "^fcmpg$", null, ""),
-	fcmpl("fcmpl", 1, "^fcmpl$", null, ""),
+	fcmpg("fcmpg", 1, "^fcmpg$", OpcodeType.SIMPLE, ""),
+	fcmpl("fcmpl", 1, "^fcmpl$", OpcodeType.SIMPLE, ""),
 	
-	_return("return", 1, "^[i|f|d|a]return$", null, "");
+	_return("return", 1, "^[i|f|d|a]return$", OpcodeType.SIMPLE, "");
 	
 	/** enumeration of the types of an opcode */
-	private enum OpcodeType { VALUE, OFFSET, CONSTANT_TABLE_INDEX, SWITCH };
+	private enum OpcodeType { SIMPLE, VALUE, OFFSET, CONSTANT_TABLE_INDEX, SWITCH };
 	
 	/** the name */
 	public final String name;
@@ -115,6 +113,25 @@ public enum Opcode {
 				return oc;
 		Logger.getLogger(Opcode.class).fatal("no opcode matching \"" + opcode + "\"");
 		throw new IllegalArgumentException("no opcode matching \"" + opcode + "\"");
+	}
+	
+	/**
+	 * getValueTypeGroup returns the '|'-separated list of the regular
+	 *  expressions of the opcodes thats types are simple.
+	 * 
+	 * @return the '|'-separated list of the regular expressions of the opcodes
+	 *  thats types are simple
+	 */
+	public static String getSimpleTypeGroup() {
+		StringBuilder simpleTypeGroup = new StringBuilder("");
+		for(Opcode opcode : values()) {
+			if(opcode.type == OpcodeType.SIMPLE) {
+				if(simpleTypeGroup.length() > 0)
+					simpleTypeGroup.append("|");
+				simpleTypeGroup.append(opcode.typeRegex);
+			}
+		}
+		return simpleTypeGroup.toString();
 	}
 	
 	/**
