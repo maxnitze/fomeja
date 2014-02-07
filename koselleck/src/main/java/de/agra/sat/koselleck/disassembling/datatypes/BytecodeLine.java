@@ -8,11 +8,12 @@ package de.agra.sat.koselleck.disassembling.datatypes;
  */
 public abstract class BytecodeLine {
 	/** types of bytecode lines */
-	public enum BytecodeLineType {
+	public enum BytecodeLineType { // TODO needed? or instanceof?
 		SIMPLE,
 		VALUE,
 		OFFSET,
-		CONSTANT_TABLE_INDEX;
+		CONSTANT_TABLE_ACCESSIBLE_OBJECT,
+		CONSTANT_TABLE_CLASS;
 	}
 	
 	/** the trimmed line */
@@ -34,14 +35,13 @@ public abstract class BytecodeLine {
 	 * @param line
 	 * @param lineNumber
 	 * @param opcode
-	 * @param followingLineNumber
 	 * @param type
 	 */
-	public BytecodeLine(String line, int lineNumber, Opcode opcode, int followingLineNumber, BytecodeLineType type) {
+	public BytecodeLine(String line, int lineNumber, Opcode opcode, BytecodeLineType type) {
 		this.line = line;
 		this.lineNumber = lineNumber;
 		this.opcode = opcode;
-		this.followingLineNumber = followingLineNumber;
+		this.followingLineNumber = lineNumber + opcode.followingLineOffset;
 		this.type = type;
 	}
 	
