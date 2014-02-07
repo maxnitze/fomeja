@@ -8,7 +8,8 @@ package de.agra.sat.koselleck.disassembling.datatypes;
  */
 public abstract class BytecodeLine {
 	/** types of bytecode lines */
-	enum BytecodeLineType {
+	public enum BytecodeLineType {
+		SIMPLE,
 		VALUE,
 		OFFSET,
 		CONSTANT_TABLE_INDEX;

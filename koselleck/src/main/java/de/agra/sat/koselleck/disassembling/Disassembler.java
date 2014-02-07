@@ -4,8 +4,13 @@ package de.agra.sat.koselleck.disassembling;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLine;
+import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLine.BytecodeLineType;
+import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineSimple;
+import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineValue;
 import de.agra.sat.koselleck.disassembling.datatypes.DisassembledMethod;
 import de.agra.sat.koselleck.disassembling.datatypes.Opcode;
 
@@ -16,10 +21,11 @@ import de.agra.sat.koselleck.disassembling.datatypes.Opcode;
  * @author Max Nitze
  */
 public class Disassembler {
-	public static final String simpleTypeRegex = "^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleTypeGroup() + ")$";
-	public static final String simpleValueTypeRegex = "^(?<number>\\d+): (?<opcode>" + Opcode.getValueTypeGroup() + ")_(?<value>\\d+)$";
-	public static final String valueTypeRegex = "^(?<number>\\d+): (?<opcode>" + Opcode.getValueTypeGroup() + ") (?<value>\\d+)$";
-	public static final String offsetTypeRegex = "^(?<number>\\d+): (?<opcode>" + Opcode.getOffsetTypeGroup() + ") (?<offset>\\d+)$";
+	private final Pattern simpleTypePattern = Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleTypeGroup() + ")$");
+	private final Pattern simpleValueTypePattern = Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getValueTypeGroup() + ")_(?<value>\\d+)$");
+	private final Pattern valueTypePattern = Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getValueTypeGroup() + ") (?<value>\\d+)$");
+	private final Pattern offsetTypePattern = Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getOffsetTypeGroup() + ") (?<offset>\\d+)$");
+	private final Pattern constantTableIndexTypePattern = Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableIndexTypeGroup() + ") (?<offset>\\d+)$");
 	
 	/** the component */
 	private final Class<?> componentClass;
@@ -54,11 +60,28 @@ public class Disassembler {
 	private DisassembledMethod disassemble() {
 		System.out.println(this.disassembledMethodString); // TODO delete print line
 		
+		/** bytecode lines to return */
 		Map<Integer, BytecodeLine> bytecodeLines = new HashMap<Integer, BytecodeLine>();
 		
-		String[] methodLines = this.disassembledMethodString.split("\n");
-		for(int i=0; i<methodLines.length; i++) {
+		/** match simple type */
+		Matcher simpleTypeMatcher = this.simpleTypePattern.matcher(this.disassembledMethodString);
+		while(simpleTypeMatcher.find()) {
+			int lineNumber = Integer.parseInt(simpleTypeMatcher.group("number"));
+			bytecodeLines.put(lineNumber, new BytecodeLineSimple(
+					simpleTypeMatcher.group(), lineNumber, Opcode.fromString(simpleTypeMatcher.group("opcode")), lineNumber + 1, BytecodeLineType.SIMPLE));
+		}
+		
+		/** match simple value type */
+		Matcher simpleValueTypeMatcher = this.simpleValueTypePattern.matcher(this.disassembledMethodString);
+		while(simpleValueTypeMatcher.find()) {
+			int lineNumber = Integer.parseInt(simpleValueTypeMatcher.group("number"));
 			
+			bytecodeLines.put(lineNumber, new BytecodeLineValue(
+					simpleTypeMatcher.group(), lineNumber, Opcode.fromString(simpleTypeMatcher.group("opcode")), lineNumber + 1, BytecodeLineType.SIMPLE));
+		}
+		
+//		String[] methodLines = this.disassembledMethodString.split("\n");
+//		for(int i=0; i<methodLines.length; i++) {
 //			BytecodeLine bytecodeLine = new BytecodeLine(this.componentClass, methodLines[i]);
 //			bytecodeLines.put(bytecodeLine.lineNumber, bytecodeLine);
 //			if(bytecodeLine.opcode == Opcode.tableswitch)
@@ -66,9 +89,7 @@ public class Disassembler {
 //					bytecodeLine.switchOffsets.put(
 //							methodLines[++i].replaceAll(BytecodeLineRegexes.switchCase, "${case}"),
 //							Integer.parseInt(methodLines[i].replaceAll(BytecodeLineRegexes.switchCase, "${offset}")));
-			
-			this.componentClass.getName();
-		}
+//		}
 		
 		return new DisassembledMethod(this.method, this.methodSignature, this.disassembledMethodString, bytecodeLines);
 	}
