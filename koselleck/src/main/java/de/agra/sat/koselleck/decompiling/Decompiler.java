@@ -193,6 +193,8 @@ public class Decompiler {
 				
 				constraintValue = this.stack.pop();
 				if(!(constraintValue instanceof AbstractConstraintLiteral)) {
+					System.out.println(bytecodeLine.line);
+					System.out.println(constraintValue);
 					String message = "could not get field";
 					Logger.getLogger(Decompiler.class).fatal(message);
 					throw new MissformattedBytecodeLineException(message);
@@ -307,7 +309,7 @@ public class Decompiler {
 			case ldc2_w:
 				bytecodeLineValue = (BytecodeLineValue)bytecodeLine;
 				this.stack.push(
-						new AbstractConstraintLiteral(bytecodeLineValue.value, ConstraintValueType.fromClass(bytecodeLineValue.getClass()), false));
+						new AbstractConstraintLiteral(bytecodeLineValue.value, ConstraintValueType.fromClass(bytecodeLineValue.value.getClass()), false));
 				break;
 				
 			case add:

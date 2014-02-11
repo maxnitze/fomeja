@@ -32,15 +32,12 @@ public class Disassembler {
 	/**  */
 	private final Pattern simpleTypePattern =
 			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleTypeGroup() + ")$");
-//	/**  */
-//	private final Pattern simpleValueTypePattern =
-//			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleValueTypeGroup() + ")_(?<value>\\d+)$");
 	/**  */
 	private final Pattern valueTypePattern =
-			Pattern.compile("^(?<number>\\d+): ((?<opcode>" + Opcode.getValueTypeGroup() + ") |(?<opcode>" + Opcode.getSimpleTypeGroup() + ")_)(?<value>\\d+)$");
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleValueTypeGroup() + ")(?<value>[+-]?[0-9]+(\\.[0-9]+)?)$");
 	/**  */
 	private final Pattern constantTableValueTypePattern =
-			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableValueTypeGroup() + ") #\\d+ // (float|double) (?<value>\\d+)(?<valuetype>[f|d])$");
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableValueTypeGroup() + ") #\\d+ // (float|double) (?<value>[+-]?[0-9]+(\\.[0-9]+)?)(?<valuetype>[f|d])$");
 	/**  */
 	private final Pattern offsetTypePattern =
 			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getOffsetTypeGroup() + ") (?<offset>\\d+)$");
@@ -94,6 +91,7 @@ public class Disassembler {
 			/** is simple bytecode line */
 			if(disassembledMethodLine.matches(this.simpleTypePattern.pattern())) {
 				Matcher matcher = this.simpleTypePattern.matcher(disassembledMethodLine);
+				matcher.find();
 				
 				int lineNumber = Integer.parseInt(matcher.group("number"));
 				
@@ -104,21 +102,20 @@ public class Disassembler {
 			/** is value bytecode line */
 			else if(disassembledMethodLine.matches(this.valueTypePattern.pattern())) {
 				Matcher matcher = this.valueTypePattern.matcher(disassembledMethodLine);
+				matcher.find();
 				
 				int lineNumber = Integer.parseInt(matcher.group("number"));
-				String opcodeString = matcher.group("opcode");
+				String opcodeString = matcher.group("opcode").trim();
 				String valueString = matcher.group("value");
 				
 				Object value;
-				if(valueString.matches("^\\d+$")) {
-					if(opcodeString.startsWith("i"))
-						value = Integer.parseInt(valueString);
-					else if(opcodeString.startsWith("f"))
+				if(valueString.matches("^[+-]?[0-9]+(\\.[0-9]+)?$")) {
+					if(opcodeString.startsWith("f"))
 						value = Float.parseFloat(valueString);
 					else if(opcodeString.startsWith("d"))
 						value = Double.parseDouble(valueString);
 					else
-						value = valueString;
+						value = Integer.parseInt(valueString);
 				} else
 					value = valueString;
 				
@@ -128,9 +125,10 @@ public class Disassembler {
 			/** is offset bytecode line */
 			else if(disassembledMethodLine.matches(this.constantTableValueTypePattern.pattern())) {
 				Matcher matcher = this.constantTableValueTypePattern.matcher(disassembledMethodLine);
+				matcher.find();
 				
 				int lineNumber = Integer.parseInt(matcher.group("number"));
-				String valueTypeString = matcher.group("valueType");
+				String valueTypeString = matcher.group("valuetype");
 				
 				Object value;
 				if(valueTypeString.equals("f"))
@@ -147,6 +145,7 @@ public class Disassembler {
 			/** is offset bytecode line */
 			else if(disassembledMethodLine.matches(this.offsetTypePattern.pattern())) {
 				Matcher matcher = this.offsetTypePattern.matcher(disassembledMethodLine);
+				matcher.find();
 				
 				int lineNumber = Integer.parseInt(matcher.group("number"));
 				
@@ -158,6 +157,7 @@ public class Disassembler {
 			/** is constant table class bytecode line */
 			else if(disassembledMethodLine.matches(this.constantTableClassTypePattern.pattern())) {
 				Matcher matcher = this.constantTableClassTypePattern.matcher(disassembledMethodLine);
+				matcher.find();
 				
 				int lineNumber = Integer.parseInt(matcher.group("number"));
 				
@@ -178,6 +178,7 @@ public class Disassembler {
 			/** is constant table accessible object bytecode line */
 			else if(disassembledMethodLine.matches(this.constantTableAccessibleObjectTypePattern.pattern())) {
 				Matcher matcher = this.constantTableAccessibleObjectTypePattern.matcher(disassembledMethodLine);
+				matcher.find();
 				
 				int lineNumber = Integer.parseInt(matcher.group("number"));
 				
@@ -240,26 +241,28 @@ public class Disassembler {
 					}
 					
 					/** get parameter types */
-					String[] parameterTypes = matcher.group("parameterTypes").split(";");
 					List<Class<?>> parameterTypesList = new ArrayList<Class<?>>();
-					for(String paramType : parameterTypes) {
-						String parameterTypeClassName = paramType.replaceAll("/", ".");
-						if(parameterTypeClassName == null || parameterTypeClassName.equals(""))
-							continue;
-						else if(parameterTypeClassName.equals("D"))
-							parameterTypesList.add(double.class);
-						else if(parameterTypeClassName.equals("F"))
-							parameterTypesList.add(float.class);
-						else if(parameterTypeClassName.equals("I"))
-							parameterTypesList.add(int.class);
-						else {
-							try {
-								parameterTypeClassName = parameterTypeClassName.substring(1);
-								parameterTypesList.add(Class.forName(parameterTypeClassName));
-							} catch (ClassNotFoundException e) {
-								String message = "could not find class for name \"" + parameterTypeClassName + "\"";
-								Logger.getLogger(Disassembler.class).fatal(message);
-								throw new MissformattedBytecodeLineException(message);
+					if(matcher.group("parametertypes") != null) {
+						String[] parameterTypes = matcher.group("parametertypes").split(";");
+						for(String paramType : parameterTypes) {
+							String parameterTypeClassName = paramType.replaceAll("/", ".");
+							if(parameterTypeClassName == null || parameterTypeClassName.equals(""))
+								continue;
+							else if(parameterTypeClassName.equals("D"))
+								parameterTypesList.add(double.class);
+							else if(parameterTypeClassName.equals("F"))
+								parameterTypesList.add(float.class);
+							else if(parameterTypeClassName.equals("I"))
+								parameterTypesList.add(int.class);
+							else {
+								try {
+									parameterTypeClassName = parameterTypeClassName.substring(1);
+									parameterTypesList.add(Class.forName(parameterTypeClassName));
+								} catch (ClassNotFoundException e) {
+									String message = "could not find class for name \"" + parameterTypeClassName + "\"";
+									Logger.getLogger(Disassembler.class).fatal(message);
+									throw new MissformattedBytecodeLineException(message);
+								}
 							}
 						}
 					}
