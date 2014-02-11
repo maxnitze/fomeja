@@ -17,6 +17,7 @@ import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineConstantTableAc
 import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineConstantTableClass;
 import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineOffset;
 import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineSimple;
+import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineTableswitch;
 import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineValue;
 import de.agra.sat.koselleck.disassembling.datatypes.DisassembledMethod;
 import de.agra.sat.koselleck.disassembling.datatypes.Opcode;
@@ -30,23 +31,29 @@ import de.agra.sat.koselleck.exceptions.MissformattedBytecodeLineException;
  */
 public class Disassembler {
 	/**  */
-	private final Pattern simpleTypePattern =
+	private static final Pattern simpleTypePattern =
 			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleTypeGroup() + ")$");
 	/**  */
-	private final Pattern valueTypePattern =
+	private static final Pattern valueTypePattern =
 			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleValueTypeGroup() + ")(?<value>[+-]?[0-9]+(\\.[0-9]+)?)$");
 	/**  */
-	private final Pattern constantTableValueTypePattern =
+	private static final Pattern constantTableValueTypePattern =
 			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableValueTypeGroup() + ") #\\d+ // (float|double) (?<value>[+-]?[0-9]+(\\.[0-9]+)?)(?<valuetype>[f|d])$");
 	/**  */
-	private final Pattern offsetTypePattern =
+	private static final Pattern offsetTypePattern =
 			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getOffsetTypeGroup() + ") (?<offset>\\d+)$");
 	/**  */
-	private final Pattern constantTableAccessibleObjectTypePattern =
+	private static final Pattern constantTableAccessibleObjectTypePattern =
 			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableIndexTypeGroup() + ") #(?<index>\\d+) // (?<accessibleobjecttype>Field|Method) (?<accessibleobject>\\S+):(\\((?<parametertypes>\\S+)\\))?(?<returntype>\\S+)$");
 	/**  */
-	private final Pattern constantTableClassTypePattern =
+	private static final Pattern constantTableClassTypePattern =
 			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableIndexTypeGroup() + ") #(?<index>\\d+) // class (?<class>\\S+):(\\((?<parametertypes>\\S+)\\))?(?<returntype>\\S+)$"); // TODO might not be right
+	/**  */
+	private static final Pattern tableswitchPattern =
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantSwitchGroup() + ") \\{ // \\d+ to \\d+$");
+	/**  */
+	private static final Pattern tableswitchCasePattern =
+			Pattern.compile("^(?<case>(\\d+|default)): (?<offset>\\d+)$");
 	
 	/** the component */
 	private final Class<?> componentClass;
@@ -89,8 +96,8 @@ public class Disassembler {
 			String disassembledMethodLine = disassembledMethodLines[i].trim().replaceAll("\\s+", " ");
 			
 			/** is simple bytecode line */
-			if(disassembledMethodLine.matches(this.simpleTypePattern.pattern())) {
-				Matcher matcher = this.simpleTypePattern.matcher(disassembledMethodLine);
+			if(disassembledMethodLine.matches(simpleTypePattern.pattern())) {
+				Matcher matcher = simpleTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
 				
 				int lineNumber = Integer.parseInt(matcher.group("number"));
@@ -100,8 +107,8 @@ public class Disassembler {
 						Opcode.fromString(matcher.group("opcode"))));
 			}
 			/** is value bytecode line */
-			else if(disassembledMethodLine.matches(this.valueTypePattern.pattern())) {
-				Matcher matcher = this.valueTypePattern.matcher(disassembledMethodLine);
+			else if(disassembledMethodLine.matches(valueTypePattern.pattern())) {
+				Matcher matcher = valueTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
 				
 				int lineNumber = Integer.parseInt(matcher.group("number"));
@@ -123,8 +130,8 @@ public class Disassembler {
 						disassembledMethodLine, lineNumber, Opcode.fromString(opcodeString), value));
 			}
 			/** is offset bytecode line */
-			else if(disassembledMethodLine.matches(this.constantTableValueTypePattern.pattern())) {
-				Matcher matcher = this.constantTableValueTypePattern.matcher(disassembledMethodLine);
+			else if(disassembledMethodLine.matches(constantTableValueTypePattern.pattern())) {
+				Matcher matcher = constantTableValueTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
 				
 				int lineNumber = Integer.parseInt(matcher.group("number"));
@@ -143,8 +150,8 @@ public class Disassembler {
 						Opcode.fromString(matcher.group("opcode")), value));
 			}
 			/** is offset bytecode line */
-			else if(disassembledMethodLine.matches(this.offsetTypePattern.pattern())) {
-				Matcher matcher = this.offsetTypePattern.matcher(disassembledMethodLine);
+			else if(disassembledMethodLine.matches(offsetTypePattern.pattern())) {
+				Matcher matcher = offsetTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
 				
 				int lineNumber = Integer.parseInt(matcher.group("number"));
@@ -155,8 +162,8 @@ public class Disassembler {
 						Integer.parseInt(matcher.group("offset"))));
 			}
 			/** is constant table class bytecode line */
-			else if(disassembledMethodLine.matches(this.constantTableClassTypePattern.pattern())) {
-				Matcher matcher = this.constantTableClassTypePattern.matcher(disassembledMethodLine);
+			else if(disassembledMethodLine.matches(constantTableClassTypePattern.pattern())) {
+				Matcher matcher = constantTableClassTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
 				
 				int lineNumber = Integer.parseInt(matcher.group("number"));
@@ -176,8 +183,8 @@ public class Disassembler {
 						Integer.parseInt(matcher.group("index")), clazz));
 			}
 			/** is constant table accessible object bytecode line */
-			else if(disassembledMethodLine.matches(this.constantTableAccessibleObjectTypePattern.pattern())) {
-				Matcher matcher = this.constantTableAccessibleObjectTypePattern.matcher(disassembledMethodLine);
+			else if(disassembledMethodLine.matches(constantTableAccessibleObjectTypePattern.pattern())) {
+				Matcher matcher = constantTableAccessibleObjectTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
 				
 				int lineNumber = Integer.parseInt(matcher.group("number"));
@@ -296,6 +303,27 @@ public class Disassembler {
 							Integer.parseInt(matcher.group("index")), object));
 				}
 			}
+			/** is tableswitch bytecode line */
+			else if(disassembledMethodLine.matches(tableswitchPattern.pattern())) {
+				Matcher matcher = tableswitchPattern.matcher(disassembledMethodLine);
+				matcher.find();
+				
+				int lineNumber = Integer.parseInt(matcher.group("number"));
+				
+				BytecodeLineTableswitch bytecodeLineTableSwitch = new BytecodeLineTableswitch(
+						disassembledMethodLine, lineNumber,
+						Opcode.fromString(matcher.group("opcode")));
+				
+				while(i+1<disassembledMethodLines.length && disassembledMethodLines[i+1].matches(tableswitchCasePattern.pattern())) {
+					++i;
+					
+					bytecodeLineTableSwitch.offsetsMap.put(
+							disassembledMethodLines[i].replaceAll(tableswitchCasePattern.pattern(), "${case}"),
+							Integer.parseInt(disassembledMethodLines[i].replaceAll(tableswitchCasePattern.pattern(), "${offset}")));
+				}
+				
+				bytecodeLines.put(lineNumber, bytecodeLineTableSwitch);
+			}
 			/** otherwise */
 			else {
 				String message = "could not parse given bytecode line \"" + disassembledMethodLine + "\"";
@@ -303,17 +331,6 @@ public class Disassembler {
 				throw new MissformattedBytecodeLineException(message);
 			}
 		}
-		
-//		String[] methodLines = this.disassembledMethodString.split("\n");
-//		for(int i=0; i<methodLines.length; i++) {
-//			BytecodeLine bytecodeLine = new BytecodeLine(this.componentClass, methodLines[i]);
-//			bytecodeLines.put(bytecodeLine.lineNumber, bytecodeLine);
-//			if(bytecodeLine.opcode == Opcode.tableswitch)
-//				while(methodLines[i+1].matches(BytecodeLineRegexes.switchCase))
-//					bytecodeLine.switchOffsets.put(
-//							methodLines[++i].replaceAll(BytecodeLineRegexes.switchCase, "${case}"),
-//							Integer.parseInt(methodLines[i].replaceAll(BytecodeLineRegexes.switchCase, "${offset}")));
-//		}
 		
 		return new DisassembledMethod(this.method, this.methodSignature, this.disassembledMethodString, bytecodeLines);
 	}
