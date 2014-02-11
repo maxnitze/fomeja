@@ -18,7 +18,7 @@ public class BytecodeLineValue extends BytecodeLine {
 	 * @param value
 	 */
 	public BytecodeLineValue(String line, int lineNumber, Opcode opcode, Object value) {
-		super(line, lineNumber, opcode, BytecodeLineType.VALUE);
+		super(line, lineNumber, opcode);
 		
 		this.value = value;
 	}

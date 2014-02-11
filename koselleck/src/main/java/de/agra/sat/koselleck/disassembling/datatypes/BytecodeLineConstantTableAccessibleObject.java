@@ -9,10 +9,7 @@ import java.lang.reflect.AccessibleObject;
  * @author Max Nitze
  * @version 1.0.0
  */
-public class BytecodeLineConstantTableAccessibleObject extends BytecodeLine {
-	/** the constant table offset */
-	public final int constantTableOffset;
-	
+public class BytecodeLineConstantTableAccessibleObject extends BytecodeLineConstantTable {
 	/** the accessible object */
 	public final AccessibleObject accessibleObject;
 	
@@ -27,9 +24,8 @@ public class BytecodeLineConstantTableAccessibleObject extends BytecodeLine {
 	 * @param accessibleObject
 	 */
 	public BytecodeLineConstantTableAccessibleObject(String line, int lineNumber, Opcode opcode, int constantTableOffset, AccessibleObject accessibleObject) {
-		super(line, lineNumber, opcode, BytecodeLineType.CONSTANT_TABLE_ACCESSIBLE_OBJECT);
+		super(line, lineNumber, opcode, constantTableOffset);
 		
-		this.constantTableOffset = constantTableOffset;
 		this.accessibleObject = accessibleObject;
 	}
 }

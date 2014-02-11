@@ -7,15 +7,6 @@ package de.agra.sat.koselleck.disassembling.datatypes;
  * @author Max Nitze
  */
 public abstract class BytecodeLine {
-	/** types of bytecode lines */
-	public enum BytecodeLineType { // TODO needed? or instanceof?
-		SIMPLE,
-		VALUE,
-		OFFSET,
-		CONSTANT_TABLE_ACCESSIBLE_OBJECT,
-		CONSTANT_TABLE_CLASS;
-	}
-	
 	/** the trimmed line */
 	public final String line;
 	
@@ -26,23 +17,18 @@ public abstract class BytecodeLine {
 	/** the number of the following line */
 	public final int followingLineNumber;
 	
-	/** the type */
-	public final BytecodeLineType type;
-	
 	/**
 	 * Constructor for a new byte code line.
 	 * 
 	 * @param line
 	 * @param lineNumber
 	 * @param opcode
-	 * @param type
 	 */
-	public BytecodeLine(String line, int lineNumber, Opcode opcode, BytecodeLineType type) {
+	public BytecodeLine(String line, int lineNumber, Opcode opcode) {
 		this.line = line;
 		this.lineNumber = lineNumber;
 		this.opcode = opcode;
 		this.followingLineNumber = lineNumber + opcode.followingLineOffset;
-		this.type = type;
 	}
 	
 	/**

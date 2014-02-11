@@ -18,7 +18,7 @@ public class BytecodeLineOffset extends BytecodeLine {
 	 * @param offset
 	 */
 	public BytecodeLineOffset(String line, int lineNumber, Opcode opcode, int offset) {
-		super(line, lineNumber, opcode, BytecodeLineType.OFFSET);
+		super(line, lineNumber, opcode);
 		
 		this.offset = offset;
 	}

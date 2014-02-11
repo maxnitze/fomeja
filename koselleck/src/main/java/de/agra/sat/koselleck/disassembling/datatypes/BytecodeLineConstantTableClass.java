@@ -6,10 +6,7 @@ package de.agra.sat.koselleck.disassembling.datatypes;
  * @author Max Nitze
  * @version 1.0.0
  */
-public class BytecodeLineConstantTableClass extends BytecodeLine {
-	/** the constant table offset */
-	public final int constantTableOffset;
-	
+public class BytecodeLineConstantTableClass extends BytecodeLineConstantTable {
 	/** the accessible object */
 	public final Class<?> clazz;
 	
@@ -24,9 +21,8 @@ public class BytecodeLineConstantTableClass extends BytecodeLine {
 	 * @param clazz
 	 */
 	public BytecodeLineConstantTableClass(String line, int lineNumber, Opcode opcode, int constantTableOffset, Class<?> clazz) {
-		super(line, lineNumber, opcode, BytecodeLineType.CONSTANT_TABLE_CLASS);
+		super(line, lineNumber, opcode, constantTableOffset);
 		
-		this.constantTableOffset = constantTableOffset;
 		this.clazz = clazz;
 	}
 }

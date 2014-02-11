@@ -16,6 +16,6 @@ public class BytecodeLineSimple extends BytecodeLine {
 	 * @param type
 	 */
 	public BytecodeLineSimple(String line, int lineNumber, Opcode opcode) {
-		super(line, lineNumber, opcode, BytecodeLineType.SIMPLE);
+		super(line, lineNumber, opcode);
 	}
 }

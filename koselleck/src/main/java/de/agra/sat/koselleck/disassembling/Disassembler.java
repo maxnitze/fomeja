@@ -1,9 +1,14 @@
 package de.agra.sat.koselleck.disassembling;
 
 /** imports */
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
@@ -25,19 +30,26 @@ import de.agra.sat.koselleck.exceptions.MissformattedBytecodeLineException;
  */
 public class Disassembler {
 	/**  */
-	private final String simpleTypePattern = "^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleTypeGroup() + ")$";
+	private final Pattern simpleTypePattern =
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleTypeGroup() + ")$");
+//	/**  */
+//	private final Pattern simpleValueTypePattern =
+//			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleValueTypeGroup() + ")_(?<value>\\d+)$");
 	/**  */
-	private final String simpleValueTypePattern = "^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleValueTypeGroup() + ")_(?<value>\\d+)$";
+	private final Pattern valueTypePattern =
+			Pattern.compile("^(?<number>\\d+): ((?<opcode>" + Opcode.getValueTypeGroup() + ") |(?<opcode>" + Opcode.getSimpleTypeGroup() + ")_)(?<value>\\d+)$");
 	/**  */
-	private final String valueTypePattern = "^(?<number>\\d+): (?<opcode>" + Opcode.getValueTypeGroup() + ") (?<value>\\d+)$";
+	private final Pattern constantTableValueTypePattern =
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableValueTypeGroup() + ") #\\d+ // (float|double) (?<value>\\d+)(?<valuetype>[f|d])$");
 	/**  */
-	private final String constantTableValueTypePattern = "^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableValueTypeGroup() + ") #\\d+ // (float|double) (?<value>\\d+)(?<valuetype>[f|d])$";
+	private final Pattern offsetTypePattern =
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getOffsetTypeGroup() + ") (?<offset>\\d+)$");
 	/**  */
-	private final String offsetTypePattern = "^(?<number>\\d+): (?<opcode>" + Opcode.getOffsetTypeGroup() + ") (?<offset>\\d+)$";
+	private final Pattern constantTableAccessibleObjectTypePattern =
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableIndexTypeGroup() + ") #(?<index>\\d+) // (?<accessibleobjecttype>Field|Method) (?<accessibleobject>\\S+):(\\((?<parametertypes>\\S+)\\))?(?<returntype>\\S+)$");
 	/**  */
-	private final String constantTableAccessibleObjectTypePattern = "^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableIndexTypeGroup() + ") #(?<index>\\d+) // (?<accessibleobjecttype>Field|Method) (?<accessibleobject>\\S+):(\\((?<parametertypes>\\S+)\\))?(?<returntype>\\S+)$";
-	/**  */
-	private final String constantTableClassTypePattern = "^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableIndexTypeGroup() + ") #(?<index>\\d+) // class (?<class>\\S+):(\\((?<parametertypes>\\S+)\\))?(?<returntype>\\S+)$"; // TODO might not be right
+	private final Pattern constantTableClassTypePattern =
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableIndexTypeGroup() + ") #(?<index>\\d+) // class (?<class>\\S+):(\\((?<parametertypes>\\S+)\\))?(?<returntype>\\S+)$"); // TODO might not be right
 	
 	/** the component */
 	private final Class<?> componentClass;
@@ -80,18 +92,22 @@ public class Disassembler {
 			String disassembledMethodLine = disassembledMethodLines[i].trim().replaceAll("\\s+", " ");
 			
 			/** is simple bytecode line */
-			if(disassembledMethodLine.matches(this.simpleTypePattern)) {
-				int lineNumber = Integer.parseInt(disassembledMethodLine.replaceAll(this.simpleTypePattern, "$number"));
+			if(disassembledMethodLine.matches(this.simpleTypePattern.pattern())) {
+				Matcher matcher = this.simpleTypePattern.matcher(disassembledMethodLine);
+				
+				int lineNumber = Integer.parseInt(matcher.group("number"));
 				
 				bytecodeLines.put(lineNumber, new BytecodeLineSimple(
 						disassembledMethodLine, lineNumber,
-						Opcode.fromString(disassembledMethodLine.replaceAll(this.simpleTypePattern, "$opcode"))));
+						Opcode.fromString(matcher.group("opcode"))));
 			}
 			/** is value bytecode line */
-			else if(disassembledMethodLine.matches(this.simpleValueTypePattern) || disassembledMethodLine.matches(this.valueTypePattern)) {
-				int lineNumber = Integer.parseInt(disassembledMethodLine.replaceAll(this.valueTypePattern, "$number"));
-				String opcodeString = disassembledMethodLine.replaceAll(this.valueTypePattern, "$opcode");
-				String valueString = disassembledMethodLine.replaceAll(this.valueTypePattern, "$value");
+			else if(disassembledMethodLine.matches(this.valueTypePattern.pattern())) {
+				Matcher matcher = this.valueTypePattern.matcher(disassembledMethodLine);
+				
+				int lineNumber = Integer.parseInt(matcher.group("number"));
+				String opcodeString = matcher.group("opcode");
+				String valueString = matcher.group("value");
 				
 				Object value;
 				if(valueString.matches("^\\d+$")) {
@@ -110,39 +126,44 @@ public class Disassembler {
 						disassembledMethodLine, lineNumber, Opcode.fromString(opcodeString), value));
 			}
 			/** is offset bytecode line */
-			else if(disassembledMethodLine.matches(this.constantTableValueTypePattern)) {
-				int lineNumber = Integer.parseInt(disassembledMethodLine.replaceAll(this.constantTableValueTypePattern, "$number"));
-				String valueTypeString = disassembledMethodLine.replaceAll(this.constantTableValueTypePattern, "$valuetype");
+			else if(disassembledMethodLine.matches(this.constantTableValueTypePattern.pattern())) {
+				Matcher matcher = this.constantTableValueTypePattern.matcher(disassembledMethodLine);
+				
+				int lineNumber = Integer.parseInt(matcher.group("number"));
+				String valueTypeString = matcher.group("valueType");
 				
 				Object value;
 				if(valueTypeString.equals("f"))
-					value = Float.parseFloat(disassembledMethodLine.replaceAll(this.constantTableValueTypePattern, "$value"));
+					value = Float.parseFloat(matcher.group("value"));
 				else if(valueTypeString.equals("d"))
-					value = Double.parseDouble(disassembledMethodLine.replaceAll(this.constantTableValueTypePattern, "$value"));
+					value = Double.parseDouble(matcher.group("value"));
 				else
-					value = disassembledMethodLine.replaceAll(this.constantTableValueTypePattern, "$value");
+					value = matcher.group("value");
 				
 				bytecodeLines.put(lineNumber, new BytecodeLineValue(
 						disassembledMethodLine, lineNumber,
-						Opcode.fromString(disassembledMethodLine.replaceAll(this.constantTableValueTypePattern, "$opcode")), value));
+						Opcode.fromString(matcher.group("opcode")), value));
 			}
 			/** is offset bytecode line */
-			else if(disassembledMethodLine.matches(this.offsetTypePattern)) {
-				int lineNumber = Integer.parseInt(disassembledMethodLine.replaceAll(this.offsetTypePattern, "$number"));
+			else if(disassembledMethodLine.matches(this.offsetTypePattern.pattern())) {
+				Matcher matcher = this.offsetTypePattern.matcher(disassembledMethodLine);
+				
+				int lineNumber = Integer.parseInt(matcher.group("number"));
 				
 				bytecodeLines.put(lineNumber, new BytecodeLineOffset(
 						disassembledMethodLine, lineNumber,
-						Opcode.fromString(disassembledMethodLine.replaceAll(this.offsetTypePattern, "$opcode")),
-						Integer.parseInt(disassembledMethodLine.replaceAll(this.offsetTypePattern, "$offset"))));
+						Opcode.fromString(matcher.group("opcode")),
+						Integer.parseInt(matcher.group("offset"))));
 			}
 			/** is constant table class bytecode line */
-			else if(disassembledMethodLine.matches(this.constantTableClassTypePattern)) {
-				int lineNumber = Integer.parseInt(disassembledMethodLine.replaceAll(this.constantTableClassTypePattern, "$number"));
+			else if(disassembledMethodLine.matches(this.constantTableClassTypePattern.pattern())) {
+				Matcher matcher = this.constantTableClassTypePattern.matcher(disassembledMethodLine);
 				
-				String accessibleObjectType = disassembledMethodLine.replaceAll(this.constantTableClassTypePattern, "$class");
+				int lineNumber = Integer.parseInt(matcher.group("number"));
+				
 				Class<?> clazz;
 				try {
-					clazz = Class.forName(disassembledMethodLine.replaceAll(this.constantTableClassTypePattern, "$class"));
+					clazz = Class.forName(matcher.group("class"));
 				} catch (ClassNotFoundException e) {
 					String message = "";
 					Logger.getLogger(Disassembler.class).fatal(message);
@@ -151,43 +172,125 @@ public class Disassembler {
 				
 				bytecodeLines.put(lineNumber, new BytecodeLineConstantTableClass(
 						disassembledMethodLine, lineNumber,
-						Opcode.fromString(disassembledMethodLine.replaceAll(this.offsetTypePattern, "$opcode")),
-						Integer.parseInt(disassembledMethodLine.replaceAll(this.offsetTypePattern, "$index")), clazz));
+						Opcode.fromString(matcher.group("opcode")),
+						Integer.parseInt(matcher.group("index")), clazz));
 			}
 			/** is constant table accessible object bytecode line */
-			else if(disassembledMethodLine.matches(this.constantTableAccessibleObjectTypePattern)) {
-				int lineNumber = Integer.parseInt(disassembledMethodLine.replaceAll(this.constantTableAccessibleObjectTypePattern, "$number"));
+			else if(disassembledMethodLine.matches(this.constantTableAccessibleObjectTypePattern.pattern())) {
+				Matcher matcher = this.constantTableAccessibleObjectTypePattern.matcher(disassembledMethodLine);
 				
-				String accessibleObjectType = disassembledMethodLine.replaceAll(this.constantTableAccessibleObjectTypePattern, "$accessibleobjecttype");
-				/**  */
+				int lineNumber = Integer.parseInt(matcher.group("number"));
+				
+				String accessibleObjectType = matcher.group("accessibleobjecttype");
+				
+				/** accessible object is a field */
 				if(accessibleObjectType.equals("Field")) {
-					Class<?> clazz;
+					String fieldString = matcher.group("accessibleobject");
+					Class<?> fieldClass;
+					String fieldName;
+					if(fieldString.contains(".")) {
+						String[] splittedField = fieldString.split("\\.");
+						String className = splittedField[0].replaceAll("/", ".");
+						try {
+							fieldClass = Class.forName(className);
+						} catch (ClassNotFoundException e) {
+							String message = "could not find class for name \"" + className + "\"";
+							Logger.getLogger(Disassembler.class).fatal(message);
+							throw new MissformattedBytecodeLineException(message);
+						}
+						fieldName = splittedField[1];
+					} else {
+						fieldClass = this.componentClass;
+						fieldName = fieldString;
+					}
+					
+					AccessibleObject object;
 					try {
-						clazz = Class.forName(disassembledMethodLine.replaceAll(this.constantTableAccessibleObjectTypePattern, "$accessibleobjecttype"));
-					} catch (ClassNotFoundException e) {
-						String message = "";
+						object = fieldClass.getDeclaredField(fieldName);
+					} catch (NoSuchFieldException | SecurityException e) {
+						String message = "could not find field \"" + fieldName + "\" for class \"" + fieldClass.getCanonicalName() + "\"";
 						Logger.getLogger(Disassembler.class).fatal(message);
 						throw new MissformattedBytecodeLineException(message);
 					}
+					
 					bytecodeLines.put(lineNumber, new BytecodeLineConstantTableAccessibleObject(
 							disassembledMethodLine, lineNumber,
-							Opcode.fromString(disassembledMethodLine.replaceAll(this.offsetTypePattern, "$opcode")),
-							Integer.parseInt(disassembledMethodLine.replaceAll(this.offsetTypePattern, "$index")), clazz));
+							Opcode.fromString(matcher.group("opcode")),
+							Integer.parseInt(matcher.group("index")), object));
 				}
-				/**  */
-				else if(accessibleObjectType.equals("Field")) {
-					Class<?> clazz;
+				/** accessible object is a method */
+				else if(accessibleObjectType.equals("Method")) {
+					String methodString = matcher.group("accessibleobject");
+					Class<?> methodClass;
+					String methodName;
+					if(methodString.contains(".")) {
+						String[] splittedField = methodString.split("\\.");
+						String className = splittedField[0].replaceAll("/", ".");
+						try {
+							methodClass = Class.forName(className);
+						} catch (ClassNotFoundException e) {
+							String message = "could not find class for name \"" + className + "\"";
+							Logger.getLogger(Disassembler.class).fatal(message);
+							throw new MissformattedBytecodeLineException(message);
+						}
+						methodName = splittedField[1];
+					} else {
+						methodClass = this.componentClass;
+						methodName = methodString;
+					}
+					
+					/** get parameter types */
+					String[] parameterTypes = matcher.group("parameterTypes").split(";");
+					List<Class<?>> parameterTypesList = new ArrayList<Class<?>>();
+					for(String paramType : parameterTypes) {
+						String parameterTypeClassName = paramType.replaceAll("/", ".");
+						if(parameterTypeClassName == null || parameterTypeClassName.equals(""))
+							continue;
+						else if(parameterTypeClassName.equals("D"))
+							parameterTypesList.add(double.class);
+						else if(parameterTypeClassName.equals("F"))
+							parameterTypesList.add(float.class);
+						else if(parameterTypeClassName.equals("I"))
+							parameterTypesList.add(int.class);
+						else {
+							try {
+								parameterTypeClassName = parameterTypeClassName.substring(1);
+								parameterTypesList.add(Class.forName(parameterTypeClassName));
+							} catch (ClassNotFoundException e) {
+								String message = "could not find class for name \"" + parameterTypeClassName + "\"";
+								Logger.getLogger(Disassembler.class).fatal(message);
+								throw new MissformattedBytecodeLineException(message);
+							}
+						}
+					}
+					
+					AccessibleObject object;
 					try {
-						clazz = Class.forName(disassembledMethodLine.replaceAll(this.constantTableAccessibleObjectTypePattern, "$accessibleobjecttype"));
-					} catch (ClassNotFoundException e) {
-						String message = "";
+						if(methodName.equals("\"<init>\""))
+							object = methodClass.getDeclaredConstructor(parameterTypesList.toArray(new Class[parameterTypesList.size()]));
+						else
+							object = methodClass.getDeclaredMethod(methodName, parameterTypesList.toArray(new Class[parameterTypesList.size()]));
+					} catch (NoSuchMethodException | SecurityException e) {
+						StringBuilder parameterString = new StringBuilder();
+						for(Class<?> cls : parameterTypesList) {
+							if(parameterString.length() > 0)
+								parameterString.append(", ");
+							parameterString.append(cls.getCanonicalName());
+						}
+						
+						String message;
+						if(methodName.equals("\"<init>\""))
+							message = "could not find constructor with parameters \"(" + parameterString.toString() + ")\" for class \"" + methodClass.getCanonicalName() + "\"";
+						else
+							message = "could not find method \"" + methodName + "(" + parameterString.toString() + ")\" for class \"" + methodClass.getCanonicalName() + "\"";
 						Logger.getLogger(Disassembler.class).fatal(message);
 						throw new MissformattedBytecodeLineException(message);
 					}
+					
 					bytecodeLines.put(lineNumber, new BytecodeLineConstantTableAccessibleObject(
 							disassembledMethodLine, lineNumber,
-							Opcode.fromString(disassembledMethodLine.replaceAll(this.offsetTypePattern, "$opcode")),
-							Integer.parseInt(disassembledMethodLine.replaceAll(this.offsetTypePattern, "$index")), clazz));
+							Opcode.fromString(matcher.group("opcode")),
+							Integer.parseInt(matcher.group("index")), object));
 				}
 			}
 			/** otherwise */

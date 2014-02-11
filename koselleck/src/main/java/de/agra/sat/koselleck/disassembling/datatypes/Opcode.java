@@ -16,8 +16,8 @@ public enum Opcode {
 	store_("store_", 1, "^[i|f|d|a]store_\\d+$", OpcodeType.SIMPLE_VALUE, "[i|f|d|a]store"),
 	store("store", 2, "^[i|f|d|a]store$", OpcodeType.VALUE, "[i|f|d|a]store"),
 
-	bconst_("bconst_", 1, "^[i|f|b]const_\\d+$", OpcodeType.SIMPLE_VALUE, "[i|f|b]const_"),
-	bconst("bconst", 2, "^[i|f|b]const$", OpcodeType.VALUE, "[i|f|b]const"),
+	_const_("bconst_", 1, "^[i|f|b]const_\\d+$", OpcodeType.SIMPLE_VALUE, "[i|f|b]const_"),
+	_const("bconst", 2, "^[i|f|b]const$", OpcodeType.VALUE, "[i|f|b]const"),
 	bipush("bipush", 2, "^bipush$", OpcodeType.VALUE, "bipush"),
 	
 	getfield("getfield", 3, "^getfield$", OpcodeType.CONSTANT_TABLE_INDEX, "getfield"),
