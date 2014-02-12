@@ -344,7 +344,6 @@ public abstract class KoselleckUtils {
 			}
 			
 			if(!signatureLine) {
-				System.out.println(trimmedMethod.toString()); // TODO delete
 				return Disassembler.disassemble(
 						method.getDeclaringClass(),
 						method,

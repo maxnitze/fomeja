@@ -22,7 +22,7 @@ public enum ConstraintValueType {
 	
 	Object("Object", new ArrayList<Class<?>>(), false, false),
 	
-	NULL("null", null, true, false);
+	NULL("null", new ArrayList<Class<?>>(), true, false);
 	
 	/** the name */
 	public final String name;

@@ -66,24 +66,7 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	
 	@Constraint(fields = { @Constraint.Field("") })
 	public boolean adjacentHaveDifferentColors(CGEdge edge) {
-//		return edge.vertex1.color != edge.vertex2.color;
-//		return edge.vertex1.getColor() != edge.vertex2.getColor();
-//		return edge.getVertex1().color != edge.getVertex2().color;
-		return edge.getVertex1().getColor() != edge.getVertex2().getColor();
-//		return edge.getVertex1().getColor() - 4 != edge.getVertex2().getColor() + 3;
-//		return edge.vertex1.color - 1.2d != edge.vertex2.color + 2.6d;
-//		return edge.getVertex1().getColor() - 1.2d != edge.getVertex2().getColor() + 2.6d;
-//		return edge.vertex1.color - 1.2f != edge.vertex2.color + 2.6f;
-//		return edge.getVertex1().getColor() - 1.2f != edge.getVertex2().getColor() + 2.6f;
-//		return edge.getVertex1().getColor() - 1.2f != edge.getVertex2().getColor() + 2.6d;
-//		float a = 1.2f;
-//		float b = 2.6f;
-//		a = 4.3f;
-//		return edge.getVertex1().getColor() - a != edge.getVertex2().getColor() + b;
-//		Float a = new Float(1.2);
-//		Float b = new Float(2.6);
-//		a = 22.3f;
-//		return edge.getVertex1().getColor() - a != edge.getVertex2().getColor() + b;
+		return -1.4f != edge.getVertex1().getColor() && 1.6d != edge.getVertex2().getColor() && edge.getVertex1().getColor() - 1.2f != edge.getVertex2().getColor() + 2.6f;
 	}
 	
 	@Objective
