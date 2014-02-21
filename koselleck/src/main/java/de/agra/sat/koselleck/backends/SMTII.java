@@ -14,6 +14,7 @@ import de.agra.sat.koselleck.decompiling.datatypes.AbstractBooleanConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintLiteral;
+import de.agra.sat.koselleck.decompiling.datatypes.AbstractIfThenElseConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractPrematureConstraintValue;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractSubConstraint;
@@ -164,6 +165,59 @@ public class SMTII extends Dialect {
 		subConstraintString.append(")");
 		
 		return subConstraintString.toString();
+	}
+	
+	/**
+	 * prepareAbstractSubConstraint returns the smt2 string representation of
+	 *  an abstract if-then-else-constraint.
+	 * 
+	 * @param ifThenElseConstraint the abstract if-then-else-constraint to get
+	 *  the smt2 string representation for
+	 * 
+	 * @return the smt2 string representation for the given abstract
+	 *  if-then-else-constraint
+	 */
+	@Override
+	public String prepareAbstractIfThenElseConstraint(AbstractIfThenElseConstraint ifThenElseConstraint) {
+		StringBuilder ifThenElseConstraintString = new StringBuilder();
+		
+		/** if --> then */
+		if(ifThenElseConstraint.thenCaseConstraint instanceof AbstractBooleanConstraint) {
+			if(((AbstractBooleanConstraint)ifThenElseConstraint.thenCaseConstraint).value) {
+				ifThenElseConstraintString.append("(");
+				ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.ifConstraint));
+			}
+		} else {
+			ifThenElseConstraintString.append("(");
+			ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.ifConstraint));
+			ifThenElseConstraintString.append(" and ");
+			ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.thenCaseConstraint));
+			ifThenElseConstraintString.append(")");
+		}
+		
+		/** if not --> else */
+		if(ifThenElseConstraint.elseCaseConstraint instanceof AbstractBooleanConstraint) {
+			if(((AbstractBooleanConstraint)ifThenElseConstraint.elseCaseConstraint).value) {
+				if(ifThenElseConstraintString.length() > 0)
+					ifThenElseConstraintString.append(") or (");
+				else
+					ifThenElseConstraintString.append("(");
+
+				ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.ifConstraint));
+			}
+		} else {
+			if(ifThenElseConstraintString.length() > 0)
+				ifThenElseConstraintString.append(") or (not (");
+			else
+				ifThenElseConstraintString.append("(not (");
+
+			ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.ifConstraint));
+			ifThenElseConstraintString.append(") and ");
+			ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.elseCaseConstraint));
+			ifThenElseConstraintString.append("))");
+		}
+		
+		return ifThenElseConstraintString.toString();
 	}
 	
 	/**

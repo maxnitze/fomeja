@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -25,11 +26,10 @@ import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintValue;
+import de.agra.sat.koselleck.decompiling.datatypes.AbstractIfThenElseConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractPrematureConstraintValue;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractSingleConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.ArithmeticOperator;
-import de.agra.sat.koselleck.decompiling.datatypes.BooleanConnector;
 import de.agra.sat.koselleck.decompiling.datatypes.ConstraintOperator;
 import de.agra.sat.koselleck.decompiling.datatypes.ConstraintValueType;
 import de.agra.sat.koselleck.decompiling.datatypes.PrefixedClass;
@@ -38,6 +38,7 @@ import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLine;
 import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineConstantTableAccessibleObject;
 import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineConstantTableClass;
 import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineOffset;
+import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineTableswitch;
 import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineValue;
 import de.agra.sat.koselleck.disassembling.datatypes.DisassembledMethod;
 import de.agra.sat.koselleck.disassembling.datatypes.Opcode;
@@ -45,6 +46,7 @@ import de.agra.sat.koselleck.exceptions.MissformattedBytecodeLineException;
 import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 import de.agra.sat.koselleck.exceptions.UnknownOpcodeException;
+import de.agra.sat.koselleck.exceptions.UnknownSwitchCaseException;
 import de.agra.sat.koselleck.utils.KoselleckUtils;
 
 /**
@@ -141,6 +143,7 @@ public class Decompiler {
 		BytecodeLineOffset bytecodeLineOffset = null;
 		BytecodeLineConstantTableClass bytecodeLineConstantTableClass = null;
 		BytecodeLineConstantTableAccessibleObject bytecodeLineConstantTableAccessibleObject = null;
+		BytecodeLineTableswitch bytecodeLineTableswitch = null;
 		
 		PrefixedField prefixedField = null;
 		PrefixedField innerPrefixedField = null;
@@ -153,7 +156,6 @@ public class Decompiler {
 		AbstractConstraintValue innerConstraintValue = null;
 		AbstractConstraintLiteral constraintLiteral = null;
 		AbstractConstraintLiteral innerConstraintLiteral = null;
-		AbstractConstraintFormula constraintFormula = null;
 		AbstractConstraintValue constraintValue1 = null;
 		AbstractConstraintValue constraintValue2 = null;
 		AbstractConstraintLiteral constraintLiteral1 = null;
@@ -476,27 +478,29 @@ public class Decompiler {
 				
 				break;
 				
-//			case tableswitch: // TODO implement!!
-//				constraintValue = this.stack.pop();
-//				if(!(constraintValue instanceof AbstractConstraintLiteral) ||
-//						((AbstractConstraintLiteral)constraintValue).valueType != ConstraintValueType.Integer) {
-//					String message = "could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.";
-//					Logger.getLogger(Decompiler.class).fatal(message);
-//					throw new ClassCastException(message);
-//				}
-//				
-//				Integer caseOffset = bytecodeLine.switchOffsets.get(((Integer)((AbstractConstraintLiteral)constraintValue).value).toString());
-//				if(caseOffset == null) {
-//					caseOffset = bytecodeLine.switchOffsets.get("default");
-//					if(caseOffset == null) {
-//						String message = "no case for value \"" + ((Integer)constraintLiteral.value).toString() + "\" and no default case";
-//						Logger.getLogger(Decompiler.class).fatal(message);
-//						throw new UnknownSwitchCaseException(message);
-//					} else
-//						nextOffset = caseOffset;
-//				} else
-//					nextOffset = caseOffset;
-//				break;
+			case tableswitch:
+				bytecodeLineTableswitch = (BytecodeLineTableswitch)bytecodeLine;
+				
+				constraintValue = this.stack.pop();
+				
+				if(constraintValue instanceof AbstractConstraintLiteral &&
+						((AbstractConstraintLiteral)constraintValue).valueType == ConstraintValueType.Integer) {
+					Integer caseOffset = bytecodeLineTableswitch.offsetsMap.get(((Integer)((AbstractConstraintLiteral)constraintValue).value).toString());
+					if(caseOffset == null) {
+						caseOffset = bytecodeLineTableswitch.offsetsMap.get("default");
+						if(caseOffset == null) {
+							String message = "neither a case for value \"" + ((Integer)constraintLiteral.value).toString() + "\" nor a default case";
+							Logger.getLogger(Decompiler.class).fatal(message);
+							throw new UnknownSwitchCaseException(message);
+						} else
+							nextOffset = caseOffset;
+					} else
+						nextOffset = caseOffset;
+				} else
+					return this.getTableswitchConstraint(
+							constraintValue, bytecodeLineTableswitch.offsetsMap, bytecodeLineTableswitch.offsetsMap.keySet().iterator(), bytecodeLineTableswitch.offsetsMap.get("default"), bytecodeLines, prefixedFields);
+				
+				break;
 				
 			case dup:
 				this.stack.push(this.stack.peek());
@@ -519,54 +523,22 @@ public class Decompiler {
 				
 				constraintValue = this.stack.pop();
 				
-				if(constraintValue instanceof AbstractConstraintLiteral) {
+				if(constraintValue instanceof AbstractConstraintLiteral &&
+						((AbstractConstraintLiteral)constraintLiteral).valueType.isComparableNumberType) {
 					constraintLiteral = (AbstractConstraintLiteral)constraintValue;
 					
-					if(constraintLiteral.valueType.isComparableNumberType) {
-						if(constraintOperator.compare((Integer)constraintLiteral.value, 0))
-							nextOffset = bytecodeLineOffset.offset;
-						else
-							nextOffset = bytecodeLine.followingLineNumber;
-					} else
-						return 	new AbstractSubConstraint(
-								new AbstractSubConstraint(
-										new AbstractSingleConstraint(
-												constraintLiteral,
-												constraintOperator,
-												new AbstractConstraintLiteral(0, ConstraintValueType.Integer, false),
-												prefixedFields),
-										BooleanConnector.AND,
-										this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.offset)),
-								BooleanConnector.OR,
-								new AbstractSubConstraint(
-										new AbstractSingleConstraint(
-												constraintLiteral,
-												ConstraintOperator.fromOppositeAsciiName(constraintOperator.asciiName),
-												new AbstractConstraintLiteral(0, ConstraintValueType.Integer, false),
-												prefixedFields),
-										BooleanConnector.AND,
-										this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.followingLineNumber)));
-				} else if(constraintValue instanceof AbstractConstraintFormula) {
-					constraintFormula = (AbstractConstraintFormula)constraintValue;
-					
-					return new AbstractSubConstraint(
-							new AbstractSubConstraint(
-									new AbstractSingleConstraint(
-											constraintFormula,
-											constraintOperator,
-											new AbstractConstraintLiteral(0, ConstraintValueType.Integer, false),
-											prefixedFields),
-									BooleanConnector.AND,
-									this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.offset)),
-							BooleanConnector.OR,
-							new AbstractSubConstraint(
-									new AbstractSingleConstraint(
-											constraintFormula,
-											ConstraintOperator.fromOppositeAsciiName(constraintOperator.asciiName),
-											new AbstractConstraintLiteral(0, ConstraintValueType.Integer, false),
-											prefixedFields),
-									BooleanConnector.AND,
-									this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.followingLineNumber)));
+					if(constraintOperator.compare((Integer)constraintLiteral.value, 0))
+						nextOffset = bytecodeLineOffset.offset;
+					else
+						nextOffset = bytecodeLineOffset.followingLineNumber;
+				} else if(constraintValue instanceof AbstractConstraintLiteral ||
+						constraintValue instanceof AbstractConstraintFormula) {
+					return new AbstractIfThenElseConstraint(
+							new AbstractSingleConstraint(
+									constraintValue, constraintOperator, 
+									new AbstractConstraintLiteral(0, ConstraintValueType.Integer, false), prefixedFields),
+							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.offset),
+							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.followingLineNumber));
 				} else {
 					String message = "could not cast given value \"" + constraintLiteral + "\" to AbstractConstraintLiteral.";
 					Logger.getLogger(Decompiler.class).fatal(message);
@@ -586,24 +558,14 @@ public class Decompiler {
 				
 				bytecodeLineOffset = (BytecodeLineOffset)bytecodeLine;
 				
-				return new AbstractSubConstraint(
-						new AbstractSubConstraint(
-								getSingleConstraint(
-										constraintValue1,
-										ConstraintOperator.fromOpcode(bytecodeLine.opcode.name),
-										constraintValue2,
-										prefixedFields),
-								BooleanConnector.AND,
-								this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.offset)),
-						BooleanConnector.OR,
-						new AbstractSubConstraint(
-								getSingleConstraint(
-										constraintValue1,
-										ConstraintOperator.fromOppositeOpcode(bytecodeLine.opcode.name),
-										constraintValue2,
-										prefixedFields),
-								BooleanConnector.AND,
-								this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.followingLineNumber)));
+				return new AbstractIfThenElseConstraint(
+						this.getSingleConstraint(
+								constraintValue1,
+								ConstraintOperator.fromOpcode(bytecodeLine.opcode.name),
+								constraintValue2,
+								prefixedFields),
+						this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.offset),
+						this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.followingLineNumber));
 			
 			case fcmpg:
 			case fcmpl:
@@ -907,6 +869,42 @@ public class Decompiler {
 					constraintOperator,
 					constraintValue2,
 					prefixedFields);
+	}
+	
+	/**
+	 * TODO comment
+	 * 
+	 * @param constraintValue
+	 * @param offsetsMap
+	 * @param offsetsMapKeyIterator
+	 * @param defaultOffset
+	 * @param bytecodeLines
+	 * @param prefixedFields
+	 * 
+	 * @return
+	 */
+	private AbstractConstraint getTableswitchConstraint(AbstractConstraintValue constraintValue, Map<String, Integer> offsetsMap, Iterator<String> offsetsMapKeyIterator, Integer defaultOffset, Map<Integer, BytecodeLine> bytecodeLines, List<PrefixedField> prefixedFields) {
+		if(offsetsMapKeyIterator.hasNext()) {
+			String offsetsKey = offsetsMapKeyIterator.next();
+			if(offsetsKey.matches("\\d+"))
+				return new AbstractIfThenElseConstraint(
+						new AbstractSingleConstraint(constraintValue, ConstraintOperator.EQUAL, 
+								new AbstractConstraintLiteral(Integer.parseInt(offsetsKey), ConstraintValueType.Integer, false), prefixedFields),
+						this.parseMethodBytecode(bytecodeLines, offsetsMap.get(offsetsKey)),
+						this.getTableswitchConstraint(constraintValue, offsetsMap, offsetsMapKeyIterator, defaultOffset, bytecodeLines, prefixedFields));
+			else if(offsetsKey.equals("default"))
+				return this.getTableswitchConstraint(constraintValue, offsetsMap, offsetsMapKeyIterator, defaultOffset, bytecodeLines, prefixedFields);
+			else {
+				String message = "case of a tableswitch needs to be integer or default case but is \"" + offsetsKey + "\"";
+				Logger.getLogger(Decompiler.class).fatal(message);
+				throw new MissformattedBytecodeLineException(message);
+			}
+		} else {
+			if(defaultOffset != null)
+				return this.parseMethodBytecode(bytecodeLines, defaultOffset);
+			else
+				return new AbstractBooleanConstraint(false);
+		}
 	}
 	
 	/**

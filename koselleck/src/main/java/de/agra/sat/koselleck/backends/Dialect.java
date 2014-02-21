@@ -19,6 +19,7 @@ import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintValue;
+import de.agra.sat.koselleck.decompiling.datatypes.AbstractIfThenElseConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractPrematureConstraintValue;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.datatypes.AbstractSubConstraint;
@@ -111,6 +112,18 @@ public abstract class Dialect {
 	public abstract String prepareAbstractSubConstraint(AbstractSubConstraint subConstraint);
 	
 	/**
+	 * prepareAbstractIfThenElseConstraint returns the string representation of
+	 *  a given abstract if-then-else constraint.
+	 * 
+	 * @param ifThenElseConstraint the abstract if-then-else constraint to
+	 *  proceed
+	 * 
+	 * @return the string representation of the abstract if-then-else
+	 *  constraint
+	 */
+	public abstract String prepareAbstractIfThenElseConstraint(AbstractIfThenElseConstraint ifThenElseConstraint);
+	
+	/**
 	 * prepareAbstractConstraintLiteral returns the string representation of a
 	 *  given abstract constraint literal.
 	 * 
@@ -158,6 +171,8 @@ public abstract class Dialect {
 			return prepareAbstractSingleConstraint((AbstractSingleConstraint)constraint);
 		else if(constraint instanceof AbstractSubConstraint)
 			return prepareAbstractSubConstraint((AbstractSubConstraint)constraint);
+		else if(constraint instanceof AbstractIfThenElseConstraint)
+			return prepareAbstractIfThenElseConstraint((AbstractIfThenElseConstraint)constraint);
 		else {
 			UnsupportedConstraintException exception = new UnsupportedConstraintException(constraint);
 			Logger.getLogger(Dialect.class).fatal(exception.getMessage());
