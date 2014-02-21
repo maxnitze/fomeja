@@ -1,5 +1,8 @@
 package de.agra.sat.koselleck.decompiling.datatypes;
 
+/** imports */
+import java.util.ArrayList;
+
 /**
  * AbstractBooleanConstraint represents a boolean value in a constraint.
  * 
@@ -20,6 +23,8 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 *  value}
 	 */
 	public AbstractBooleanConstraint(boolean value, AbstractConstraintValue returnValue) {
+		super(new ArrayList<PrefixedField>());
+		
 		this.value = value;
 		this.returnValue = returnValue;
 	}
@@ -30,6 +35,8 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 * @param value the new boolean value
 	 */
 	public AbstractBooleanConstraint(boolean value) {
+		super(new ArrayList<PrefixedField>());
+		
 		this.value = value;
 		this.returnValue = new AbstractConstraintLiteral(value);
 	}

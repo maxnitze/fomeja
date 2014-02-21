@@ -30,7 +30,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	 * @param value2 the new second value
 	 */
 	public AbstractSingleConstraint(AbstractConstraintValue value1, ConstraintOperator operator, AbstractConstraintValue value2, List<PrefixedField> prefixedFields) {
-		this.prefixedFields.addAll(prefixedFields);
+		super(prefixedFields);
 		
 		this.value1 = value1;
 		this.operator = operator;

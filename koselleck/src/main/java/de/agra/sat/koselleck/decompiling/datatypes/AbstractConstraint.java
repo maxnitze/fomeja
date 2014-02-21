@@ -2,6 +2,7 @@ package de.agra.sat.koselleck.decompiling.datatypes;
 
 /** imports */
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,9 +17,11 @@ public abstract class AbstractConstraint implements Cloneable {
 	
 	/**
 	 * Constructor for a new abstract constraint.
+	 * 
+	 * @param prefiexedFields the prefixed fields for this abstract constraint
 	 */
-	public AbstractConstraint() {
-		this.prefixedFields = new HashSet<PrefixedField>();
+	public AbstractConstraint(List<PrefixedField> prefixedFields) {
+		this.prefixedFields = new HashSet<PrefixedField>(prefixedFields);
 	}
 	
 	/**

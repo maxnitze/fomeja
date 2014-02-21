@@ -61,7 +61,7 @@ public abstract class Prover {
 		
 		String formattedTheorem = this.dialect.format(theorem);
 		
-		System.out.println(formattedTheorem); // TODO delete output
+//		System.out.println(formattedTheorem); // TODO delete output
 		
 		String proverResult = solve(formattedTheorem);
 		

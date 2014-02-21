@@ -1,9 +1,5 @@
 package de.agra.sat.koselleck.decompiling;
 
-/** TODO List:
- * - handle dconst and fconst
- * ----- ----- ----- ----- ----- */
-
 /** imports */
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;

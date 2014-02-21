@@ -1,5 +1,9 @@
 package de.agra.sat.koselleck.decompiling.datatypes;
 
+/** imports */
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Max Nitze
@@ -20,6 +24,11 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	 * @param elseCaseConstraint
 	 */
 	public AbstractIfThenElseConstraint(AbstractConstraint ifCondition, AbstractConstraint thenCaseConstraint, AbstractConstraint elseCaseConstraint) {
+		super(new ArrayList<PrefixedField>());
+		this.prefixedFields.addAll(ifCondition.prefixedFields);
+		this.prefixedFields.addAll(thenCaseConstraint.prefixedFields);
+		this.prefixedFields.addAll(elseCaseConstraint.prefixedFields);
+		
 		this.ifCondition = ifCondition;
 		
 		this.thenCaseConstraint = thenCaseConstraint;
@@ -69,53 +78,53 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 			this.thenCaseConstraint = this.thenCaseConstraint.evaluate();
 			this.elseCaseConstraint = this.elseCaseConstraint.evaluate();
 			
-//			if(this.thenCaseConstraint instanceof AbstractBooleanConstraint) {
-//				if(this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
-//					AbstractBooleanConstraint booleanThenCaseConstraint = (AbstractBooleanConstraint)this.thenCaseConstraint;
-//					AbstractBooleanConstraint booleanElseCaseConstraint = (AbstractBooleanConstraint)this.elseCaseConstraint;
-//					
-//					if(booleanThenCaseConstraint.value && booleanElseCaseConstraint.value)
-//						return new AbstractBooleanConstraint(true);
-//					else if(booleanThenCaseConstraint.value)
-//						return this.ifCondition;
-//					else if(booleanElseCaseConstraint.value)
-//						return this.ifCondition.invert();
-//					else
-//						return new AbstractBooleanConstraint(false);
-//				} else {
-//					AbstractBooleanConstraint booleanThenCaseConstraint = (AbstractBooleanConstraint)this.thenCaseConstraint;
-//					
-//					if(booleanThenCaseConstraint.value)
-//						return new AbstractSubConstraint(
-//								this.ifCondition,
-//								BooleanConnector.OR,
-//								new AbstractSubConstraint(
-//										this.ifCondition.clone().invert(),
-//										BooleanConnector.AND,
-//										this.elseCaseConstraint));
-//					else
-//						return new AbstractSubConstraint(
-//								this.ifCondition.clone().invert(),
-//								BooleanConnector.AND,
-//								this.elseCaseConstraint);
-//				}
-//			} else if(this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
-//				AbstractBooleanConstraint booleanElseCaseConstraint = (AbstractBooleanConstraint)this.elseCaseConstraint;
-//				
-//				if(booleanElseCaseConstraint.value)
-//					return new AbstractSubConstraint(
-//							new AbstractSubConstraint(
-//									this.ifCondition,
-//									BooleanConnector.AND,
-//									this.thenCaseConstraint),
-//							BooleanConnector.OR,
-//							this.ifCondition.clone().invert());
-//				else
-//					return new AbstractSubConstraint(
-//							this.ifCondition,
-//							BooleanConnector.AND,
-//							this.thenCaseConstraint);
-//			} else
+			if(this.thenCaseConstraint instanceof AbstractBooleanConstraint) {
+				if(this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
+					AbstractBooleanConstraint booleanThenCaseConstraint = (AbstractBooleanConstraint)this.thenCaseConstraint;
+					AbstractBooleanConstraint booleanElseCaseConstraint = (AbstractBooleanConstraint)this.elseCaseConstraint;
+					
+					if(booleanThenCaseConstraint.value && booleanElseCaseConstraint.value)
+						return new AbstractBooleanConstraint(true);
+					else if(booleanThenCaseConstraint.value)
+						return this.ifCondition;
+					else if(booleanElseCaseConstraint.value)
+						return this.ifCondition.invert();
+					else
+						return new AbstractBooleanConstraint(false);
+				} else {
+					AbstractBooleanConstraint booleanThenCaseConstraint = (AbstractBooleanConstraint)this.thenCaseConstraint;
+					
+					if(booleanThenCaseConstraint.value)
+						return new AbstractSubConstraint(
+								this.ifCondition,
+								BooleanConnector.OR,
+								new AbstractSubConstraint(
+										this.ifCondition.clone().invert(),
+										BooleanConnector.AND,
+										this.elseCaseConstraint));
+					else
+						return new AbstractSubConstraint(
+								this.ifCondition.clone().invert(),
+								BooleanConnector.AND,
+								this.elseCaseConstraint);
+				}
+			} else if(this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
+				AbstractBooleanConstraint booleanElseCaseConstraint = (AbstractBooleanConstraint)this.elseCaseConstraint;
+				
+				if(booleanElseCaseConstraint.value)
+					return new AbstractSubConstraint(
+							new AbstractSubConstraint(
+									this.ifCondition,
+									BooleanConnector.AND,
+									this.thenCaseConstraint),
+							BooleanConnector.OR,
+							this.ifCondition.clone().invert());
+				else
+					return new AbstractSubConstraint(
+							this.ifCondition,
+							BooleanConnector.AND,
+							this.thenCaseConstraint);
+			} else
 				return this;
 		}
 	}
@@ -180,6 +189,8 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	 */
 	@Override
 	public AbstractConstraint clone() {
+		List<PrefixedField> prefixedFields = new ArrayList<PrefixedField>();
+		prefixedFields.addAll(this.prefixedFields);
 		return new AbstractIfThenElseConstraint(
 				this.ifCondition.clone(), this.thenCaseConstraint.clone(), this.elseCaseConstraint.clone());
 	}
