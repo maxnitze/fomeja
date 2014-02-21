@@ -66,15 +66,15 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	
 	@Constraint(fields = { @Constraint.Field("") })
 	public boolean adjacentHaveDifferentColors(CGEdge edge) {
-		int x = 1;
-		switch(x) {
-		case 1:
-			return edge.getVertex1().getColor()+1 != edge.getVertex2().getColor()-1;
-		case 2:
-			return edge.getVertex1().getColor()+2 != edge.getVertex2().getColor()-2;
-		default:
+//		int x = 2;
+//		switch(x) {
+//		case 1:
+//			return edge.getVertex1().getColor()+1 != edge.getVertex2().getColor()-1;
+//		case 2:
+//			return edge.getVertex1().getColor()+2 != edge.getVertex2().getColor()-2;
+//		default:
 			return edge.getVertex1().getColor() != edge.getVertex2().getColor();
-		}
+//		}
 	}
 	
 	@Objective

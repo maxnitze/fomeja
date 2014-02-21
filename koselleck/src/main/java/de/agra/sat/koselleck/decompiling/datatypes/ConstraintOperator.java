@@ -42,6 +42,13 @@ public enum ConstraintOperator {
 		this.oppositeOpcode = oppositeOpcode;
 	}
 	
+	public ConstraintOperator getOpposite() {
+		for(ConstraintOperator co : values())
+			if(this.oppositeAsciiName.equals(co.asciiName))
+				return co;
+		throw new IllegalArgumentException("no constant with ascii name \"" + asciiName + "\" found");
+	}
+	
 	/**
 	 * fromAsciiName returns the constraint operator with the given ascii name.
 	 * 

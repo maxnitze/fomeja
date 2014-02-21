@@ -1,5 +1,10 @@
 package de.agra.sat.koselleck.decompiling.datatypes;
 
+/** imports */
+import org.apache.log4j.Logger;
+
+import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
+
 /**
  * An enumeration of the two boolean connectors && and ||.
  * 
@@ -20,5 +25,22 @@ public enum BooleanConnector {
 	 */
 	BooleanConnector(String code) {
 		this.code = code;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public BooleanConnector getOppositeConnector() {
+		switch(this) {
+		case AND:
+			return OR;
+		case OR:
+			return AND;
+		default:
+			UnknownBooleanConnectorException unknownBooleanConnectorException = new UnknownBooleanConnectorException(this);
+			Logger.getLogger(BooleanConnector.class).fatal(unknownBooleanConnectorException.getMessage());
+			throw unknownBooleanConnectorException;
+		}
 	}
 }

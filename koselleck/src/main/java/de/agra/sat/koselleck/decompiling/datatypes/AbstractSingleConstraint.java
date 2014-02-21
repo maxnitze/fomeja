@@ -18,7 +18,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	/** the first value */
 	public AbstractConstraintValue value1;
 	/** the constraint operator of the values */
-	public final ConstraintOperator operator;
+	public ConstraintOperator operator;
 	/** the second value */
 	public AbstractConstraintValue value2;
 	
@@ -170,6 +170,13 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	@Override
 	public boolean matches(PrefixedField prefixedField) {
 		return this.value1.matches(prefixedField) || this.value2.matches(prefixedField);
+	}
+	
+	@Override
+	public AbstractConstraint invert() {
+		this.operator = this.operator.getOpposite();
+		
+		return this;
 	}
 	
 	/**

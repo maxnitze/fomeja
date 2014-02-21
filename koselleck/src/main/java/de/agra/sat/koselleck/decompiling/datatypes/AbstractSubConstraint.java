@@ -16,7 +16,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	/** the first constraint */
 	public AbstractConstraint constraint1;
 	/** the boolean connector of both constraints */
-	public final BooleanConnector connector;
+	public BooleanConnector connector;
 	/** the second constraint */
 	public AbstractConstraint constraint2;
 	
@@ -167,6 +167,20 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	@Override
 	public boolean matches(PrefixedField prefixedField) {
 		return this.constraint1.matches(prefixedField) || this.constraint2.matches(prefixedField);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	public AbstractConstraint invert() {
+		this.connector = this.connector.getOppositeConnector();
+		
+		this.constraint1 = this.constraint1.invert();
+		this.constraint2 = this.constraint2.invert();
+		
+		return this;
 	}
 	
 	/**

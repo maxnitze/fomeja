@@ -181,41 +181,51 @@ public class SMTII extends Dialect {
 	public String prepareAbstractIfThenElseConstraint(AbstractIfThenElseConstraint ifThenElseConstraint) {
 		StringBuilder ifThenElseConstraintString = new StringBuilder();
 		
-		/** if --> then */
-		if(ifThenElseConstraint.thenCaseConstraint instanceof AbstractBooleanConstraint) {
-			if(((AbstractBooleanConstraint)ifThenElseConstraint.thenCaseConstraint).value) {
-				ifThenElseConstraintString.append("(");
-				ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.ifConstraint));
-			}
-		} else {
-			ifThenElseConstraintString.append("(");
-			ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.ifConstraint));
-			ifThenElseConstraintString.append(" and ");
-			ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.thenCaseConstraint));
-			ifThenElseConstraintString.append(")");
-		}
+		ifThenElseConstraintString.append("((");
+		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.ifCondition));
+		ifThenElseConstraintString.append(" and ");
+		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.thenCaseConstraint));
+		ifThenElseConstraintString.append(") or (not (");
+		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.ifCondition));
+		ifThenElseConstraintString.append(") and ");
+		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.elseCaseConstraint));
+		ifThenElseConstraintString.append(")))");
 		
-		/** if not --> else */
-		if(ifThenElseConstraint.elseCaseConstraint instanceof AbstractBooleanConstraint) {
-			if(((AbstractBooleanConstraint)ifThenElseConstraint.elseCaseConstraint).value) {
-				if(ifThenElseConstraintString.length() > 0)
-					ifThenElseConstraintString.append(") or (");
-				else
-					ifThenElseConstraintString.append("(");
-
-				ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.ifConstraint));
-			}
-		} else {
-			if(ifThenElseConstraintString.length() > 0)
-				ifThenElseConstraintString.append(") or (not (");
-			else
-				ifThenElseConstraintString.append("(not (");
-
-			ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.ifConstraint));
-			ifThenElseConstraintString.append(") and ");
-			ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.elseCaseConstraint));
-			ifThenElseConstraintString.append("))");
-		}
+//		/** if --> then */
+//		if(ifThenElseConstraint.thenCaseConstraint instanceof AbstractBooleanConstraint) {
+//			if(((AbstractBooleanConstraint)ifThenElseConstraint.thenCaseConstraint).value) {
+//				ifThenElseConstraintString.append("(");
+//				ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.ifConstraint));
+//			}
+//		} else {
+//			ifThenElseConstraintString.append("(");
+//			ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.ifConstraint));
+//			ifThenElseConstraintString.append(" and ");
+//			ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.thenCaseConstraint));
+//			ifThenElseConstraintString.append(")");
+//		}
+//		
+//		/** if not --> else */
+//		if(ifThenElseConstraint.elseCaseConstraint instanceof AbstractBooleanConstraint) {
+//			if(((AbstractBooleanConstraint)ifThenElseConstraint.elseCaseConstraint).value) {
+//				if(ifThenElseConstraintString.length() > 0)
+//					ifThenElseConstraintString.append(") or (");
+//				else
+//					ifThenElseConstraintString.append("(");
+//
+//				ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.ifConstraint));
+//			}
+//		} else {
+//			if(ifThenElseConstraintString.length() > 0)
+//				ifThenElseConstraintString.append(") or (not (");
+//			else
+//				ifThenElseConstraintString.append("(not (");
+//
+//			ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.ifConstraint));
+//			ifThenElseConstraintString.append(") and ");
+//			ifThenElseConstraintString.append(getBackendConstraint(ifThenElseConstraint.elseCaseConstraint));
+//			ifThenElseConstraintString.append("))");
+//		}
 		
 		return ifThenElseConstraintString.toString();
 	}
