@@ -291,7 +291,7 @@ public class Decompiler {
 						this.stack.push(
 								new AbstractConstraintLiteral(new Double((Float)constraintLiteral.value), ConstraintValueType.Double, false));
 					} else if(constraintLiteral.valueType.isComparableNumberType) {
-						String message = "could not cast constraint value " + constraintLiteral.value + " to double";
+						String message = "could not cast constraint value \"" + constraintLiteral.value + "\" to double";
 						Logger.getLogger(Decompiler.class).fatal(message);
 						throw new MissformattedBytecodeLineException(message);
 					} else
@@ -305,7 +305,8 @@ public class Decompiler {
 			case ldc2_w:
 				bytecodeLineValue = (BytecodeLineValue)bytecodeLine;
 				this.stack.push(
-						new AbstractConstraintLiteral(bytecodeLineValue.value, ConstraintValueType.fromClass(bytecodeLineValue.value.getClass()), false));
+						new AbstractConstraintLiteral(
+								bytecodeLineValue.value, ConstraintValueType.fromClass(bytecodeLineValue.value.getClass()), false));
 				break;
 				
 			case add:
