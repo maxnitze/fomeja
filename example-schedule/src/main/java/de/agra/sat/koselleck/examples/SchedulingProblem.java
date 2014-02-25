@@ -2,7 +2,7 @@ package de.agra.sat.koselleck.examples;
 
 import de.agra.sat.koselleck.DIAB;
 
-public class Schedule {
+public class SchedulingProblem {
 	public static void main(String[] args) {
 		boolean testValidate	= false;
 		boolean testSatisfy		= false;
