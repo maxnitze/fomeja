@@ -12,16 +12,16 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLine;
-import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineConstantTableAccessibleObject;
-import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineConstantTableClass;
-import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineOffset;
-import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineSimple;
-import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineTableswitch;
-import de.agra.sat.koselleck.disassembling.datatypes.BytecodeLineValue;
-import de.agra.sat.koselleck.disassembling.datatypes.DisassembledMethod;
-import de.agra.sat.koselleck.disassembling.datatypes.Opcode;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLine;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLineConstantTableAccessibleObject;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLineConstantTableClass;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLineOffset;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLineSimple;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLineTableswitch;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLineValue;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.DisassembledMethod;
 import de.agra.sat.koselleck.exceptions.MissformattedBytecodeLineException;
+import de.agra.sat.koselleck.types.Opcode;
 
 /**
  * Disassembler implements a disassembler for java byte code.

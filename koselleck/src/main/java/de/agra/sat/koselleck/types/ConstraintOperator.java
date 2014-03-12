@@ -1,4 +1,4 @@
-package de.agra.sat.koselleck.decompiling.datatypes;
+package de.agra.sat.koselleck.types;
 
 /**
  * An enumeration of the six constraint operators ==, >=, >, <=, < and !=.

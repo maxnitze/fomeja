@@ -1,7 +1,9 @@
-package de.agra.sat.koselleck.disassembling.datatypes;
+package de.agra.sat.koselleck.disassembling.bytecodetypes;
 
 /** imports */
 import java.lang.reflect.AccessibleObject;
+
+import de.agra.sat.koselleck.types.Opcode;
 
 /**
  * 

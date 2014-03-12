@@ -22,7 +22,7 @@ import de.agra.sat.koselleck.annotations.Constraint;
 import de.agra.sat.koselleck.annotations.Variable;
 import de.agra.sat.koselleck.backends.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.disassembling.Disassembler;
-import de.agra.sat.koselleck.disassembling.datatypes.DisassembledMethod;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.DisassembledMethod;
 import de.agra.sat.koselleck.exceptions.NoCollectionFieldException;
 import de.agra.sat.koselleck.exceptions.NoConstraintMethodException;
 import de.agra.sat.koselleck.exceptions.NoSuchFieldForClassException;
@@ -33,17 +33,22 @@ import de.agra.sat.koselleck.exceptions.NoSuchFieldForClassException;
  * @version 1.0.0
  * @author Max Nitze
  */
-public abstract class KoselleckUtils {
+public final class KoselleckUtils {
 	/** pattern for the inner text of two angle brackets */
 	private static final Pattern genericPattern = Pattern.compile("(?i)(<)(?<genericClass>.*)(>)");
-	
+
 	/** regular expression for a text enclosed by angle brackets */
 	private static final String bracketRegex = "(?i)(<.*>)";
 	/** regular expression for a generic collection type */
 	private static final String collectionTypeRegex = "^.*([^<]+)<(?<genericType>.*)>$";
 	/** regular expression for a generic class type */
 	private static final String genericTypeRegex = "^(class )?(?<genericType>.*)$";
-	
+
+	/**
+	 * Private Constructor to prevent this class from being instantiated.
+	 */
+	private KoselleckUtils() {}
+
 	/**
 	 * getConstraintMethods returns a list of all {@link Method}s of the given
 	 *  class that are annotated as {@link Constraint}s.
@@ -62,7 +67,7 @@ public abstract class KoselleckUtils {
 		
 		return methods;
 	}
-	
+
 	/**
 	 * getVariableFields returns a list of all {@link Field}s of the given
 	 *  class and the classes of its attributes that are annotated as
@@ -75,18 +80,18 @@ public abstract class KoselleckUtils {
 	 */
 	public static List<Field> getVariableFields(Class<?> clazz) {
 		List<Field> fields = new ArrayList<Field>();
-		
+
 		/** already visited classes */
 		Set<Class<?>> visitedClasses = new HashSet<Class<?>>();
 		/** new classes found in the last while-loop */
 		List<Class<?>> lastClasses = new ArrayList<Class<?>>();
-		
+
 		lastClasses.add(clazz);
-		
+
 		/** as long as there are new classes found */
 		while(lastClasses.size() > 0) {
 			List<Class<?>> currentClasses = new ArrayList<Class<?>>();
-			
+
 			for(Class<?> cls : lastClasses) {
 				visitedClasses.add(cls);
 				
@@ -98,15 +103,15 @@ public abstract class KoselleckUtils {
 						currentClasses.addAll(getGenericClasses(field.getGenericType().toString()));
 				}
 			}
-			
+
 			lastClasses.clear();
-			
+
 			/** add classes to lastClasses if not already visited */
 			for(Class<?> cls : currentClasses)
 				if(!visitedClasses.contains(cls))
 					lastClasses.add(cls);
 		}
-		
+
 		/** get variable fields of all visited classes */
 		for(Class<?> cls : visitedClasses)
 			for(Field field : cls.getDeclaredFields())
@@ -115,7 +120,7 @@ public abstract class KoselleckUtils {
 		
 		return fields;
 	}
-	
+
 	/**
 	 * getGenericClasses returns a list of classes given in the generic type
 	 *  declaration.
@@ -127,11 +132,11 @@ public abstract class KoselleckUtils {
 	 */
 	public static List<Class<?>> getGenericClasses(String genericType) {
 		List<Class<?>> classes = new ArrayList<Class<?>>();
-		
+
 		Matcher matcher = genericPattern.matcher(genericType);
 		while(matcher.find()) {
 			String replacedMatch = matcher.group("genericClass").replaceAll(bracketRegex, "");
-			
+
 			String[] genericClasses = replacedMatch.split(",");
 			for(String genericClass : genericClasses) {
 				try {
@@ -147,7 +152,7 @@ public abstract class KoselleckUtils {
 		
 		return classes;
 	}
-	
+
 	/**
 	 * getCollectionFieldsForMethod returns an array of lists of the collection
 	 *  fields that match the single parameters of the given method. If the

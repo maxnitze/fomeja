@@ -1,9 +1,11 @@
-package de.agra.sat.koselleck.decompiling.datatypes;
+package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
+import de.agra.sat.koselleck.exceptions.UnsupportedConstraintLiteralNumberTypeException;
+import de.agra.sat.koselleck.types.ArithmeticOperator;
 
 /**
  * AbstractConstraintFormula represents a formula in a constraint value.
@@ -47,20 +49,6 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	}
 	
 	/**
-	 * replaceAll replaces all occurrences of the given prefixed field
-	 *  {@code prefixedField} of the values with the given {@code replacement}
-	 *  by calling the replaceAll(PrefixedField, String) method of the values.
-	 * 
-	 * @param prefixedField the prefixed field to look for
-	 * @param replacement the string to replace the matches with
-	 */
-	@Override
-	public void replaceAll(PrefixedField prefixedField, String replacement) {
-		this.value1.replaceAll(prefixedField, replacement);
-		this.value2.replaceAll(prefixedField, replacement);
-	}
-	
-	/**
 	 * evaluate first evaluates both values by calling their evaluate method. 
 	 *  Afterwards a new abstract constraint literal with the calculated value
 	 *  of the values is returned if both are of type integer. Otherwise this
@@ -74,90 +62,18 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 		this.value1 = this.value1.evaluate();
 		this.value2 = this.value2.evaluate();
 		
-		if(
-				this.value1 instanceof AbstractConstraintLiteral &&
-				this.value2 instanceof AbstractConstraintLiteral) {
-			AbstractConstraintLiteral constraintLiteral1 = (AbstractConstraintLiteral)this.value1;
-			AbstractConstraintLiteral constraintLiteral2 = (AbstractConstraintLiteral)this.value2;
-			if(
-					constraintLiteral1.valueType.isComparableNumberType &&
-					constraintLiteral2.valueType.isComparableNumberType) {
-				switch(constraintLiteral1.valueType) {
-				case Double:
-					switch(constraintLiteral2.valueType) {
-					case Double:
-					case Float:
-					case Integer:
-						return new AbstractConstraintLiteral(
-								calculateValue(
-										(Double)constraintLiteral1.value,
-										this.operator,
-										(Double)constraintLiteral2.value),
-								ConstraintValueType.Double,
-								false);
-					default:
-						return this;
-					}
-				case Float:
-					switch(constraintLiteral2.valueType) {
-					case Double:
-						return new AbstractConstraintLiteral(
-								calculateValue(
-										(Double)constraintLiteral1.value,
-										this.operator,
-										(Double)constraintLiteral2.value),
-								ConstraintValueType.Double,
-								false);
-					case Float:
-					case Integer:
-						return new AbstractConstraintLiteral(
-								calculateValue(
-										(Float)constraintLiteral1.value,
-										this.operator,
-										(Float)constraintLiteral2.value),
-								ConstraintValueType.Float,
-								false);
-					default:
-						return this;
-					}
-				case Integer:
-					switch(constraintLiteral2.valueType) {
-					case Double:
-						return new AbstractConstraintLiteral(
-								calculateValue(
-										(Double)constraintLiteral1.value,
-										this.operator,
-										(Double)constraintLiteral2.value),
-								ConstraintValueType.Double,
-								false);
-					case Float:
-						return new AbstractConstraintLiteral(
-								calculateValue(
-										(Float)constraintLiteral1.value,
-										this.operator,
-										(Float)constraintLiteral2.value),
-								ConstraintValueType.Float,
-								false);
-					case Integer:
-						return new AbstractConstraintLiteral(
-								calculateValue(
-										(Integer)constraintLiteral1.value,
-										this.operator,
-										(Integer)constraintLiteral2.value),
-								ConstraintValueType.Integer,
-								false);
-					default:
-						return this;
-					}
-				default:
-					return this;
-				}
-			} else
+		if(this.value1 instanceof AbstractConstraintLiteral && this.value2 instanceof AbstractConstraintLiteral) {
+			AbstractConstraintLiteral<?> constraintLiteral1 = (AbstractConstraintLiteral<?>)this.value1;
+			AbstractConstraintLiteral<?> constraintLiteral2 = (AbstractConstraintLiteral<?>)this.value2;
+
+			if(constraintLiteral1.isNumberType && constraintLiteral2.isNumberType)
+				return this.calculateLiterals(constraintLiteral1, this.operator, constraintLiteral2);
+			else
 				return this;
 		} else
 			return this;
 	}
-	
+
 	/**
 	 * matches checks if this object matches the given regular expression
 	 *  {@code regex} by calling the matches(String) method of both values.
@@ -170,21 +86,6 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	@Override
 	public boolean matches(String regex) {
 		return this.value1.matches(regex) || this.value2.matches(regex);
-	}
-	
-	/**
-	 * matches checks if this object matches the given prefixed field
-	 *  {@code prefixedField} by calling the matches(String) method of both
-	 *  values.
-	 * 
-	 * @param prefixedField the prefixed field to look for
-	 * 
-	 * @return {@code true} if one of the values matches the given prefixed
-	 *  field, {@code false} otherwise
-	 */
-	@Override
-	public boolean matches(PrefixedField prefixedField) {
-		return this.value1.matches(prefixedField) || this.value2.matches(prefixedField);
 	}
 	
 	/**
@@ -241,11 +142,104 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	
 	/** private methods
 	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @param constraintLiteral1
+	 * @param operator
+	 * @param constraintLiteral2
+	 * @return
+	 */
+	private AbstractConstraintLiteral<?> calculateLiterals(AbstractConstraintLiteral<?> constraintLiteral1, ArithmeticOperator operator, AbstractConstraintLiteral<?> constraintLiteral2) {
+		/**  */
+		if(constraintLiteral1 instanceof AbstractConstraintLiteralDouble) {
+			if(constraintLiteral2 instanceof AbstractConstraintLiteralDouble)
+				return new AbstractConstraintLiteralDouble(
+						this.calculate(
+								((AbstractConstraintLiteralDouble)constraintLiteral1).value,
+								this.operator,
+								((AbstractConstraintLiteralDouble)constraintLiteral2).value));
+			if(constraintLiteral2 instanceof AbstractConstraintLiteralFloat)
+				return new AbstractConstraintLiteralDouble(
+						this.calculate(
+								((AbstractConstraintLiteralDouble)constraintLiteral1).value,
+								this.operator,
+								((AbstractConstraintLiteralFloat)constraintLiteral2).value.doubleValue()));
+			if(constraintLiteral2 instanceof AbstractConstraintLiteralInteger)
+				return new AbstractConstraintLiteralDouble(
+						this.calculate(
+								((AbstractConstraintLiteralDouble)constraintLiteral1).value,
+								this.operator,
+								((AbstractConstraintLiteralInteger)constraintLiteral2).value.doubleValue()));
+			else {
+				UnsupportedConstraintLiteralNumberTypeException e = new UnsupportedConstraintLiteralNumberTypeException(constraintLiteral2.getClass());
+				Logger.getLogger(AbstractConstraintFormula.class).fatal(e.getMessage());
+				throw e;
+			}
+		}
+		/**  */
+		else if(constraintLiteral1 instanceof AbstractConstraintLiteralFloat) {
+			if(constraintLiteral2 instanceof AbstractConstraintLiteralDouble)
+				return new AbstractConstraintLiteralDouble(
+						this.calculate(
+								((AbstractConstraintLiteralFloat)constraintLiteral1).value.doubleValue(),
+								this.operator,
+								((AbstractConstraintLiteralDouble)constraintLiteral2).value));
+			if(constraintLiteral2 instanceof AbstractConstraintLiteralFloat)
+				return new AbstractConstraintLiteralFloat(
+						this.calculate(
+								((AbstractConstraintLiteralFloat)constraintLiteral1).value,
+								this.operator,
+								((AbstractConstraintLiteralFloat)constraintLiteral2).value));
+			if(constraintLiteral2 instanceof AbstractConstraintLiteralInteger)
+				return new AbstractConstraintLiteralFloat(
+						this.calculate(
+								((AbstractConstraintLiteralFloat)constraintLiteral1).value,
+								this.operator,
+								((AbstractConstraintLiteralInteger)constraintLiteral2).value.floatValue()));
+			else {
+				UnsupportedConstraintLiteralNumberTypeException e = new UnsupportedConstraintLiteralNumberTypeException(constraintLiteral2.getClass());
+				Logger.getLogger(AbstractConstraintFormula.class).fatal(e.getMessage());
+				throw e;
+			}
+		}
+		/**  */
+		else if(constraintLiteral1 instanceof AbstractConstraintLiteralInteger) {
+			if(constraintLiteral2 instanceof AbstractConstraintLiteralDouble)
+				return new AbstractConstraintLiteralDouble(
+						this.calculate(
+								((AbstractConstraintLiteralInteger)constraintLiteral1).value.doubleValue(),
+								this.operator,
+								((AbstractConstraintLiteralDouble)constraintLiteral2).value));
+			if(constraintLiteral2 instanceof AbstractConstraintLiteralFloat)
+				return new AbstractConstraintLiteralFloat(
+						this.calculate(
+								((AbstractConstraintLiteralInteger)constraintLiteral1).value.floatValue(),
+								this.operator,
+								((AbstractConstraintLiteralFloat)constraintLiteral2).value));
+			if(constraintLiteral2 instanceof AbstractConstraintLiteralInteger)
+				return new AbstractConstraintLiteralInteger(
+						this.calculate(
+								((AbstractConstraintLiteralInteger)constraintLiteral1).value,
+								this.operator,
+								((AbstractConstraintLiteralInteger)constraintLiteral2).value));
+			else {
+				UnsupportedConstraintLiteralNumberTypeException e = new UnsupportedConstraintLiteralNumberTypeException(constraintLiteral2.getClass());
+				Logger.getLogger(AbstractConstraintFormula.class).fatal(e.getMessage());
+				throw e;
+			}
+		}
+		/**  */
+		else {
+			UnsupportedConstraintLiteralNumberTypeException e = new UnsupportedConstraintLiteralNumberTypeException(constraintLiteral1.getClass());
+			Logger.getLogger(AbstractConstraintFormula.class).fatal(e.getMessage());
+			throw e;
+		}
+	}
 	
 	/**
-	 * calculateValue calculates the value of the two given doubles and
-	 *  returns the calculation of those considering the given arithmetic
-	 *  operator.
+	 * calculate calculates the value of the two given doubles and returns the
+	 *  calculation of those considering the given arithmetic operator.
 	 * 
 	 * @param value1 the first double
 	 * @param operator the arithmetic operator
@@ -254,7 +248,7 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	 * @return a new double for the calculation considering the arithmetic
 	 *  operator
 	 */
-	private Double calculateValue(Double value1, ArithmeticOperator operator, Double value2) {
+	private Double calculate(Double value1, ArithmeticOperator operator, Double value2) {
 		switch(operator) {
 		case ADD:
 			return value1 + value2;
@@ -271,9 +265,8 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	}
 	
 	/**
-	 * calculateValue calculates the value of the two given floats and
-	 *  returns the calculation of those considering the given arithmetic
-	 *  operator.
+	 * calculate calculates the value of the two given floats and returns the
+	 *  calculation of those considering the given arithmetic operator.
 	 * 
 	 * @param value1 the first float
 	 * @param operator the arithmetic operator
@@ -282,7 +275,7 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	 * @return a new float for the calculation considering the arithmetic
 	 *  operator
 	 */
-	private Float calculateValue(Float value1, ArithmeticOperator operator, Float value2) {
+	private Float calculate(Float value1, ArithmeticOperator operator, Float value2) {
 		switch(operator) {
 		case ADD:
 			return value1 + value2;
@@ -299,9 +292,8 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	}
 	
 	/**
-	 * calculateValue calculates the value of the two given integers and
-	 *  returns the calculation of those considering the given arithmetic
-	 *  operator.
+	 * calculate calculates the value of the two given integers and returns the
+	 *  calculation of those considering the given arithmetic operator.
 	 * 
 	 * @param value1 the first integer
 	 * @param operator the arithmetic operator
@@ -310,7 +302,7 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	 * @return a new integer for the calculation considering the arithmetic
 	 *  operator
 	 */
-	private Integer calculateValue(Integer value1, ArithmeticOperator operator, Integer value2) {
+	private Integer calculate(Integer value1, ArithmeticOperator operator, Integer value2) {
 		switch(operator) {
 		case ADD:
 			return value1 + value2;

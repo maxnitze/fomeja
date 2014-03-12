@@ -1,13 +1,16 @@
-package de.agra.sat.koselleck.decompiling.datatypes;
+package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import de.agra.sat.koselleck.utils.ListUtils;
 
 /**
  * 
@@ -48,19 +51,6 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	
 	/**
 	 * 
-	 * @param prefixedField
-	 * @param replacement
-	 */
-	@Override
-	public void replaceAll(PrefixedField prefixedField, String replacement) {
-		this.constraintValue.replaceAll(prefixedField, replacement);
-		
-		for(AbstractConstraintValue methodArgument : this.objectArguments)
-			methodArgument.replaceAll(prefixedField, replacement);
-	}
-	
-	/**
-	 * 
 	 * @return
 	 */
 	@Override
@@ -73,41 +63,65 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 		
 		/** evaluated constraint value is a literal */
 		if(this.constraintValue instanceof AbstractConstraintLiteral) {
-			AbstractConstraintLiteral constraintLiteral = (AbstractConstraintLiteral)this.constraintValue;
+			AbstractConstraintLiteral<?> constraintLiteral = (AbstractConstraintLiteral<?>)this.constraintValue;
 			
 			/** check for unfinished argument values */
 			Object[] arguments = new Object[this.objectArguments.size()];
 			for(int i=0; i<this.objectArguments.size(); i++) {
 				if(!(this.objectArguments.get(i) instanceof AbstractConstraintLiteral) ||
-						!((AbstractConstraintLiteral)this.objectArguments.get(i)).valueType.isFinishedType)
+						!((AbstractConstraintLiteral<?>)this.objectArguments.get(i)).isFinishedType)
 					return this;
 				
-				arguments[i] = ((AbstractConstraintLiteral)this.objectArguments.get(i)).value;
+				arguments[i] = ((AbstractConstraintLiteral<?>)this.objectArguments.get(i)).value;
 			}
 			
+//			constraintLiteral.valueType.hasClass(((Method)this.accessibleObject).getDeclaringClass())) {
 			/** try to invoke the accessible object (method or constructor) */
 			try {
-				if(this.accessibleObject instanceof Method &&
-						((AbstractConstraintLiteral)this.constraintValue).valueType.hasClass(((Method)this.accessibleObject).getDeclaringClass())) {
+				if (this.accessibleObject instanceof Method) {
 					Method method = (Method)this.accessibleObject;
-					return new AbstractConstraintLiteral(
-						method.invoke(constraintLiteral.value, arguments),
-						ConstraintValueType.fromClass(method.getReturnType()), false);
-				}
-				/** accessible object is a method */
-				else if(this.accessibleObject instanceof Method &&
-						constraintLiteral.valueType == ConstraintValueType.NULL) {
-					Method method = (Method)this.accessibleObject;
-					return new AbstractConstraintLiteral(
-						method.invoke(null, arguments),
-						ConstraintValueType.fromClass(method.getReturnType()), false);
+
+					Object invokationObject;
+					if (Modifier.isStatic(method.getModifiers()))
+						invokationObject = null;
+					else
+						invokationObject = constraintLiteral.value;
+
+					if (ListUtils.equalsAny(
+							method.getReturnType(), new Class<?>[] { double.class, Double.class }))
+						return new AbstractConstraintLiteralDouble(
+								(Double) method.invoke(invokationObject, arguments));
+					else if (ListUtils.equalsAny(
+							method.getReturnType(), new Class<?>[] { float.class, Float.class }))
+						return new AbstractConstraintLiteralFloat(
+								(Float) method.invoke(invokationObject, arguments));
+					else if (ListUtils.equalsAny(
+							method.getReturnType(), new Class<?>[] { int.class, Integer.class }))
+						return new AbstractConstraintLiteralInteger(
+								(Integer) method.invoke(invokationObject, arguments));
+					else
+						return new AbstractConstraintLiteralObject(
+								method.invoke(invokationObject, arguments));
 				}
 				/** accessible object is a constructor */
 				else if(this.accessibleObject instanceof Constructor<?>) {
 					Constructor<?> constructor = (Constructor<?>)this.accessibleObject;
-					return new AbstractConstraintLiteral(
-							constructor.newInstance(arguments),
-							ConstraintValueType.fromClass(constructor.getDeclaringClass()), false);
+
+					if (ListUtils.equalsAny(
+							constructor.getDeclaringClass(), new Class<?>[] { double.class, Double.class }))
+						return new AbstractConstraintLiteralDouble(
+								(Double) constructor.newInstance(arguments));
+					else if (ListUtils.equalsAny(
+							constructor.getDeclaringClass(), new Class<?>[] { float.class, Float.class }))
+						return new AbstractConstraintLiteralFloat(
+								(Float) constructor.newInstance(arguments));
+					else if (ListUtils.equalsAny(
+							constructor.getDeclaringClass(), new Class<?>[] { int.class, Integer.class }))
+						return new AbstractConstraintLiteralInteger(
+								(Integer) constructor.newInstance(arguments));
+					else
+						return new AbstractConstraintLiteralObject(
+								constructor.newInstance(arguments));
 				}
 				/** otherwise */
 				else
@@ -151,17 +165,6 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	
 	/**
 	 * 
-	 * @param prefixedField
-	 * 
-	 * @return
-	 */
-	@Override
-	public boolean matches(PrefixedField prefixedField) {
-		return this.constraintValue.matches(prefixedField);
-	}
-	
-	/**
-	 * 
 	 * @param object
 	 * 
 	 * @return
@@ -200,10 +203,10 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 			argumentString.append(argument.toString());
 		}
 		
-		if(this.accessibleObject instanceof Method)
+		if (this.accessibleObject instanceof Method)
 			return this.constraintValue.toString() + "." + ((Method)this.accessibleObject).getName() + "(" + argumentString.toString() + ")";
-		else if(this.accessibleObject instanceof Constructor<?>)
-			return "new " + ((PrefixedClass)((AbstractConstraintLiteral)this.constraintValue).value).clazz.getName() + "(" + argumentString.toString() + ")";
+		else if (this.accessibleObject instanceof Constructor<?>)
+			return "new " + ((Class<?>)((AbstractConstraintLiteral<?>)this.constraintValue).value).getName() + "(" + argumentString.toString() + ")";
 		else
 			return this.accessibleObject.toString();
 	}

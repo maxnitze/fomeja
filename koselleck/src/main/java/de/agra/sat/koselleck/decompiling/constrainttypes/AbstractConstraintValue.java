@@ -1,4 +1,4 @@
-package de.agra.sat.koselleck.decompiling.datatypes;
+package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /**
  * AbstractConstraint is an abstract class for all types of constraint values.
@@ -17,15 +17,6 @@ public abstract class AbstractConstraintValue {
 	public abstract void replaceAll(String regex, String replacement);
 
 	/**
-	 * replaceAll replaces all occurrences of the given prefixed field
-	 *  {@code prefixedField} with the given {@code replacement}.
-	 * 
-	 * @param prefixedField the prefixed field to look for
-	 * @param replacement the replacement
-	 */
-	public abstract void replaceAll(PrefixedField prefixedField, String replacement);
-	
-	/**
 	 * evaluate evaluates the abstract constraint value.
 	 * 
 	 * @return the new evaluated or this abstract constraint value 
@@ -42,18 +33,7 @@ public abstract class AbstractConstraintValue {
 	 *  regular expression {@code regex}, {@code false} otherwise
 	 */
 	public abstract boolean matches(String regex);
-	
-	/**
-	 * matches checks if this abstract constraint value matches the given
-	 *  prefixed field {@code prefixedField}.
-	 * 
-	 * @param prefixedField the prefixed field
-	 * 
-	 * @return {@code true} if this abstract constraint value matches the given
-	 *  prefixed field {@code prefixedField}, {@code false} otherwise
-	 */
-	public abstract boolean matches(PrefixedField prefixedField);
-	
+
 	/**
 	 * equals checks if this abstract constraint value and the given object are
 	 *  equal.

@@ -1,8 +1,10 @@
-package de.agra.sat.koselleck.disassembling.datatypes;
+package de.agra.sat.koselleck.disassembling.bytecodetypes;
 
 /** imports */
 import java.util.HashMap;
 import java.util.Map;
+
+import de.agra.sat.koselleck.types.Opcode;
 
 /**
  * 

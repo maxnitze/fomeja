@@ -1,7 +1,7 @@
 package de.agra.sat.koselleck.exceptions;
 
 /** imports */
-import de.agra.sat.koselleck.decompiling.datatypes.BooleanConnector;
+import de.agra.sat.koselleck.types.BooleanConnector;
 
 /**
  * UnknownBooleanConnectorException is a runtime exception that is thrown when

@@ -70,11 +70,11 @@ public abstract class Prover {
 			Object result = resultMap.get(variable.getKey());
 			
 			if(result != null) {
-				variable.getValue().prefixedField.field.setAccessible(true);
+				variable.getValue().preField.field.setAccessible(true);
 				try {
-					variable.getValue().prefixedField.field.set(variable.getValue().object, result);
+					variable.getValue().preField.field.set(variable.getValue().object, result);
 				} catch (IllegalArgumentException | IllegalAccessException e) {
-					String message = "could not access field \"" + variable.getValue().prefixedField.field.getName() +"\"";
+					String message = "could not access field \"" + variable.getValue().preField.field.getName() +"\"";
 					Logger.getLogger(SMTII.class).fatal(message);
 					throw new IllegalArgumentException(message);
 				}

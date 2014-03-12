@@ -10,19 +10,19 @@ import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
 import de.agra.sat.koselleck.backends.datatypes.VariableField;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractBooleanConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintFormula;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintLiteral;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractIfThenElseConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractPrematureConstraintValue;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractSingleConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractSubConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.BooleanConnector;
-import de.agra.sat.koselleck.decompiling.datatypes.ConstraintOperator;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintFormula;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiteral;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractPrematureConstraintValue;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 import de.agra.sat.koselleck.exceptions.UnsupportedVariableTypeException;
+import de.agra.sat.koselleck.types.BooleanConnector;
+import de.agra.sat.koselleck.types.ConstraintOperator;
 
 /**
  * SMTII implements the smt2 pseudo boolean dialect.
@@ -204,7 +204,8 @@ public class SMTII extends Dialect {
 	 * @return the smt2 string representation for the given abstract constraint
 	 *  literal
 	 */
-	public String prepareAbstractConstraintLiteral(AbstractConstraintLiteral constraintLiteral) {
+	@Override
+	public String prepareAbstractConstraintLiteral(AbstractConstraintLiteral<?> constraintLiteral) {
 		return constraintLiteral.toString();
 	}
 	
@@ -218,6 +219,7 @@ public class SMTII extends Dialect {
 	 * @return the smt2 string representation for the given abstract constraint
 	 *  formula
 	 */
+	@Override
 	public String prepareAbstractConstraintFormula(AbstractConstraintFormula constraintFormula) {
 		StringBuilder constraintFormulaString = new StringBuilder();
 		
@@ -240,6 +242,7 @@ public class SMTII extends Dialect {
 	 * 
 	 * @return the string representation of the abstract constraint formula
 	 */
+	@Override
 	public String prepareAbstractPrematureConstraintValue(AbstractPrematureConstraintValue prematureConstraintValue) {
 		System.out.println("-- " + prematureConstraintValue.toString());
 		

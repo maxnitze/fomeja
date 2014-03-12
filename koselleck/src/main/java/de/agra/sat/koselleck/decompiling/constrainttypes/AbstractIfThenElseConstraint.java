@@ -1,8 +1,10 @@
-package de.agra.sat.koselleck.decompiling.datatypes;
+package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
 import java.util.ArrayList;
-import java.util.List;
+
+import de.agra.sat.koselleck.datatypes.PreField;
+import de.agra.sat.koselleck.types.BooleanConnector;
 
 /**
  * 
@@ -24,10 +26,10 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	 * @param elseCaseConstraint
 	 */
 	public AbstractIfThenElseConstraint(AbstractConstraint ifCondition, AbstractConstraint thenCaseConstraint, AbstractConstraint elseCaseConstraint) {
-		super(new ArrayList<PrefixedField>());
-		this.prefixedFields.addAll(ifCondition.prefixedFields);
-		this.prefixedFields.addAll(thenCaseConstraint.prefixedFields);
-		this.prefixedFields.addAll(elseCaseConstraint.prefixedFields);
+		super(new ArrayList<PreField>());
+		this.preFields.addAll(ifCondition.preFields);
+		this.preFields.addAll(thenCaseConstraint.preFields);
+		this.preFields.addAll(elseCaseConstraint.preFields);
 		
 		this.ifCondition = ifCondition;
 		
@@ -46,19 +48,6 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 		
 		this.thenCaseConstraint.replaceAll(regex, replacement);
 		this.elseCaseConstraint.replaceAll(regex, replacement);
-	}
-
-	/**
-	 * 
-	 * @param prefixedField
-	 * @param replacement
-	 */
-	@Override
-	public void replaceAll(PrefixedField prefixedField, String replacement) {
-		this.ifCondition.replaceAll(prefixedField, replacement);
-		
-		this.thenCaseConstraint.replaceAll(prefixedField, replacement);
-		this.elseCaseConstraint.replaceAll(prefixedField, replacement);
 	}
 
 	/**
@@ -141,19 +130,6 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 				this.thenCaseConstraint.matches(regex) ||
 				this.elseCaseConstraint.matches(regex);
 	}
-
-	/**
-	 * 
-	 * @param prefixedField
-	 * 
-	 * @return
-	 */
-	@Override
-	public boolean matches(PrefixedField prefixedField) {
-		return this.ifCondition.matches(prefixedField) ||
-				this.thenCaseConstraint.matches(prefixedField) ||
-				this.elseCaseConstraint.matches(prefixedField);
-	}
 	
 	/**
 	 * 
@@ -189,8 +165,6 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	 */
 	@Override
 	public AbstractConstraint clone() {
-		List<PrefixedField> prefixedFields = new ArrayList<PrefixedField>();
-		prefixedFields.addAll(this.prefixedFields);
 		return new AbstractIfThenElseConstraint(
 				this.ifCondition.clone(), this.thenCaseConstraint.clone(), this.elseCaseConstraint.clone());
 	}

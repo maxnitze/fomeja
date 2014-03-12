@@ -1,8 +1,7 @@
-package de.agra.sat.koselleck.decompiling.datatypes;
+package de.agra.sat.koselleck.types;
 
 import org.apache.log4j.Logger;
 
-import de.agra.sat.koselleck.disassembling.datatypes.Opcode;
 import de.agra.sat.koselleck.exceptions.UnknownOpcodeException;
 /** imports */
 

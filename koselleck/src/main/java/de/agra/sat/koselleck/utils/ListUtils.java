@@ -8,7 +8,12 @@ import java.util.List;
  * 
  * @author Max Nitze
  */
-public abstract class ListUtils {
+public final class ListUtils {
+	/**
+	 * Private Constructor to prevent this class from being instantiated.
+	 */
+	private ListUtils() {}
+	
 	/**
 	 * identsAny compares a given element with all elements of a given array.
 	 *  If an array element is identical to the given element {@code true} is

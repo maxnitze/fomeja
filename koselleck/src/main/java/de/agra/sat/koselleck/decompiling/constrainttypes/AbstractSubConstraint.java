@@ -1,12 +1,15 @@
-package de.agra.sat.koselleck.decompiling.datatypes;
+package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
+import de.agra.sat.koselleck.types.BooleanConnector;
+import de.agra.sat.koselleck.types.ConstraintOperator;
 
 /**
  * AbstractSubConstraint represents a sub constraint in a constraint.
@@ -30,9 +33,9 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	 * @param constraint2 the new second constraint
 	 */
 	public AbstractSubConstraint(AbstractConstraint constraint1, BooleanConnector connector, AbstractConstraint constraint2) {
-		super(new ArrayList<PrefixedField>());
-		this.prefixedFields.addAll(constraint1.prefixedFields);
-		this.prefixedFields.addAll(constraint2.prefixedFields);
+		super(new ArrayList<PreField>());
+		this.preFields.addAll(constraint1.preFields);
+		this.preFields.addAll(constraint2.preFields);
 		
 		this.constraint1 = constraint1;
 		this.connector = connector;
@@ -53,23 +56,6 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	public void replaceAll(String regex, String replacement) {
 		this.constraint1.replaceAll(regex, replacement);
 		this.constraint2.replaceAll(regex, replacement);
-	}
-	
-	/**
-	 * replaceAll replaces all occurrences of the given prefixed field
-	 *  {@code prefixeField} with the given replacement {@code replacement} by
-	 *  calling the replaceAll(PrefixedField, String) method of the two
-	 *  constraints.
-	 * 
-	 * @param prefixeField the prefixed field to look for
-	 * @param replacement the replacement
-	 * 
-	 * @see AbstractConstraint#replaceAll(PrefixedField, String)
-	 */
-	@Override
-	public void replaceAll(PrefixedField prefixedField, String replacement) {
-		this.constraint1.replaceAll(prefixedField, replacement);
-		this.constraint2.replaceAll(prefixedField, replacement);
 	}
 	
 	/**
@@ -156,20 +142,6 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	@Override
 	public boolean matches(String regex) {
 		return this.constraint1.matches(regex) || this.constraint2.matches(regex);
-	}
-	
-	/**
-	 * matches checks if one or both of the constraints match the prefixed
-	 *  field expression {@code prefixedField}.
-	 * 
-	 * @param prefixedField the prefixed field to look for
-	 * 
-	 * @return {@code true} if one or both of the constraints match the given
-	 *  prefixed field {@code prefixedField}, {@code false} otherwise
-	 */
-	@Override
-	public boolean matches(PrefixedField prefixedField) {
-		return this.constraint1.matches(prefixedField) || this.constraint2.matches(prefixedField);
 	}
 	
 	/**

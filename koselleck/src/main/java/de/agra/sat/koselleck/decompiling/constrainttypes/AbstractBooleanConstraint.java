@@ -1,7 +1,9 @@
-package de.agra.sat.koselleck.decompiling.datatypes;
+package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
 import java.util.ArrayList;
+
+import de.agra.sat.koselleck.datatypes.PreField;
 
 /**
  * AbstractBooleanConstraint represents a boolean value in a constraint.
@@ -23,7 +25,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 *  value}
 	 */
 	public AbstractBooleanConstraint(boolean value, AbstractConstraintValue returnValue) {
-		super(new ArrayList<PrefixedField>());
+		super(new ArrayList<PreField>());
 		
 		this.value = value;
 		this.returnValue = returnValue;
@@ -35,10 +37,10 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 * @param value the new boolean value
 	 */
 	public AbstractBooleanConstraint(boolean value) {
-		super(new ArrayList<PrefixedField>());
+		super(new ArrayList<PreField>());
 		
 		this.value = value;
-		this.returnValue = new AbstractConstraintLiteral(value);
+		this.returnValue = new AbstractConstraintLiteralInteger(value ? 1 : 0);
 	}
 	
 	/**
@@ -50,17 +52,6 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	@Override
 	public void replaceAll(String regex, String replacement) {
 		this.returnValue.replaceAll(regex, replacement);
-	}
-	
-	/**
-	 * replaceAll does nothing.
-	 * 
-	 * @param prefixedField is ignored
-	 * @param replacement is ignored
-	 */
-	@Override
-	public void replaceAll(PrefixedField prefixedField, String replacement) {
-		this.returnValue.replaceAll(prefixedField, replacement);
 	}
 	
 	/**
@@ -85,18 +76,6 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	@Override
 	public boolean matches(String regex) {
 		return this.returnValue.matches(regex);
-	}
-	
-	/**
-	 * matches returns {@code false}.
-	 * 
-	 * @param prefixedField is ignored
-	 * 
-	 * @return {@code false}
-	 */
-	@Override
-	public boolean matches(PrefixedField prefixedField) {
-		return this.returnValue.matches(prefixedField);
 	}
 	
 	/**

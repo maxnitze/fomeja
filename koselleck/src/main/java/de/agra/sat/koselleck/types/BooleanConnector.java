@@ -1,4 +1,4 @@
-package de.agra.sat.koselleck.decompiling.datatypes;
+package de.agra.sat.koselleck.types;
 
 /** imports */
 import org.apache.log4j.Logger;

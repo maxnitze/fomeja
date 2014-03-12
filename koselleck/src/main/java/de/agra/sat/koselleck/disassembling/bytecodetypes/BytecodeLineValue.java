@@ -1,4 +1,6 @@
-package de.agra.sat.koselleck.disassembling.datatypes;
+package de.agra.sat.koselleck.disassembling.bytecodetypes;
+
+import de.agra.sat.koselleck.types.Opcode;
 
 /**
  * 

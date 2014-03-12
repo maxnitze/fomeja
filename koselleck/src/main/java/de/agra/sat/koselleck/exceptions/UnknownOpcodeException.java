@@ -1,7 +1,7 @@
 package de.agra.sat.koselleck.exceptions;
 
 /** imports */
-import de.agra.sat.koselleck.disassembling.datatypes.Opcode;
+import de.agra.sat.koselleck.types.Opcode;
 
 /**
  * UnknownOpcodeException is a runtime exception that is thrown when an unknown
