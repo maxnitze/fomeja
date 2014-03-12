@@ -1,5 +1,7 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
+import de.agra.sat.koselleck.types.ArithmeticOperator;
+
 
 /**
  * AbstractConstraintLiteral represents a literal in a constraint value.
@@ -104,4 +106,40 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	 * @return
 	 */
 	public abstract int compareTo(AbstractConstraintLiteral<?> constraintLiteral);
+
+	/**
+	 * 
+	 * @param constraintLiteral
+	 * @param operator
+	 * 
+	 * @return
+	 */
+	public abstract AbstractConstraintLiteral<?> add(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator);
+
+	/**
+	 * 
+	 * @param constraintLiteral
+	 * @param operator
+	 * 
+	 * @return
+	 */
+	public abstract AbstractConstraintLiteral<?> sub(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator);
+
+	/**
+	 * 
+	 * @param constraintLiteral
+	 * @param operator
+	 * 
+	 * @return
+	 */
+	public abstract AbstractConstraintLiteral<?> mul(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator);
+
+	/**
+	 * 
+	 * @param constraintLiteral
+	 * @param operator
+	 * 
+	 * @return
+	 */
+	public abstract AbstractConstraintLiteral<?> div(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator);
 }

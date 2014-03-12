@@ -3,7 +3,9 @@ package de.agra.sat.koselleck.decompiling.constrainttypes;
 /** imports */
 import org.apache.log4j.Logger;
 
+import de.agra.sat.koselleck.exceptions.NoCalculatableNumberTypeException;
 import de.agra.sat.koselleck.exceptions.NoComparableNumberTypeException;
+import de.agra.sat.koselleck.types.ArithmeticOperator;
 import de.agra.sat.koselleck.types.Opcode;
 
 /**
@@ -67,6 +69,34 @@ public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Cl
 	@Override
 	public int compareTo(AbstractConstraintLiteral<?> constraintLiteral) {
 		NoComparableNumberTypeException exception = new NoComparableNumberTypeException(this);
+		Logger.getLogger(AbstractConstraintLiteralClass.class).fatal(exception.getMessage());
+		throw exception;
+	}
+
+	@Override
+	public AbstractConstraintLiteral<?> add(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
+		NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(this);
+		Logger.getLogger(AbstractConstraintLiteralClass.class).fatal(exception.getMessage());
+		throw exception;
+	}
+
+	@Override
+	public AbstractConstraintLiteral<?> sub(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
+		NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(this);
+		Logger.getLogger(AbstractConstraintLiteralClass.class).fatal(exception.getMessage());
+		throw exception;
+	}
+
+	@Override
+	public AbstractConstraintLiteral<?> mul(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
+		NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(this);
+		Logger.getLogger(AbstractConstraintLiteralClass.class).fatal(exception.getMessage());
+		throw exception;
+	}
+
+	@Override
+	public AbstractConstraintLiteral<?> div(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
+		NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(this);
 		Logger.getLogger(AbstractConstraintLiteralClass.class).fatal(exception.getMessage());
 		throw exception;
 	}
