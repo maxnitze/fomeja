@@ -44,10 +44,13 @@ public class PreField {
 
 		StringBuilder prefixedNameBuilder = new StringBuilder("v_");
 		for(PreField preField : preFields)
-			prefixedNameBuilder.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"));
-		prefixedNameBuilder.append(field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1"));
-		prefixedNameBuilder.append("_");
-		prefixedNameBuilder.append(field.getName());
+			prefixedNameBuilder
+					.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"))
+					.append(preField.field.getName())
+					.append("_");
+		prefixedNameBuilder
+				.append(field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"))
+				.append(field.getName());
 		this.prefixedName = prefixedNameBuilder.toString();
 	}
 

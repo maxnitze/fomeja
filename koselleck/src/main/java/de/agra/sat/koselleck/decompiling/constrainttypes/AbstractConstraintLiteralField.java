@@ -30,6 +30,9 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 	/** the prefixed name of this field */
 	public final String prefixedName;
 
+	/** the replaced constraint value */
+	private AbstractConstraintValue replacedConstraintValue;
+
 	/**
 	 * 
 	 * @param value
@@ -47,11 +50,15 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 
 		StringBuilder prefixedNameBuilder = new StringBuilder("v_");
 		for(PreField preField : preFields)
-			prefixedNameBuilder.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"));
-		prefixedNameBuilder.append(value.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1"));
-		prefixedNameBuilder.append("_");
-		prefixedNameBuilder.append(value.getName());
+			prefixedNameBuilder
+					.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"));
+					
+		prefixedNameBuilder
+			.append(value.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"))
+			.append(value.getName());
 		this.prefixedName = prefixedNameBuilder.toString();
+
+		this.replacedConstraintValue = null;
 	}
 
 	/**
@@ -67,19 +74,35 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 		this.preFields = new ArrayList<PreField>(preField.preFields);
 
 		this.prefixedName = preField.prefixedName;
+
+		this.replacedConstraintValue = null;
 	}
 
 	@Override
-	public void replaceAll(String regex, String replacement) {}
+	public void replaceAll(String regex, String replacement) {
+		if (this.replacedConstraintValue == null && this.prefixedName.matches(regex)) {
+			if (replacement.matches("^\\d+(\\.\\d+)?d$"))
+				this.replacedConstraintValue = new AbstractConstraintLiteralDouble(Double.parseDouble(replacement));
+			else if (replacement.matches("^\\d+(\\.\\d+)?f$"))
+				this.replacedConstraintValue = new AbstractConstraintLiteralFloat(Float.parseFloat(replacement));
+			else if (replacement.matches("^\\d+$"))
+				this.replacedConstraintValue = new AbstractConstraintLiteralInteger(Integer.parseInt(replacement));
+			else
+				this.replacedConstraintValue = new AbstractConstraintLiteralString(replacement);
+		} 
+	}
 
 	@Override
 	public AbstractConstraintValue evaluate() {
-		return this;
+		if (this.replacedConstraintValue != null)
+			return this.replacedConstraintValue;
+		else
+			return this;
 	}
 
 	@Override
 	public boolean matches(String regex) {
-		return false;
+		return this.prefixedName.matches(regex);
 	}
 
 	@Override
@@ -100,7 +123,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 
 	@Override
 	public String toString() {
-		return this.value + "[" + (this.isVariable ? " variable;" : " not variable;") + " no number type]";
+		return this.prefixedName;
 	}
 
 	@Override

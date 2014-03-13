@@ -52,7 +52,7 @@ public class SMTII extends Dialect {
 	public String format(Theorem theorem) {
 		StringBuilder assignedConstraint = new StringBuilder();
 		for(AbstractConstraint theoremConstraint : theorem.abstractConstraints) {
-			String z3Constraint = getBackendConstraint(theoremConstraint);
+			String z3Constraint = this.getBackendConstraint(theoremConstraint);
 			
 			assignedConstraint.append("\n\t");
 			assignedConstraint.append(z3Constraint);

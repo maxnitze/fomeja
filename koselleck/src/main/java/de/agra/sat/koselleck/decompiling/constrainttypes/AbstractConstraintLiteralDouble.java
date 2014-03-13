@@ -50,7 +50,7 @@ public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<D
 
 	@Override
 	public String toString() {
-		return this.value + "[" + (this.isVariable ? " variable;" : " not variable;") + " no number type]";
+		return this.value.toString();
 	}
 
 	@Override

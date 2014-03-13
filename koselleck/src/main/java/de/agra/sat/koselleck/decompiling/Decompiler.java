@@ -17,7 +17,6 @@ import java.util.Stack;
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.annotations.Variable;
-import de.agra.sat.koselleck.datatypes.PreClass;
 import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
@@ -147,9 +146,7 @@ public class Decompiler {
 		BytecodeLineTableswitch bytecodeLineTableswitch = null;
 		
 		PreField preField = null;
-		PreField innerPreField = null;
 		PreField newPreField = null;
-		PreClass preClass = null;
 		
 		List<PreField> preFields = new ArrayList<PreField>();
 		
@@ -476,18 +473,17 @@ public class Decompiler {
 									
 									List<PreField> newPreFields = new ArrayList<PreField>();
 									newPreFields.addAll(constraintLiteralField.preFields);
-									newPreFields.add(preField);
+									newPreFields.add(new PreField(
+											constraintLiteralField.value, constraintLiteralField.fieldCode, constraintLiteralField.fieldCodeIndex, new ArrayList<PreField>(constraintLiteralField.preFields)));
 									newPreFields.addAll(innerConstraintLiteralField.preFields);
 									
 									newPreField = new PreField(
-											innerConstraintLiteralField.value, preField.fieldCode, preField.fieldCodeIndex, newPreFields);
+											innerConstraintLiteralField.value, constraintLiteralField.fieldCode, constraintLiteralField.fieldCodeIndex, newPreFields);
 								} else if (constraintLiteral instanceof AbstractConstraintLiteralClass) {
 									constraintLiteralClass = (AbstractConstraintLiteralClass) constraintLiteral;
 									
-									List<PreField> newPreFields = new ArrayList<PreField>(innerConstraintLiteralField.preFields);
-									
 									newPreField = new PreField(
-											innerConstraintLiteralField.value, constraintLiteralClass.fieldCode, constraintLiteralClass.fieldCodeIndex, newPreFields);
+											innerConstraintLiteralField.value, constraintLiteralClass.fieldCode, constraintLiteralClass.fieldCodeIndex, new ArrayList<PreField>(innerConstraintLiteralField.preFields));
 								} else
 									throw new RuntimeException("TODO outer literal is no prefixed field"); // TODO implement
 								

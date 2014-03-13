@@ -225,6 +225,8 @@ public abstract class Dialect {
 		for(AbstractSingleTheorem singleTheorem : singleTheorems) {
 			AbstractConstraint constraint = singleTheorem.constraint;
 			
+			System.out.println("constraint = " + constraint);
+			
 			for(PreField preField : constraint.preFields) {
 				if(preField.fieldCode == Opcode.load && preField.fieldCodeIndex == 0 && !preField.isVariable && constraint.matches(preField.prefixedName))
 					constraint.replaceAll(preField.prefixedName, this.getAttributeReplacement(component, preField));
