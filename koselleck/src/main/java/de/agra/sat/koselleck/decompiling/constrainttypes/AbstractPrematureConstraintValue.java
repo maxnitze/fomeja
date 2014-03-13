@@ -87,16 +87,13 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 					else
 						invokationObject = constraintLiteral.value;
 
-					if (CompareUtils.equalsAny(
-							method.getReturnType(), new Class<?>[] { double.class, Double.class }))
+					if (CompareUtils.equalsAny(method.getReturnType(), CompareUtils.doubleClasses))
 						return new AbstractConstraintLiteralDouble(
 								(Double) method.invoke(invokationObject, arguments));
-					else if (CompareUtils.equalsAny(
-							method.getReturnType(), new Class<?>[] { float.class, Float.class }))
+					else if (CompareUtils.equalsAny(method.getReturnType(), CompareUtils.floatClasses))
 						return new AbstractConstraintLiteralFloat(
 								(Float) method.invoke(invokationObject, arguments));
-					else if (CompareUtils.equalsAny(
-							method.getReturnType(), new Class<?>[] { int.class, Integer.class }))
+					else if (CompareUtils.equalsAny(method.getReturnType(), CompareUtils.integerClasses))
 						return new AbstractConstraintLiteralInteger(
 								(Integer) method.invoke(invokationObject, arguments));
 					else
