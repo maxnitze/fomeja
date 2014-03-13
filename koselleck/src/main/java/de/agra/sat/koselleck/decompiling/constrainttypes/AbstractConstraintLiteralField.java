@@ -2,6 +2,7 @@ package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -51,6 +52,21 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 		prefixedNameBuilder.append("_");
 		prefixedNameBuilder.append(value.getName());
 		this.prefixedName = prefixedNameBuilder.toString();
+	}
+
+	/**
+	 * 
+	 * @param preField
+	 */
+	public AbstractConstraintLiteralField(PreField preField) {
+		super(preField.field, preField.isVariable, false, false);
+
+		this.fieldCode = preField.fieldCode;
+		this.fieldCodeIndex = preField.fieldCodeIndex;
+
+		this.preFields = new ArrayList<PreField>(preField.preFields);
+
+		this.prefixedName = preField.prefixedName;
 	}
 
 	@Override

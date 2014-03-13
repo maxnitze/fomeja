@@ -8,12 +8,19 @@ import java.util.List;
  * 
  * @author Max Nitze
  */
-public final class ListUtils {
+public final class CompareUtils {
+	/** array of the two double classes */
+	public static final Class<?>[] doubleClasses = new Class<?>[] { double.class, Double.class };
+	/** array of the two float classes */
+	public static final Class<?>[] floatClasses = new Class<?>[] { float.class, Float.class };
+	/** array of the two integer classes */
+	public static final Class<?>[] integerClasses = new Class<?>[] { int.class, Integer.class };
+
 	/**
 	 * Private Constructor to prevent this class from being instantiated.
 	 */
-	private ListUtils() {}
-	
+	private CompareUtils() {}
+
 	/**
 	 * identsAny compares a given element with all elements of a given array.
 	 *  If an array element is identical to the given element {@code true} is
@@ -31,7 +38,7 @@ public final class ListUtils {
 				return true;
 		return false;
 	}
-	
+
 	/**
 	 * identsAny compares a given element with all elements of a given list.
 	 *  If a list element is identical to the given element {@code true} is
@@ -49,7 +56,7 @@ public final class ListUtils {
 				return true;
 		return false;
 	}
-	
+
 	/**
 	 * equalsAny compares a given element with all elements of a given array.
 	 *  If an array element is equal to the given element {@code true} is
@@ -67,7 +74,7 @@ public final class ListUtils {
 				return true;
 		return false;
 	}
-	
+
 	/**
 	 * equalsAny compares a given element with all elements of a given list.
 	 *  If a list element is equal to the given element {@code true} is
@@ -85,7 +92,7 @@ public final class ListUtils {
 				return true;
 		return false;
 	}
-	
+
 	/**
 	 * instanceofAny checks if the given object is instance of any of the
 	 *  classes given by the classes array.
@@ -102,7 +109,7 @@ public final class ListUtils {
 				return true;
 		return false;
 	}
-	
+
 	/**
 	 * instanceofAny checks if the given object is instance of any of the
 	 *  classes given by the classes list.
@@ -119,7 +126,7 @@ public final class ListUtils {
 				return true;
 		return false;
 	}
-	
+
 	/**
 	 * isBetween returns {@code true} if the given value is greater or equal
 	 *  to the given start and lower or equal to the given end, {@code false}
@@ -138,5 +145,23 @@ public final class ListUtils {
 			return true;
 		else
 			return false;
+	}
+
+	/**
+	 * 
+	 * @param class1
+	 * @param class2
+	 * 
+	 * @return
+	 */
+	public static boolean classesEquals(Class<?> class1, Class<?> class2) {
+		if (equalsAny(class1, doubleClasses))
+			return equalsAny(class2, doubleClasses);
+		else if (equalsAny(class1, floatClasses))
+			return equalsAny(class2, floatClasses);
+		else if (equalsAny(class1, integerClasses))
+			return equalsAny(class2, integerClasses);
+		else
+			return class1.equals(class2);
 	}
 }

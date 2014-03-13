@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import de.agra.sat.koselleck.utils.ListUtils;
+import de.agra.sat.koselleck.utils.CompareUtils;
 
 /**
  * 
@@ -87,15 +87,15 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 					else
 						invokationObject = constraintLiteral.value;
 
-					if (ListUtils.equalsAny(
+					if (CompareUtils.equalsAny(
 							method.getReturnType(), new Class<?>[] { double.class, Double.class }))
 						return new AbstractConstraintLiteralDouble(
 								(Double) method.invoke(invokationObject, arguments));
-					else if (ListUtils.equalsAny(
+					else if (CompareUtils.equalsAny(
 							method.getReturnType(), new Class<?>[] { float.class, Float.class }))
 						return new AbstractConstraintLiteralFloat(
 								(Float) method.invoke(invokationObject, arguments));
-					else if (ListUtils.equalsAny(
+					else if (CompareUtils.equalsAny(
 							method.getReturnType(), new Class<?>[] { int.class, Integer.class }))
 						return new AbstractConstraintLiteralInteger(
 								(Integer) method.invoke(invokationObject, arguments));
@@ -107,15 +107,15 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 				else if(this.accessibleObject instanceof Constructor<?>) {
 					Constructor<?> constructor = (Constructor<?>)this.accessibleObject;
 
-					if (ListUtils.equalsAny(
+					if (CompareUtils.equalsAny(
 							constructor.getDeclaringClass(), new Class<?>[] { double.class, Double.class }))
 						return new AbstractConstraintLiteralDouble(
 								(Double) constructor.newInstance(arguments));
-					else if (ListUtils.equalsAny(
+					else if (CompareUtils.equalsAny(
 							constructor.getDeclaringClass(), new Class<?>[] { float.class, Float.class }))
 						return new AbstractConstraintLiteralFloat(
 								(Float) constructor.newInstance(arguments));
-					else if (ListUtils.equalsAny(
+					else if (CompareUtils.equalsAny(
 							constructor.getDeclaringClass(), new Class<?>[] { int.class, Integer.class }))
 						return new AbstractConstraintLiteralInteger(
 								(Integer) constructor.newInstance(arguments));
