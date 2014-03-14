@@ -14,19 +14,20 @@ import de.agra.sat.koselleck.backends.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.backends.datatypes.ParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
 import de.agra.sat.koselleck.backends.datatypes.VariableField;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractBooleanConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintFormula;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintLiteral;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintValue;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractPrematureConstraintValue;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractSingleConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractSubConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.PrefixedField;
-import de.agra.sat.koselleck.disassembling.datatypes.Opcode;
+import de.agra.sat.koselleck.datatypes.PreField;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintFormula;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiteral;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintValue;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractPrematureConstraintValue;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
 import de.agra.sat.koselleck.exceptions.UnsupportedConstraintException;
 import de.agra.sat.koselleck.exceptions.UnsupportedConstraintValueException;
+import de.agra.sat.koselleck.types.Opcode;
 import de.agra.sat.koselleck.utils.KoselleckUtils;
 
 /**
@@ -111,6 +112,18 @@ public abstract class Dialect {
 	public abstract String prepareAbstractSubConstraint(AbstractSubConstraint subConstraint);
 	
 	/**
+	 * prepareAbstractIfThenElseConstraint returns the string representation of
+	 *  a given abstract if-then-else constraint.
+	 * 
+	 * @param ifThenElseConstraint the abstract if-then-else constraint to
+	 *  proceed
+	 * 
+	 * @return the string representation of the abstract if-then-else
+	 *  constraint
+	 */
+	public abstract String prepareAbstractIfThenElseConstraint(AbstractIfThenElseConstraint ifThenElseConstraint);
+	
+	/**
 	 * prepareAbstractConstraintLiteral returns the string representation of a
 	 *  given abstract constraint literal.
 	 * 
@@ -118,7 +131,7 @@ public abstract class Dialect {
 	 * 
 	 * @return the string representation of the abstract constraint literal
 	 */
-	public abstract String prepareAbstractConstraintLiteral(AbstractConstraintLiteral constraintLiteral);
+	public abstract String prepareAbstractConstraintLiteral(AbstractConstraintLiteral<?> constraintLiteral);
 	
 	/**
 	 * prepareAbstractConstraintFormula returns the string representation of a
@@ -158,6 +171,8 @@ public abstract class Dialect {
 			return prepareAbstractSingleConstraint((AbstractSingleConstraint)constraint);
 		else if(constraint instanceof AbstractSubConstraint)
 			return prepareAbstractSubConstraint((AbstractSubConstraint)constraint);
+		else if(constraint instanceof AbstractIfThenElseConstraint)
+			return prepareAbstractIfThenElseConstraint((AbstractIfThenElseConstraint)constraint);
 		else {
 			UnsupportedConstraintException exception = new UnsupportedConstraintException(constraint);
 			Logger.getLogger(Dialect.class).fatal(exception.getMessage());
@@ -175,7 +190,7 @@ public abstract class Dialect {
 	 */
 	protected String getBackendConstraintValue(AbstractConstraintValue constraintValue) {
 		if(constraintValue instanceof AbstractConstraintLiteral)
-			return prepareAbstractConstraintLiteral((AbstractConstraintLiteral)constraintValue);
+			return prepareAbstractConstraintLiteral((AbstractConstraintLiteral<?>)constraintValue);
 		else if(constraintValue instanceof AbstractConstraintFormula)
 			return prepareAbstractConstraintFormula((AbstractConstraintFormula)constraintValue);
 		else if(constraintValue instanceof AbstractPrematureConstraintValue)
@@ -205,17 +220,17 @@ public abstract class Dialect {
 		List<VariableField> variableFields = new ArrayList<VariableField>();
 		Map<String, ParameterObject> variablesMap = new HashMap<String, ParameterObject>();
 		
-		List<PrefixedField> prefixedFieldsList = new ArrayList<PrefixedField>();
+		List<PreField> preFieldsList = new ArrayList<PreField>();
 		
 		for(AbstractSingleTheorem singleTheorem : singleTheorems) {
 			AbstractConstraint constraint = singleTheorem.constraint;
-			
-			for(PrefixedField prefixedField : constraint.prefixedFields) {
-				if(prefixedField.fieldCode == Opcode.aload_0 && !prefixedField.isVariable && constraint.matches(prefixedField.prefixedName))
-					constraint.replaceAll(prefixedField, getAttributeReplacement(component, prefixedField));
-				else if(prefixedField.fieldCode == Opcode.aload && constraint.matches(prefixedField))
-					if(!prefixedFieldsList.contains(prefixedField))
-						prefixedFieldsList.add(prefixedField);
+
+			for(PreField preField : constraint.preFields) {
+				if(preField.fieldCode == Opcode.load && preField.fieldCodeIndex == 0 && !preField.isVariable && constraint.matches(preField.constantTablePrefixedName))
+					constraint.replaceAll(preField.constantTablePrefixedName, this.getAttributeReplacement(component, preField));
+				else if(preField.fieldCode == Opcode.load && constraint.matches(preField.constantTablePrefixedName))
+					if(!preFieldsList.contains(preField))
+						preFieldsList.add(preField);
 			}
 			
 			ConstraintParameter[] constraintParameters = new ConstraintParameter[singleTheorem.fields.length];
@@ -238,16 +253,16 @@ public abstract class Dialect {
 			
 			do {
 				AbstractConstraint cConstraint = constraint.clone();
-				for(PrefixedField prefixedField : prefixedFieldsList) {
-					ConstraintParameter currentConstraintParameter = constraintParameters[prefixedField.value-1];
-					if(!prefixedField.isVariable) {
-						String replacement = getReplacement(prefixedField, currentConstraintParameter.getCurrentCollectionObject());
-						cConstraint.replaceAll(prefixedField, replacement);
+				for(PreField preField : preFieldsList) {
+					ConstraintParameter currentConstraintParameter = constraintParameters[preField.fieldCodeIndex-1];
+					if(!preField.isVariable) {
+						String replacement = this.getReplacement(preField, currentConstraintParameter.getCurrentCollectionObject());
+						cConstraint.replaceAll(preField.constantTablePrefixedName, replacement);
 					} else {
-						Object parameterObject = getParameterObject(prefixedField, currentConstraintParameter.getCurrentCollectionObject());
+						Object parameterObject = this.getParameterObject(preField, currentConstraintParameter.getCurrentCollectionObject());
 						int index = -1;
 						for(ParameterObject paramObject : parameterObjects) {
-							if(paramObject.object.equals(parameterObject) && paramObject.prefixedField.field.equals(prefixedField.field)) {
+							if(paramObject.object.equals(parameterObject) && paramObject.preField.field.equals(preField.field)) {
 								currentParameterObject = paramObject;
 								index = currentParameterObject.index;
 								break;
@@ -256,19 +271,19 @@ public abstract class Dialect {
 						if(index == -1) {
 							int maxIndex = 0;
 							for(ParameterObject paramObject : parameterObjects)
-								if(paramObject.prefixedField.field.equals(prefixedField.field))
+								if(paramObject.preField.field.equals(preField.field))
 									maxIndex = (paramObject.index > maxIndex ? paramObject.index : maxIndex);
-							currentParameterObject = new ParameterObject(parameterObject, prefixedField, maxIndex+1);
+							currentParameterObject = new ParameterObject(parameterObject, preField, maxIndex+1);
 							parameterObjects.add(currentParameterObject);
 							index = currentParameterObject.index;
 						}
-						String prefixedVariableName = prefixedField.prefieldsPrefixedName + "_" + index;
+						String prefixedVariableName = preField.preFieldsPrefixedName + "_" + index;
 						
 						variablesMap.put(prefixedVariableName, currentParameterObject);
-						VariableField variableField = new VariableField(prefixedVariableName, prefixedField.fieldType);
+						VariableField variableField = new VariableField(prefixedVariableName, preField.field.getType());
 						if(!variableFields.contains(variableField))
 							variableFields.add(variableField);
-						cConstraint.replaceAll(prefixedField, prefixedVariableName);
+						cConstraint.replaceAll(preField.constantTablePrefixedName, prefixedVariableName);
 					}
 				}
 				
@@ -293,20 +308,20 @@ public abstract class Dialect {
 	 *  attribute type field and returns the replacement for this field.
 	 * 
 	 * @param component the component to get the replacements from
-	 * @param prefixedField the prefixed field to get the replacement for
+	 * @param preField the prefixed field to get the replacement for
 	 * 
 	 * @return the replacement for the attribute field
 	 * 
 	 * @see Dialect#getReplacement(PrefixedField, Object)
 	 * @see Dialect#getParameterObject(PrefixedField, Object)
 	 */
-	private String getAttributeReplacement(Object component, PrefixedField prefixedField) {
-		if(prefixedField.fieldCode != Opcode.aload_0) {
-			Logger.getLogger(Dialect.class).fatal("given field \"" + prefixedField.field.getName() + "\" is no attribute field");
-			throw new IllegalArgumentException("given field \"" + prefixedField.field.getName() + "\" is no attribute field");
+	private String getAttributeReplacement(Object component, PreField preField) {
+		if(preField.fieldCode != Opcode.load || preField.fieldCodeIndex != 0) {
+			Logger.getLogger(Dialect.class).fatal("given field \"" + preField.field.getName() + "\" is no attribute field");
+			throw new IllegalArgumentException("given field \"" + preField.field.getName() + "\" is no attribute field");
 		}
 		
-		return getReplacement(prefixedField, component);
+		return this.getReplacement(preField, component);
 	}
 	
 	/**
@@ -314,22 +329,22 @@ public abstract class Dialect {
 	 *  reflectively getting its parameter objects and the value of this for
 	 *  the given starting object.
 	 * 
-	 * @param prefixedField the prefixed field to get the replacement for
+	 * @param preField the prefixed field to get the replacement for
 	 * @param startingObject the object to start getting its sub-values
 	 * 
 	 * @return the replacement for the given prefixed field
 	 * 
 	 * @see Dialect#getParameterObject(PrefixedField, Object)
 	 */
-	private String getReplacement(PrefixedField prefixedField, Object startingObject) {
-		Object replacement = getParameterObject(prefixedField, startingObject);
+	private String getReplacement(PreField preField, Object startingObject) {
+		Object replacement = this.getParameterObject(preField, startingObject);
 		
-		prefixedField.field.setAccessible(true);
+		preField.field.setAccessible(true);
 		try{
-			replacement = prefixedField.field.get(replacement);
+			replacement = preField.field.get(replacement);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
-			Logger.getLogger(Dialect.class).fatal("could not access field \"" + prefixedField.field.getName() +"\"");
-			throw new IllegalArgumentException("could not access field \"" + prefixedField.field.getName() +"\"");
+			Logger.getLogger(Dialect.class).fatal("could not access field \"" + preField.field.getName() +"\"");
+			throw new IllegalArgumentException("could not access field \"" + preField.field.getName() +"\"");
 		}
 		
 		return replacement.toString();
@@ -340,14 +355,14 @@ public abstract class Dialect {
 	 *  reflectively getting its parameter objects for the given starting
 	 *  object.
 	 * 
-	 * @param prefixedField the prefixed field to get the parameter object for
+	 * @param preField the prefixed field to get the parameter object for
 	 * @param startingObject the object to start getting its sub-values
 	 * 
 	 * @return the parameter object for the given prefixed field
 	 */
-	private Object getParameterObject(PrefixedField prefixedField, Object startingObject) {
+	private Object getParameterObject(PreField preField, Object startingObject) {
 		Object parameterObject = startingObject;
-		for(PrefixedField prePrefixedField : prefixedField.preFields) {
+		for(PreField prePrefixedField : preField.preFields) {
 			prePrefixedField.field.setAccessible(true);
 			try {
 				parameterObject = prePrefixedField.field.get(parameterObject);

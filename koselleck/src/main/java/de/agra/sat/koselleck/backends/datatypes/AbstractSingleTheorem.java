@@ -4,7 +4,7 @@ package de.agra.sat.koselleck.backends.datatypes;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 
 /**
  * AbstractSingleTheorem is a data type that describes a single theorem by its

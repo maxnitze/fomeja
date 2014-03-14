@@ -4,7 +4,7 @@ package de.agra.sat.koselleck.backends.datatypes;
 import java.util.List;
 import java.util.Map;
 
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 
 /**
  * Theorem describes a theorem by its constraints and variables.

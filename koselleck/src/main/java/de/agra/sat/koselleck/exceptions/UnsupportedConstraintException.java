@@ -1,7 +1,7 @@
 package de.agra.sat.koselleck.exceptions;
 
 /** imports */
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 
 /**
  * UnsupportedConstraintException is a  runtime exception that is thrown when a

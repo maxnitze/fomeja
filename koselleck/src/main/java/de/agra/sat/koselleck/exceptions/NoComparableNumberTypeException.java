@@ -1,7 +1,7 @@
 package de.agra.sat.koselleck.exceptions;
 
 /** imports */
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintLiteral;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiteral;
 
 /**
  * NoComparableNumberType is a runtime exception that is thrown if the
@@ -20,7 +20,7 @@ public class NoComparableNumberTypeException extends RuntimeException {
 	 * @param constraintLiteral the abstract constraint literal of the
 	 *  exception
 	 */
-	public NoComparableNumberTypeException(AbstractConstraintLiteral constraintLiteral) {
+	public NoComparableNumberTypeException(AbstractConstraintLiteral<?> constraintLiteral) {
 		super("abstract constraint literal \"" + constraintLiteral + "\" has no comparable number type");
 	}
 }

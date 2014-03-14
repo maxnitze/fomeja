@@ -15,7 +15,12 @@ import java.io.PrintWriter;
  * @version 1.0.0
  * @author Max Nitze
  */
-public abstract class IOUtils {
+public final class IOUtils {
+	/**
+	 * Private Constructor to prevent this class from being instantiated.
+	 */
+	private IOUtils() {}
+
 	/**
 	 * readFromFile reads the file at the given {@code URI} and returns its
 	 *  content.

@@ -9,7 +9,12 @@ import java.util.List;
  * @version 1.0.0
  * @author Max Nitze
  */
-public abstract class StringUtils {
+public final class StringUtils {
+	/**
+	 * Private Constructor to prevent this class from being instantiated.
+	 */
+	private StringUtils() {}
+
 	/**
 	 * matchesAny checks if any of regular expressions of the given array
 	 *  matches the given text.

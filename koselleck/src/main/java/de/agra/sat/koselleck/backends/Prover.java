@@ -58,23 +58,25 @@ public abstract class Prover {
 	 */
 	public void solveAndAssign(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
 		Theorem theorem = this.dialect.getConstraintForArguments(component, singleTheorems);
-		
+
 		String formattedTheorem = this.dialect.format(theorem);
-		
-		System.out.println(formattedTheorem); // TODO delete output
-		
+
+//		System.out.println(formattedTheorem); // TODO delete output formattedTheorem
+
 		String proverResult = solve(formattedTheorem);
-		
+
+//		System.out.println(proverResult); // TODO delete output proverResult
+
 		Map<String, Object> resultMap = this.dialect.parseResult(proverResult);
 		for(Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {
 			Object result = resultMap.get(variable.getKey());
 			
 			if(result != null) {
-				variable.getValue().prefixedField.field.setAccessible(true);
+				variable.getValue().preField.field.setAccessible(true);
 				try {
-					variable.getValue().prefixedField.field.set(variable.getValue().object, result);
+					variable.getValue().preField.field.set(variable.getValue().object, result);
 				} catch (IllegalArgumentException | IllegalAccessException e) {
-					String message = "could not access field \"" + variable.getValue().prefixedField.field.getName() +"\"";
+					String message = "could not access field \"" + variable.getValue().preField.field.getName() +"\"";
 					Logger.getLogger(SMTII.class).fatal(message);
 					throw new IllegalArgumentException(message);
 				}

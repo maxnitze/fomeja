@@ -10,18 +10,19 @@ import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
 import de.agra.sat.koselleck.backends.datatypes.VariableField;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractBooleanConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintFormula;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractConstraintLiteral;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractPrematureConstraintValue;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractSingleConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.AbstractSubConstraint;
-import de.agra.sat.koselleck.decompiling.datatypes.BooleanConnector;
-import de.agra.sat.koselleck.decompiling.datatypes.ConstraintOperator;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintFormula;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiteral;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractPrematureConstraintValue;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 import de.agra.sat.koselleck.exceptions.UnsupportedVariableTypeException;
+import de.agra.sat.koselleck.types.BooleanConnector;
+import de.agra.sat.koselleck.types.ConstraintOperator;
 
 /**
  * SMTII implements the smt2 pseudo boolean dialect.
@@ -51,7 +52,7 @@ public class SMTII extends Dialect {
 	public String format(Theorem theorem) {
 		StringBuilder assignedConstraint = new StringBuilder();
 		for(AbstractConstraint theoremConstraint : theorem.abstractConstraints) {
-			String z3Constraint = getBackendConstraint(theoremConstraint);
+			String z3Constraint = this.getBackendConstraint(theoremConstraint);
 			
 			assignedConstraint.append("\n\t");
 			assignedConstraint.append(z3Constraint);
@@ -167,6 +168,33 @@ public class SMTII extends Dialect {
 	}
 	
 	/**
+	 * prepareAbstractSubConstraint returns the smt2 string representation of
+	 *  an abstract if-then-else-constraint.
+	 * 
+	 * @param ifThenElseConstraint the abstract if-then-else-constraint to get
+	 *  the smt2 string representation for
+	 * 
+	 * @return the smt2 string representation for the given abstract
+	 *  if-then-else-constraint
+	 */
+	@Override
+	public String prepareAbstractIfThenElseConstraint(AbstractIfThenElseConstraint ifThenElseConstraint) {
+		StringBuilder ifThenElseConstraintString = new StringBuilder();
+		
+		ifThenElseConstraintString.append("((");
+		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.ifCondition));
+		ifThenElseConstraintString.append(" and ");
+		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.thenCaseConstraint));
+		ifThenElseConstraintString.append(") or (not (");
+		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.ifCondition));
+		ifThenElseConstraintString.append(") and ");
+		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.elseCaseConstraint));
+		ifThenElseConstraintString.append(")))");
+		
+		return ifThenElseConstraintString.toString();
+	}
+	
+	/**
 	 * prepareAbstractConstraintLiteral returns the smt2 string representation
 	 *  of an abstract constraint literal.
 	 * 
@@ -176,7 +204,8 @@ public class SMTII extends Dialect {
 	 * @return the smt2 string representation for the given abstract constraint
 	 *  literal
 	 */
-	public String prepareAbstractConstraintLiteral(AbstractConstraintLiteral constraintLiteral) {
+	@Override
+	public String prepareAbstractConstraintLiteral(AbstractConstraintLiteral<?> constraintLiteral) {
 		return constraintLiteral.toString();
 	}
 	
@@ -190,6 +219,7 @@ public class SMTII extends Dialect {
 	 * @return the smt2 string representation for the given abstract constraint
 	 *  formula
 	 */
+	@Override
 	public String prepareAbstractConstraintFormula(AbstractConstraintFormula constraintFormula) {
 		StringBuilder constraintFormulaString = new StringBuilder();
 		
@@ -212,8 +242,9 @@ public class SMTII extends Dialect {
 	 * 
 	 * @return the string representation of the abstract constraint formula
 	 */
+	@Override
 	public String prepareAbstractPrematureConstraintValue(AbstractPrematureConstraintValue prematureConstraintValue) {
-		System.out.println(prematureConstraintValue.toString());
+		System.out.println("-- " + prematureConstraintValue.toString());
 		
 		throw new RuntimeException("PREMATURE");
 	}
@@ -310,12 +341,12 @@ public class SMTII extends Dialect {
 		variableDeclaration.append("(declare-const ");
 		variableDeclaration.append(variableField.variableName);
 		
-		if(variableField.fieldType.equals(Double.class))
-			variableDeclaration.append(" Real)");
-		else if(variableField.fieldType.equals(Float.class))
-			variableDeclaration.append(" Real)");
-		else if(variableField.fieldType.equals(Integer.class))
+		if(variableField.fieldType.equals(int.class) || variableField.fieldType.equals(Integer.class))
 			variableDeclaration.append(" Int)");
+		else if(variableField.fieldType.equals(float.class) || variableField.fieldType.equals(Float.class))
+			variableDeclaration.append(" Real)");
+		else if(variableField.fieldType.equals(double.class) || variableField.fieldType.equals(Double.class))
+			variableDeclaration.append(" Real)");
 		else {
 			String message = "could not translate class \"" + variableField.fieldType.getName() + "\" to Z3 syntax.";
 			Logger.getLogger(SMTII.class).fatal(message);

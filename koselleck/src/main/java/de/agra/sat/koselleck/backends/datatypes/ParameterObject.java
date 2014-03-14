@@ -1,7 +1,7 @@
 package de.agra.sat.koselleck.backends.datatypes;
 
 /** imports */
-import de.agra.sat.koselleck.decompiling.datatypes.PrefixedField;
+import de.agra.sat.koselleck.datatypes.PreField;
 
 /**
  * ParameterObject is an parameter object for a specific method (at index).
@@ -13,7 +13,7 @@ public class ParameterObject {
 	/** the object */
 	public final Object object;
 	/** the prefixed field of the object */
-	public final PrefixedField prefixedField;
+	public final PreField preField;
 	/** the index of the parameter */
 	public final int index;
 	
@@ -24,9 +24,9 @@ public class ParameterObject {
 	 * @param prefixedField the new prefixed field of the object
 	 * @param index the index of the parameter
 	 */
-	public ParameterObject(Object object, PrefixedField prefixedField, int index) {
+	public ParameterObject(Object object, PreField preField, int index) {
 		this.object = object;
-		this.prefixedField = prefixedField;
+		this.preField = preField;
 		this.index = index;
 	}
 	
@@ -45,6 +45,6 @@ public class ParameterObject {
 			return false;
 		
 		ParameterObject parameterObject = (ParameterObject)object;
-		return this.object.equals(parameterObject.object) && this.prefixedField.equals(parameterObject.prefixedField);
+		return this.object.equals(parameterObject.object) && this.preField.equals(parameterObject.preField);
 	}
 }
