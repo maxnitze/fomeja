@@ -224,13 +224,11 @@ public abstract class Dialect {
 		
 		for(AbstractSingleTheorem singleTheorem : singleTheorems) {
 			AbstractConstraint constraint = singleTheorem.constraint;
-			
-			System.out.println("constraint = " + constraint);
-			
+
 			for(PreField preField : constraint.preFields) {
-				if(preField.fieldCode == Opcode.load && preField.fieldCodeIndex == 0 && !preField.isVariable && constraint.matches(preField.prefixedName))
-					constraint.replaceAll(preField.prefixedName, this.getAttributeReplacement(component, preField));
-				else if(preField.fieldCode == Opcode.load && constraint.matches(preField.prefixedName))
+				if(preField.fieldCode == Opcode.load && preField.fieldCodeIndex == 0 && !preField.isVariable && constraint.matches(preField.constantTablePrefixedName))
+					constraint.replaceAll(preField.constantTablePrefixedName, this.getAttributeReplacement(component, preField));
+				else if(preField.fieldCode == Opcode.load && constraint.matches(preField.constantTablePrefixedName))
 					if(!preFieldsList.contains(preField))
 						preFieldsList.add(preField);
 			}
@@ -259,7 +257,7 @@ public abstract class Dialect {
 					ConstraintParameter currentConstraintParameter = constraintParameters[preField.fieldCodeIndex-1];
 					if(!preField.isVariable) {
 						String replacement = this.getReplacement(preField, currentConstraintParameter.getCurrentCollectionObject());
-						cConstraint.replaceAll(preField.prefixedName, replacement);
+						cConstraint.replaceAll(preField.constantTablePrefixedName, replacement);
 					} else {
 						Object parameterObject = this.getParameterObject(preField, currentConstraintParameter.getCurrentCollectionObject());
 						int index = -1;
@@ -279,13 +277,13 @@ public abstract class Dialect {
 							parameterObjects.add(currentParameterObject);
 							index = currentParameterObject.index;
 						}
-						String prefixedVariableName = preField.prefixedName + "_" + index;
+						String prefixedVariableName = preField.preFieldsPrefixedName + "_" + index;
 						
 						variablesMap.put(prefixedVariableName, currentParameterObject);
 						VariableField variableField = new VariableField(prefixedVariableName, preField.field.getType());
 						if(!variableFields.contains(variableField))
 							variableFields.add(variableField);
-						cConstraint.replaceAll(preField.prefixedName, prefixedVariableName);
+						cConstraint.replaceAll(preField.constantTablePrefixedName, prefixedVariableName);
 					}
 				}
 				

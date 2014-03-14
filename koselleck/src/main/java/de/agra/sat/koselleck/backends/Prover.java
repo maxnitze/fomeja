@@ -58,16 +58,15 @@ public abstract class Prover {
 	 */
 	public void solveAndAssign(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
 		Theorem theorem = this.dialect.getConstraintForArguments(component, singleTheorems);
-		
-		System.out.println("component = " + component);
-		System.out.println("singleTheoremsSize = " + singleTheorems.size());
-		
+
 		String formattedTheorem = this.dialect.format(theorem);
-		
-		System.out.println(formattedTheorem); // TODO delete output
-		
+
+//		System.out.println(formattedTheorem); // TODO delete output formattedTheorem
+
 		String proverResult = solve(formattedTheorem);
-		
+
+//		System.out.println(proverResult); // TODO delete output proverResult
+
 		Map<String, Object> resultMap = this.dialect.parseResult(proverResult);
 		for(Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {
 			Object result = resultMap.get(variable.getKey());

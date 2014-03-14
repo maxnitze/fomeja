@@ -2,7 +2,6 @@ package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -25,10 +24,15 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 	/** the index of the field code */
 	public final int fieldCodeIndex;
 
+	/** constant table prefix of the field */
+	public final String constantTablePrefix;
+	/** the prefixed name of this field */
+	public final String constantTablePrefixedName;
+
 	/** the fields accessed before this field */
 	public final List<PreField> preFields;
-	/** the prefixed name of this field */
-	public final String prefixedName;
+	/** the prefixed name of this field with previous field names */
+	public final String preFieldsPrefixedName;
 
 	/** the replaced constraint value */
 	private AbstractConstraintValue replacedConstraintValue;
@@ -36,51 +40,38 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 	/**
 	 * 
 	 * @param value
+	 * @param constantTablePrefix
 	 * @param fieldCode
 	 * @param fieldCodeIndex
 	 * @param preFields
 	 */
-	public AbstractConstraintLiteralField(Field value, Opcode fieldCode, int fieldCodeIndex, List<PreField> preFields) {
+	public AbstractConstraintLiteralField(Field value, String constantTablePrefix, Opcode fieldCode, int fieldCodeIndex, List<PreField> preFields) {
 		super(value, (value != null && value.getAnnotation(Variable.class) != null), false, false);
 
 		this.fieldCode = fieldCode;
 		this.fieldCodeIndex = fieldCodeIndex;
 
+		this.constantTablePrefix = constantTablePrefix;
+		this.constantTablePrefixedName = constantTablePrefix + value.getName();
+
 		this.preFields = preFields;
 
-		StringBuilder prefixedNameBuilder = new StringBuilder("v_");
+		StringBuilder preFieldsPrefixedNameBuilder = new StringBuilder("v_");
 		for(PreField preField : preFields)
-			prefixedNameBuilder
+			preFieldsPrefixedNameBuilder
 					.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"));
 					
-		prefixedNameBuilder
+		preFieldsPrefixedNameBuilder
 			.append(value.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"))
 			.append(value.getName());
-		this.prefixedName = prefixedNameBuilder.toString();
-
-		this.replacedConstraintValue = null;
-	}
-
-	/**
-	 * 
-	 * @param preField
-	 */
-	public AbstractConstraintLiteralField(PreField preField) {
-		super(preField.field, preField.isVariable, false, false);
-
-		this.fieldCode = preField.fieldCode;
-		this.fieldCodeIndex = preField.fieldCodeIndex;
-
-		this.preFields = new ArrayList<PreField>(preField.preFields);
-
-		this.prefixedName = preField.prefixedName;
+		this.preFieldsPrefixedName = preFieldsPrefixedNameBuilder.toString();
 
 		this.replacedConstraintValue = null;
 	}
 
 	@Override
 	public void replaceAll(String regex, String replacement) {
-		if (this.replacedConstraintValue == null && this.prefixedName.matches(regex)) {
+		if (this.replacedConstraintValue == null && this.constantTablePrefixedName.matches(regex)) {
 			if (replacement.matches("^\\d+(\\.\\d+)?d$"))
 				this.replacedConstraintValue = new AbstractConstraintLiteralDouble(Double.parseDouble(replacement));
 			else if (replacement.matches("^\\d+(\\.\\d+)?f$"))
@@ -102,7 +93,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 
 	@Override
 	public boolean matches(String regex) {
-		return this.prefixedName.matches(regex);
+		return this.constantTablePrefixedName.matches(regex);
 	}
 
 	@Override
@@ -118,12 +109,12 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 
 	@Override
 	public AbstractConstraintLiteral<Field> clone() {
-		return new AbstractConstraintLiteralField(this.value, this.fieldCode, this.fieldCodeIndex, this.preFields);
+		return new AbstractConstraintLiteralField(this.value, this.constantTablePrefix, this.fieldCode, this.fieldCodeIndex, this.preFields);
 	}
 
 	@Override
 	public String toString() {
-		return this.prefixedName;
+		return this.constantTablePrefixedName;
 	}
 
 	@Override

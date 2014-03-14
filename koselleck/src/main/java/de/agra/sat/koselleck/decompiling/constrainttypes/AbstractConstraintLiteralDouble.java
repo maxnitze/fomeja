@@ -16,7 +16,7 @@ public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<D
 	 * @param value
 	 */
 	public AbstractConstraintLiteralDouble(Double value) {
-		super(value, false, false, true);
+		super(value, false, true, true);
 	}
 
 	@Override

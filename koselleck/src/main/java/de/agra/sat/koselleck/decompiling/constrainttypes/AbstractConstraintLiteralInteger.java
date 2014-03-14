@@ -16,7 +16,7 @@ public class AbstractConstraintLiteralInteger extends AbstractConstraintLiteral<
 	 * @param value
 	 */
 	public AbstractConstraintLiteralInteger(Integer value) {
-		super(value, false, false, true);
+		super(value, false, true, true);
 	}
 
 	@Override

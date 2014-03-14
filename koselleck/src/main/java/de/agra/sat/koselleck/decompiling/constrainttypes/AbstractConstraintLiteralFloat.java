@@ -16,7 +16,7 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 	 * @param value
 	 */
 	public AbstractConstraintLiteralFloat(Float value) {
-		super(value, false, false, true);
+		super(value, false, true, true);
 	}
 
 	@Override
