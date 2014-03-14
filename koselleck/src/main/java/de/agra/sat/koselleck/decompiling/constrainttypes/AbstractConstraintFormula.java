@@ -1,10 +1,6 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
-import org.apache.log4j.Logger;
-
-import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
-import de.agra.sat.koselleck.exceptions.UnsupportedConstraintLiteralNumberTypeException;
 import de.agra.sat.koselleck.types.ArithmeticOperator;
 
 /**
@@ -62,12 +58,12 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 		this.value1 = this.value1.evaluate();
 		this.value2 = this.value2.evaluate();
 		
-		if(this.value1 instanceof AbstractConstraintLiteral && this.value2 instanceof AbstractConstraintLiteral) {
+		if(this.value1 instanceof AbstractConstraintLiteral<?> && this.value2 instanceof AbstractConstraintLiteral<?>) {
 			AbstractConstraintLiteral<?> constraintLiteral1 = (AbstractConstraintLiteral<?>)this.value1;
 			AbstractConstraintLiteral<?> constraintLiteral2 = (AbstractConstraintLiteral<?>)this.value2;
 
 			if(constraintLiteral1.isNumberType && constraintLiteral2.isNumberType)
-				return this.calculateLiterals(constraintLiteral1, this.operator, constraintLiteral2);
+				return constraintLiteral1.calc(constraintLiteral2, this.operator);
 			else
 				return this;
 		} else
@@ -104,10 +100,9 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 		
 		AbstractConstraintFormula constraintFormula = (AbstractConstraintFormula)object;
 		
-		return
-				this.value1.equals(constraintFormula.value1) &&
-				this.operator == constraintFormula.operator &&
-				this.value2.equals(constraintFormula.value2);
+		return this.value1.equals(constraintFormula.value1) 
+				&& this.operator == constraintFormula.operator
+				&& this.value2.equals(constraintFormula.value2);
 	}
 	
 	/**
@@ -118,9 +113,7 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	@Override
 	public AbstractConstraintValue clone() {
 		return new AbstractConstraintFormula(
-				this.value1.clone(),
-				this.operator,
-				this.value2.clone());
+				this.value1.clone(), this.operator, this.value2.clone());
 	}
 	
 	/**
@@ -134,187 +127,11 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 		StringBuilder stringRepresentation = new StringBuilder();
 		stringRepresentation.append("(");
 		stringRepresentation.append(this.value1.toString());
+		stringRepresentation.append(" ");
 		stringRepresentation.append(this.operator.asciiName);
+		stringRepresentation.append(" ");
 		stringRepresentation.append(this.value2.toString());
 		stringRepresentation.append(")");
 		return stringRepresentation.toString();
-	}
-	
-	/** private methods
-	 * ----- ----- ----- ----- ----- */
-
-	/**
-	 * 
-	 * @param constraintLiteral1
-	 * @param operator
-	 * @param constraintLiteral2
-	 * @return
-	 */
-	private AbstractConstraintLiteral<?> calculateLiterals(AbstractConstraintLiteral<?> constraintLiteral1, ArithmeticOperator operator, AbstractConstraintLiteral<?> constraintLiteral2) {
-		/**  */
-		if(constraintLiteral1 instanceof AbstractConstraintLiteralDouble) {
-			if(constraintLiteral2 instanceof AbstractConstraintLiteralDouble)
-				return new AbstractConstraintLiteralDouble(
-						this.calculate(
-								((AbstractConstraintLiteralDouble)constraintLiteral1).value,
-								this.operator,
-								((AbstractConstraintLiteralDouble)constraintLiteral2).value));
-			if(constraintLiteral2 instanceof AbstractConstraintLiteralFloat)
-				return new AbstractConstraintLiteralDouble(
-						this.calculate(
-								((AbstractConstraintLiteralDouble)constraintLiteral1).value,
-								this.operator,
-								((AbstractConstraintLiteralFloat)constraintLiteral2).value.doubleValue()));
-			if(constraintLiteral2 instanceof AbstractConstraintLiteralInteger)
-				return new AbstractConstraintLiteralDouble(
-						this.calculate(
-								((AbstractConstraintLiteralDouble)constraintLiteral1).value,
-								this.operator,
-								((AbstractConstraintLiteralInteger)constraintLiteral2).value.doubleValue()));
-			else {
-				UnsupportedConstraintLiteralNumberTypeException e = new UnsupportedConstraintLiteralNumberTypeException(constraintLiteral2.getClass());
-				Logger.getLogger(AbstractConstraintFormula.class).fatal(e.getMessage());
-				throw e;
-			}
-		}
-		/**  */
-		else if(constraintLiteral1 instanceof AbstractConstraintLiteralFloat) {
-			if(constraintLiteral2 instanceof AbstractConstraintLiteralDouble)
-				return new AbstractConstraintLiteralDouble(
-						this.calculate(
-								((AbstractConstraintLiteralFloat)constraintLiteral1).value.doubleValue(),
-								this.operator,
-								((AbstractConstraintLiteralDouble)constraintLiteral2).value));
-			if(constraintLiteral2 instanceof AbstractConstraintLiteralFloat)
-				return new AbstractConstraintLiteralFloat(
-						this.calculate(
-								((AbstractConstraintLiteralFloat)constraintLiteral1).value,
-								this.operator,
-								((AbstractConstraintLiteralFloat)constraintLiteral2).value));
-			if(constraintLiteral2 instanceof AbstractConstraintLiteralInteger)
-				return new AbstractConstraintLiteralFloat(
-						this.calculate(
-								((AbstractConstraintLiteralFloat)constraintLiteral1).value,
-								this.operator,
-								((AbstractConstraintLiteralInteger)constraintLiteral2).value.floatValue()));
-			else {
-				UnsupportedConstraintLiteralNumberTypeException e = new UnsupportedConstraintLiteralNumberTypeException(constraintLiteral2.getClass());
-				Logger.getLogger(AbstractConstraintFormula.class).fatal(e.getMessage());
-				throw e;
-			}
-		}
-		/**  */
-		else if(constraintLiteral1 instanceof AbstractConstraintLiteralInteger) {
-			if(constraintLiteral2 instanceof AbstractConstraintLiteralDouble)
-				return new AbstractConstraintLiteralDouble(
-						this.calculate(
-								((AbstractConstraintLiteralInteger)constraintLiteral1).value.doubleValue(),
-								this.operator,
-								((AbstractConstraintLiteralDouble)constraintLiteral2).value));
-			if(constraintLiteral2 instanceof AbstractConstraintLiteralFloat)
-				return new AbstractConstraintLiteralFloat(
-						this.calculate(
-								((AbstractConstraintLiteralInteger)constraintLiteral1).value.floatValue(),
-								this.operator,
-								((AbstractConstraintLiteralFloat)constraintLiteral2).value));
-			if(constraintLiteral2 instanceof AbstractConstraintLiteralInteger)
-				return new AbstractConstraintLiteralInteger(
-						this.calculate(
-								((AbstractConstraintLiteralInteger)constraintLiteral1).value,
-								this.operator,
-								((AbstractConstraintLiteralInteger)constraintLiteral2).value));
-			else {
-				UnsupportedConstraintLiteralNumberTypeException e = new UnsupportedConstraintLiteralNumberTypeException(constraintLiteral2.getClass());
-				Logger.getLogger(AbstractConstraintFormula.class).fatal(e.getMessage());
-				throw e;
-			}
-		}
-		/**  */
-		else {
-			UnsupportedConstraintLiteralNumberTypeException e = new UnsupportedConstraintLiteralNumberTypeException(constraintLiteral1.getClass());
-			Logger.getLogger(AbstractConstraintFormula.class).fatal(e.getMessage());
-			throw e;
-		}
-	}
-	
-	/**
-	 * calculate calculates the value of the two given doubles and returns the
-	 *  calculation of those considering the given arithmetic operator.
-	 * 
-	 * @param value1 the first double
-	 * @param operator the arithmetic operator
-	 * @param value2 the second double
-	 * 
-	 * @return a new double for the calculation considering the arithmetic
-	 *  operator
-	 */
-	private Double calculate(Double value1, ArithmeticOperator operator, Double value2) {
-		switch(operator) {
-		case ADD:
-			return value1 + value2;
-		case SUB:
-			return value1 - value2;
-		case MUL:
-			return value1 * value2;
-		case DIV:
-			return value1 / value2;
-		default:
-			Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-			throw new UnknownArithmeticOperatorException(operator);
-		}
-	}
-	
-	/**
-	 * calculate calculates the value of the two given floats and returns the
-	 *  calculation of those considering the given arithmetic operator.
-	 * 
-	 * @param value1 the first float
-	 * @param operator the arithmetic operator
-	 * @param value2 the second float
-	 * 
-	 * @return a new float for the calculation considering the arithmetic
-	 *  operator
-	 */
-	private Float calculate(Float value1, ArithmeticOperator operator, Float value2) {
-		switch(operator) {
-		case ADD:
-			return value1 + value2;
-		case SUB:
-			return value1 - value2;
-		case MUL:
-			return value1 * value2;
-		case DIV:
-			return value1 / value2;
-		default:
-			Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-			throw new UnknownArithmeticOperatorException(operator);
-		}
-	}
-	
-	/**
-	 * calculate calculates the value of the two given integers and returns the
-	 *  calculation of those considering the given arithmetic operator.
-	 * 
-	 * @param value1 the first integer
-	 * @param operator the arithmetic operator
-	 * @param value2 the second integer
-	 * 
-	 * @return a new integer for the calculation considering the arithmetic
-	 *  operator
-	 */
-	private Integer calculate(Integer value1, ArithmeticOperator operator, Integer value2) {
-		switch(operator) {
-		case ADD:
-			return value1 + value2;
-		case SUB:
-			return value1 - value2;
-		case MUL:
-			return value1 * value2;
-		case DIV:
-			return value1 / value2;
-		default:
-			Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
-			throw new UnknownArithmeticOperatorException(operator);
-		}
 	}
 }

@@ -40,7 +40,6 @@ import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLineTableswitch
 import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLineValue;
 import de.agra.sat.koselleck.disassembling.bytecodetypes.DisassembledMethod;
 import de.agra.sat.koselleck.exceptions.MissformattedBytecodeLineException;
-import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
 import de.agra.sat.koselleck.exceptions.UnknownOpcodeException;
 import de.agra.sat.koselleck.exceptions.UnknownSwitchCaseException;
 import de.agra.sat.koselleck.types.ArithmeticOperator;
@@ -74,20 +73,20 @@ public class Decompiler {
 	 *  constraint starting at index zero of the byte code lines.
 	 * 
 	 * @param method the method to decompile
+	 * @param invokationValue
 	 * @param bytecodeLines the byte code lines of the method to decompile
 	 * @param argumentValues the method parameters
 	 * 
 	 * @return the abstract constraint starting at index 0 of the byte code
 	 *  lines
 	 */
-	private AbstractConstraint decompile(Method method, Map<Integer, BytecodeLine> bytecodeLines, AbstractConstraintValue... argumentValues) {
+	private AbstractConstraint decompile(Method method, Map<Integer, BytecodeLine> bytecodeLines, AbstractConstraintValue invokationValue, AbstractConstraintValue... argumentValues) {
 		this.stack.clear();
 		this.store.clear();
 		
-		this.store.put(0, new AbstractConstraintLiteralClass(
-				method.getDeclaringClass(), Opcode.load, 0));
+		this.store.put(0, invokationValue);
 		
-		for(int i=0; i<argumentValues.length; i++)
+		for (int i=0; i<argumentValues.length; i++)
 			this.store.put(i+1, argumentValues[i]);
 		
 		return parseMethodBytecode(bytecodeLines, 0);
@@ -101,21 +100,14 @@ public class Decompiler {
 	 *  method and returns the decompiled abstract constraint.
 	 * 
 	 * @param disassembledMethod the disassembled method to decompile
+	 * @param invokationValue
 	 * @param argumentValues the initial elements on the stack
 	 * 
 	 * @return the decompiled abstract constraint of the disassembled method
 	 */
-	public static AbstractConstraint decompile(DisassembledMethod disassembledMethod, AbstractConstraintValue... argumentValues) {
-		AbstractConstraintValue[] arguments;
-		if (argumentValues.length == 0 && disassembledMethod.method.getParameterTypes().length > 0) {
-			arguments = new AbstractConstraintValue[disassembledMethod.method.getParameterTypes().length];
-			for(int i=0; i<arguments.length; i++)
-				arguments[i] = new AbstractConstraintLiteralClass(
-						disassembledMethod.method.getParameterTypes()[i], Opcode.load, i+1);
-		} else
-			arguments = argumentValues;
-		
-		return new Decompiler().decompile(disassembledMethod.method, disassembledMethod.bytecodeLines, arguments);
+	public static AbstractConstraint decompile(DisassembledMethod disassembledMethod, AbstractConstraintValue invokationValue, AbstractConstraintValue... argumentValues) {
+		return new Decompiler().decompile(
+				disassembledMethod.method, disassembledMethod.bytecodeLines, invokationValue, argumentValues);
 	}
 	
 	/** constraint value methods
@@ -126,7 +118,6 @@ public class Decompiler {
 	 *  map of byte code lines. Recursively every single constraint is added to
 	 *  the abstract constraint.
 	 * 
-	 * @param method the method to decompile
 	 * @param bytecodeLines the byte code lines to process
 	 * @param offset the offset of the byte code line to start from
 	 * 
@@ -194,21 +185,21 @@ public class Decompiler {
 				break;
 				
 			case getfield:
-				bytecodeLineConstantTableAccessibleObject = (BytecodeLineConstantTableAccessibleObject)bytecodeLine;
+				bytecodeLineConstantTableAccessibleObject = (BytecodeLineConstantTableAccessibleObject) bytecodeLine;
 				
 				constraintValue = this.stack.pop();
-				if (!(constraintValue instanceof AbstractConstraintLiteral)) {
+				if (!(constraintValue instanceof AbstractConstraintLiteral<?>)) {
 					String message = "could not get field";
 					Logger.getLogger(Decompiler.class).fatal(message);
 					throw new MissformattedBytecodeLineException(message);
 				}
 				
 				this.stack.push(
-						this.getField(bytecodeLineConstantTableAccessibleObject, (AbstractConstraintLiteral<?>)constraintValue, preFields));
+						this.getField(bytecodeLineConstantTableAccessibleObject, (AbstractConstraintLiteral<?>) constraintValue, preFields));
 				
 				break;
 			case getstatic:
-				bytecodeLineConstantTableAccessibleObject = (BytecodeLineConstantTableAccessibleObject)bytecodeLine;
+				bytecodeLineConstantTableAccessibleObject = (BytecodeLineConstantTableAccessibleObject) bytecodeLine;
 				
 				constraintValue = this.stack.pop();
 				if (!(constraintValue instanceof AbstractConstraintLiteralField)) {
@@ -218,7 +209,7 @@ public class Decompiler {
 				}
 				
 				this.stack.push(
-						this.getStaticField(bytecodeLineConstantTableAccessibleObject, (AbstractConstraintLiteralField)constraintValue, preFields));
+						this.getStaticField(bytecodeLineConstantTableAccessibleObject, (AbstractConstraintLiteralField) constraintValue, preFields));
 				
 				break;
 				
@@ -307,7 +298,7 @@ public class Decompiler {
 				
 			case ldc:
 			case ldc2_w:
-				bytecodeLineValue = (BytecodeLineValue)bytecodeLine;
+				bytecodeLineValue = (BytecodeLineValue) bytecodeLine;
 
 				if (CompareUtils.equalsAny(bytecodeLineValue.value.getClass(), CompareUtils.doubleClasses))
 					this.stack.push(new AbstractConstraintLiteralDouble((Double) bytecodeLineValue.value));
@@ -340,24 +331,24 @@ public class Decompiler {
 			case invokevirtual:
 			case invokespecial:
 				bytecodeLineConstantTableAccessibleObject = (BytecodeLineConstantTableAccessibleObject)bytecodeLine;
-				
+
 				/** get arguments for method or constructor */
 				argumentValues = this.getArgumentList(bytecodeLineConstantTableAccessibleObject.accessibleObject);
-				
+
 				/** pop value from stack */
 				constraintValue = this.stack.pop();
-				
+
 				/** no premature value and accessible object is a method that can get invoked */
 				if (!argumentValues.hasPrematureArgument && constraintValue instanceof AbstractConstraintLiteral<?>
 						&& !(constraintValue instanceof AbstractConstraintLiteralField)
 						&& (bytecodeLine.opcode == Opcode.invokestatic || !(constraintValue instanceof AbstractConstraintLiteralClass))) {
 					constraintLiteral = (AbstractConstraintLiteral<?>)constraintValue;
-					
+
 					/** get argument values from abstract constraint values in argument list */
 					Object[] arguments = new Object[argumentValues.size()];
-					for(int i=0; i<argumentValues.size(); i++)
+					for (int i=0; i<argumentValues.size(); i++)
 						arguments[i] = ((AbstractConstraintLiteral<?>)argumentValues.get(i)).value;
-					
+
 					/**  */
 					if (bytecodeLineConstantTableAccessibleObject.accessibleObject instanceof Method
 							&& bytecodeLine.opcode != Opcode.invokestatic
@@ -370,7 +361,7 @@ public class Decompiler {
 							/** push result of invoked method to stack */
 							if (CompareUtils.equalsAny(lineMethod.getReturnType(), CompareUtils.doubleClasses))
 								this.stack.push(new AbstractConstraintLiteralDouble(
-									(Double) lineMethod.invoke(constraintLiteral.value, arguments)));
+										(Double) lineMethod.invoke(constraintLiteral.value, arguments)));
 							else if (CompareUtils.equalsAny(lineMethod.getReturnType(), CompareUtils.floatClasses))
 								this.stack.push(new AbstractConstraintLiteralFloat(
 										(Float) lineMethod.invoke(constraintLiteral.value, arguments)));
@@ -396,7 +387,7 @@ public class Decompiler {
 							/** push result of invoked method to stack */
 							if (CompareUtils.equalsAny(lineMethod.getReturnType(), CompareUtils.doubleClasses))
 								this.stack.push(new AbstractConstraintLiteralDouble(
-									(Double) lineMethod.invoke(null, arguments)));
+										(Double) lineMethod.invoke(null, arguments)));
 							else if (CompareUtils.equalsAny(lineMethod.getReturnType(), CompareUtils.floatClasses))
 								this.stack.push(new AbstractConstraintLiteralFloat(
 										(Float) lineMethod.invoke(null, arguments)));
@@ -449,19 +440,21 @@ public class Decompiler {
 					}
 				}
 				/** accessible object is a method and class file can get loaded from the classloader */
-				else if (bytecodeLineConstantTableAccessibleObject.accessibleObject instanceof Method &&
-						((Method) bytecodeLineConstantTableAccessibleObject.accessibleObject).getDeclaringClass().getClassLoader() != null) {
+				else if (bytecodeLineConstantTableAccessibleObject.accessibleObject instanceof Method
+						&& ((Method) bytecodeLineConstantTableAccessibleObject.accessibleObject).getDeclaringClass().getClassLoader() != null) {
+					if (bytecodeLine.opcode == Opcode.invokestatic)
+						constraintValue = AbstractConstraintValue.NULLValue;
+
 					DisassembledMethod disassembledSubMethod = KoselleckUtils.getDisassembledMethod((Method) bytecodeLineConstantTableAccessibleObject.accessibleObject);
 					AbstractConstraint abstractConstraint = new Decompiler().decompile(
-							disassembledSubMethod.method, disassembledSubMethod.bytecodeLines,
-							argumentValues.toArray(new AbstractConstraintValue[0]));
+							disassembledSubMethod.method, disassembledSubMethod.bytecodeLines, constraintValue, argumentValues.toArray(new AbstractConstraintValue[0]));
 					
 					if (abstractConstraint instanceof AbstractBooleanConstraint
 							&& ((AbstractBooleanConstraint) abstractConstraint).value) {
 						innerConstraintValue = ((AbstractBooleanConstraint) abstractConstraint).returnValue;
-						
-						if (constraintValue instanceof AbstractConstraintLiteral &&
-								innerConstraintValue instanceof AbstractConstraintLiteral) {
+
+						if (constraintValue instanceof AbstractConstraintLiteral<?>
+								&& innerConstraintValue instanceof AbstractConstraintLiteral<?>) {
 							constraintLiteral = (AbstractConstraintLiteral<?>) constraintValue;
 							innerConstraintLiteral = (AbstractConstraintLiteral<?>) innerConstraintValue; 
 							
@@ -543,7 +536,7 @@ public class Decompiler {
 			
 			case ifeq:
 			case ifne:
-				bytecodeLineOffset = (BytecodeLineOffset)bytecodeLine;
+				bytecodeLineOffset = (BytecodeLineOffset) bytecodeLine;
 				
 				if (bytecodeLineOffset.opcode == Opcode.ifeq)
 					constraintOperator = ConstraintOperator.EQUAL;
@@ -560,7 +553,7 @@ public class Decompiler {
 						nextOffset = bytecodeLineOffset.offset;
 					else
 						nextOffset = bytecodeLineOffset.followingLineNumber;
-				} else if (constraintValue instanceof AbstractConstraintLiteral
+				} else if (constraintValue instanceof AbstractConstraintLiteral<?>
 						|| constraintValue instanceof AbstractConstraintFormula) {
 					return new AbstractIfThenElseConstraint(
 							new AbstractSingleConstraint(
@@ -665,25 +658,12 @@ public class Decompiler {
 	private AbstractConstraintValue getCalculatedValue(AbstractConstraintValue constraintValue1, ArithmeticOperator operator, AbstractConstraintValue constraintValue2) {
 		if (constraintValue1 instanceof AbstractConstraintLiteral<?>
 				&& constraintValue2 instanceof AbstractConstraintLiteral<?>) {
-			AbstractConstraintLiteral<?> constraintLiteral1 = (AbstractConstraintLiteral<?>)constraintValue1;
-			AbstractConstraintLiteral<?> constraintLiteral2 = (AbstractConstraintLiteral<?>)constraintValue2;
+			AbstractConstraintLiteral<?> constraintLiteral1 = (AbstractConstraintLiteral<?>) constraintValue1;
+			AbstractConstraintLiteral<?> constraintLiteral2 = (AbstractConstraintLiteral<?>) constraintValue2;
 
-			if (constraintLiteral1.isNumberType && constraintLiteral2.isNumberType) {
-				switch (operator) {
-				case ADD:
-					return constraintLiteral1.add(constraintLiteral2, operator);
-				case SUB:
-					return constraintLiteral1.sub(constraintLiteral2, operator);
-				case MUL:
-					return constraintLiteral1.mul(constraintLiteral2, operator);
-				case DIV:
-					return constraintLiteral1.div(constraintLiteral2, operator);
-				default:
-					UnknownArithmeticOperatorException exception = new UnknownArithmeticOperatorException(operator);
-					Logger.getLogger(Decompiler.class).fatal(exception.getMessage());
-					throw exception;
-				}
-			} else
+			if (constraintLiteral1.isNumberType && constraintLiteral2.isNumberType)
+				return constraintLiteral1.calc(constraintLiteral2, operator);
+			else
 				return new AbstractConstraintFormula(
 						constraintLiteral1, operator, constraintLiteral2);
 		} else
@@ -708,16 +688,17 @@ public class Decompiler {
 	 *  constraint values and the constraint operator otherwise
 	 */
 	private AbstractConstraint getSingleConstraint(AbstractConstraintValue constraintValue1, ConstraintOperator operator, AbstractConstraintValue constraintValue2, List<PreField> preFields) {
-		if (constraintValue1 instanceof AbstractConstraintLiteral &&
-				constraintValue2 instanceof AbstractConstraintLiteral) {
+		if (constraintValue1 instanceof AbstractConstraintLiteral<?>
+				&& constraintValue2 instanceof AbstractConstraintLiteral<?>) {
 			AbstractConstraintLiteral<?> constraintLiteral1 = (AbstractConstraintLiteral<?>)constraintValue1;
 			AbstractConstraintLiteral<?> constraintLiteral2 = (AbstractConstraintLiteral<?>)constraintValue2;
 			
 			if (constraintLiteral1.isNumberType && constraintLiteral2.isNumberType)
-				return ConstraintUtils.evaluateNumberTypes(constraintLiteral1, operator, constraintLiteral2);
+				return ConstraintUtils.evaluateNumberTypes(
+						constraintLiteral1, operator, constraintLiteral2);
 			else
 				return new AbstractSingleConstraint(
-						constraintValue1, operator, constraintValue2, preFields);
+						constraintLiteral1, operator, constraintLiteral2, preFields);
 		} else
 			return new AbstractSingleConstraint(
 					constraintValue1, operator, constraintValue2, preFields);
@@ -767,7 +748,21 @@ public class Decompiler {
 	 * @return
 	 */
 	private AbstractConstraintValue getField(BytecodeLineConstantTableAccessibleObject bytecodeLineConstantTableAccessibleObject, AbstractConstraintLiteral<?> constraintLiteral, List<PreField> preFields) {
-		if (constraintLiteral instanceof AbstractConstraintLiteralField) {
+		Field bytecodeLineField = (Field) bytecodeLineConstantTableAccessibleObject.accessibleObject;
+
+		if (constraintLiteral.isFinishedType) {
+			if (bytecodeLineField.getAnnotation(Variable.class) == null) {
+				
+			} else {
+				preFields.add(new PreField(
+						bytecodeLineField, "v_" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+						constraintLiteralClass.fieldCode, constraintLiteralClass.fieldCodeIndex, new ArrayList<PreField>()));
+
+				return new AbstractConstraintLiteralField(
+						bytecodeLineField, "v_" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+						constraintLiteralClass.fieldCode, constraintLiteralClass.fieldCodeIndex, new ArrayList<PreField>());
+			}
+		} else if (constraintLiteral instanceof AbstractConstraintLiteralField) {
 			AbstractConstraintLiteralField constraintLiteralField = (AbstractConstraintLiteralField)constraintLiteral;
 
 			List<PreField> newPreFields = new ArrayList<PreField>(constraintLiteralField.preFields);
@@ -775,30 +770,26 @@ public class Decompiler {
 					constraintLiteralField.fieldCode, constraintLiteralField.fieldCodeIndex, constraintLiteralField.preFields));
 
 			preFields.add(new PreField(
-					(Field) bytecodeLineConstantTableAccessibleObject.accessibleObject,
-					constraintLiteralField.constantTablePrefix + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+					bytecodeLineField, constraintLiteralField.constantTablePrefix + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 					constraintLiteralField.fieldCode, constraintLiteralField.fieldCodeIndex, newPreFields));
 
 			return new AbstractConstraintLiteralField(
-					(Field) bytecodeLineConstantTableAccessibleObject.accessibleObject,
-					constraintLiteralField.constantTablePrefix + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+					bytecodeLineField, constraintLiteralField.constantTablePrefix + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 					constraintLiteralField.fieldCode, constraintLiteralField.fieldCodeIndex, newPreFields);
 
 		} else if (constraintLiteral instanceof AbstractConstraintLiteralClass) {
 			AbstractConstraintLiteralClass constraintLiteralClass = (AbstractConstraintLiteralClass)constraintLiteral;
 
 			preFields.add(new PreField(
-					(Field) bytecodeLineConstantTableAccessibleObject.accessibleObject,
-					"v_" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+					bytecodeLineField, "v_" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 					constraintLiteralClass.fieldCode, constraintLiteralClass.fieldCodeIndex, new ArrayList<PreField>()));
 
 			return new AbstractConstraintLiteralField(
-					(Field) bytecodeLineConstantTableAccessibleObject.accessibleObject,
-					"v_" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+					bytecodeLineField, "v_" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 					constraintLiteralClass.fieldCode, constraintLiteralClass.fieldCodeIndex, new ArrayList<PreField>());
 
 		} else {
-			String message = "could not get field";
+			String message = "could not access field \"" + bytecodeLineField.getName() +"\" on literal \"" + constraintLiteral + "\"";
 			Logger.getLogger(Decompiler.class).fatal(message);
 			throw new MissformattedBytecodeLineException(message);
 		}
@@ -813,26 +804,26 @@ public class Decompiler {
 	 * @return
 	 */
 	private AbstractConstraintValue getStaticField(BytecodeLineConstantTableAccessibleObject bytecodeLineConstantTableAccessibleObject, AbstractConstraintLiteral<?> constraintLiteral, List<PreField> preFields) {
-		Field field = (Field)bytecodeLineConstantTableAccessibleObject.accessibleObject;
+		Field bytecodeLineField = (Field) bytecodeLineConstantTableAccessibleObject.accessibleObject;
 		
 		/** non-variable static field */
-		if (field.getAnnotation(Variable.class) == null) {
-			field.setAccessible(true);
+		if (bytecodeLineField.getAnnotation(Variable.class) == null) {
+			bytecodeLineField.setAccessible(true);
 			try {
-				if (field.getType().equals(Double.class))
+				if (CompareUtils.equalsAny(bytecodeLineField.getType(), CompareUtils.doubleClasses))
 					return new AbstractConstraintLiteralDouble(
-							(Double) field.get(null));
-				else if (field.getType().equals(Float.class))
+							(Double) bytecodeLineField.get(null));
+				else if (CompareUtils.equalsAny(bytecodeLineField.getType(), CompareUtils.floatClasses))
 					return new AbstractConstraintLiteralFloat(
-							(Float) field.get(null));
-				else if (field.getType().equals(Integer.class))
+							(Float) bytecodeLineField.get(null));
+				else if (CompareUtils.equalsAny(bytecodeLineField.getType(), CompareUtils.integerClasses))
 					return new AbstractConstraintLiteralInteger(
-							(Integer) field.get(null));
+							(Integer) bytecodeLineField.get(null));
 				else
 					return new AbstractConstraintLiteralObject(
-							field.get(null));
+							bytecodeLineField.get(null));
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				String message = "could not access static field \"" + field.getName() +"\"";
+				String message = "could not access static field \"" + bytecodeLineField.getName() +"\"";
 				Logger.getLogger(Decompiler.class).fatal(message);
 				throw new IllegalArgumentException(message);
 			}
@@ -863,11 +854,11 @@ public class Decompiler {
 		
 		/** pop argument values from stack */
 		ArgumentList argumentValues = new ArgumentList();
-		for(int i=0; i<parameterCount; i++) {
+		for (int i=0; i<parameterCount; i++) {
 			AbstractConstraintValue argument = this.stack.pop();
-			if (!argumentValues.hasPrematureArgument &&
-					(!(argument instanceof AbstractConstraintLiteral) ||
-							!((AbstractConstraintLiteral<?>)argument).isFinishedType))
+			if (!argumentValues.hasPrematureArgument
+					&& (!(argument instanceof AbstractConstraintLiteral)
+							|| !((AbstractConstraintLiteral<?>)argument).isFinishedType))
 				argumentValues.hasPrematureArgument = true;
 			argumentValues.add(argument);
 		}
@@ -875,7 +866,7 @@ public class Decompiler {
 		
 		return argumentValues;
 	}
-	
+
 	/**
 	 * 
 	 * @author Max Nitze
@@ -883,10 +874,13 @@ public class Decompiler {
 	private class ArgumentList extends ArrayList<AbstractConstraintValue> {
 		/**  */
 		private static final long serialVersionUID = 4116003574027287498L;
-		
+
 		/**  */
 		public boolean hasPrematureArgument;
-		
+
+		/**
+		 * 
+		 */
 		public ArgumentList() {
 			super();
 			this.hasPrematureArgument = false;

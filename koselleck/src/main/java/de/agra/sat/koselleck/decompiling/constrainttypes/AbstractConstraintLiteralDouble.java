@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.exceptions.NoCalculatableNumberTypeException;
 import de.agra.sat.koselleck.exceptions.NoComparableNumberTypeException;
+import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
 import de.agra.sat.koselleck.types.ArithmeticOperator;
 
 /**
@@ -67,61 +68,52 @@ public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<D
 			throw exception;
 		}
 	}
-
+	
 	@Override
-	public AbstractConstraintLiteral<?> add(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
-		if (constraintLiteral.value instanceof Double)
-			return new AbstractConstraintLiteralDouble(this.value + ((Double) constraintLiteral.value));
-		else if (constraintLiteral.value instanceof Float)
-			return new AbstractConstraintLiteralDouble(this.value + ((Float) constraintLiteral.value).doubleValue());
-		else if (constraintLiteral.value instanceof Integer)
-			return new AbstractConstraintLiteralDouble(this.value + ((Integer) constraintLiteral.value).doubleValue());
-		else {
-			NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(constraintLiteral);
-			Logger.getLogger(AbstractConstraintLiteralField.class).fatal(exception.getMessage());
-			throw exception;
-		}
-	}
-
-	@Override
-	public AbstractConstraintLiteral<?> sub(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
-		if (constraintLiteral.value instanceof Double)
-			return new AbstractConstraintLiteralDouble(this.value - ((Double) constraintLiteral.value));
-		else if (constraintLiteral.value instanceof Float)
-			return new AbstractConstraintLiteralDouble(this.value - ((Float) constraintLiteral.value).doubleValue());
-		else if (constraintLiteral.value instanceof Integer)
-			return new AbstractConstraintLiteralDouble(this.value - ((Integer) constraintLiteral.value).doubleValue());
-		else {
-			NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(constraintLiteral);
-			Logger.getLogger(AbstractConstraintLiteralField.class).fatal(exception.getMessage());
-			throw exception;
-		}
-	}
-
-	@Override
-	public AbstractConstraintLiteral<?> mul(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
-		if (constraintLiteral.value instanceof Double)
-			return new AbstractConstraintLiteralDouble(this.value * ((Double) constraintLiteral.value));
-		else if (constraintLiteral.value instanceof Float)
-			return new AbstractConstraintLiteralDouble(this.value * ((Float) constraintLiteral.value).doubleValue());
-		else if (constraintLiteral.value instanceof Integer)
-			return new AbstractConstraintLiteralDouble(this.value * ((Integer) constraintLiteral.value).doubleValue());
-		else {
-			NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(constraintLiteral);
-			Logger.getLogger(AbstractConstraintLiteralField.class).fatal(exception.getMessage());
-			throw exception;
-		}
-	}
-
-	@Override
-	public AbstractConstraintLiteral<?> div(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
-		if (constraintLiteral.value instanceof Double)
-			return new AbstractConstraintLiteralDouble(this.value / ((Double) constraintLiteral.value));
-		else if (constraintLiteral.value instanceof Float)
-			return new AbstractConstraintLiteralDouble(this.value / ((Float) constraintLiteral.value).doubleValue());
-		else if (constraintLiteral.value instanceof Integer)
-			return new AbstractConstraintLiteralDouble(this.value / ((Integer) constraintLiteral.value).doubleValue());
-		else {
+	public AbstractConstraintLiteral<?> calc(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
+		if (constraintLiteral.value instanceof Double) {
+			switch(operator) {
+			case ADD:
+				return new AbstractConstraintLiteralDouble(this.value + ((Double) constraintLiteral.value));
+			case SUB:
+				return new AbstractConstraintLiteralDouble(this.value - ((Double) constraintLiteral.value));
+			case MUL:
+				return new AbstractConstraintLiteralDouble(this.value * ((Double) constraintLiteral.value));
+			case DIV:
+				return new AbstractConstraintLiteralDouble(this.value / ((Double) constraintLiteral.value));
+			default:
+				Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+				throw new UnknownArithmeticOperatorException(operator);
+			}
+		} else if (constraintLiteral.value instanceof Float) {
+			switch(operator) {
+			case ADD:
+				return new AbstractConstraintLiteralDouble(this.value + ((Float) constraintLiteral.value).doubleValue());
+			case SUB:
+				return new AbstractConstraintLiteralDouble(this.value - ((Float) constraintLiteral.value).doubleValue());
+			case MUL:
+				return new AbstractConstraintLiteralDouble(this.value * ((Float) constraintLiteral.value).doubleValue());
+			case DIV:
+				return new AbstractConstraintLiteralDouble(this.value / ((Float) constraintLiteral.value).doubleValue());
+			default:
+				Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+				throw new UnknownArithmeticOperatorException(operator);
+			}
+		} else if (constraintLiteral.value instanceof Integer) {
+			switch(operator) {
+			case ADD:
+				return new AbstractConstraintLiteralDouble(this.value + ((Integer) constraintLiteral.value).doubleValue());
+			case SUB:
+				return new AbstractConstraintLiteralDouble(this.value - ((Integer) constraintLiteral.value).doubleValue());
+			case MUL:
+				return new AbstractConstraintLiteralDouble(this.value * ((Integer) constraintLiteral.value).doubleValue());
+			case DIV:
+				return new AbstractConstraintLiteralDouble(this.value / ((Integer) constraintLiteral.value).doubleValue());
+			default:
+				Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+				throw new UnknownArithmeticOperatorException(operator);
+			}
+		} else {
 			NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(constraintLiteral);
 			Logger.getLogger(AbstractConstraintLiteralField.class).fatal(exception.getMessage());
 			throw exception;

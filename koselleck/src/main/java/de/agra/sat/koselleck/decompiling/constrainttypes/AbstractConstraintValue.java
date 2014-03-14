@@ -7,6 +7,8 @@ package de.agra.sat.koselleck.decompiling.constrainttypes;
  * @author Max Nitze
  */
 public abstract class AbstractConstraintValue {
+	public static AbstractConstraintValue NULLValue = new AbstractConstraintLiteralObject(null);
+
 	/**
 	 * replaceAll replaces all occurrences of the given regular expression
 	 * 	{@code regex} with the given {@code replacement}.

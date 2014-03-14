@@ -16,8 +16,12 @@ import de.agra.sat.koselleck.backends.Z3;
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
 import de.agra.sat.koselleck.backends.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.decompiling.Decompiler;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiteralClass;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiteralObject;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintValue;
 import de.agra.sat.koselleck.disassembling.bytecodetypes.DisassembledMethod;
 import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
+import de.agra.sat.koselleck.types.Opcode;
 import de.agra.sat.koselleck.utils.KoselleckUtils;
 
 /**
@@ -106,8 +110,15 @@ public abstract class DIAB {
 				String methodSignature = (method.toGenericString().replaceFirst("^public boolean .*\\(", "public boolean "+ method.getName() +"(") + ";").replaceAll(", ", ",");;
 				DisassembledMethod disassembledMethod = disassembledMethods.get(methodSignature);
 				
+				AbstractConstraintValue[] arguments = new AbstractConstraintValue[disassembledMethod.method.getParameterTypes().length];
+				for (int i = 0; i < arguments.length; i++)
+					arguments[i] = new AbstractConstraintLiteralClass(
+							disassembledMethod.method.getParameterTypes()[i], Opcode.load, i+1);
+				
 				if(disassembledMethod != null)
-					singleTheorems.add(new AbstractSingleTheorem(Decompiler.decompile(disassembledMethod), paramFields));
+					singleTheorems.add(new AbstractSingleTheorem(
+							Decompiler.decompile(
+									disassembledMethod, new AbstractConstraintLiteralObject(component), arguments), paramFields));
 			}
 			
 			try {

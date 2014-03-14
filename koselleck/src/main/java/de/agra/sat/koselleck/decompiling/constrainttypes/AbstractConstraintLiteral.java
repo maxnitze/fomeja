@@ -110,36 +110,8 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	/**
 	 * 
 	 * @param constraintLiteral
-	 * @param operator
 	 * 
 	 * @return
 	 */
-	public abstract AbstractConstraintLiteral<?> add(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator);
-
-	/**
-	 * 
-	 * @param constraintLiteral
-	 * @param operator
-	 * 
-	 * @return
-	 */
-	public abstract AbstractConstraintLiteral<?> sub(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator);
-
-	/**
-	 * 
-	 * @param constraintLiteral
-	 * @param operator
-	 * 
-	 * @return
-	 */
-	public abstract AbstractConstraintLiteral<?> mul(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator);
-
-	/**
-	 * 
-	 * @param constraintLiteral
-	 * @param operator
-	 * 
-	 * @return
-	 */
-	public abstract AbstractConstraintLiteral<?> div(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator);
+	public abstract AbstractConstraintLiteral<?> calc(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator);
 }

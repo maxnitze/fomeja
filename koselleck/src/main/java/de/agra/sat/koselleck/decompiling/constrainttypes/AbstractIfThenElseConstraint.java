@@ -58,8 +58,8 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	public AbstractConstraint evaluate() {
 		this.ifCondition = this.ifCondition.evaluate();
 		
-		if(this.ifCondition instanceof AbstractBooleanConstraint) {
-			if(((AbstractBooleanConstraint)this.ifCondition).value)
+		if (this.ifCondition instanceof AbstractBooleanConstraint) {
+			if (((AbstractBooleanConstraint)this.ifCondition).value)
 				return this.thenCaseConstraint.evaluate();
 			else
 				return this.elseCaseConstraint.evaluate();
@@ -67,23 +67,23 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 			this.thenCaseConstraint = this.thenCaseConstraint.evaluate();
 			this.elseCaseConstraint = this.elseCaseConstraint.evaluate();
 			
-			if(this.thenCaseConstraint instanceof AbstractBooleanConstraint) {
-				if(this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
+			if (this.thenCaseConstraint instanceof AbstractBooleanConstraint) {
+				if (this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
 					AbstractBooleanConstraint booleanThenCaseConstraint = (AbstractBooleanConstraint)this.thenCaseConstraint;
 					AbstractBooleanConstraint booleanElseCaseConstraint = (AbstractBooleanConstraint)this.elseCaseConstraint;
 					
-					if(booleanThenCaseConstraint.value && booleanElseCaseConstraint.value)
+					if (booleanThenCaseConstraint.value && booleanElseCaseConstraint.value)
 						return new AbstractBooleanConstraint(true);
-					else if(booleanThenCaseConstraint.value)
+					else if (booleanThenCaseConstraint.value)
 						return this.ifCondition;
-					else if(booleanElseCaseConstraint.value)
+					else if (booleanElseCaseConstraint.value)
 						return this.ifCondition.invert();
 					else
 						return new AbstractBooleanConstraint(false);
 				} else {
 					AbstractBooleanConstraint booleanThenCaseConstraint = (AbstractBooleanConstraint)this.thenCaseConstraint;
 					
-					if(booleanThenCaseConstraint.value)
+					if (booleanThenCaseConstraint.value)
 						return new AbstractSubConstraint(
 								this.ifCondition,
 								BooleanConnector.OR,
@@ -97,10 +97,10 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 								BooleanConnector.AND,
 								this.elseCaseConstraint);
 				}
-			} else if(this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
+			} else if (this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
 				AbstractBooleanConstraint booleanElseCaseConstraint = (AbstractBooleanConstraint)this.elseCaseConstraint;
 				
-				if(booleanElseCaseConstraint.value)
+				if (booleanElseCaseConstraint.value)
 					return new AbstractSubConstraint(
 							new AbstractSubConstraint(
 									this.ifCondition,
@@ -149,7 +149,7 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	 */
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractIfThenElseConstraint))
+		if (!(object instanceof AbstractIfThenElseConstraint))
 			return false;
 		
 		AbstractIfThenElseConstraint abstractIfThenElseConstraint = (AbstractIfThenElseConstraint)object;

@@ -45,7 +45,7 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	public void replaceAll(String regex, String replacement) {
 		this.constraintValue.replaceAll(regex, replacement);
 		
-		for(AbstractConstraintValue methodArgument : this.objectArguments)
+		for (AbstractConstraintValue methodArgument : this.objectArguments)
 			methodArgument.replaceAll(regex, replacement);
 	}
 	
@@ -58,28 +58,27 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 		/** evaluate this constraint value */
 		this.constraintValue = this.constraintValue.evaluate();
 		/** evaluate the arguments for the arguments the method is called with */
-		for(int i=0; i<this.objectArguments.size(); i++)
+		for (int i=0; i<this.objectArguments.size(); i++)
 			this.objectArguments.set(i, this.objectArguments.get(i).evaluate());
 		
 		/** evaluated constraint value is a literal */
-		if(this.constraintValue instanceof AbstractConstraintLiteral) {
+		if (this.constraintValue instanceof AbstractConstraintLiteral) {
 			AbstractConstraintLiteral<?> constraintLiteral = (AbstractConstraintLiteral<?>)this.constraintValue;
 			
 			/** check for unfinished argument values */
 			Object[] arguments = new Object[this.objectArguments.size()];
-			for(int i=0; i<this.objectArguments.size(); i++) {
-				if(!(this.objectArguments.get(i) instanceof AbstractConstraintLiteral) ||
+			for (int i=0; i<this.objectArguments.size(); i++) {
+				if (!(this.objectArguments.get(i) instanceof AbstractConstraintLiteral) ||
 						!((AbstractConstraintLiteral<?>)this.objectArguments.get(i)).isFinishedType)
 					return this;
 				
 				arguments[i] = ((AbstractConstraintLiteral<?>)this.objectArguments.get(i)).value;
 			}
-			
-//			constraintLiteral.valueType.hasClass(((Method)this.accessibleObject).getDeclaringClass())) {
+
 			/** try to invoke the accessible object (method or constructor) */
 			try {
 				if (this.accessibleObject instanceof Method) {
-					Method method = (Method)this.accessibleObject;
+					Method method = (Method) this.accessibleObject;
 
 					Object invokationObject;
 					if (Modifier.isStatic(method.getModifiers()))
@@ -101,7 +100,7 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 								method.invoke(invokationObject, arguments));
 				}
 				/** accessible object is a constructor */
-				else if(this.accessibleObject instanceof Constructor<?>) {
+				else if (this.accessibleObject instanceof Constructor<?>) {
 					Constructor<?> constructor = (Constructor<?>)this.accessibleObject;
 
 					if (CompareUtils.equalsAny(
@@ -126,8 +125,8 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 					
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
 				StringBuilder argumentString = new StringBuilder();
-				for(Object argument : arguments) {
-					if(argumentString.length() > 0)
+				for (Object argument : arguments) {
+					if (argumentString.length() > 0)
 						argumentString.append(", ");
 					argumentString.append(argument.toString());
 					argumentString.append("(:");
@@ -136,9 +135,9 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 				}
 				
 				String message;
-				if(this.accessibleObject instanceof Method)
+				if (this.accessibleObject instanceof Method)
 					message = "could not invoke method \"" + ((Method)this.accessibleObject).toGenericString() + "\" with arguments \"(" + argumentString.toString() + ")\"";
-				else if(this.accessibleObject instanceof Constructor<?>)
+				else if (this.accessibleObject instanceof Constructor<?>)
 					message = "could not invoke constructor \"" + ((Constructor<?>)this.accessibleObject).toGenericString() + "\" with arguments \"(" + argumentString.toString() + ")\"";
 				else
 					message = "could not invoke accessible object type \"" + this.accessibleObject.toString() + "\" with arguments \"(" + argumentString.toString() + ")\"";
@@ -168,7 +167,7 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	 */
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractPrematureConstraintValue))
+		if (!(object instanceof AbstractPrematureConstraintValue))
 			return false;
 		
 		AbstractPrematureConstraintValue constraintValue = (AbstractPrematureConstraintValue)object;
@@ -194,8 +193,8 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	@Override
 	public String toString() {
 		StringBuilder argumentString = new StringBuilder();
-		for(AbstractConstraintValue argument : this.objectArguments) {
-			if(argumentString.length() > 0)
+		for (AbstractConstraintValue argument : this.objectArguments) {
+			if (argumentString.length() > 0)
 				argumentString.append(", ");
 			argumentString.append(argument.toString());
 		}

@@ -125,28 +125,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 	}
 
 	@Override
-	public AbstractConstraintLiteral<?> add(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
-		NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(this);
-		Logger.getLogger(AbstractConstraintLiteralField.class).fatal(exception.getMessage());
-		throw exception;
-	}
-
-	@Override
-	public AbstractConstraintLiteral<?> sub(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
-		NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(this);
-		Logger.getLogger(AbstractConstraintLiteralField.class).fatal(exception.getMessage());
-		throw exception;
-	}
-
-	@Override
-	public AbstractConstraintLiteral<?> mul(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
-		NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(this);
-		Logger.getLogger(AbstractConstraintLiteralField.class).fatal(exception.getMessage());
-		throw exception;
-	}
-
-	@Override
-	public AbstractConstraintLiteral<?> div(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
+	public AbstractConstraintLiteral<?> calc(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
 		NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(this);
 		Logger.getLogger(AbstractConstraintLiteralField.class).fatal(exception.getMessage());
 		throw exception;
