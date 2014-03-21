@@ -162,13 +162,13 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	@Override
 	public String toString() {
 		StringBuilder stringRepresentation = new StringBuilder();
-		stringRepresentation.append("if ");
+		stringRepresentation.append("if (");
 		stringRepresentation.append(this.ifCondition.toString());
-		stringRepresentation.append(" then ");
+		stringRepresentation.append(") then (");
 		stringRepresentation.append(this.thenCaseConstraint.toString());
-		stringRepresentation.append(" else ");
+		stringRepresentation.append(") else (");
 		stringRepresentation.append(this.elseCaseConstraint.toString());
-		stringRepresentation.append("");
+		stringRepresentation.append(")");
 		return stringRepresentation.toString();
 	}
 }

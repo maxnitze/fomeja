@@ -184,9 +184,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	@Override
 	public AbstractConstraint clone() {
 		return new AbstractSubConstraint(
-				this.constraint1.clone(),
-				this.connector,
-				this.constraint2.clone());
+				this.constraint1.clone(), this.connector, this.constraint2.clone());
 	}
 	
 	/**
@@ -198,13 +196,11 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	@Override
 	public String toString() {
 		StringBuilder stringRepresentation = new StringBuilder();
-		stringRepresentation.append("(");
 		stringRepresentation.append(this.constraint1.toString());
 		stringRepresentation.append(" ");
 		stringRepresentation.append(this.connector.code);
 		stringRepresentation.append(" ");
 		stringRepresentation.append(this.constraint2.toString());
-		stringRepresentation.append(")");
 		return stringRepresentation.toString();
 	}
 	

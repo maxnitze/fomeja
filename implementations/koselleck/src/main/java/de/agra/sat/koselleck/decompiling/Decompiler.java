@@ -466,22 +466,22 @@ public class Decompiler {
 									newPreFields.addAll(innerConstraintLiteralField.preFields);
 
 									preFields.add(new PreField(innerConstraintLiteralField.value,
-											constraintLiteralField.constantTablePrefix + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+											constraintLiteralField.constantTablePrefix + innerConstraintLiteralField.fieldCodeIndex + "-" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 											constraintLiteralField.fieldCode, constraintLiteralField.fieldCodeIndex, new ArrayList<PreField>(newPreFields)));
 
 									this.stack.push(new AbstractConstraintLiteralField(innerConstraintLiteralField.value,
-											constraintLiteralField.constantTablePrefix + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+											constraintLiteralField.constantTablePrefix + innerConstraintLiteralField.fieldCodeIndex + "-" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 											constraintLiteralField.fieldCode, constraintLiteralField.fieldCodeIndex, newPreFields));
 								} else if (constraintLiteral instanceof AbstractConstraintLiteralClass) {
 									constraintLiteralClass = (AbstractConstraintLiteralClass) constraintLiteral;
 
 									preFields.add(new PreField(innerConstraintLiteralField.value,
-											"v_" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+											"v_" + constraintLiteralClass.fieldCodeIndex + "-" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 											constraintLiteralClass.fieldCode, constraintLiteralClass.fieldCodeIndex,
 											new ArrayList<PreField>(innerConstraintLiteralField.preFields)));
 
 									this.stack.push(new AbstractConstraintLiteralField(innerConstraintLiteralField.value,
-											"v_" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+											"v_" + constraintLiteralClass.fieldCodeIndex + "-" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 											constraintLiteralClass.fieldCode, constraintLiteralClass.fieldCodeIndex,
 											new ArrayList<PreField>(innerConstraintLiteralField.preFields)));
 								} else
@@ -490,8 +490,10 @@ public class Decompiler {
 								throw new RuntimeException("TODO invokevirtual --> inner literal is no prefixed field"); // TODO implement
 						} else
 							throw new RuntimeException("TODO invokevirtual --> no abstract constraint literal"); // TODO implement
-					} else
+					} else {
+						System.out.println(abstractConstraint);
 						throw new RuntimeException("TODO invokevirtual --> no abstract boolean constraint"); // TODO implement
+					}
 				}
 				/** class file can not get loaded from the classloader (e.g. java.lang classes) */
 				else
@@ -778,22 +780,22 @@ public class Decompiler {
 					constraintLiteralField.fieldCode, constraintLiteralField.fieldCodeIndex, constraintLiteralField.preFields));
 
 			preFields.add(new PreField(
-					bytecodeLineField, constraintLiteralField.constantTablePrefix + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+					bytecodeLineField, constraintLiteralField.constantTablePrefix + constraintLiteralField.fieldCodeIndex + "-" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 					constraintLiteralField.fieldCode, constraintLiteralField.fieldCodeIndex, new ArrayList<PreField>(newPreFields)));
 
 			return new AbstractConstraintLiteralField(
-					bytecodeLineField, constraintLiteralField.constantTablePrefix + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+					bytecodeLineField, constraintLiteralField.constantTablePrefix + constraintLiteralField.fieldCodeIndex + "-" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 					constraintLiteralField.fieldCode, constraintLiteralField.fieldCodeIndex, newPreFields);
 
 		} else if (constraintLiteral instanceof AbstractConstraintLiteralClass) {
 			AbstractConstraintLiteralClass constraintLiteralClass = (AbstractConstraintLiteralClass) constraintLiteral;
 
 			preFields.add(new PreField(
-					bytecodeLineField, "v_" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+					bytecodeLineField, "v_" + constraintLiteralClass.fieldCodeIndex + "-" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 					constraintLiteralClass.fieldCode, constraintLiteralClass.fieldCodeIndex, new ArrayList<PreField>()));
 
 			return new AbstractConstraintLiteralField(
-					bytecodeLineField, "v_" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+					bytecodeLineField, "v_" + constraintLiteralClass.fieldCodeIndex + "-" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 					constraintLiteralClass.fieldCode, constraintLiteralClass.fieldCodeIndex, new ArrayList<PreField>());
 
 		} else {

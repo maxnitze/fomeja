@@ -131,13 +131,8 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	 */
 	@Override
 	public AbstractConstraint clone() {
-		List<PreField> preFields = new ArrayList<PreField>();
-		preFields.addAll(this.preFields);
 		return new AbstractSingleConstraint(
-				this.value1.clone(),
-				this.operator,
-				this.value2.clone(),
-				preFields);
+				this.value1.clone(), this.operator, this.value2.clone(), new ArrayList<PreField>(this.preFields));
 	}
 	
 	/**
@@ -149,13 +144,11 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	@Override
 	public String toString() {
 		StringBuilder stringRepresentation = new StringBuilder();
-		stringRepresentation.append("(");
 		stringRepresentation.append(this.value1.toString());
 		stringRepresentation.append(" ");
 		stringRepresentation.append(this.operator.asciiName);
 		stringRepresentation.append(" ");
 		stringRepresentation.append(this.value2.toString());
-		stringRepresentation.append(")");
 		return stringRepresentation.toString();
 	}
 }
