@@ -289,7 +289,7 @@ public abstract class Dialect {
 				
 				AbstractConstraint abstractPartialConstraint = cConstraint.evaluate();
 				if(abstractPartialConstraint instanceof AbstractBooleanConstraint) {
-					AbstractBooleanConstraint abstractBooleanConstraint = (AbstractBooleanConstraint)abstractPartialConstraint;
+					AbstractBooleanConstraint abstractBooleanConstraint = (AbstractBooleanConstraint) abstractPartialConstraint;
 					if(!abstractBooleanConstraint.value)
 						throw new NotSatisfyableException("one or more of the constraints are not satisfyable for the given instance");
 				} else
@@ -362,13 +362,14 @@ public abstract class Dialect {
 	 */
 	private Object getParameterObject(PreField preField, Object startingObject) {
 		Object parameterObject = startingObject;
-		for(PreField prePrefixedField : preField.preFields) {
-			prePrefixedField.field.setAccessible(true);
+		for(PreField prePreField : preField.preFields) {
+			prePreField.field.setAccessible(true);
 			try {
-				parameterObject = prePrefixedField.field.get(parameterObject);
+				parameterObject = prePreField.field.get(parameterObject);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				Logger.getLogger(Dialect.class).fatal("could not access field \"" + prePrefixedField.field.getName() +"\"");
-				throw new IllegalArgumentException("could not access field \"" + prePrefixedField.field.getName() +"\"");
+				String message = "could not access field \"" + prePreField.field.getName() +"\" on object \"" + startingObject + "\"";
+				Logger.getLogger(Dialect.class).fatal(message);
+				throw new IllegalArgumentException(message + "\n" + e.getMessage());
 			}
 		}
 		

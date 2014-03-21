@@ -1,9 +1,6 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
-import java.util.ArrayList;
-
-import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.types.BooleanConnector;
 
 /**
@@ -26,7 +23,6 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	 * @param elseCaseConstraint
 	 */
 	public AbstractIfThenElseConstraint(AbstractConstraint ifCondition, AbstractConstraint thenCaseConstraint, AbstractConstraint elseCaseConstraint) {
-		super(new ArrayList<PreField>());
 		this.preFields.addAll(ifCondition.preFields);
 		this.preFields.addAll(thenCaseConstraint.preFields);
 		this.preFields.addAll(elseCaseConstraint.preFields);
@@ -57,9 +53,9 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	@Override
 	public AbstractConstraint evaluate() {
 		this.ifCondition = this.ifCondition.evaluate();
-		
+
 		if (this.ifCondition instanceof AbstractBooleanConstraint) {
-			if (((AbstractBooleanConstraint)this.ifCondition).value)
+			if (((AbstractBooleanConstraint) this.ifCondition).value)
 				return this.thenCaseConstraint.evaluate();
 			else
 				return this.elseCaseConstraint.evaluate();
@@ -69,9 +65,9 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 			
 			if (this.thenCaseConstraint instanceof AbstractBooleanConstraint) {
 				if (this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
-					AbstractBooleanConstraint booleanThenCaseConstraint = (AbstractBooleanConstraint)this.thenCaseConstraint;
-					AbstractBooleanConstraint booleanElseCaseConstraint = (AbstractBooleanConstraint)this.elseCaseConstraint;
-					
+					AbstractBooleanConstraint booleanThenCaseConstraint = (AbstractBooleanConstraint) this.thenCaseConstraint;
+					AbstractBooleanConstraint booleanElseCaseConstraint = (AbstractBooleanConstraint) this.elseCaseConstraint;
+
 					if (booleanThenCaseConstraint.value && booleanElseCaseConstraint.value)
 						return new AbstractBooleanConstraint(true);
 					else if (booleanThenCaseConstraint.value)
@@ -85,34 +81,24 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 					
 					if (booleanThenCaseConstraint.value)
 						return new AbstractSubConstraint(
-								this.ifCondition,
-								BooleanConnector.OR,
+								this.ifCondition, BooleanConnector.OR,
 								new AbstractSubConstraint(
-										this.ifCondition.clone().invert(),
-										BooleanConnector.AND,
-										this.elseCaseConstraint));
+										this.ifCondition.clone().invert(), BooleanConnector.AND, this.elseCaseConstraint));
 					else
 						return new AbstractSubConstraint(
-								this.ifCondition.clone().invert(),
-								BooleanConnector.AND,
-								this.elseCaseConstraint);
+								this.ifCondition.clone().invert(), BooleanConnector.AND, this.elseCaseConstraint);
 				}
 			} else if (this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
 				AbstractBooleanConstraint booleanElseCaseConstraint = (AbstractBooleanConstraint)this.elseCaseConstraint;
-				
+
 				if (booleanElseCaseConstraint.value)
 					return new AbstractSubConstraint(
 							new AbstractSubConstraint(
-									this.ifCondition,
-									BooleanConnector.AND,
-									this.thenCaseConstraint),
-							BooleanConnector.OR,
-							this.ifCondition.clone().invert());
+									this.ifCondition, BooleanConnector.AND, this.thenCaseConstraint),
+							BooleanConnector.OR, this.ifCondition.clone().invert());
 				else
 					return new AbstractSubConstraint(
-							this.ifCondition,
-							BooleanConnector.AND,
-							this.thenCaseConstraint);
+							this.ifCondition, BooleanConnector.AND, this.thenCaseConstraint);
 			} else
 				return this;
 		}
@@ -126,9 +112,9 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	 */
 	@Override
 	public boolean matches(String regex) {
-		return this.ifCondition.matches(regex) ||
-				this.thenCaseConstraint.matches(regex) ||
-				this.elseCaseConstraint.matches(regex);
+		return this.ifCondition.matches(regex)
+				|| this.thenCaseConstraint.matches(regex)
+				|| this.elseCaseConstraint.matches(regex);
 	}
 	
 	/**

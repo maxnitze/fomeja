@@ -52,7 +52,7 @@ public class AbstractConstraintLiteralString extends AbstractConstraintLiteral<S
 	}
 
 	@Override
-	public AbstractConstraintLiteral<String> clone() {
+	public AbstractConstraintLiteralString clone() {
 		return new AbstractConstraintLiteralString(this.value);
 	}
 

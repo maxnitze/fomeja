@@ -72,4 +72,9 @@ public class PreField {
 		return this.field.equals(preField.field)
 				&& this.constantTablePrefixedName.equals(preField.constantTablePrefixedName);
 	}
+
+	@Override
+	public String toString() {
+		return this.constantTablePrefixedName + " (" + this.preFieldsPrefixedName + ")";
+	}
 }

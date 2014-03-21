@@ -62,8 +62,8 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 					.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"));
 					
 		preFieldsPrefixedNameBuilder
-			.append(value.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"))
-			.append(value.getName());
+				.append(value.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"))
+				.append(value.getName());
 		this.preFieldsPrefixedName = preFieldsPrefixedNameBuilder.toString();
 
 		this.replacedConstraintValue = null;
@@ -80,7 +80,8 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 				this.replacedConstraintValue = new AbstractConstraintLiteralInteger(Integer.parseInt(replacement));
 			else
 				this.replacedConstraintValue = new AbstractConstraintLiteralString(replacement);
-		} 
+		} else if (this.replacedConstraintValue != null)
+			this.replacedConstraintValue.replaceAll(regex, replacement);
 	}
 
 	@Override
@@ -93,28 +94,35 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 
 	@Override
 	public boolean matches(String regex) {
-		return this.constantTablePrefixedName.matches(regex);
+		if (this.replacedConstraintValue == null)
+			return this.constantTablePrefixedName.matches(regex);
+		else
+			return this.replacedConstraintValue.matches(regex);
 	}
 
 	@Override
 	public boolean equals(Object object) {
 		if(!(object instanceof AbstractConstraintLiteralField))
 			return false;
-		
-		AbstractConstraintLiteralField abstractConstraintLiteralField = (AbstractConstraintLiteralField)object;
-		
-		return this.value.equals(abstractConstraintLiteralField.value) &&
-				this.isVariable == abstractConstraintLiteralField.isVariable;
+
+		AbstractConstraintLiteralField abstractConstraintLiteralField = (AbstractConstraintLiteralField) object;
+
+		return this.value.equals(abstractConstraintLiteralField.value)
+				&& this.constantTablePrefix.equals(abstractConstraintLiteralField.constantTablePrefix)
+				&& this.isVariable == abstractConstraintLiteralField.isVariable;
 	}
 
 	@Override
-	public AbstractConstraintLiteral<Field> clone() {
+	public AbstractConstraintLiteralField clone() {
 		return new AbstractConstraintLiteralField(this.value, this.constantTablePrefix, this.fieldCode, this.fieldCodeIndex, this.preFields);
 	}
 
 	@Override
 	public String toString() {
-		return this.constantTablePrefixedName;
+		if (this.replacedConstraintValue == null)
+			return this.constantTablePrefixedName;
+		else
+			return this.replacedConstraintValue + " [" + this.constantTablePrefixedName + "]";
 	}
 
 	@Override

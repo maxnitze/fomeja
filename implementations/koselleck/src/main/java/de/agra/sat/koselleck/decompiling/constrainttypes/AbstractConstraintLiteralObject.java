@@ -44,7 +44,7 @@ public class AbstractConstraintLiteralObject extends AbstractConstraintLiteral<O
 	}
 
 	@Override
-	public AbstractConstraintLiteral<Object> clone() {
+	public AbstractConstraintLiteralObject clone() {
 		return new AbstractConstraintLiteralObject(this.value);
 	}
 

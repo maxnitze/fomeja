@@ -45,7 +45,7 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 	}
 
 	@Override
-	public AbstractConstraintLiteral<Float> clone() {
+	public AbstractConstraintLiteralFloat clone() {
 		return new AbstractConstraintLiteralFloat(this.value);
 	}
 

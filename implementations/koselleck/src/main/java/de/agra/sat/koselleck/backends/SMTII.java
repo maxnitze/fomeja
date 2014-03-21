@@ -60,7 +60,7 @@ public class SMTII extends Dialect {
 		
 		StringBuilder smt2theorem = new StringBuilder();
 		for(VariableField prefixedVariable : theorem.variables) {
-			smt2theorem.append(getVariableDeclaration(prefixedVariable));
+			smt2theorem.append(this.getVariableDeclaration(prefixedVariable));
 			smt2theorem.append("\n");
 		}
 		smt2theorem.append("(assert (and ");

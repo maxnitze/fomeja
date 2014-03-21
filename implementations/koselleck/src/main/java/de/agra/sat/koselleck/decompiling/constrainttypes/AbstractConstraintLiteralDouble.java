@@ -45,7 +45,7 @@ public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<D
 	}
 
 	@Override
-	public AbstractConstraintLiteral<Double> clone() {
+	public AbstractConstraintLiteralDouble clone() {
 		return new AbstractConstraintLiteralDouble(this.value);
 	}
 

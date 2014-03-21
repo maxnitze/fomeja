@@ -57,7 +57,7 @@ public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Cl
 	}
 
 	@Override
-	public AbstractConstraintLiteral<Class<?>> clone() {
+	public AbstractConstraintLiteralClass clone() {
 		return new AbstractConstraintLiteralClass(this.value, this.fieldCode, this.fieldCodeIndex);
 	}
 

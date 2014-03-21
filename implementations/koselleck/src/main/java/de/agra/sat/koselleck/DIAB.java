@@ -124,6 +124,9 @@ public abstract class DIAB {
 			try {
 				prover.solveAndAssign(component, singleTheorems);
 			} catch (NotSatisfyableException e) {
+				String message = "failed to satisfy given theorems due to:\n" + e.getMessage();
+				System.err.println(message);
+				Logger.getLogger(DIAB.class).info(message);
 				return false;
 			}
 		}

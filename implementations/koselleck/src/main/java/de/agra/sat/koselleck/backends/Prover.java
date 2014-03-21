@@ -63,7 +63,7 @@ public abstract class Prover {
 
 //		System.out.println(formattedTheorem); // TODO delete output formattedTheorem
 
-		String proverResult = solve(formattedTheorem);
+		String proverResult = this.solve(formattedTheorem);
 
 //		System.out.println(proverResult); // TODO delete output proverResult
 

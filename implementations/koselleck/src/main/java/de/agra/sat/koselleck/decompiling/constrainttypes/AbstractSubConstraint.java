@@ -1,11 +1,8 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
-import java.util.ArrayList;
-
 import org.apache.log4j.Logger;
 
-import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 import de.agra.sat.koselleck.types.BooleanConnector;
@@ -33,7 +30,6 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	 * @param constraint2 the new second constraint
 	 */
 	public AbstractSubConstraint(AbstractConstraint constraint1, BooleanConnector connector, AbstractConstraint constraint2) {
-		super(new ArrayList<PreField>());
 		this.preFields.addAll(constraint1.preFields);
 		this.preFields.addAll(constraint2.preFields);
 		

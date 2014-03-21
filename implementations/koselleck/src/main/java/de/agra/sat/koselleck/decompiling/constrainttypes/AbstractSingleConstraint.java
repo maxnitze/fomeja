@@ -30,7 +30,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	 * @param value2 the new second value
 	 */
 	public AbstractSingleConstraint(AbstractConstraintValue value1, ConstraintOperator operator, AbstractConstraintValue value2, List<PreField> preFields) {
-		super(preFields);
+		this.preFields.addAll(preFields);
 		
 		this.value1 = value1;
 		this.operator = operator;
@@ -69,11 +69,11 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 		this.value1 = this.value1.evaluate();
 		this.value2 = this.value2.evaluate();
 
-		if (!(this.value1 instanceof AbstractConstraintLiteral) || !(this.value2 instanceof AbstractConstraintLiteral))
+		if (!(this.value1 instanceof AbstractConstraintLiteral<?>) || !(this.value2 instanceof AbstractConstraintLiteral<?>))
 			return this;
 
 		return ConstraintUtils.evaluate(
-				(AbstractConstraintLiteral<?>)this.value1, operator, (AbstractConstraintLiteral<?>)this.value2, this);
+				(AbstractConstraintLiteral<?>) this.value1, operator, (AbstractConstraintLiteral<?>) this.value2, this);
 	}
 	
 	/**
@@ -111,7 +111,9 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 		if(!(obj instanceof AbstractSingleConstraint))
 			return false;
 		
-		AbstractSingleConstraint singleConstraint = (AbstractSingleConstraint)obj;
+		AbstractSingleConstraint singleConstraint = (AbstractSingleConstraint) obj;
+		
+		System.out.println("TEST123");
 		
 		return (
 				(this.value1.equals(singleConstraint.value1) &&

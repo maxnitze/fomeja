@@ -36,7 +36,7 @@ public final class ConstraintUtils {
 			return evaluateNumberTypes(constraintLiteral1, operator, constraintLiteral2);
 		else if (constraintLiteral1 instanceof AbstractConstraintLiteralField
 				&& constraintLiteral2 instanceof AbstractConstraintLiteralField
-				&& ((AbstractConstraintLiteralField)constraintLiteral1).equals((AbstractConstraintLiteralField)constraintLiteral1)) {
+				&& ((AbstractConstraintLiteralField) constraintLiteral1).equals((AbstractConstraintLiteralField) constraintLiteral2)) {
 			switch(operator) {
 			case EQUAL:
 				return new AbstractBooleanConstraint(true);
