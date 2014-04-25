@@ -39,67 +39,6 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	}
 
 	/**
-	 * replaceAll replaces all occurrences of the given regular expression
-	 *  {@code regex} with the given {@code replacement}. if the replacement is
-	 *  an integer type the type of this literal is changed to integer.
-	 * 
-	 * @param regex the regular expression to look for
-	 * @param replacement the replacement
-	 */
-	@Override
-	public abstract void replaceAll(String regex, String replacement);
-
-	/**
-	 * If the value of the literal is parsable to integer evaluate parses it.
-	 *  Afterwards this abstract constraint literal is returned.
-	 * 
-	 * @return this abstract constraint literal
-	 */
-	@Override
-	public abstract AbstractConstraintValue evaluate();
-
-	/**
-	 * matches checks whether the value matches the given regular expression
-	 *  {@code regex}.
-	 * 
-	 * @param regex the regular expression to look for
-	 * 
-	 * @return {@code true} if the value matches the given regular expression,
-	 *  {@code false} otherwise
-	 */
-	@Override
-	public abstract boolean matches(String regex);
-
-	/**
-	 * equals checks if this abstract constraint literal and the given object
-	 *  are equal.
-	 * 
-	 * @param object the object to check for equality
-	 * 
-	 * @return {@code true} if the given object an this abstract constraint
-	 *  literal are equal, {@code false} otherwise
-	 */
-	@Override
-	public abstract boolean equals(Object object);
-
-	/**
-	 * clone returns a copy of this abstract constraint literal.
-	 * 
-	 * @return a copy of this abstract constraint literal
-	 */
-	@Override
-	public abstract AbstractConstraintLiteral<T> clone();
-
-	/**
-	 * toString returns the string representation of this abstract constraint
-	 *  literal.
-	 * 
-	 * @return the string representation of this abstract constraint literal
-	 */
-	@Override
-	public abstract String toString();
-
-	/**
 	 * 
 	 * @param constraintLiteral
 	 * 
