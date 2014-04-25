@@ -1,7 +1,7 @@
 package de.agra.sat.koselleck.exceptions;
 
 /** imports */
-import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiteral;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 
 /**
  * UnsupportedNumberTypeException is a runtime exception that is thrown when a

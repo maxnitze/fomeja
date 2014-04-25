@@ -1,7 +1,7 @@
 package de.agra.sat.koselleck.exceptions;
 
 /** imports */
-import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintValue;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
 
 /**
  * UnsupportedConstraintValueException is a  runtime exception that is thrown

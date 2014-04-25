@@ -1,4 +1,4 @@
-package de.agra.sat.koselleck.decompiling.constrainttypes;
+package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 /**
  * AbstractConstraint is an abstract class for all types of constraint values.

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.agra.sat.koselleck.datatypes.PreField;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
 import de.agra.sat.koselleck.types.ConstraintOperator;
 import de.agra.sat.koselleck.utils.ConstraintUtils;
 

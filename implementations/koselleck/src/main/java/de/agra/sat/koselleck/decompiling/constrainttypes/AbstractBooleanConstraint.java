@@ -1,5 +1,8 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralInteger;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
+
 /** imports */
 
 /**

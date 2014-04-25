@@ -1,4 +1,4 @@
-package de.agra.sat.koselleck.decompiling.constrainttypes;
+package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 /** imports */
 import org.apache.log4j.Logger;

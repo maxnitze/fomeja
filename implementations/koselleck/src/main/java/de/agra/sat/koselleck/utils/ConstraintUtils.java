@@ -5,9 +5,9 @@ import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
-import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiteral;
-import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiteralField;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralField;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 import de.agra.sat.koselleck.types.ConstraintOperator;
 

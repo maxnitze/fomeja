@@ -1,4 +1,4 @@
-package de.agra.sat.koselleck.decompiling.constrainttypes;
+package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 import org.apache.log4j.Logger;
 
@@ -11,12 +11,12 @@ import de.agra.sat.koselleck.types.ArithmeticOperator;
  * 
  * @author Max Nitze
  */
-public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Float> {
+public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<Double> {
 	/**
 	 * 
 	 * @param value
 	 */
-	public AbstractConstraintLiteralFloat(Float value) {
+	public AbstractConstraintLiteralDouble(Double value) {
 		super(value, false, true, true);
 	}
 
@@ -35,18 +35,18 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractConstraintLiteralFloat))
+		if(!(object instanceof AbstractConstraintLiteralDouble))
 			return false;
 		
-		AbstractConstraintLiteralFloat abstractConstraintLiteralFloat = (AbstractConstraintLiteralFloat)object;
+		AbstractConstraintLiteralDouble abstractConstraintLiteralDouble = (AbstractConstraintLiteralDouble)object;
 		
-		return this.value.equals(abstractConstraintLiteralFloat.value) &&
-				this.isVariable == abstractConstraintLiteralFloat.isVariable;
+		return this.value.equals(abstractConstraintLiteralDouble.value) &&
+				this.isVariable == abstractConstraintLiteralDouble.isVariable;
 	}
 
 	@Override
-	public AbstractConstraintLiteralFloat clone() {
-		return new AbstractConstraintLiteralFloat(this.value);
+	public AbstractConstraintLiteralDouble clone() {
+		return new AbstractConstraintLiteralDouble(this.value);
 	}
 
 	@Override
@@ -57,11 +57,11 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 	@Override
 	public int compareTo(AbstractConstraintLiteral<?> constraintLiteral) {
 		if (constraintLiteral.value instanceof Double)
-			return ((Double) this.value.doubleValue()).compareTo((Double) constraintLiteral.value);
+			return this.value.compareTo((Double) constraintLiteral.value);
 		else if (constraintLiteral.value instanceof Float)
-			return this.value.compareTo((Float) constraintLiteral.value);
+			return this.value.compareTo(((Float) constraintLiteral.value).doubleValue());
 		else if (constraintLiteral.value instanceof Integer)
-			return this.value.compareTo(((Integer) constraintLiteral.value).floatValue());
+			return this.value.compareTo(((Integer) constraintLiteral.value).doubleValue());
 		else {
 			NoComparableNumberTypeException exception = new NoComparableNumberTypeException(this);
 			Logger.getLogger(AbstractConstraintLiteralClass.class).fatal(exception.getMessage());
@@ -74,13 +74,13 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 		if (constraintLiteral.value instanceof Double) {
 			switch(operator) {
 			case ADD:
-				return new AbstractConstraintLiteralDouble(this.value.doubleValue() + ((Double) constraintLiteral.value));
+				return new AbstractConstraintLiteralDouble(this.value + ((Double) constraintLiteral.value));
 			case SUB:
-				return new AbstractConstraintLiteralDouble(this.value.doubleValue() - ((Double) constraintLiteral.value));
+				return new AbstractConstraintLiteralDouble(this.value - ((Double) constraintLiteral.value));
 			case MUL:
-				return new AbstractConstraintLiteralDouble(this.value.doubleValue() * ((Double) constraintLiteral.value));
+				return new AbstractConstraintLiteralDouble(this.value * ((Double) constraintLiteral.value));
 			case DIV:
-				return new AbstractConstraintLiteralDouble(this.value.doubleValue() / ((Double) constraintLiteral.value));
+				return new AbstractConstraintLiteralDouble(this.value / ((Double) constraintLiteral.value));
 			default:
 				Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
 				throw new UnknownArithmeticOperatorException(operator);
@@ -88,13 +88,13 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 		} else if (constraintLiteral.value instanceof Float) {
 			switch(operator) {
 			case ADD:
-				return new AbstractConstraintLiteralFloat(this.value + ((Float) constraintLiteral.value));
+				return new AbstractConstraintLiteralDouble(this.value + ((Float) constraintLiteral.value).doubleValue());
 			case SUB:
-				return new AbstractConstraintLiteralFloat(this.value - ((Float) constraintLiteral.value));
+				return new AbstractConstraintLiteralDouble(this.value - ((Float) constraintLiteral.value).doubleValue());
 			case MUL:
-				return new AbstractConstraintLiteralFloat(this.value * ((Float) constraintLiteral.value));
+				return new AbstractConstraintLiteralDouble(this.value * ((Float) constraintLiteral.value).doubleValue());
 			case DIV:
-				return new AbstractConstraintLiteralFloat(this.value / ((Float) constraintLiteral.value));
+				return new AbstractConstraintLiteralDouble(this.value / ((Float) constraintLiteral.value).doubleValue());
 			default:
 				Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
 				throw new UnknownArithmeticOperatorException(operator);
@@ -102,13 +102,13 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 		} else if (constraintLiteral.value instanceof Integer) {
 			switch(operator) {
 			case ADD:
-				return new AbstractConstraintLiteralFloat(this.value + ((Integer) constraintLiteral.value).floatValue());
+				return new AbstractConstraintLiteralDouble(this.value + ((Integer) constraintLiteral.value).doubleValue());
 			case SUB:
-				return new AbstractConstraintLiteralFloat(this.value - ((Integer) constraintLiteral.value).floatValue());
+				return new AbstractConstraintLiteralDouble(this.value - ((Integer) constraintLiteral.value).doubleValue());
 			case MUL:
-				return new AbstractConstraintLiteralFloat(this.value * ((Integer) constraintLiteral.value).floatValue());
+				return new AbstractConstraintLiteralDouble(this.value * ((Integer) constraintLiteral.value).doubleValue());
 			case DIV:
-				return new AbstractConstraintLiteralFloat(this.value / ((Integer) constraintLiteral.value).floatValue());
+				return new AbstractConstraintLiteralDouble(this.value / ((Integer) constraintLiteral.value).doubleValue());
 			default:
 				Logger.getLogger(AbstractConstraintFormula.class).fatal("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
 				throw new UnknownArithmeticOperatorException(operator);

@@ -1,4 +1,4 @@
-package de.agra.sat.koselleck.decompiling.constrainttypes;
+package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 /** imports */
 import de.agra.sat.koselleck.types.ArithmeticOperator;
