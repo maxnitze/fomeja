@@ -15,7 +15,8 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConstraint;
-import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractPrematureConstraintValue;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractPrematureConstraintValueAccessibleObject;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractPrematureConstraintValueConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
@@ -235,18 +236,39 @@ public class SMTII extends Dialect {
 	}
 	
 	/**
-	 * prepareAbstractPrematureConstraintValue returns the string
-	 *  representation of a given abstract premature constraint value.
+	 * prepareAbstractPrematureConstraintValueAccessibleObject returns the
+	 *  string representation of a given abstract premature constraint value
+	 *  accessible object.
 	 * 
-	 * @param prematureConstraintValue the abstract premature constraint value to proceed
+	 * @param prematureConstraintValueAccessibleObject the abstract premature
+	 *  constraint value accessible object to proceed
 	 * 
-	 * @return the string representation of the abstract constraint formula
+	 * @return the string representation of the abstract premature constraint
+	 *  value accessible object
 	 */
 	@Override
-	public String prepareAbstractPrematureConstraintValue(AbstractPrematureConstraintValue prematureConstraintValue) {
-		System.out.println("-- " + prematureConstraintValue.toString());
+	public String prepareAbstractPrematureConstraintValueAccessibleObject(AbstractPrematureConstraintValueAccessibleObject prematureConstraintValueAccessibleObject) {
+		System.out.println("-- " + prematureConstraintValueAccessibleObject.toString());
 		
-		throw new RuntimeException("PREMATURE");
+		throw new RuntimeException("PREMATURE Constraint Value Accessible Object");
+	}
+
+	/**
+	 * prepareAbstractPrematureConstraintValue returns the string
+	 *  representation of a given abstract premature constraint value
+	 *  constraint.
+	 * 
+	 * @param prematureConstraintValueConstraint the abstract premature
+	 *  constraint value constraint to proceed
+	 * 
+	 * @return the string representation of the abstract premature constraint
+	 *  value constraint
+	 */
+	@Override
+	public String prepareAbstractPrematureConstraintValueConstraint(AbstractPrematureConstraintValueConstraint prematureConstraintValueConstraint) {
+		System.out.println("-- " + prematureConstraintValueConstraint.toString());
+		
+		throw new RuntimeException("PREMATURE Constraint Value Constraint");
 	}
 	
 	/** private methods

@@ -30,7 +30,8 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiter
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiteralObject;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintValue;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConstraint;
-import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractPrematureConstraintValue;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractPrematureConstraintValueAccessibleObject;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractPrematureConstraintValueConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLine;
 import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLineConstantTableAccessibleObject;
@@ -164,18 +165,18 @@ public class Decompiler {
 			nextOffset = bytecodeLine.followingLineNumber;
 			
 			switch(bytecodeLine.opcode) {
-			case load_:
-			case load:
+			case Xload_:
+			case Xload:
 				this.stack.push(this.store.get(((BytecodeLineValue)bytecodeLine).value));
 				break;
 				
-			case store_:
-			case store:
+			case Xstore_:
+			case Xstore:
 				this.store.put((Integer)((BytecodeLineValue)bytecodeLine).value, this.stack.pop());
 				break;
 				
-			case _const:
-			case _const_:
+			case Xconst:
+			case Xconst_:
 			case bipush:
 				this.stack.push(
 						new AbstractConstraintLiteralInteger((Integer)((BytecodeLineValue)bytecodeLine).value));
@@ -308,10 +309,10 @@ public class Decompiler {
 
 				break;
 
-			case add:
-			case sub:
-			case mul:
-			case div:
+			case Xadd:
+			case Xsub:
+			case Xmul:
+			case Xdiv:
 				constraintValue2 = this.stack.pop();
 				constraintValue1 = this.stack.pop();
 				this.stack.push(this.getCalculatedValue(
@@ -351,8 +352,8 @@ public class Decompiler {
 							&& bytecodeLine.opcode != Opcode.invokestatic
 							&& CompareUtils.classesEquals(
 									constraintLiteral.value.getClass(),
-									((Method)bytecodeLineConstantTableAccessibleObject.accessibleObject).getDeclaringClass())) {
-						lineMethod = (Method)bytecodeLineConstantTableAccessibleObject.accessibleObject;
+									((Method) bytecodeLineConstantTableAccessibleObject.accessibleObject).getDeclaringClass())) {
+						lineMethod = (Method) bytecodeLineConstantTableAccessibleObject.accessibleObject;
 						/** try to invoke method */
 						try {
 							/** push result of invoked method to stack */
@@ -476,7 +477,7 @@ public class Decompiler {
 									constraintLiteralClass = (AbstractConstraintLiteralClass) constraintLiteral;
 
 									preFields.add(new PreField(innerConstraintLiteralField.value,
-											"v_" + constraintLiteralClass.fieldCodeIndex + "-" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
+											"v_" + "---" + constraintLiteralClass.fieldCodeIndex + "-" + bytecodeLineConstantTableAccessibleObject.constantTableIndex + "_",
 											constraintLiteralClass.fieldCode, constraintLiteralClass.fieldCodeIndex,
 											new ArrayList<PreField>(innerConstraintLiteralField.preFields)));
 
@@ -485,19 +486,21 @@ public class Decompiler {
 											constraintLiteralClass.fieldCode, constraintLiteralClass.fieldCodeIndex,
 											new ArrayList<PreField>(innerConstraintLiteralField.preFields)));
 								} else
-									throw new RuntimeException("TODO outer literal is no prefixed field"); // TODO implement								
+									throw new RuntimeException("TODO outer literal is no pre field or pre class"); // TODO implement								
 							} else
-								throw new RuntimeException("TODO invokevirtual --> inner literal is no prefixed field"); // TODO implement
+								throw new RuntimeException("TODO invoke* --> inner literal is no pre field"); // TODO implement
 						} else
-							throw new RuntimeException("TODO invokevirtual --> no abstract constraint literal"); // TODO implement
+							throw new RuntimeException("TODO invoke* --> no abstract constraint literal"); // TODO implement
 					} else {
-						System.out.println(abstractConstraint);
-						throw new RuntimeException("TODO invokevirtual --> no abstract boolean constraint"); // TODO implement
+						System.out.println(abstractConstraint); // TODO delete
+						
+						this.stack.push(
+								new AbstractPrematureConstraintValueConstraint(abstractConstraint));
 					}
 				}
 				/** class file can not get loaded from the classloader (e.g. java.lang classes) */
 				else
-					this.stack.push(new AbstractPrematureConstraintValue(
+					this.stack.push(new AbstractPrematureConstraintValueAccessibleObject(
 							constraintValue, bytecodeLineConstantTableAccessibleObject.accessibleObject, argumentValues));
 				
 				break;
@@ -546,6 +549,8 @@ public class Decompiler {
 				
 				constraintValue = this.stack.pop();
 				
+				System.out.println("-- " + constraintValue.toString() + "\n\t" + constraintValue.getClass());
+				
 				if (constraintValue instanceof AbstractConstraintLiteral<?>
 						&& ((AbstractConstraintLiteral<?>) constraintLiteral).isNumberType) {
 					constraintLiteral = (AbstractConstraintLiteral<?>) constraintValue;
@@ -555,30 +560,43 @@ public class Decompiler {
 					else
 						nextOffset = bytecodeLineOffset.followingLineNumber;
 				} else if (constraintValue instanceof AbstractConstraintLiteral<?>
-						|| constraintValue instanceof AbstractConstraintFormula) {
+						|| constraintValue instanceof AbstractConstraintFormula)
 					return new AbstractIfThenElseConstraint(
 							new AbstractSingleConstraint(
 									constraintValue, constraintOperator, new AbstractConstraintLiteralInteger(0), preFields),
 							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.offset),
 							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.followingLineNumber));
-				} else {
-					String message = "could not cast given value \"" + constraintLiteral + "\" to AbstractConstraintLiteral.";
+				else if (constraintValue instanceof AbstractPrematureConstraintValueConstraint)
+					return new AbstractIfThenElseConstraint(
+							((AbstractPrematureConstraintValueConstraint) constraintValue).constraint,
+							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.offset),
+							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.followingLineNumber));
+				else if (constraintValue instanceof AbstractPrematureConstraintValueAccessibleObject)
+					return new AbstractIfThenElseConstraint(
+							new AbstractSingleConstraint(constraintValue, constraintOperator, new AbstractConstraintLiteralInteger(0), new ArrayList<PreField>()),
+							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.offset),
+							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.followingLineNumber));
+				else {
+					String message = "could not cast given value \"" + constraintValue+ "\" to AbstractConstraintLiteral.";
 					Logger.getLogger(Decompiler.class).fatal(message);
 					throw new ClassCastException(message);
 				}
 				
 				break;
 				
-			case if_icmpne:
-			case if_icmpge:
-			case if_icmpgt:
-			case if_icmple:
-			case if_icmplt:
-			case if_icmpeq:
+			case if_Xcmpne:
+			case if_Xcmpge:
+			case if_Xcmpgt:
+			case if_Xcmple:
+			case if_Xcmplt:
+			case if_Xcmpeq:
 				constraintValue2 = this.stack.pop();
 				constraintValue1 = this.stack.pop();
 
 				bytecodeLineOffset = (BytecodeLineOffset)bytecodeLine;
+				
+				System.out.println("value1 = " + constraintValue1);
+				System.out.println("value2 = " + constraintValue2);
 
 				return new AbstractIfThenElseConstraint(
 						this.getSingleConstraint(
@@ -853,9 +871,9 @@ public class Decompiler {
 		/** get count of parameters */
 		int parameterCount = 0;
 		if (accessibleObject instanceof Method)
-			parameterCount = ((Method)accessibleObject).getParameterTypes().length;
+			parameterCount = ((Method) accessibleObject).getParameterTypes().length;
 		else if (accessibleObject instanceof Constructor<?>)
-			parameterCount = ((Constructor<?>)accessibleObject).getParameterTypes().length;
+			parameterCount = ((Constructor<?>) accessibleObject).getParameterTypes().length;
 		else {
 			String message = "accessible object needs to be method or constructor but is \"" + accessibleObject.getClass().getName() + "\"";
 			Logger.getLogger(Decompiler.class).fatal(message);
@@ -868,7 +886,7 @@ public class Decompiler {
 			AbstractConstraintValue argument = this.stack.pop();
 			if (!argumentValues.hasPrematureArgument
 					&& (!(argument instanceof AbstractConstraintLiteral)
-							|| !((AbstractConstraintLiteral<?>)argument).isFinishedType))
+							|| !((AbstractConstraintLiteral<?>) argument).isFinishedType))
 				argumentValues.hasPrematureArgument = true;
 			argumentValues.add(argument);
 		}

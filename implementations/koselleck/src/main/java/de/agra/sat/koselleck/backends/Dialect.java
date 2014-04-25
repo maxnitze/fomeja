@@ -21,7 +21,8 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintFormu
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraintValue;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConstraint;
-import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractPrematureConstraintValue;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractPrematureConstraintValueAccessibleObject;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractPrematureConstraintValueConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
@@ -145,14 +146,30 @@ public abstract class Dialect {
 	
 	/**
 	 * prepareAbstractPrematureConstraintValue returns the string
-	 *  representation of a given abstract premature constraint value.
+	 *  representation of a given abstract premature constraint value
+	 *  accessible object.
 	 * 
-	 * @param prematureConstraintValue the abstract premature constraint value to proceed
+	 * @param prematureConstraintValueAccessibleObject the abstract premature
+	 *  constraint value acessible object to proceed
 	 * 
-	 * @return the string representation of the abstract constraint formula
+	 * @return the string representation of the abstract premature constraint
+	 *  value accessible object
 	 */
-	public abstract String prepareAbstractPrematureConstraintValue(AbstractPrematureConstraintValue prematureConstraintValue);
-	
+	public abstract String prepareAbstractPrematureConstraintValueAccessibleObject(AbstractPrematureConstraintValueAccessibleObject prematureConstraintValueAccessibleObject);
+
+	/**
+	 * prepareAbstractPrematureConstraintValue returns the string
+	 *  representation of a given abstract premature constraint value
+	 *  accessible object.
+	 * 
+	 * @param prematureConstraintValueConstraint the abstract premature
+	 *  constraint value constraint to proceed
+	 * 
+	 * @return the string representation of the abstract premature constraint
+	 *  value accessible object
+	 */
+	public abstract String prepareAbstractPrematureConstraintValueConstraint(AbstractPrematureConstraintValueConstraint prematureConstraintValueConstraint);
+
 	/** protected methods
 	 * ----- ----- ----- ----- ----- */
 	
@@ -190,11 +207,13 @@ public abstract class Dialect {
 	 */
 	protected String getBackendConstraintValue(AbstractConstraintValue constraintValue) {
 		if(constraintValue instanceof AbstractConstraintLiteral)
-			return prepareAbstractConstraintLiteral((AbstractConstraintLiteral<?>)constraintValue);
+			return prepareAbstractConstraintLiteral((AbstractConstraintLiteral<?>) constraintValue);
 		else if(constraintValue instanceof AbstractConstraintFormula)
-			return prepareAbstractConstraintFormula((AbstractConstraintFormula)constraintValue);
-		else if(constraintValue instanceof AbstractPrematureConstraintValue)
-			return prepareAbstractPrematureConstraintValue((AbstractPrematureConstraintValue)constraintValue);
+			return prepareAbstractConstraintFormula((AbstractConstraintFormula) constraintValue);
+		else if(constraintValue instanceof AbstractPrematureConstraintValueAccessibleObject)
+			return prepareAbstractPrematureConstraintValueAccessibleObject((AbstractPrematureConstraintValueAccessibleObject) constraintValue);
+		else if(constraintValue instanceof AbstractPrematureConstraintValueConstraint)
+			return prepareAbstractPrematureConstraintValueConstraint((AbstractPrematureConstraintValueConstraint) constraintValue);
 		else {
 			UnsupportedConstraintValueException exception = new UnsupportedConstraintValueException(constraintValue);
 			Logger.getLogger(Dialect.class).fatal(exception.getMessage());
@@ -226,9 +245,9 @@ public abstract class Dialect {
 			AbstractConstraint constraint = singleTheorem.constraint;
 
 			for(PreField preField : constraint.preFields) {
-				if(preField.fieldCode == Opcode.load && preField.fieldCodeIndex == 0 && !preField.isVariable && constraint.matches(preField.constantTablePrefixedName))
+				if(preField.fieldCode == Opcode.Xload && preField.fieldCodeIndex == 0 && !preField.isVariable && constraint.matches(preField.constantTablePrefixedName))
 					constraint.replaceAll(preField.constantTablePrefixedName, this.getAttributeReplacement(component, preField));
-				else if(preField.fieldCode == Opcode.load && constraint.matches(preField.constantTablePrefixedName))
+				else if(preField.fieldCode == Opcode.Xload && constraint.matches(preField.constantTablePrefixedName))
 					if(!preFieldsList.contains(preField))
 						preFieldsList.add(preField);
 			}
@@ -316,7 +335,7 @@ public abstract class Dialect {
 	 * @see Dialect#getParameterObject(PrefixedField, Object)
 	 */
 	private String getAttributeReplacement(Object component, PreField preField) {
-		if(preField.fieldCode != Opcode.load || preField.fieldCodeIndex != 0) {
+		if(preField.fieldCode != Opcode.Xload || preField.fieldCodeIndex != 0) {
 			Logger.getLogger(Dialect.class).fatal("given field \"" + preField.field.getName() + "\" is no attribute field");
 			throw new IllegalArgumentException("given field \"" + preField.field.getName() + "\" is no attribute field");
 		}

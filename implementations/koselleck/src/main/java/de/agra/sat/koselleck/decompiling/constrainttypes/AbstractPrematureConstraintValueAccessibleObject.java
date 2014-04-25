@@ -16,7 +16,7 @@ import de.agra.sat.koselleck.utils.CompareUtils;
  * 
  * @author Max Nitze
  */
-public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
+public class AbstractPrematureConstraintValueAccessibleObject extends AbstractConstraintValue {
 	/**  */
 	public AbstractConstraintValue constraintValue;
 	/**  */
@@ -30,7 +30,7 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	 * @param accessibleObject
 	 * @param objectArguments
 	 */
-	public AbstractPrematureConstraintValue(AbstractConstraintValue constraintValue, AccessibleObject accessibleObject, List<AbstractConstraintValue> objectArguments) {
+	public AbstractPrematureConstraintValueAccessibleObject(AbstractConstraintValue constraintValue, AccessibleObject accessibleObject, List<AbstractConstraintValue> objectArguments) {
 		this.constraintValue = constraintValue;
 		this.accessibleObject = accessibleObject;
 		this.objectArguments = objectArguments;
@@ -104,15 +104,15 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 					Constructor<?> constructor = (Constructor<?>)this.accessibleObject;
 
 					if (CompareUtils.equalsAny(
-							constructor.getDeclaringClass(), new Class<?>[] { double.class, Double.class }))
+							constructor.getDeclaringClass(), CompareUtils.doubleClasses))
 						return new AbstractConstraintLiteralDouble(
 								(Double) constructor.newInstance(arguments));
 					else if (CompareUtils.equalsAny(
-							constructor.getDeclaringClass(), new Class<?>[] { float.class, Float.class }))
+							constructor.getDeclaringClass(), CompareUtils.floatClasses))
 						return new AbstractConstraintLiteralFloat(
 								(Float) constructor.newInstance(arguments));
 					else if (CompareUtils.equalsAny(
-							constructor.getDeclaringClass(), new Class<?>[] { int.class, Integer.class }))
+							constructor.getDeclaringClass(), CompareUtils.integerClasses))
 						return new AbstractConstraintLiteralInteger(
 								(Integer) constructor.newInstance(arguments));
 					else
@@ -136,12 +136,12 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 				
 				String message;
 				if (this.accessibleObject instanceof Method)
-					message = "could not invoke method \"" + ((Method)this.accessibleObject).toGenericString() + "\" with arguments \"(" + argumentString.toString() + ")\"";
+					message = "could not invoke method \"" + ((Method) this.accessibleObject).toGenericString() + "\" with arguments \"(" + argumentString.toString() + ")\"";
 				else if (this.accessibleObject instanceof Constructor<?>)
-					message = "could not invoke constructor \"" + ((Constructor<?>)this.accessibleObject).toGenericString() + "\" with arguments \"(" + argumentString.toString() + ")\"";
+					message = "could not invoke constructor \"" + ((Constructor<?>) this.accessibleObject).toGenericString() + "\" with arguments \"(" + argumentString.toString() + ")\"";
 				else
 					message = "could not invoke accessible object type \"" + this.accessibleObject.toString() + "\" with arguments \"(" + argumentString.toString() + ")\"";
-				Logger.getLogger(AbstractPrematureConstraintValue.class).fatal(message);
+				Logger.getLogger(AbstractPrematureConstraintValueAccessibleObject.class).fatal(message);
 				throw new IllegalArgumentException(message);
 			}
 		} else
@@ -167,10 +167,10 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	 */
 	@Override
 	public boolean equals(Object object) {
-		if (!(object instanceof AbstractPrematureConstraintValue))
+		if (!(object instanceof AbstractPrematureConstraintValueAccessibleObject))
 			return false;
 		
-		AbstractPrematureConstraintValue constraintValue = (AbstractPrematureConstraintValue)object;
+		AbstractPrematureConstraintValueAccessibleObject constraintValue = (AbstractPrematureConstraintValueAccessibleObject)object;
 		
 		return this.constraintValue.equals(constraintValue.constraintValue) &&
 				this.accessibleObject == constraintValue.accessibleObject;
@@ -182,7 +182,7 @@ public class AbstractPrematureConstraintValue extends AbstractConstraintValue {
 	 */
 	@Override
 	public AbstractConstraintValue clone() {
-		return new AbstractPrematureConstraintValue(
+		return new AbstractPrematureConstraintValueAccessibleObject(
 				this.constraintValue.clone(), this.accessibleObject, this.objectArguments);
 	}
 	

@@ -113,7 +113,7 @@ public abstract class DIAB {
 				AbstractConstraintValue[] arguments = new AbstractConstraintValue[disassembledMethod.method.getParameterTypes().length];
 				for (int i = 0; i < arguments.length; i++)
 					arguments[i] = new AbstractConstraintLiteralClass(
-							disassembledMethod.method.getParameterTypes()[i], Opcode.load, i+1);
+							disassembledMethod.method.getParameterTypes()[i], Opcode.Xload, i+1);
 				
 				if(disassembledMethod != null)
 					singleTheorems.add(new AbstractSingleTheorem(

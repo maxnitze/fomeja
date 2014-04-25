@@ -39,13 +39,13 @@ public enum ArithmeticOperator {
 	 */
 	public static ArithmeticOperator fromOpcode(Opcode opcode) {
 		switch(opcode){
-		case add:
+		case Xadd:
 			return ADD;
-		case sub:
+		case Xsub:
 			return SUB;
-		case mul:
+		case Xmul:
 			return MUL;
-		case div:
+		case Xdiv:
 			return DIV;
 		default:
 			UnknownOpcodeException exception = new UnknownOpcodeException(opcode);

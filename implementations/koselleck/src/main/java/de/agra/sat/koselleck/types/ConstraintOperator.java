@@ -7,12 +7,12 @@ package de.agra.sat.koselleck.types;
  * @author Max Nitze
  */
 public enum ConstraintOperator {
-	EQUAL("==", "!=", "==", "if_[i]cmpeq", "if_[i]cmpne"),
-	GREATER_EQUAL(">=", "<", "<=", "if_[i]cmpge", "if_[i]cmplt"),
-	GREATER(">", "<=", "<", "if_[i]cmpgt", "if_[i]cmple"),
-	LESS_EQUAL("<=", ">", ">=", "if_[i]cmple", "if_[i]cmpgt"),
-	LESS("<", ">=", ">", "if_[i]cmplt", "if_[i]cmpge"),
-	NOT_EQUAL("!=", "==", "!=", "if_[i]cmpne", "if_[i]cmpeq");
+	EQUAL("==", "!=", "==", "if_Xcmpeq", "if_Xcmpne"),
+	GREATER_EQUAL(">=", "<", "<=", "if_Xcmpge", "if_Xcmplt"),
+	GREATER(">", "<=", "<", "if_Xcmpgt", "if_Xcmple"),
+	LESS_EQUAL("<=", ">", ">=", "if_Xcmple", "if_Xcmpgt"),
+	LESS("<", ">=", ">", "if_Xcmplt", "if_Xcmpge"),
+	NOT_EQUAL("!=", "==", "!=", "if_Xcmpne", "if_Xcmpeq");
 	
 	/** the ascii name */
 	public final String asciiName;

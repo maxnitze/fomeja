@@ -11,13 +11,13 @@ import org.apache.log4j.Logger;
  * @author Max Nitze
  */
 public enum Opcode {
-	load_("load_", 1, OpcodeType.SIMPLE_VALUE, "[i|f|d|a]load_"),
-	load("load", 2, OpcodeType.SIMPLE_VALUE, "[i|f|d|a]load( )?"),
-	store_("store_", 1, OpcodeType.SIMPLE_VALUE, "[i|f|d|a]store_"),
-	store("store", 2, OpcodeType.SIMPLE_VALUE, "[i|f|d|a]store( )?"),
+	Xload_("Xload_", 1, OpcodeType.SIMPLE_VALUE, "[i|f|d|a]load_"),
+	Xload("Xload", 2, OpcodeType.SIMPLE_VALUE, "[i|f|d|a]load( )?"),
+	Xstore_("Xstore_", 1, OpcodeType.SIMPLE_VALUE, "[i|f|d|a]store_"),
+	Xstore("Xstore", 2, OpcodeType.SIMPLE_VALUE, "[i|f|d|a]store( )?"),
 
-	_const_("bconst_", 1, OpcodeType.SIMPLE_VALUE, "[i|f|b]const_"),
-	_const("bconst", 2, OpcodeType.SIMPLE_VALUE, "[i|f|b]const( )?"),
+	Xconst_("bconst_", 1, OpcodeType.SIMPLE_VALUE, "[i|f|b]const_"),
+	Xconst("bconst", 2, OpcodeType.SIMPLE_VALUE, "[i|f|b]const( )?"),
 	bipush("bipush", 2, OpcodeType.SIMPLE_VALUE, "bipush "),
 	
 	getfield("getfield", 3, OpcodeType.CONSTANT_TABLE_INDEX, "getfield"),
@@ -32,10 +32,10 @@ public enum Opcode {
 	ldc("ldc", 2, OpcodeType.CONSTANT_TABLE_VALUE, "ldc"),
 	ldc2_w("ldc2_w", 3, OpcodeType.CONSTANT_TABLE_VALUE, "ldc2_w"),
 	
-	add("add", 1, OpcodeType.SIMPLE, "[i|f|d]add"),
-	sub("sub", 1, OpcodeType.SIMPLE, "[i|f|d]sub"),
-	mul("mul", 1, OpcodeType.SIMPLE, "[i|f|d]mul"),
-	div("div", 1, OpcodeType.SIMPLE, "[i|f|d]div"),
+	Xadd("Xadd", 1, OpcodeType.SIMPLE, "[i|f|d]add"),
+	Xsub("Xsub", 1, OpcodeType.SIMPLE, "[i|f|d]sub"),
+	Xmul("Xmul", 1, OpcodeType.SIMPLE, "[i|f|d]mul"),
+	Xdiv("Xdiv", 1, OpcodeType.SIMPLE, "[i|f|d]div"),
 	
 	_new("new", 3, OpcodeType.CONSTANT_TABLE_INDEX, "new"),
 	
@@ -52,12 +52,12 @@ public enum Opcode {
 	ifeq("ifeq", 3, OpcodeType.OFFSET, "ifeq"),							/** jump if zero */
 	ifne("ifne", 3, OpcodeType.OFFSET, "ifne"),							/** jump if nonzero */
 	
-	if_icmpeq("if_icmpeq", 3, OpcodeType.OFFSET, "if_icmpeq"),		/** equal */
-	if_icmpge("if_icmpge", 3, OpcodeType.OFFSET, "if_icmpge"),		/** greater-equal */
-	if_icmpgt("if_icmpgt", 3, OpcodeType.OFFSET, "if_icmpgt"),		/** greater */
-	if_icmple("if_icmple", 3, OpcodeType.OFFSET, "if_icmple"),		/** less-equal */
-	if_icmplt("if_icmplt", 3, OpcodeType.OFFSET, "if_icmplt"),		/** less */
-	if_icmpne("if_icmpne", 3, OpcodeType.OFFSET, "if_icmpne"),		/** not equal */
+	if_Xcmpeq("if_Xcmpeq", 3, OpcodeType.OFFSET, "if_[i|a]cmpeq"),		/** equal */
+	if_Xcmpge("if_Xcmpge", 3, OpcodeType.OFFSET, "if_[i|a]cmpge"),		/** greater-equal */
+	if_Xcmpgt("if_Xcmpgt", 3, OpcodeType.OFFSET, "if_[i|a]cmpgt"),		/** greater */
+	if_Xcmple("if_Xcmple", 3, OpcodeType.OFFSET, "if_[i|a]cmple"),		/** less-equal */
+	if_Xcmplt("if_Xcmplt", 3, OpcodeType.OFFSET, "if_[i|a]cmplt"),		/** less */
+	if_Xcmpne("if_Xcmpne", 3, OpcodeType.OFFSET, "if_[i|a]cmpne"),		/** not equal */
 	
 	dcmpg("dcmpg", 1, OpcodeType.SIMPLE, "dcmpg"),
 	dcmpl("dcmpl", 1, OpcodeType.SIMPLE, "dcmpl"),
