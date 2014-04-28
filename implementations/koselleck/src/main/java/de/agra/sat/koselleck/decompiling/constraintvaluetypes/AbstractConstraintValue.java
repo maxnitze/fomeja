@@ -1,5 +1,7 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
+import java.util.Map;
+
 /**
  * AbstractConstraint is an abstract class for all types of constraint values.
  * 
@@ -24,6 +26,15 @@ public abstract class AbstractConstraintValue {
 	 * @return the new evaluated or this abstract constraint value 
 	 */
 	public abstract AbstractConstraintValue evaluate();
+	
+	/**
+	 * substitute substitutes the abstract constraint value with the given
+	 *  objects (method parameters).
+	 * 
+	 * @param constraintArguments the arguments the substitute the constraint
+	 *  values with
+	 */
+	public abstract AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments);
 	
 	/**
 	 * matches checks if this abstract constraint value matches the given

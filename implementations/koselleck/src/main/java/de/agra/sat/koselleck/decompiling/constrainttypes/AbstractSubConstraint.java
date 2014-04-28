@@ -1,6 +1,8 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
@@ -37,37 +39,13 @@ public class AbstractSubConstraint extends AbstractConstraint {
 		this.connector = connector;
 		this.constraint2 = constraint2;
 	}
-	
-	/**
-	 * replaceAll replaces all occurrences of the given regular expression
-	 *  {@code regex} with the given replacement {@code replacement} by calling
-	 *  the replaceAll(String, String) method of the two constraints.
-	 * 
-	 * @param regex the regular expression to look for
-	 * @param replacement the replacement
-	 * 
-	 * @see AbstractConstraint#replaceAll(String, String)
-	 */
+
 	@Override
 	public void replaceAll(String regex, String replacement) {
 		this.constraint1.replaceAll(regex, replacement);
 		this.constraint2.replaceAll(regex, replacement);
 	}
-	
-	/**
-	 * evaluate evaluates this abstract single constraint. At first both
-	 *  constraints are evaluated.<br />
-	 *  If any of these new constraints is a boolean constraints the calculated
-	 *  value of those considering the boolean connector is calculated.<br />
-	 *  If both new constraints are single constraints and those are equal one
-	 *  of the constraints is returned. If only the values of the two
-	 *  constraints are equal the boolean connectors of those two single
-	 *  constraints are evaluated considering the boolean connector of this
-	 *  abstract sub constraint.<br />
-	 *  Otherwise this abstract sub constraint is returned.
-	 * 
-	 * @return the evaluated value of this abstract constraint
-	 */
+
 	@Override
 	public AbstractConstraint evaluate() {
 		this.constraint1 = this.constraint1.evaluate();
@@ -125,74 +103,47 @@ public class AbstractSubConstraint extends AbstractConstraint {
 		} else
 			return this;
 	}
-	
-	/**
-	 * matches checks if one or both of the constraints match the given regular
-	 *  expression {@code regex}.
-	 * 
-	 * @param regex the regular expression to look for
-	 * 
-	 * @return {@code true} if one or both of the constraints match the given
-	 *  regular expression {@code regex}, {@code false} otherwise
-	 */
+
+	@Override
+	public void substitute(Map<Integer, Object> constraintArguments) {
+		this.constraint1.substitute(constraintArguments);
+		this.constraint2.substitute(constraintArguments);
+	}
+
 	@Override
 	public boolean matches(String regex) {
 		return this.constraint1.matches(regex) || this.constraint2.matches(regex);
 	}
-	
-	/**
-	 * 
-	 * @return
-	 */
+
 	@Override
 	public AbstractConstraint invert() {
 		this.connector = this.connector.getOppositeConnector();
-		
+
 		this.constraint1 = this.constraint1.invert();
 		this.constraint2 = this.constraint2.invert();
-		
+
 		return this;
 	}
-	
-	/**
-	 * equals checks if this abstract sub constraint and the given object are
-	 *  equal.
-	 * 
-	 * @param object the object to check for equality
-	 * 
-	 * @return {@code true} if the given object matches this abstract
-	 *  sub constraint, {@code false} otherwise
-	 */
+
 	@Override
 	public boolean equals(Object object) {
 		if(!(object instanceof AbstractSubConstraint))
 			return false;
-		
+
 		AbstractSubConstraint subConstraint = (AbstractSubConstraint)object;
-		
+
 		return
 				this.constraint1.equals(subConstraint.constraint1) &&
 				this.connector == subConstraint.connector &&
 				this.constraint2.equals(subConstraint.constraint2);
 	}
-	
-	/**
-	 * clone returns a copy of this abstract sub constraint.
-	 * 
-	 * @return a copy of this abstract sub constraint
-	 */
+
 	@Override
 	public AbstractConstraint clone() {
 		return new AbstractSubConstraint(
 				this.constraint1.clone(), this.connector, this.constraint2.clone());
 	}
-	
-	/**
-	 * toString returns the string representation of this abstract sub
-	 *  constraint.
-	 * 
-	 * @return the string representation of this abstract sub constraint
-	 */
+
 	@Override
 	public String toString() {
 		StringBuilder stringRepresentation = new StringBuilder();

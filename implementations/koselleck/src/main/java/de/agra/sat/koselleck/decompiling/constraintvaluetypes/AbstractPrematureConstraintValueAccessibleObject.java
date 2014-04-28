@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -35,12 +36,7 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 		this.accessibleObject = accessibleObject;
 		this.objectArguments = objectArguments;
 	}
-	
-	/**
-	 * 
-	 * @param regex
-	 * @param replacement
-	 */
+
 	@Override
 	public void replaceAll(String regex, String replacement) {
 		this.constraintValue.replaceAll(regex, replacement);
@@ -48,11 +44,7 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 		for (AbstractConstraintValue methodArgument : this.objectArguments)
 			methodArgument.replaceAll(regex, replacement);
 	}
-	
-	/**
-	 * 
-	 * @return
-	 */
+
 	@Override
 	public AbstractConstraintValue evaluate() {
 		/** evaluate this constraint value */
@@ -147,24 +139,22 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 		} else
 			return this;
 	}
-	
-	/**
-	 * 
-	 * @param regex
-	 * 
-	 * @return
-	 */
+
+	@Override
+	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
+		this.constraintValue = this.constraintValue.substitute(constraintArguments);
+		
+		for (int i=0; i<this.objectArguments.size(); i++)
+			this.objectArguments.set(i, this.objectArguments.get(i).substitute(constraintArguments));
+		
+		return this;
+	}
+
 	@Override
 	public boolean matches(String regex) {
 		return this.constraintValue.matches(regex);
 	}
-	
-	/**
-	 * 
-	 * @param object
-	 * 
-	 * @return
-	 */
+
 	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof AbstractPrematureConstraintValueAccessibleObject))
@@ -175,21 +165,13 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 		return this.constraintValue.equals(constraintValue.constraintValue) &&
 				this.accessibleObject == constraintValue.accessibleObject;
 	}
-	
-	/**
-	 * 
-	 * @return
-	 */
+
 	@Override
 	public AbstractConstraintValue clone() {
 		return new AbstractPrematureConstraintValueAccessibleObject(
 				this.constraintValue.clone(), this.accessibleObject, this.objectArguments);
 	}
-	
-	/**
-	 * 
-	 * @return
-	 */
+
 	@Override
 	public String toString() {
 		StringBuilder argumentString = new StringBuilder();

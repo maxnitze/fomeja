@@ -1,6 +1,8 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 /** imports */
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.exceptions.NoCalculatableNumberTypeException;
@@ -38,6 +40,22 @@ public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Cl
 	@Override
 	public AbstractConstraintValue evaluate() {
 		return this;
+	}
+
+	@Override
+	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
+		if (constraintArguments.get(this.fieldCodeIndex) != null) {
+			Object constraintArgument = constraintArguments.get(this.fieldCodeIndex);
+			if (constraintArgument instanceof Integer)
+				return new AbstractConstraintLiteralInteger((Integer) constraintArgument);
+			else if (constraintArgument instanceof Float)
+				return new AbstractConstraintLiteralFloat((Float) constraintArgument);
+			else if (constraintArgument instanceof Double)
+				return new AbstractConstraintLiteralDouble((Double) constraintArgument);
+			else
+				return new AbstractConstraintLiteralObject(constraintArgument);
+		} else
+			return this;
 	}
 
 	@Override

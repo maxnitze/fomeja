@@ -1,5 +1,7 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.exceptions.NoCalculatableNumberTypeException;
@@ -25,6 +27,11 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 
 	@Override
 	public AbstractConstraintValue evaluate() {
+		return this;
+	}
+
+	@Override
+	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
 		return this;
 	}
 

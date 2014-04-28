@@ -2,6 +2,7 @@ package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import de.agra.sat.koselleck.datatypes.PreField;
@@ -38,6 +39,15 @@ public abstract class AbstractConstraint implements Cloneable {
 	 * @return the evaluated abstract constraint
 	 */
 	public abstract AbstractConstraint evaluate();
+	
+	/**
+	 * substitute substitutes the abstract constraint with the given objects
+	 *  (method parameters).
+	 * 
+	 * @param constraintArguments the arguments to substitute the constraint
+	 *  with
+	 */
+	public abstract void substitute(Map<Integer, Object> constraintArguments);
 	
 	/**
 	 * matches checks if any part of this abstract constraint matches the

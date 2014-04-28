@@ -1,5 +1,7 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
+import java.util.Map;
+
 /** imports */
 import de.agra.sat.koselleck.types.BooleanConnector;
 
@@ -102,6 +104,13 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 			} else
 				return this;
 		}
+	}
+
+	@Override
+	public void substitute(Map<Integer, Object> constraintArguments) {
+		this.ifCondition.substitute(constraintArguments);
+		this.thenCaseConstraint.substitute(constraintArguments);
+		this.elseCaseConstraint.substitute(constraintArguments);
 	}
 
 	/**

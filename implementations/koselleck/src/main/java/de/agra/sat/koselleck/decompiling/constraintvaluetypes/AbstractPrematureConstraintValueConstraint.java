@@ -1,5 +1,7 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
+import java.util.Map;
+
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 
 public class AbstractPrematureConstraintValueConstraint extends AbstractConstraintValue {
@@ -22,6 +24,13 @@ public class AbstractPrematureConstraintValueConstraint extends AbstractConstrai
 	@Override
 	public AbstractConstraintValue evaluate() {
 		this.constraint = this.constraint.evaluate();
+
+		return this;
+	}
+
+	@Override
+	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
+		this.constraint.substitute(constraintArguments);
 
 		return this;
 	}

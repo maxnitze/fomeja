@@ -1,5 +1,7 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
+import java.util.Map;
+
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralInteger;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
 
@@ -60,6 +62,10 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 		this.returnValue = this.returnValue.evaluate();
 		
 		return this;
+	}
+
+	@Override
+	public void substitute(Map<Integer, Object> constraintArguments) {
 	}
 	
 	/**

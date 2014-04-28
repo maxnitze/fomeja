@@ -3,6 +3,7 @@ package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 /** imports */
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -90,6 +91,41 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 			return this.replacedConstraintValue;
 		else
 			return this;
+	}
+
+	@Override
+	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
+		if (constraintArguments.get(this.fieldCodeIndex) == null)
+			return this;
+
+		Object constraintArgument = constraintArguments.get(this.fieldCodeIndex);
+		for (PreField preField : this.preFields) {
+			preField.field.setAccessible(true);
+			try {
+				constraintArgument = preField.field.get(constraintArgument);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				String message = "could not access field \"" + preField.field + "\" on object \"" + constraintArgument + "\"";
+				Logger.getLogger(AbstractConstraintLiteralField.class).fatal(message);
+				throw new IllegalArgumentException(message);
+			}
+		}
+
+		try {
+			constraintArgument = this.value.get(constraintArgument);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			String message = "could not access field \"" + this.value + "\" on object \"" + constraintArgument + "\"";
+			Logger.getLogger(AbstractConstraintLiteralField.class).fatal(message);
+			throw new IllegalArgumentException(message);
+		}
+
+		if (constraintArgument instanceof Integer)
+			return new AbstractConstraintLiteralInteger((Integer) constraintArgument);
+		else if (constraintArgument instanceof Float)
+			return new AbstractConstraintLiteralFloat((Float) constraintArgument);
+		else if (constraintArgument instanceof Double)
+			return new AbstractConstraintLiteralDouble((Double) constraintArgument);
+		else
+			return new AbstractConstraintLiteralObject(constraintArgument);
 	}
 
 	@Override
