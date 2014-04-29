@@ -68,12 +68,6 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 				arguments[i] = ((AbstractConstraintLiteral<?>) this.objectArguments.get(i)).value;
 			}
 
-			System.out.println("\t\tall constraint are finished...");
-			System.out.println("\t\t\tconstraint value: " + this.constraintValue);
-			System.out.println("\t\t\targuments:");
-			for (AbstractConstraintValue acv : this.objectArguments)
-				System.out.println("\t\t\t\t" + acv);
-
 			/** try to invoke the accessible object (method or constructor) */
 			try {
 				if (this.accessibleObject instanceof Method) {
@@ -94,11 +88,9 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 					else if (CompareUtils.equalsAny(method.getReturnType(), CompareUtils.integerClasses))
 						return new AbstractConstraintLiteralInteger(
 								(Integer) method.invoke(invokationObject, arguments));
-					else if (CompareUtils.equalsAny(method.getReturnType(), CompareUtils.booleanClasses)) {
-						System.out.println("\t\t\t\tboolsch! : " + method.invoke(invokationObject, arguments).equals(true));
+					else if (CompareUtils.equalsAny(method.getReturnType(), CompareUtils.booleanClasses))
 						return new AbstractConstraintLiteralInteger(
 								method.invoke(invokationObject, arguments).equals(true) ? 1 : 0);
-					}
 					else
 						return new AbstractConstraintLiteralObject(
 								method.invoke(invokationObject, arguments));
@@ -154,17 +146,10 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 
 	@Override
 	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
-		System.out.println("AbstractPrematureConstraintValueAccessibleObject#substitute");
-		System.out.println("\tconstraint value before: " + this.constraintValue + "(" + this.constraintValue.getClass() + ")");
 		this.constraintValue = this.constraintValue.substitute(constraintArguments);
-		System.out.println("\tconstraint value after: " + this.constraintValue + "(" + this.constraintValue.getClass() + ")");
 
-		System.out.println("\targuments:");
-		for (int i = 0; i < this.objectArguments.size(); i++) {
-			System.out.println("\t\tbefore: " + this.objectArguments.get(i));
+		for (int i = 0; i < this.objectArguments.size(); i++)
 			this.objectArguments.set(i, this.objectArguments.get(i).substitute(constraintArguments));
-			System.out.println("\t\tafter: " + this.objectArguments.get(i));
-		}
 
 		return this;
 	}

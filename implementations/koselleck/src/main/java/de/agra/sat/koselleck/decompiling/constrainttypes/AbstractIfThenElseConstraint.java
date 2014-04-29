@@ -1,5 +1,6 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
+/** imports */
 import java.util.Map;
 
 /** imports */
@@ -34,12 +35,7 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 		this.thenCaseConstraint = thenCaseConstraint;
 		this.elseCaseConstraint = elseCaseConstraint;
 	}
-	
-	/**
-	 * 
-	 * @param regex
-	 * @param replacement
-	 */
+
 	@Override
 	public void replaceAll(String regex, String replacement) {
 		this.ifCondition.replaceAll(regex, replacement);
@@ -48,16 +44,11 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 		this.elseCaseConstraint.replaceAll(regex, replacement);
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	@Override
 	public AbstractConstraint evaluate() {
 		this.ifCondition = this.ifCondition.evaluate();
 
 		if (this.ifCondition instanceof AbstractBooleanConstraint) {
-			System.out.println("AbstractIfThenElse...#evaluate: " + ((AbstractBooleanConstraint) this.ifCondition).value);
 			if (((AbstractBooleanConstraint) this.ifCondition).value)
 				return this.thenCaseConstraint.evaluate();
 			else
@@ -80,7 +71,7 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 					else
 						return new AbstractBooleanConstraint(false);
 				} else {
-					AbstractBooleanConstraint booleanThenCaseConstraint = (AbstractBooleanConstraint)this.thenCaseConstraint;
+					AbstractBooleanConstraint booleanThenCaseConstraint = (AbstractBooleanConstraint) this.thenCaseConstraint;
 					
 					if (booleanThenCaseConstraint.value)
 						return new AbstractSubConstraint(
@@ -92,7 +83,7 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 								this.ifCondition.clone().invert(), BooleanConnector.AND, this.elseCaseConstraint);
 				}
 			} else if (this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
-				AbstractBooleanConstraint booleanElseCaseConstraint = (AbstractBooleanConstraint)this.elseCaseConstraint;
+				AbstractBooleanConstraint booleanElseCaseConstraint = (AbstractBooleanConstraint) this.elseCaseConstraint;
 
 				if (booleanElseCaseConstraint.value)
 					return new AbstractSubConstraint(
@@ -114,22 +105,13 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 		this.elseCaseConstraint.substitute(constraintArguments);
 	}
 
-	/**
-	 * 
-	 * @param regex
-	 * 
-	 * @return
-	 */
 	@Override
 	public boolean matches(String regex) {
 		return this.ifCondition.matches(regex)
 				|| this.thenCaseConstraint.matches(regex)
 				|| this.elseCaseConstraint.matches(regex);
 	}
-	
-	/**
-	 * 
-	 */
+
 	@Override
 	public AbstractConstraint invert() {
 		this.ifCondition = this.ifCondition.invert();
@@ -137,12 +119,6 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 		return this;
 	}
 
-	/**
-	 * 
-	 * @param object
-	 * 
-	 * @return
-	 */
 	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof AbstractIfThenElseConstraint))
@@ -155,20 +131,12 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 				this.elseCaseConstraint.equals(abstractIfThenElseConstraint.elseCaseConstraint);
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	@Override
 	public AbstractConstraint clone() {
 		return new AbstractIfThenElseConstraint(
 				this.ifCondition.clone(), this.thenCaseConstraint.clone(), this.elseCaseConstraint.clone());
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	@Override
 	public String toString() {
 		StringBuilder stringRepresentation = new StringBuilder();

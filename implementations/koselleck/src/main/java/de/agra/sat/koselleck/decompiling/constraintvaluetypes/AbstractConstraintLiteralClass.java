@@ -45,7 +45,6 @@ public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Cl
 	@Override
 	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
 		if (constraintArguments.get(this.fieldCodeIndex) != null) {
-			System.out.println("\t\t\t map at " + this.fieldCodeIndex + " != null");
 			Object constraintArgument = constraintArguments.get(this.fieldCodeIndex);
 			if (constraintArgument instanceof Integer)
 				return new AbstractConstraintLiteralInteger((Integer) constraintArgument);
@@ -55,10 +54,8 @@ public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Cl
 				return new AbstractConstraintLiteralDouble((Double) constraintArgument);
 			else
 				return new AbstractConstraintLiteralObject(constraintArgument);
-		} else {
-			System.out.println("\t\t\t map at " + this.fieldCodeIndex + " == null");
+		} else
 			return this;
-		}
 	}
 
 	@Override
