@@ -95,7 +95,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 
 	@Override
 	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
-		if (constraintArguments.get(this.fieldCodeIndex) == null)
+		if (this.isVariable || constraintArguments.get(this.fieldCodeIndex) == null)
 			return this;
 
 		Object constraintArgument = constraintArguments.get(this.fieldCodeIndex);

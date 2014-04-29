@@ -272,6 +272,21 @@ public abstract class Dialect {
 			
 			do {
 				AbstractConstraint cConstraint = constraint.clone();
+
+				System.out.println("constraint = " + cConstraint);
+				System.out.println("Start Substitution");
+				System.out.println("With Parameters:");
+				/** substitute the parameters of the current constraint */
+				Map<Integer, Object> constraintParametersMap = new HashMap<Integer, Object>();
+				for (int i = 0; i < constraintParameters.length; i++) {
+					System.out.println("\t" + (i+1) + ": " + constraintParameters[i].getCurrentCollectionObject());
+					constraintParametersMap.put(i+1, constraintParameters[i].getCurrentCollectionObject());
+				}
+
+				cConstraint.substitute(constraintParametersMap);
+				System.out.println("End Substitution\n");
+
+				/** replace the prefields in the current constraint */
 				for(PreField preField : preFieldsList) {
 					ConstraintParameter currentConstraintParameter = constraintParameters[preField.fieldCodeIndex-1];
 					if(!preField.isVariable) {

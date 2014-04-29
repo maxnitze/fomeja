@@ -9,6 +9,8 @@ import java.util.List;
  * @author Max Nitze
  */
 public final class CompareUtils {
+	/** array of the two boolean classes */
+	public static final Class<?>[] booleanClasses = new Class<?>[] { boolean.class, Boolean.class };
 	/** array of the two double classes */
 	public static final Class<?>[] doubleClasses = new Class<?>[] { double.class, Double.class };
 	/** array of the two float classes */

@@ -57,6 +57,7 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 		this.ifCondition = this.ifCondition.evaluate();
 
 		if (this.ifCondition instanceof AbstractBooleanConstraint) {
+			System.out.println("AbstractIfThenElse...#evaluate: " + ((AbstractBooleanConstraint) this.ifCondition).value);
 			if (((AbstractBooleanConstraint) this.ifCondition).value)
 				return this.thenCaseConstraint.evaluate();
 			else
