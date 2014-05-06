@@ -81,15 +81,6 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	}
 	
 	/**
-	 * 
-	 * @return
-	 */
-	@Override
-	public AbstractConstraint invert() {
-		return this;
-	}
-	
-	/**
 	 * equals tests if this abstract boolean constraint and the given object
 	 *  are equal.
 	 * 

@@ -258,7 +258,7 @@ public class Decompiler {
 
 					/** check for integer */
 					if (constraintLiteral instanceof AbstractConstraintLiteralInteger) {
-						/** push corresponding double to stack */
+						/** push corresponding float to stack */
 						this.stack.push(
 								new AbstractConstraintLiteralFloat(new Float((Integer) constraintLiteral.value)));
 					} else if (constraintLiteral.isNumberType) {
@@ -278,7 +278,7 @@ public class Decompiler {
 				if (constraintValue instanceof AbstractConstraintLiteral<?>) {
 					constraintLiteral = (AbstractConstraintLiteral<?>)constraintValue;
 
-					/** check for integer */
+					/** check for float */
 					if (constraintLiteral instanceof AbstractConstraintLiteralFloat) {
 						/** push corresponding double to stack */
 						this.stack.push(
@@ -564,15 +564,15 @@ public class Decompiler {
 				else if (constraintValue instanceof AbstractPrematureConstraintValueConstraint)
 					return new AbstractIfThenElseConstraint(
 							((AbstractPrematureConstraintValueConstraint) constraintValue).constraint,
-							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.offset),
-							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.followingLineNumber));
+							constraintOperator == ConstraintOperator.NOT_EQUAL ? this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.offset) : this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.followingLineNumber),
+							constraintOperator == ConstraintOperator.NOT_EQUAL ? this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.followingLineNumber) : this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.offset));
 				else if (constraintValue instanceof AbstractPrematureConstraintValueAccessibleObject)
 					return new AbstractIfThenElseConstraint(
 							new AbstractSingleConstraint(constraintValue, constraintOperator, new AbstractConstraintLiteralInteger(0), new ArrayList<PreField>()),
 							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.offset),
 							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.followingLineNumber));
 				else {
-					String message = "could not cast given value \"" + constraintValue+ "\" to AbstractConstraintLiteral.";
+					String message = "could not cast given value \"" + constraintValue + "\" to AbstractConstraintLiteral.";
 					Logger.getLogger(Decompiler.class).fatal(message);
 					throw new ClassCastException(message);
 				}

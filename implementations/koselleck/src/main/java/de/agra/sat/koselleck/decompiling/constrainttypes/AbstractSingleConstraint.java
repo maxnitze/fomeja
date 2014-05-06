@@ -68,13 +68,6 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	public boolean matches(String regex) {
 		return this.value1.matches(regex) || this.value2.matches(regex);
 	}
-	
-	@Override
-	public AbstractConstraint invert() {
-		this.operator = this.operator.getOpposite();
-		
-		return this;
-	}
 
 	@Override
 	public boolean equals(Object obj) {

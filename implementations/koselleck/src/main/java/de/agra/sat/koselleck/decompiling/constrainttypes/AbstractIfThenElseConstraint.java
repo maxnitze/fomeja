@@ -67,7 +67,7 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 					else if (booleanThenCaseConstraint.value)
 						return this.ifCondition;
 					else if (booleanElseCaseConstraint.value)
-						return this.ifCondition.invert();
+						return new AbstractNotConstraint(this.ifCondition);
 					else
 						return new AbstractBooleanConstraint(false);
 				} else {
@@ -77,10 +77,11 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 						return new AbstractSubConstraint(
 								this.ifCondition, BooleanConnector.OR,
 								new AbstractSubConstraint(
-										this.ifCondition.clone().invert(), BooleanConnector.AND, this.elseCaseConstraint));
+										new AbstractNotConstraint(
+												this.ifCondition), BooleanConnector.AND, this.elseCaseConstraint));
 					else
 						return new AbstractSubConstraint(
-								this.ifCondition.clone().invert(), BooleanConnector.AND, this.elseCaseConstraint);
+								new AbstractNotConstraint(this.ifCondition), BooleanConnector.AND, this.elseCaseConstraint);
 				}
 			} else if (this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
 				AbstractBooleanConstraint booleanElseCaseConstraint = (AbstractBooleanConstraint) this.elseCaseConstraint;
@@ -89,7 +90,8 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 					return new AbstractSubConstraint(
 							new AbstractSubConstraint(
 									this.ifCondition, BooleanConnector.AND, this.thenCaseConstraint),
-							BooleanConnector.OR, this.ifCondition.clone().invert());
+							BooleanConnector.OR,
+							new AbstractNotConstraint(this.ifCondition));
 				else
 					return new AbstractSubConstraint(
 							this.ifCondition, BooleanConnector.AND, this.thenCaseConstraint);
@@ -110,13 +112,6 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 		return this.ifCondition.matches(regex)
 				|| this.thenCaseConstraint.matches(regex)
 				|| this.elseCaseConstraint.matches(regex);
-	}
-
-	@Override
-	public AbstractConstraint invert() {
-		this.ifCondition = this.ifCondition.invert();
-		
-		return this;
 	}
 
 	@Override

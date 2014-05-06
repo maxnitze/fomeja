@@ -65,7 +65,7 @@ public abstract class Prover {
 
 		String proverResult = this.solve(formattedTheorem);
 
-//		System.out.println(proverResult); // TODO delete output proverResult
+		System.out.println(proverResult); // TODO delete output proverResult
 
 		Map<String, Object> resultMap = this.dialect.parseResult(proverResult);
 		for(Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {

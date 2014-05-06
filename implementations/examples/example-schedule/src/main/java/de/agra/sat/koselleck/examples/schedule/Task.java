@@ -46,7 +46,7 @@ public class Task {
 	 * @return
 	 */
 	public boolean intersectsWith(Task task) {
-		return (this.start >= task.start && this.start < task.start + task.duration) ||
-				(task.start >= this.start && task.start < this.start + this.duration);
+		return (this.start >= task.start && this.start < task.start + task.duration)
+				|| (task.start >= this.start && task.start < this.start + this.duration);
 	}
 }

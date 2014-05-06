@@ -13,6 +13,7 @@ import de.agra.sat.koselleck.backends.datatypes.VariableField;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractNotConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintFormula;
@@ -101,125 +102,80 @@ public class SMTII extends Dialect {
 		
 		return resultMap;
 	}
-	
-	/** ----- ----- ----- ----- ----- */
-	
-	/**
-	 * prepareAbstractBooleanConstraint returns the smt2 string representation
-	 *  of an abstract boolean constraint.
-	 * 
-	 * @param booleanConstraint the abstract boolean constraint to get the smt2
-	 *  string representation from
-	 * 
-	 * @return the smt2 string representation for the given abstract boolean
-	 *  constraint
-	 */
+
+	/** abstract constraints
+	 * ----- ----- ----- ----- ----- */
+
 	@Override
 	public String prepareAbstractBooleanConstraint(AbstractBooleanConstraint booleanConstraint) {
 		return booleanConstraint.value ? "True" : "False";
 	}
-	
-	/**
-	 * prepareAbstractSingleConstraint returns the smt2 string representation
-	 *  of an abstract single constraint.
-	 * 
-	 * @param singleConstraint the abstract single constraint to get the smt2
-	 *  string representation for
-	 * 
-	 * @return the smt2 string representation for the given abstract single
-	 *  constraint
-	 */
+
+	@Override
+	public String prepareAbstractNotConstraint(AbstractNotConstraint notConstraint) {
+		StringBuilder notConstraintString = new StringBuilder();
+
+		notConstraintString.append("(not ");
+		notConstraintString.append(this.getBackendConstraint(notConstraint.constraint));
+		notConstraintString.append(")");
+
+		return notConstraintString.toString();
+	}
+
 	@Override
 	public String prepareAbstractSingleConstraint(AbstractSingleConstraint singleConstraint) {
 		StringBuilder singleConstraintString = new StringBuilder();
 		
-		singleConstraintString.append(getOperatorOpening(singleConstraint.operator));
+		singleConstraintString.append(this.getOperatorOpening(singleConstraint.operator));
 		singleConstraintString.append(" ");
-		singleConstraintString.append(getBackendConstraintValue(singleConstraint.value1));
+		singleConstraintString.append(this.getBackendConstraintValue(singleConstraint.value1));
 		singleConstraintString.append(" ");
-		singleConstraintString.append(getBackendConstraintValue(singleConstraint.value2));
-		singleConstraintString.append(getOperatorClosing(singleConstraint.operator));
+		singleConstraintString.append(this.getBackendConstraintValue(singleConstraint.value2));
+		singleConstraintString.append(this.getOperatorClosing(singleConstraint.operator));
 		
 		return singleConstraintString.toString();
 	}
-	
-	/**
-	 * prepareAbstractSubConstraint returns the smt2 string representation of
-	 *  an abstract sub-constraint.
-	 * 
-	 * @param subConstraint the abstract sub-constraint to get the smt2 string
-	 *  representation for
-	 * 
-	 * @return the smt2 string representation for the given abstract sub-
-	 *  constraint
-	 */
+
 	@Override
 	public String prepareAbstractSubConstraint(AbstractSubConstraint subConstraint) {
 		StringBuilder subConstraintString = new StringBuilder();
 		
 		subConstraintString.append("(");
-		subConstraintString.append(getConnectorName(subConstraint.connector));
+		subConstraintString.append(this.getConnectorName(subConstraint.connector));
 		subConstraintString.append(" ");
-		subConstraintString.append(getBackendConstraint(subConstraint.constraint1));
+		subConstraintString.append(this.getBackendConstraint(subConstraint.constraint1));
 		subConstraintString.append(" ");
-		subConstraintString.append(getBackendConstraint(subConstraint.constraint2));
+		subConstraintString.append(this.getBackendConstraint(subConstraint.constraint2));
 		subConstraintString.append(")");
 		
 		return subConstraintString.toString();
 	}
-	
-	/**
-	 * prepareAbstractSubConstraint returns the smt2 string representation of
-	 *  an abstract if-then-else-constraint.
-	 * 
-	 * @param ifThenElseConstraint the abstract if-then-else-constraint to get
-	 *  the smt2 string representation for
-	 * 
-	 * @return the smt2 string representation for the given abstract
-	 *  if-then-else-constraint
-	 */
+
 	@Override
 	public String prepareAbstractIfThenElseConstraint(AbstractIfThenElseConstraint ifThenElseConstraint) {
 		StringBuilder ifThenElseConstraintString = new StringBuilder();
 		
-		ifThenElseConstraintString.append("((");
+		ifThenElseConstraintString.append("(or (and ");
 		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.ifCondition));
-		ifThenElseConstraintString.append(" and ");
+		ifThenElseConstraintString.append(" ");
 		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.thenCaseConstraint));
-		ifThenElseConstraintString.append(") or (not (");
+		ifThenElseConstraintString.append(") (and (not ");
 		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.ifCondition));
-		ifThenElseConstraintString.append(") and ");
+		ifThenElseConstraintString.append(") ");
 		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.elseCaseConstraint));
-		ifThenElseConstraintString.append(")))");
+		ifThenElseConstraintString.append("))");
 		
 		return ifThenElseConstraintString.toString();
 	}
-	
-	/**
-	 * prepareAbstractConstraintLiteral returns the smt2 string representation
-	 *  of an abstract constraint literal.
-	 * 
-	 * @param singleConstraint the abstract constraint literal to get the smt2
-	 *  string representation for
-	 * 
-	 * @return the smt2 string representation for the given abstract constraint
-	 *  literal
-	 */
+
+	/** abstract constraint values
+	 * ----- ----- ----- ----- ----- */
+
 	@Override
 	public String prepareAbstractConstraintLiteral(AbstractConstraintLiteral<?> constraintLiteral) {
-		return constraintLiteral.toString();
+		return constraintLiteral.value.toString();
 	}
-	
-	/**
-	 * prepareAbstractConstraintFormula returns the smt2 string representation
-	 *  of an abstract constraint formula.
-	 * 
-	 * @param constraintFormula the abstract sub-constraint to get the smt2
-	 *  string representation for
-	 * 
-	 * @return the smt2 string representation for the given abstract constraint
-	 *  formula
-	 */
+
 	@Override
 	public String prepareAbstractConstraintFormula(AbstractConstraintFormula constraintFormula) {
 		StringBuilder constraintFormulaString = new StringBuilder();
@@ -227,25 +183,14 @@ public class SMTII extends Dialect {
 		constraintFormulaString.append("(");
 		constraintFormulaString.append(constraintFormula.operator.asciiName);
 		constraintFormulaString.append(" ");
-		constraintFormulaString.append(getBackendConstraintValue(constraintFormula.value1));
+		constraintFormulaString.append(this.getBackendConstraintValue(constraintFormula.value1));
 		constraintFormulaString.append(" ");
-		constraintFormulaString.append(getBackendConstraintValue(constraintFormula.value2));
+		constraintFormulaString.append(this.getBackendConstraintValue(constraintFormula.value2));
 		constraintFormulaString.append(")");
 		
 		return constraintFormulaString.toString();
 	}
-	
-	/**
-	 * prepareAbstractPrematureConstraintValueAccessibleObject returns the
-	 *  string representation of a given abstract premature constraint value
-	 *  accessible object.
-	 * 
-	 * @param prematureConstraintValueAccessibleObject the abstract premature
-	 *  constraint value accessible object to proceed
-	 * 
-	 * @return the string representation of the abstract premature constraint
-	 *  value accessible object
-	 */
+
 	@Override
 	public String prepareAbstractPrematureConstraintValueAccessibleObject(AbstractPrematureConstraintValueAccessibleObject prematureConstraintValueAccessibleObject) {
 		System.out.println("-- " + prematureConstraintValueAccessibleObject.toString());
@@ -253,17 +198,6 @@ public class SMTII extends Dialect {
 		throw new RuntimeException("PREMATURE Constraint Value Accessible Object");
 	}
 
-	/**
-	 * prepareAbstractPrematureConstraintValue returns the string
-	 *  representation of a given abstract premature constraint value
-	 *  constraint.
-	 * 
-	 * @param prematureConstraintValueConstraint the abstract premature
-	 *  constraint value constraint to proceed
-	 * 
-	 * @return the string representation of the abstract premature constraint
-	 *  value constraint
-	 */
 	@Override
 	public String prepareAbstractPrematureConstraintValueConstraint(AbstractPrematureConstraintValueConstraint prematureConstraintValueConstraint) {
 		System.out.println("-- " + prematureConstraintValueConstraint.toString());

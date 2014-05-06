@@ -24,7 +24,7 @@ public class Schedule {
 		this.employees = employees;
 		this.tasks = tasks;
 	}
-	
+
 	/**
 	 * 
 	 * @param task1
@@ -34,7 +34,18 @@ public class Schedule {
 	 */
 	@Constraint(fields = { @Constraint.Field("tasks"), @Constraint.Field("tasks") })
 	public boolean testConstraint(Task task1, Task task2) {
-		return task1.equals(task2) || !task1.intersectsWith(task2); // task1.equals(task2)
+		return task1.equals(task2) || !task1.intersectsWith(task2);
+	}
+
+	/**
+	 * 
+	 * @param task
+	 * 
+	 * @return
+	 */
+//	@Constraint(fields = { @Constraint.Field("tasks") })
+	public boolean startIsPositive(Task task) {
+		return task.start >= 0;
 	}
 
 	/**

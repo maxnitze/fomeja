@@ -18,6 +18,7 @@ import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractNotConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintFormula;
@@ -81,6 +82,9 @@ public abstract class Dialect {
 	 * @return
 	 */
 	public abstract Map<String, Object> parseResult(String result);
+
+	/** abstract constraints
+	 * ----- ----- ----- ----- ----- */
 	
 	/**
 	 * prepareAbstractBooleanConstraint returns the string representation of a
@@ -91,6 +95,16 @@ public abstract class Dialect {
 	 * @return the string representation of the abstract boolean constraint
 	 */
 	public abstract String prepareAbstractBooleanConstraint(AbstractBooleanConstraint booleanConstraint);
+	
+	/**
+	 * prepareAbstractNotConstraint returns the string representation of a
+	 *  given abstract not-constraint.
+	 * 
+	 * @param booleanConstraint the abstract not-constraint to proceed
+	 * 
+	 * @return the string representation of the abstract not-constraint
+	 */
+	public abstract String prepareAbstractNotConstraint(AbstractNotConstraint notConstraint);
 	
 	/**
 	 * prepareAbstractSingleConstraint returns the string representation of a
@@ -123,7 +137,10 @@ public abstract class Dialect {
 	 *  constraint
 	 */
 	public abstract String prepareAbstractIfThenElseConstraint(AbstractIfThenElseConstraint ifThenElseConstraint);
-	
+
+	/** abstract constraint values
+	 * ----- ----- ----- ----- ----- */
+
 	/**
 	 * prepareAbstractConstraintLiteral returns the string representation of a
 	 *  given abstract constraint literal.
@@ -183,13 +200,15 @@ public abstract class Dialect {
 	 */
 	protected String getBackendConstraint(AbstractConstraint constraint) {
 		if(constraint instanceof AbstractBooleanConstraint)
-			return prepareAbstractBooleanConstraint((AbstractBooleanConstraint)constraint);
+			return prepareAbstractBooleanConstraint((AbstractBooleanConstraint) constraint);
+		else if(constraint instanceof AbstractNotConstraint)
+			return prepareAbstractNotConstraint((AbstractNotConstraint) constraint);
 		else if(constraint instanceof AbstractSingleConstraint)
-			return prepareAbstractSingleConstraint((AbstractSingleConstraint)constraint);
+			return prepareAbstractSingleConstraint((AbstractSingleConstraint) constraint);
 		else if(constraint instanceof AbstractSubConstraint)
-			return prepareAbstractSubConstraint((AbstractSubConstraint)constraint);
+			return prepareAbstractSubConstraint((AbstractSubConstraint) constraint);
 		else if(constraint instanceof AbstractIfThenElseConstraint)
-			return prepareAbstractIfThenElseConstraint((AbstractIfThenElseConstraint)constraint);
+			return prepareAbstractIfThenElseConstraint((AbstractIfThenElseConstraint) constraint);
 		else {
 			UnsupportedConstraintException exception = new UnsupportedConstraintException(constraint);
 			Logger.getLogger(Dialect.class).fatal(exception.getMessage());

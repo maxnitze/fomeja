@@ -61,13 +61,6 @@ public abstract class AbstractConstraint implements Cloneable {
 	public abstract boolean matches(String regex);
 	
 	/**
-	 * invert inverts this abstract constraint.
-	 * 
-	 * @return the inverted abstract constraint
-	 */
-	public abstract AbstractConstraint invert();
-	
-	/**
 	 * equals checks if this abstract constraint and the given object are
 	 *  equal.
 	 * 

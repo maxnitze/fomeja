@@ -116,16 +116,6 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	}
 
 	@Override
-	public AbstractConstraint invert() {
-		this.connector = this.connector.getOppositeConnector();
-
-		this.constraint1 = this.constraint1.invert();
-		this.constraint2 = this.constraint2.invert();
-
-		return this;
-	}
-
-	@Override
 	public boolean equals(Object object) {
 		if(!(object instanceof AbstractSubConstraint))
 			return false;

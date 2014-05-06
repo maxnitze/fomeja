@@ -36,7 +36,10 @@ public class SchedulingProblem {
 		Schedule schedule = new Schedule(employees, tasks);
 		
 		if(testValidate) {
-			DIAB.validate(schedule);
+			if(DIAB.validate(schedule))
+				System.out.println("the current schedule is valid");
+			else
+				System.out.println("the current schedule is not valid");
 		}
 		
 		if(testSatisfy) {
@@ -44,6 +47,9 @@ public class SchedulingProblem {
 				System.out.println("there is a valid schedule for these tasks");
 			else
 				System.out.println("there is no valid schedule for these tasks");
+			
+			for (Task task : tasks)
+				System.out.println("Task \"" + task.name + "\": " + task.start);
 		}
 		
 		if(testMinimize) {

@@ -2,6 +2,7 @@ package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 import java.util.Map;
 
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 
 public class AbstractPrematureConstraintValueConstraint extends AbstractConstraintValue {
@@ -25,7 +26,10 @@ public class AbstractPrematureConstraintValueConstraint extends AbstractConstrai
 	public AbstractConstraintValue evaluate() {
 		this.constraint = this.constraint.evaluate();
 
-		return this;
+		if (this.constraint instanceof AbstractBooleanConstraint)
+			return ((AbstractBooleanConstraint) this.constraint).returnValue;
+		else
+			return this;
 	}
 
 	@Override
