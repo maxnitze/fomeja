@@ -31,7 +31,7 @@ public final class StringUtils {
 				return true;
 		return false;
 	}
-	
+
 	/**
 	 * matchesAny checks if any of regular expressions of the given list
 	 *  matches the given text.

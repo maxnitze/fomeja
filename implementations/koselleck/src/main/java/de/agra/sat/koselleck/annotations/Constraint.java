@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Constraint {
 	Field [] fields();
-	
+
 	public @interface Field {
 		String value();
 	}

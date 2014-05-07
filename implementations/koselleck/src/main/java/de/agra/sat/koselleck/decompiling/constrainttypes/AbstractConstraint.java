@@ -16,14 +16,14 @@ import de.agra.sat.koselleck.datatypes.PreField;
 public abstract class AbstractConstraint implements Cloneable {
 	/** the set of prefixed fields of the constraint */
 	public final Set<PreField> preFields;
-	
+
 	/**
 	 * Constructor for a new abstract constraint.
 	 */
 	public AbstractConstraint() {
 		this.preFields = new HashSet<PreField>();
 	}
-	
+
 	/**
 	 * replaceAll replaces all occurrences of the string {@code regex} with the
 	 *  replacement string {@code replacement}.
@@ -32,14 +32,14 @@ public abstract class AbstractConstraint implements Cloneable {
 	 * @param replacement the replacement
 	 */
 	public abstract void replaceAll(String regex, String replacement);
-	
+
 	/**
 	 * evaluate evaluates the abstract constraint.
 	 * 
 	 * @return the evaluated abstract constraint
 	 */
 	public abstract AbstractConstraint evaluate();
-	
+
 	/**
 	 * substitute substitutes the abstract constraint with the given objects
 	 *  (method parameters).
@@ -48,7 +48,7 @@ public abstract class AbstractConstraint implements Cloneable {
 	 *  with
 	 */
 	public abstract void substitute(Map<Integer, Object> constraintArguments);
-	
+
 	/**
 	 * matches checks if any part of this abstract constraint matches the
 	 *  string {@code regex}.
@@ -59,7 +59,7 @@ public abstract class AbstractConstraint implements Cloneable {
 	 *  {@code regex}, {@code false} otherwise
 	 */
 	public abstract boolean matches(String regex);
-	
+
 	/**
 	 * equals checks if this abstract constraint and the given object are
 	 *  equal.
@@ -71,7 +71,7 @@ public abstract class AbstractConstraint implements Cloneable {
 	 */
 	@Override
 	public abstract boolean equals(Object object);
-	
+
 	/**
 	 * clone returns a copy of this abstract constraint.
 	 * 
@@ -79,7 +79,7 @@ public abstract class AbstractConstraint implements Cloneable {
 	 */
 	@Override
 	public abstract AbstractConstraint clone();
-	
+
 	/**
 	 * toString returns a string representation of this abstract constraint.
 	 * 

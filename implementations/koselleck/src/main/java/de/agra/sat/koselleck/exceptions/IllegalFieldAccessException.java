@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 public class IllegalFieldAccessException extends RuntimeException {
 	/** serial id */
 	private static final long serialVersionUID = -2502006321320375209L;
-	
+
 	/**
 	 * Constructor for a new IllegalFieldAccessException.
 	 * 

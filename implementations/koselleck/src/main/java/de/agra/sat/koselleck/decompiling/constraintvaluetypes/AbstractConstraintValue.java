@@ -26,7 +26,7 @@ public abstract class AbstractConstraintValue {
 	 * @return the new evaluated or this abstract constraint value 
 	 */
 	public abstract AbstractConstraintValue evaluate();
-	
+
 	/**
 	 * substitute substitutes the abstract constraint value with the given
 	 *  objects (method parameters).
@@ -35,7 +35,7 @@ public abstract class AbstractConstraintValue {
 	 *  values with
 	 */
 	public abstract AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments);
-	
+
 	/**
 	 * matches checks if this abstract constraint value matches the given
 	 *  regular expression {@code regex}.
@@ -58,7 +58,7 @@ public abstract class AbstractConstraintValue {
 	 */
 	@Override
 	public abstract boolean equals(Object object);
-	
+
 	/**
 	 * clone returns a copy of this abstract constraint value.
 	 * 
@@ -66,7 +66,7 @@ public abstract class AbstractConstraintValue {
 	 */
 	@Override
 	public abstract AbstractConstraintValue clone();
-	
+
 	/**
 	 * toString returns the string representation of this abstract constraint
 	 *  value.

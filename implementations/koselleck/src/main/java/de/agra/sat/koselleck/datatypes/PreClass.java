@@ -37,7 +37,7 @@ public class PreClass {
 			return false;
 
 		PreClass preClass = (PreClass) object;
-		
+
 		return this.clazz.equals(preClass.clazz);
 	}
 }

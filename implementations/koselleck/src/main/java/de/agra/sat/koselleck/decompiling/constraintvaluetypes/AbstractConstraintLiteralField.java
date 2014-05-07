@@ -61,7 +61,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 		for(PreField preField : preFields)
 			preFieldsPrefixedNameBuilder
 					.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"));
-					
+
 		preFieldsPrefixedNameBuilder
 				.append(value.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"))
 				.append(value.getName());

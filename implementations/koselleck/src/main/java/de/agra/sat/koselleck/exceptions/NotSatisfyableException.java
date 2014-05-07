@@ -10,7 +10,7 @@ package de.agra.sat.koselleck.exceptions;
 public class NotSatisfyableException extends Exception {
 	/** serial id */
 	private static final long serialVersionUID = -8804853833981840506L;
-	
+
 	/**
 	 * Constructor for a new NotSatisfyableException.
 	 * 

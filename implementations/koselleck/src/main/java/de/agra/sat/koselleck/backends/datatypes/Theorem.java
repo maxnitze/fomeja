@@ -23,7 +23,7 @@ public class Theorem {
 	public final int constraintsSize;
 	/** the size of the variables list */
 	public final int variablesSize;
-	
+
 	/**
 	 * Constructor for a new theorem.
 	 * 
@@ -35,7 +35,7 @@ public class Theorem {
 		this.abstractConstraints = constraints;
 		this.variables = variables;
 		this.variablesMap = variablesMap;
-		
+
 		this.constraintsSize = constraints.size();
 		this.variablesSize = variables.size();
 	}

@@ -18,7 +18,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	public final boolean value;
 	/** the return value of the method evaluated to {@code value} */
 	public AbstractConstraintValue returnValue;
-	
+
 	/**
 	 * Constructor for a new AbstractBooleanConstraint.
 	 * 
@@ -30,7 +30,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 		this.value = value;
 		this.returnValue = returnValue;
 	}
-	
+
 	/**
 	 * Constructor for a new AbstractBooleanConstraint.
 	 * 
@@ -40,7 +40,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 		this.value = value;
 		this.returnValue = new AbstractConstraintLiteralInteger(value ? 1 : 0);
 	}
-	
+
 	/**
 	 * replaceAll does nothing.
 	 * 
@@ -51,7 +51,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	public void replaceAll(String regex, String replacement) {
 		this.returnValue.replaceAll(regex, replacement);
 	}
-	
+
 	/**
 	 * evaluate returns this object.
 	 * 
@@ -60,14 +60,14 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	@Override
 	public AbstractConstraint evaluate() {
 		this.returnValue = this.returnValue.evaluate();
-		
+
 		return this;
 	}
 
 	@Override
 	public void substitute(Map<Integer, Object> constraintArguments) {
 	}
-	
+
 	/**
 	 * matches returns {@code false}.
 	 * 
@@ -79,7 +79,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	public boolean matches(String regex) {
 		return this.returnValue.matches(regex);
 	}
-	
+
 	/**
 	 * equals tests if this abstract boolean constraint and the given object
 	 *  are equal.
@@ -93,13 +93,13 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	public boolean equals(Object object) {
 		if(!(object instanceof AbstractBooleanConstraint))
 			return false;
-		
+
 		AbstractBooleanConstraint booleanConstraint = (AbstractBooleanConstraint)object;
-		
+
 		return this.value == booleanConstraint.value &&
 				this.returnValue.equals(booleanConstraint.returnValue);
 	}
-	
+
 	/**
 	 * clone returns a new abstract boolean constraint with the same boolean
 	 *  value.
@@ -110,7 +110,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	public AbstractBooleanConstraint clone() {
 		return new AbstractBooleanConstraint(this.value, this.returnValue);
 	}
-	
+
 	/**
 	 * toString returns the string representation of the abstract boolean
 	 *  value.

@@ -9,18 +9,18 @@ import de.agra.sat.koselleck.annotations.Objective;
 
 public class AssemblerCode {
 	private List<Register> registers;
-	
+
 	@Constraint(fields = {})
 	public boolean overlappingRegisters(Register r1, Register r2) {
 		return !r1.interval.intersectsWith(r2.interval) || r1.address != r2.address || r1 == r2;
 	}
-	
+
 	@Objective
 	public int numberOfColors() {
 		Set<Integer> addresses = new HashSet<Integer>();
 		for(Register register : this.registers)
 			addresses.add(register.address);
-		
+
 		return registers.size();
 	}
 }

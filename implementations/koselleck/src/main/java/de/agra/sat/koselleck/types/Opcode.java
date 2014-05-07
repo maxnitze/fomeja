@@ -19,57 +19,57 @@ public enum Opcode {
 	Xconst_("bconst_", 1, OpcodeType.SIMPLE_VALUE, "[i|f|b]const_"),
 	Xconst("bconst", 2, OpcodeType.SIMPLE_VALUE, "[i|f|b]const( )?"),
 	bipush("bipush", 2, OpcodeType.SIMPLE_VALUE, "bipush "),
-	
+
 	getfield("getfield", 3, OpcodeType.CONSTANT_TABLE_INDEX, "getfield"),
 	getstatic("getstatic", 3, OpcodeType.CONSTANT_TABLE_INDEX, "getstatic"),
-	
+
 	checkcast("checkcast", 3, OpcodeType.CONSTANT_TABLE_INDEX, "checkcast"),
-	
+
 	i2d("i2d", 1, OpcodeType.SIMPLE, "i2d"),
 	i2f("i2f", 1, OpcodeType.SIMPLE, "i2f"),
 	f2d("f2d", 1, OpcodeType.SIMPLE, "f2d"),
-	
+
 	ldc("ldc", 2, OpcodeType.CONSTANT_TABLE_VALUE, "ldc"),
 	ldc2_w("ldc2_w", 3, OpcodeType.CONSTANT_TABLE_VALUE, "ldc2_w"),
-	
+
 	Xadd("Xadd", 1, OpcodeType.SIMPLE, "[i|f|d]add"),
 	Xsub("Xsub", 1, OpcodeType.SIMPLE, "[i|f|d]sub"),
 	Xmul("Xmul", 1, OpcodeType.SIMPLE, "[i|f|d]mul"),
 	Xdiv("Xdiv", 1, OpcodeType.SIMPLE, "[i|f|d]div"),
-	
+
 	_new("new", 3, OpcodeType.CONSTANT_TABLE_INDEX, "new"),
-	
+
 	invokestatic("invokestatic", 3, OpcodeType.CONSTANT_TABLE_INDEX, "invokestatic"),
 	invokevirtual("invokevirtual", 3, OpcodeType.CONSTANT_TABLE_INDEX, "invokevirtual"),
 	invokespecial("invokespecial", 3, OpcodeType.CONSTANT_TABLE_INDEX, "invokespecial"),
-	
+
 	dup("dup", 1, OpcodeType.SIMPLE, "dup"),
-	
+
 	tableswitch("tableswitch", 0, OpcodeType.SWITCH, "tableswitch"),
-	
+
 	_goto("goto", 1, OpcodeType.OFFSET, "goto"),
-	
+
 	ifeq("ifeq", 3, OpcodeType.OFFSET, "ifeq"),							/** jump if zero */
 	ifne("ifne", 3, OpcodeType.OFFSET, "ifne"),							/** jump if nonzero */
-	
+
 	if_Xcmpeq("if_Xcmpeq", 3, OpcodeType.OFFSET, "if_[i|a]cmpeq"),		/** equal */
 	if_Xcmpge("if_Xcmpge", 3, OpcodeType.OFFSET, "if_[i|a]cmpge"),		/** greater-equal */
 	if_Xcmpgt("if_Xcmpgt", 3, OpcodeType.OFFSET, "if_[i|a]cmpgt"),		/** greater */
 	if_Xcmple("if_Xcmple", 3, OpcodeType.OFFSET, "if_[i|a]cmple"),		/** less-equal */
 	if_Xcmplt("if_Xcmplt", 3, OpcodeType.OFFSET, "if_[i|a]cmplt"),		/** less */
 	if_Xcmpne("if_Xcmpne", 3, OpcodeType.OFFSET, "if_[i|a]cmpne"),		/** not equal */
-	
+
 	dcmpg("dcmpg", 1, OpcodeType.SIMPLE, "dcmpg"),
 	dcmpl("dcmpl", 1, OpcodeType.SIMPLE, "dcmpl"),
-	
+
 	fcmpg("fcmpg", 1, OpcodeType.SIMPLE, "fcmpg"),
 	fcmpl("fcmpl", 1, OpcodeType.SIMPLE, "fcmpl"),
-	
+
 	_return("return", 1, OpcodeType.SIMPLE, "[i|f|d|a]return");
-	
+
 	/** enumeration of the types of an opcode */
 	private enum OpcodeType { SIMPLE, SIMPLE_VALUE, CONSTANT_TABLE_VALUE, OFFSET, CONSTANT_TABLE_INDEX, SWITCH };
-	
+
 	/** the name */
 	public final String name;
 	/** the offset to the following line */
@@ -78,7 +78,7 @@ public enum Opcode {
 	private final OpcodeType type;
 	/** the regular expression for this opcode */
 	private final String opcodeRegex;
-	
+
 	/**
 	 * Constructor for a new opcode.
 	 * 
@@ -93,7 +93,7 @@ public enum Opcode {
 		this.type = type;
 		this.opcodeRegex = opcodeRegex;
 	}
-	
+
 	/**
 	 * fromString returns the opcode thats representing regular expression
 	 *  matches the given opcode name.
@@ -111,7 +111,7 @@ public enum Opcode {
 		Logger.getLogger(Opcode.class).fatal("no opcode matching \"" + opcode + "\"");
 		throw new IllegalArgumentException("no opcode matching \"" + opcode + "\"");
 	}
-	
+
 	/**
 	 * getSimpleTypeGroup returns the '|'-separated list of the regular
 	 *  expressions of the opcodes thats types are simple.
@@ -130,7 +130,7 @@ public enum Opcode {
 		}
 		return simpleTypeGroup.toString();
 	}
-	
+
 	/**
 	 * getSimpleValueTypeGroup returns the '|'-separated list of the regular
 	 *  expressions of the opcodes thats types are simple value.
@@ -149,7 +149,7 @@ public enum Opcode {
 		}
 		return simpleValueTypeGroup.toString();
 	}
-	
+
 	/**
 	 * getConstantTableValueTypeGroup returns the '|'-separated list of the
 	 *  regular expressions of the opcodes thats types are constant table
@@ -169,7 +169,7 @@ public enum Opcode {
 		}
 		return valueTypeGroup.toString();
 	}
-	
+
 	/**
 	 * getOffsetTypeGroup returns the '|'-separated list of the regular
 	 *  expressions of the opcodes thats types are offset.
@@ -188,7 +188,7 @@ public enum Opcode {
 		}
 		return offsetTypeGroup.toString();
 	}
-	
+
 	/**
 	 * getConstantTableIndexTypeGroup returns the '|'-separated list of the
 	 *  regular expressions of the opcodes thats types are constant table
@@ -208,7 +208,7 @@ public enum Opcode {
 		}
 		return constantTableIndexTypeGroup.toString();
 	}
-	
+
 	/**
 	 * getConstantSwitchGroup returns the '|'-separated list of the regular
 	 *  expressions of the opcodes thats types are switch.

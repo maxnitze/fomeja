@@ -13,7 +13,7 @@ import de.agra.sat.koselleck.types.BooleanConnector;
 public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	/**  */
 	public AbstractConstraint ifCondition;
-	
+
 	/**  */
 	public AbstractConstraint thenCaseConstraint;
 	/**  */
@@ -29,9 +29,9 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 		this.preFields.addAll(ifCondition.preFields);
 		this.preFields.addAll(thenCaseConstraint.preFields);
 		this.preFields.addAll(elseCaseConstraint.preFields);
-		
+
 		this.ifCondition = ifCondition;
-		
+
 		this.thenCaseConstraint = thenCaseConstraint;
 		this.elseCaseConstraint = elseCaseConstraint;
 	}
@@ -39,7 +39,7 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	@Override
 	public void replaceAll(String regex, String replacement) {
 		this.ifCondition.replaceAll(regex, replacement);
-		
+
 		this.thenCaseConstraint.replaceAll(regex, replacement);
 		this.elseCaseConstraint.replaceAll(regex, replacement);
 	}
@@ -56,7 +56,7 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 		} else {
 			this.thenCaseConstraint = this.thenCaseConstraint.evaluate();
 			this.elseCaseConstraint = this.elseCaseConstraint.evaluate();
-			
+
 			if (this.thenCaseConstraint instanceof AbstractBooleanConstraint) {
 				if (this.elseCaseConstraint instanceof AbstractBooleanConstraint) {
 					AbstractBooleanConstraint booleanThenCaseConstraint = (AbstractBooleanConstraint) this.thenCaseConstraint;
@@ -72,7 +72,7 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 						return new AbstractBooleanConstraint(false);
 				} else {
 					AbstractBooleanConstraint booleanThenCaseConstraint = (AbstractBooleanConstraint) this.thenCaseConstraint;
-					
+
 					if (booleanThenCaseConstraint.value)
 						return new AbstractSubConstraint(
 								this.ifCondition, BooleanConnector.OR,
@@ -118,9 +118,9 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	public boolean equals(Object object) {
 		if (!(object instanceof AbstractIfThenElseConstraint))
 			return false;
-		
+
 		AbstractIfThenElseConstraint abstractIfThenElseConstraint = (AbstractIfThenElseConstraint)object;
-		
+
 		return this.ifCondition.equals(abstractIfThenElseConstraint.ifCondition) &&
 				this.thenCaseConstraint.equals(abstractIfThenElseConstraint.thenCaseConstraint) &&
 				this.elseCaseConstraint.equals(abstractIfThenElseConstraint.elseCaseConstraint);

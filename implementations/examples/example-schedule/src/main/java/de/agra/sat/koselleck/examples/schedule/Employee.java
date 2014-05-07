@@ -11,7 +11,7 @@ public class Employee {
 	public final String lastName;
 	/**  */
 	public final Skill[] skills;
-	
+
 	/**
 	 * 
 	 * @param firstName
@@ -23,7 +23,7 @@ public class Employee {
 		this.lastName = lastName;
 		this.skills = skills;
 	}
-	
+
 	/**
 	 * 
 	 * @param neededSkills
@@ -42,7 +42,7 @@ public class Employee {
 			if(!found)
 				return false;
 		}
-		
+
 		return true;
 	}
 }

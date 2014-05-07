@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 public class NoConstraintMethodException extends RuntimeException {
 	/** serial id */
 	private static final long serialVersionUID = -887113639393430230L;
-	
+
 	/**
 	 * Constructor for a new NoConstraintMethodException.
 	 * 

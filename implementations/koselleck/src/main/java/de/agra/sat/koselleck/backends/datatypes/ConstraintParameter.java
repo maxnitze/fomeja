@@ -20,19 +20,19 @@ import de.agra.sat.koselleck.exceptions.IllegalFieldAccessException;
 public class ConstraintParameter {
 	/** the index of the parameter that is described */
 	public final int parameterIndex;
-	
+
 	/** count of the collections to iterate over */
 	public final int size;
 	/** the collections to iterate over */
 	public final List<Collection<?>> collections;
-	
+
 	/** the index of the current collection */
 	private int currentCollectionIndex;
 	/** the indices in the collections */
 	private final int[] indices;
 	/** the maximum indices in the collections */
 	private final int[] maxIndices;
-	
+
 	/**
 	 * Constructor for a new constraint parameter.
 	 * 
@@ -42,9 +42,9 @@ public class ConstraintParameter {
 	 */
 	public ConstraintParameter(Object component, int parameterIndex, List<Field> fields) {
 		this.parameterIndex = parameterIndex;
-		
+
 		this.size = fields.size();
-		
+
 		this.collections = new ArrayList<Collection<?>>();
 		this.indices = new int[this.size];
 		this.maxIndices = new int[this.size];
@@ -62,7 +62,7 @@ public class ConstraintParameter {
 		}
 		this.currentCollectionIndex = 0;
 	}
-	
+
 	/**
 	 * Getter method for the current index.
 	 * 
@@ -71,7 +71,7 @@ public class ConstraintParameter {
 	public int getCurrentIndex() {
 		return this.indices[this.currentCollectionIndex];
 	}
-	
+
 	/**
 	 * Getter method for the current collection.
 	 * 
@@ -80,7 +80,7 @@ public class ConstraintParameter {
 	public Collection<?> getCurrentCollection() {
 		return this.collections.get(this.currentCollectionIndex);
 	}
-	
+
 	/**
 	 * Getter method for the current object of the current collection.
 	 * 
@@ -89,7 +89,7 @@ public class ConstraintParameter {
 	public Object getCurrentCollectionObject() {
 		return this.collections.get(this.currentCollectionIndex).toArray()[this.indices[this.currentCollectionIndex]];
 	}
-	
+
 	/**
 	 * isIncrementable tests if the parameter object can be incremented.
 	 * 
@@ -100,10 +100,10 @@ public class ConstraintParameter {
 		for(int i=0; i<this.size; i++)
 			if(this.indices[i] < this.maxIndices[i]-1)
 				return true;
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * incrementIndex increments the index of the parameter object.
 	 * 
@@ -120,7 +120,7 @@ public class ConstraintParameter {
 		} else
 			return false;
 	}
-	
+
 	/**
 	 * resetIndex resets all indices of the parameter object to {@code 0}.
 	 */

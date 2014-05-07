@@ -16,10 +16,10 @@ public enum ArithmeticOperator {
 	SUB("-"),
 	MUL("*"),
 	DIV("/");
-	
+
 	/** the ascii name */
 	public final String asciiName;
-	
+
 	/**
 	 * Constructor for a new arithmetic operator.
 	 * 
@@ -28,7 +28,7 @@ public enum ArithmeticOperator {
 	ArithmeticOperator(String asciiName) {
 		this.asciiName = asciiName;
 	}
-	
+
 	/**
 	 * fromOpcode returns the corresponding arithmetic operator for the
 	 *  arithmetic opcodes.

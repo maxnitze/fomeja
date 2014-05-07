@@ -52,9 +52,9 @@ public class AbstractConstraintLiteralString extends AbstractConstraintLiteral<S
 	public boolean equals(Object object) {
 		if(!(object instanceof AbstractConstraintLiteralString))
 			return false;
-		
+
 		AbstractConstraintLiteralString abstractConstraintLiteralString = (AbstractConstraintLiteralString)object;
-		
+
 		return this.value.equals(abstractConstraintLiteralString.value);
 	}
 

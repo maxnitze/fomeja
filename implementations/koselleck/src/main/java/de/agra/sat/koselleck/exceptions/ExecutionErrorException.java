@@ -10,7 +10,7 @@ package de.agra.sat.koselleck.exceptions;
 public class ExecutionErrorException extends RuntimeException {
 	/** serial id */
 	private static final long serialVersionUID = 5057237497470329710L;
-	
+
 	/**
 	 * Constructor for a new ExecutionErrorException.
 	 * 

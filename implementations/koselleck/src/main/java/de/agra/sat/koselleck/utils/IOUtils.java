@@ -35,7 +35,7 @@ public final class IOUtils {
 		InputStream resourceStream = IOUtils.class.getResourceAsStream(uri);
 		return readFromStream(resourceStream);
 	}
-	
+
 	/**
 	 * readFromStream reads from the given stream and returns its content.
 	 * 
@@ -54,10 +54,10 @@ public final class IOUtils {
 			stringBuilder.append("\n");
 		}
 		bufferedReader.close();
-		
+
 		return stringBuilder.toString();
 	}
-	
+
 	/**
 	 * writeToFile writes the given text to the file at the given {@code URI}.
 	 * 
@@ -73,7 +73,7 @@ public final class IOUtils {
 		printWriter.flush();
 		printWriter.close();
 	}
-	
+
 	/**
 	 * writeToStream writes the given text to the given output stream.
 	 * 

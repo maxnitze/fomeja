@@ -44,9 +44,9 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 	public boolean equals(Object object) {
 		if(!(object instanceof AbstractConstraintLiteralFloat))
 			return false;
-		
+
 		AbstractConstraintLiteralFloat abstractConstraintLiteralFloat = (AbstractConstraintLiteralFloat)object;
-		
+
 		return this.value.equals(abstractConstraintLiteralFloat.value) &&
 				this.isVariable == abstractConstraintLiteralFloat.isVariable;
 	}
@@ -75,7 +75,7 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 			throw exception;
 		}
 	}
-	
+
 	@Override
 	public AbstractConstraintLiteral<?> calc(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
 		if (constraintLiteral.value instanceof Double) {

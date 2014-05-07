@@ -14,8 +14,7 @@ import de.agra.sat.koselleck.types.Opcode;
 public class BytecodeLineConstantTableAccessibleObject extends BytecodeLineConstantTable {
 	/** the accessible object */
 	public final AccessibleObject accessibleObject;
-	
-	
+
 	/**
 	 * 
 	 * 
@@ -27,7 +26,7 @@ public class BytecodeLineConstantTableAccessibleObject extends BytecodeLineConst
 	 */
 	public BytecodeLineConstantTableAccessibleObject(String line, int lineNumber, Opcode opcode, int constantTableOffset, AccessibleObject accessibleObject) {
 		super(line, lineNumber, opcode, constantTableOffset);
-		
+
 		this.accessibleObject = accessibleObject;
 	}
 }

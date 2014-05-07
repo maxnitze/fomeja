@@ -11,14 +11,14 @@ import de.agra.sat.koselleck.types.Opcode;
 public abstract class BytecodeLine {
 	/** the trimmed line */
 	public final String line;
-	
+
 	/** the number */
 	public final int lineNumber;
 	/** the opcode */
 	public final Opcode opcode;
 	/** the number of the following line */
 	public final int followingLineNumber;
-	
+
 	/**
 	 * Constructor for a new byte code line.
 	 * 
@@ -32,7 +32,7 @@ public abstract class BytecodeLine {
 		this.opcode = opcode;
 		this.followingLineNumber = lineNumber + opcode.followingLineOffset;
 	}
-	
+
 	/**
 	 * toString returns a string representation of this byte code line.
 	 * 

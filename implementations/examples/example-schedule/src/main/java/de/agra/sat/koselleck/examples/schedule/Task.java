@@ -16,15 +16,15 @@ public class Task {
 	public final Skill[] neededSkills;
 	/**  */
 	public final Task[] dependentTasks;
-	
+
 	/**  */
 	@Variable
 	public int start;
-	
+
 	/**  */
 	@Variable
 	public Employee doneBy;
-	
+
 	/**
 	 * 
 	 * @param name
@@ -38,7 +38,7 @@ public class Task {
 		this.neededSkills = neededSkills;
 		this.dependentTasks = dependentTasks;
 	}
-	
+
 	/**
 	 * 
 	 * @param task

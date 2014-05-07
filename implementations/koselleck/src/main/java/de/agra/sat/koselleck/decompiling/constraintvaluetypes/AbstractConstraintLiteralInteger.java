@@ -44,9 +44,9 @@ public class AbstractConstraintLiteralInteger extends AbstractConstraintLiteral<
 	public boolean equals(Object object) {
 		if(!(object instanceof AbstractConstraintLiteralInteger))
 			return false;
-		
+
 		AbstractConstraintLiteralInteger abstractConstraintLiteralInteger = (AbstractConstraintLiteralInteger)object;
-		
+
 		return this.value.equals(abstractConstraintLiteralInteger.value) &&
 				this.isVariable == abstractConstraintLiteralInteger.isVariable;
 	}

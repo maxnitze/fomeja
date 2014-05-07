@@ -10,7 +10,7 @@ package de.agra.sat.koselleck.exceptions;
 public class NoSuchFieldForClassException extends RuntimeException {
 	/** serial id */
 	private static final long serialVersionUID = -626444409422933899L;
-	
+
 	/**
 	 * Constructor for a new NoSuchFieldForClassException.
 	 * 

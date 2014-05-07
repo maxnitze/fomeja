@@ -13,7 +13,7 @@ public enum ConstraintOperator {
 	LESS_EQUAL("<=", ">", ">=", "if_Xcmple", "if_Xcmpgt"),
 	LESS("<", ">=", ">", "if_Xcmplt", "if_Xcmpge"),
 	NOT_EQUAL("!=", "==", "!=", "if_Xcmpne", "if_Xcmpeq");
-	
+
 	/** the ascii name */
 	public final String asciiName;
 	/** the opposite ascii name */
@@ -24,7 +24,7 @@ public enum ConstraintOperator {
 	public final String opcode;
 	/** the opposite opcode regex */
 	public final String oppositeOpcode;
-	
+
 	/**
 	 * Constructor for a new constraint operator.
 	 * 
@@ -41,14 +41,14 @@ public enum ConstraintOperator {
 		this.opcode = opcode;
 		this.oppositeOpcode = oppositeOpcode;
 	}
-	
+
 	public ConstraintOperator getOpposite() {
 		for(ConstraintOperator co : values())
 			if(this.oppositeAsciiName.equals(co.asciiName))
 				return co;
 		throw new IllegalArgumentException("no constant with ascii name \"" + asciiName + "\" found");
 	}
-	
+
 	/**
 	 * fromAsciiName returns the constraint operator with the given ascii name.
 	 * 
@@ -62,7 +62,7 @@ public enum ConstraintOperator {
 				return co;
 		throw new IllegalArgumentException("no constant with ascii name \"" + asciiName + "\" found");
 	}
-	
+
 	/**
 	 * fromOppositeAsciiName returns the constraint operator with the given
 	 *  opposite ascii name.
@@ -77,7 +77,7 @@ public enum ConstraintOperator {
 				return co;
 		throw new IllegalArgumentException("no constant with opposite ascii name \"" + oppositeAsciiName + "\" found");
 	}
-	
+
 	/**
 	 * fromSwappedAsciiName returns the constraint operator with the given
 	 *  swapped ascii name.
@@ -92,7 +92,7 @@ public enum ConstraintOperator {
 				return co;
 		throw new IllegalArgumentException("no constant with swapped ascii name \"" + swappedAsciiName + "\" found");
 	}
-	
+
 	/**
 	 * fromOpcode returns the constraint operator with the given opcode.
 	 * 
@@ -106,7 +106,7 @@ public enum ConstraintOperator {
 				return co;
 		throw new IllegalArgumentException("no constant with opcode \"" + opcode + "\" found");
 	}
-	
+
 	/**
 	 * fromOpcode returns the constraint operator with the given opposite
 	 *  opcode.
@@ -121,7 +121,7 @@ public enum ConstraintOperator {
 				return co;
 		throw new IllegalArgumentException("no constant with opposite opcode \"" + oppositeOpcode + "\" found");
 	}
-	
+
 	/**
 	 * compare compares the two given numbers by this constraint operator.
 	 * 

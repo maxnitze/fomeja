@@ -14,7 +14,7 @@ public class Pair<T1, T2> {
 	public T1 first;
 	/** the second object of type T2 of the pair */
 	public T2 second;
-	
+
 	/**
 	 * Constructor for a new pair.
 	 * 

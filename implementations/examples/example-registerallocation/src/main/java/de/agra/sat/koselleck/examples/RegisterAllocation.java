@@ -8,22 +8,22 @@ public class RegisterAllocation {
 		boolean testSatisfy		= false;
 		boolean testMinimize	= false;
 		boolean testMaximize	= false;
-		
+
 		Object obj = new Object();
 		// prepare Object
-		
+
 		if(testValidate) {
 			DIAB.validate(obj);
 		}
-		
+
 		if(testSatisfy) {
 			DIAB.satisfy(obj);
 		}
-		
+
 		if(testMinimize) {
 			DIAB.minimize(obj);
 		}
-		
+
 		if(testMaximize) {
 			DIAB.maximize(obj);
 		}

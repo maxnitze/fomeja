@@ -19,7 +19,7 @@ public class AbstractSingleTheorem {
 	/** array of lists where each list describes the collections to iterate
 	 * over the constraint parameters at the index of the list */
 	public final List<Field>[] fields;
-	
+
 	/**
 	 * Constructor for a new abstract single theorem.
 	 * 

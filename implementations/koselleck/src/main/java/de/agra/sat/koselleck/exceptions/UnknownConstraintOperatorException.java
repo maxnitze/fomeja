@@ -13,7 +13,7 @@ import de.agra.sat.koselleck.types.ConstraintOperator;
 public class UnknownConstraintOperatorException extends RuntimeException {
 	/** serial id */
 	private static final long serialVersionUID = -2790223235115376867L;
-	
+
 	/**
 	 * Constructor for a new UnknownConstraintOperatorException.
 	 * 

@@ -35,14 +35,14 @@ import de.agra.sat.koselleck.types.ConstraintOperator;
 public class SMTII extends Dialect {
 	/** pattern for a smt2 result constant (function without parameters) */
 	private static final Pattern smt2ResultPattern = Pattern.compile("\\(define-fun (?<name>\\S+) \\(\\) (?<type>\\S+)(\n)?\\s*\\(?(?<value>(- \\d+|\\d+))\\)?");
-	
+
 	/**
 	 * Constructor for a new SMTII dialect.
 	 */
 	public SMTII() {
 		super(Dialect.Type.smt2);
 	}
-	
+
 	/**
 	 * format returns the smt2 string representation of the given theorem.
 	 * 
@@ -55,11 +55,11 @@ public class SMTII extends Dialect {
 		StringBuilder assignedConstraint = new StringBuilder();
 		for(AbstractConstraint theoremConstraint : theorem.abstractConstraints) {
 			String z3Constraint = this.getBackendConstraint(theoremConstraint);
-			
+
 			assignedConstraint.append("\n\t");
 			assignedConstraint.append(z3Constraint);
 		}
-		
+
 		StringBuilder smt2theorem = new StringBuilder();
 		for(VariableField prefixedVariable : theorem.variables) {
 			smt2theorem.append(this.getVariableDeclaration(prefixedVariable));
@@ -68,10 +68,10 @@ public class SMTII extends Dialect {
 		smt2theorem.append("(assert (and ");
 		smt2theorem.append(assignedConstraint.toString());
 		smt2theorem.append("\n))\n(check-sat)\n(get-model)");
-		
+
 		return smt2theorem.toString();
 	}
-	
+
 	/**
 	 * parseResult parses the result from the theorem prover and returns an map
 	 *  representing the result configuration.
@@ -83,7 +83,7 @@ public class SMTII extends Dialect {
 	@Override
 	public Map<String, Object> parseResult(String result) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
+
 		Matcher resultMatcher = smt2ResultPattern.matcher(result);
 		while(resultMatcher.find()) {
 			if(resultMatcher.group("type").equals("Int"))
@@ -99,7 +99,7 @@ public class SMTII extends Dialect {
 				throw new UnsupportedVariableTypeException(resultMatcher.group("type"));
 			}
 		}
-		
+
 		return resultMap;
 	}
 
@@ -125,21 +125,21 @@ public class SMTII extends Dialect {
 	@Override
 	public String prepareAbstractSingleConstraint(AbstractSingleConstraint singleConstraint) {
 		StringBuilder singleConstraintString = new StringBuilder();
-		
+
 		singleConstraintString.append(this.getOperatorOpening(singleConstraint.operator));
 		singleConstraintString.append(" ");
 		singleConstraintString.append(this.getBackendConstraintValue(singleConstraint.value1));
 		singleConstraintString.append(" ");
 		singleConstraintString.append(this.getBackendConstraintValue(singleConstraint.value2));
 		singleConstraintString.append(this.getOperatorClosing(singleConstraint.operator));
-		
+
 		return singleConstraintString.toString();
 	}
 
 	@Override
 	public String prepareAbstractSubConstraint(AbstractSubConstraint subConstraint) {
 		StringBuilder subConstraintString = new StringBuilder();
-		
+
 		subConstraintString.append("(");
 		subConstraintString.append(this.getConnectorName(subConstraint.connector));
 		subConstraintString.append(" ");
@@ -147,14 +147,14 @@ public class SMTII extends Dialect {
 		subConstraintString.append(" ");
 		subConstraintString.append(this.getBackendConstraint(subConstraint.constraint2));
 		subConstraintString.append(")");
-		
+
 		return subConstraintString.toString();
 	}
 
 	@Override
 	public String prepareAbstractIfThenElseConstraint(AbstractIfThenElseConstraint ifThenElseConstraint) {
 		StringBuilder ifThenElseConstraintString = new StringBuilder();
-		
+
 		ifThenElseConstraintString.append("(or (and ");
 		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.ifCondition));
 		ifThenElseConstraintString.append(" ");
@@ -164,7 +164,7 @@ public class SMTII extends Dialect {
 		ifThenElseConstraintString.append(") ");
 		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.elseCaseConstraint));
 		ifThenElseConstraintString.append("))");
-		
+
 		return ifThenElseConstraintString.toString();
 	}
 
@@ -179,7 +179,7 @@ public class SMTII extends Dialect {
 	@Override
 	public String prepareAbstractConstraintFormula(AbstractConstraintFormula constraintFormula) {
 		StringBuilder constraintFormulaString = new StringBuilder();
-		
+
 		constraintFormulaString.append("(");
 		constraintFormulaString.append(constraintFormula.operator.asciiName);
 		constraintFormulaString.append(" ");
@@ -187,27 +187,27 @@ public class SMTII extends Dialect {
 		constraintFormulaString.append(" ");
 		constraintFormulaString.append(this.getBackendConstraintValue(constraintFormula.value2));
 		constraintFormulaString.append(")");
-		
+
 		return constraintFormulaString.toString();
 	}
 
 	@Override
 	public String prepareAbstractPrematureConstraintValueAccessibleObject(AbstractPrematureConstraintValueAccessibleObject prematureConstraintValueAccessibleObject) {
 		System.out.println("-- " + prematureConstraintValueAccessibleObject.toString());
-		
+
 		throw new RuntimeException("PREMATURE Constraint Value Accessible Object");
 	}
 
 	@Override
 	public String prepareAbstractPrematureConstraintValueConstraint(AbstractPrematureConstraintValueConstraint prematureConstraintValueConstraint) {
 		System.out.println("-- " + prematureConstraintValueConstraint.toString());
-		
+
 		throw new RuntimeException("PREMATURE Constraint Value Constraint");
 	}
-	
+
 	/** private methods
 	 * ----- ----- ----- ----- ----- */
-	
+
 	/**
 	 * getConnectorName returns the smt2 name of the given boolean connector.
 	 * 
@@ -226,7 +226,7 @@ public class SMTII extends Dialect {
 			throw new UnknownBooleanConnectorException(connector);
 		}
 	}
-	
+
 	/**
 	 * getOperatorOpening returns the start of an expression with the given
 	 *  constraint operator.
@@ -254,7 +254,7 @@ public class SMTII extends Dialect {
 			throw new UnknownConstraintOperatorException(operator);
 		}
 	}
-	
+
 	/**
 	 * getOperatorClosing returns the end of an expression with the given
 	 *  constraint operator.
@@ -282,7 +282,7 @@ public class SMTII extends Dialect {
 			throw new UnknownConstraintOperatorException(operator);
 		}
 	}
-	
+
 	/**
 	 * getVariableDeclaration returns the smt2 representation of a variable
 	 *  declaration for the given variable field.
@@ -296,7 +296,7 @@ public class SMTII extends Dialect {
 		StringBuilder variableDeclaration = new StringBuilder();
 		variableDeclaration.append("(declare-const ");
 		variableDeclaration.append(variableField.variableName);
-		
+
 		if(variableField.fieldType.equals(int.class) || variableField.fieldType.equals(Integer.class))
 			variableDeclaration.append(" Int)");
 		else if(variableField.fieldType.equals(float.class) || variableField.fieldType.equals(Float.class))
@@ -308,7 +308,7 @@ public class SMTII extends Dialect {
 			Logger.getLogger(SMTII.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}
-		
+
 		return variableDeclaration.toString();
 	}
 }

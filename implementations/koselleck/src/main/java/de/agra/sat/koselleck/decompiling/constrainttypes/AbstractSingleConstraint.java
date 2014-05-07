@@ -24,7 +24,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	public ConstraintOperator operator;
 	/** the second value */
 	public AbstractConstraintValue value2;
-	
+
 	/**
 	 * Constructor for a new abstract single constraint.
 	 * 
@@ -34,7 +34,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	 */
 	public AbstractSingleConstraint(AbstractConstraintValue value1, ConstraintOperator operator, AbstractConstraintValue value2, List<PreField> preFields) {
 		this.preFields.addAll(preFields);
-		
+
 		this.value1 = value1;
 		this.operator = operator;
 		this.value2 = value2;

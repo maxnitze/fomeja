@@ -4,6 +4,6 @@ public enum Skill {
 	C,
 	CPP,
 	JAVA,
-	
+
 	MANAGEMENT;
 }

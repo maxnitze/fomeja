@@ -23,7 +23,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	public BooleanConnector connector;
 	/** the second constraint */
 	public AbstractConstraint constraint2;
-	
+
 	/**
 	 * Constructor for a new abstract sub constraint.
 	 * 
@@ -34,7 +34,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	public AbstractSubConstraint(AbstractConstraint constraint1, BooleanConnector connector, AbstractConstraint constraint2) {
 		this.preFields.addAll(constraint1.preFields);
 		this.preFields.addAll(constraint2.preFields);
-		
+
 		this.constraint1 = constraint1;
 		this.connector = connector;
 		this.constraint2 = constraint2;
@@ -50,7 +50,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	public AbstractConstraint evaluate() {
 		this.constraint1 = this.constraint1.evaluate();
 		this.constraint2 = this.constraint2.evaluate();
-		
+
 		/** evaluate to boolean if both sub-constraints are boolean
 		 * constraints */
 		if(
@@ -78,7 +78,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				this.constraint2 instanceof AbstractSingleConstraint) {
 			AbstractSingleConstraint singleConstraint1 = (AbstractSingleConstraint)this.constraint1;
 			AbstractSingleConstraint singleConstraint2 = (AbstractSingleConstraint)this.constraint2;
-			
+
 			/** evaluate to one constraint if both constraints are equal */
 			if(singleConstraint1.equals(singleConstraint2))
 				return singleConstraint1;
@@ -144,10 +144,10 @@ public class AbstractSubConstraint extends AbstractConstraint {
 		stringRepresentation.append(this.constraint2.toString());
 		return stringRepresentation.toString();
 	}
-	
+
 	/** private methods
 	 * ----- ----- ----- ----- ----- */
-	
+
 	/**
 	 * evaluateConstraint evaluates the given boolean values considering the
 	 *  boolean connector of this abstract sub constraint.
@@ -170,7 +170,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 			throw new UnknownBooleanConnectorException(this.connector);
 		}
 	}
-	
+
 	/**
 	 * evaluateConstraint evaluates the given boolean value and the given
 	 *  abstract constraint considering the boolean connector of this abstract
@@ -198,7 +198,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 			throw new UnknownBooleanConnectorException(this.connector);
 		}
 	}
-	
+
 	/**
 	 * evaluateEqualConstraints evaluates the given constraint operators
 	 *  considering the boolean connector of this abstract sub constraint.

@@ -11,7 +11,7 @@ package de.agra.sat.koselleck.exceptions;
 public class MissformattedBytecodeLineException extends RuntimeException {
 	/** serial id */
 	private static final long serialVersionUID = -6735928757307264346L;
-	
+
 	/**
 	 * Constructor for a new MissformattedBytecodeLineException.
 	 * 

@@ -46,10 +46,10 @@ public abstract class Dialect {
 		dl,
 		dimacs
 	};
-	
+
 	/** dialect type */
 	public final Dialect.Type dialectType;
-	
+
 	/**
 	 * Constructor for a new dialect.
 	 * 
@@ -58,10 +58,10 @@ public abstract class Dialect {
 	public Dialect(Dialect.Type dialectType) {
 		this.dialectType = dialectType;
 	}
-	
+
 	/** abstract methods
 	 * ----- ----- ----- ----- ----- */
-	
+
 	/**
 	 * format formats the given list of single theorems to the specific string
 	 *  representation of the theorem prover.
@@ -74,7 +74,7 @@ public abstract class Dialect {
 	 *  satisfiable for the current component
 	 */
 	public abstract String format(Theorem theorem) throws NotSatisfyableException;
-	
+
 	/**
 	 * 
 	 * @param result
@@ -85,7 +85,7 @@ public abstract class Dialect {
 
 	/** abstract constraints
 	 * ----- ----- ----- ----- ----- */
-	
+
 	/**
 	 * prepareAbstractBooleanConstraint returns the string representation of a
 	 *  given abstract boolean constraint.
@@ -95,7 +95,7 @@ public abstract class Dialect {
 	 * @return the string representation of the abstract boolean constraint
 	 */
 	public abstract String prepareAbstractBooleanConstraint(AbstractBooleanConstraint booleanConstraint);
-	
+
 	/**
 	 * prepareAbstractNotConstraint returns the string representation of a
 	 *  given abstract not-constraint.
@@ -105,7 +105,7 @@ public abstract class Dialect {
 	 * @return the string representation of the abstract not-constraint
 	 */
 	public abstract String prepareAbstractNotConstraint(AbstractNotConstraint notConstraint);
-	
+
 	/**
 	 * prepareAbstractSingleConstraint returns the string representation of a
 	 *  given abstract single constraint.
@@ -115,7 +115,7 @@ public abstract class Dialect {
 	 * @return the string representation of the abstract single constraint
 	 */
 	public abstract String prepareAbstractSingleConstraint(AbstractSingleConstraint singleConstraint);
-	
+
 	/**
 	 * prepareAbstractSubConstraint returns the string representation of a
 	 *  given abstract sub constraint.
@@ -125,7 +125,7 @@ public abstract class Dialect {
 	 * @return the string representation of the abstract sub constraint
 	 */
 	public abstract String prepareAbstractSubConstraint(AbstractSubConstraint subConstraint);
-	
+
 	/**
 	 * prepareAbstractIfThenElseConstraint returns the string representation of
 	 *  a given abstract if-then-else constraint.
@@ -150,7 +150,7 @@ public abstract class Dialect {
 	 * @return the string representation of the abstract constraint literal
 	 */
 	public abstract String prepareAbstractConstraintLiteral(AbstractConstraintLiteral<?> constraintLiteral);
-	
+
 	/**
 	 * prepareAbstractConstraintFormula returns the string representation of a
 	 *  given abstract constraint formula.
@@ -160,7 +160,7 @@ public abstract class Dialect {
 	 * @return the string representation of the abstract constraint formula
 	 */
 	public abstract String prepareAbstractConstraintFormula(AbstractConstraintFormula constraintFormula);
-	
+
 	/**
 	 * prepareAbstractPrematureConstraintValue returns the string
 	 *  representation of a given abstract premature constraint value
@@ -189,7 +189,7 @@ public abstract class Dialect {
 
 	/** protected methods
 	 * ----- ----- ----- ----- ----- */
-	
+
 	/**
 	 * getBackendConstraint returns the string representation of a given
 	 *  abstract constraint.
@@ -215,7 +215,7 @@ public abstract class Dialect {
 			throw exception;
 		}
 	}
-	
+
 	/**
 	 * getBackendConstraint returns the string representation of a given
 	 *  abstract constraint value.
@@ -239,7 +239,7 @@ public abstract class Dialect {
 			throw exception;
 		}
 	}
-	
+
 	/**
 	 * getConstraintForArguments assigns the given abstract single theorems
 	 *  with the non-variable fields of the component.
@@ -257,9 +257,9 @@ public abstract class Dialect {
 		List<AbstractConstraint> constraints = new ArrayList<AbstractConstraint>();
 		List<VariableField> variableFields = new ArrayList<VariableField>();
 		Map<String, ParameterObject> variablesMap = new HashMap<String, ParameterObject>();
-		
+
 		List<PreField> preFieldsList = new ArrayList<PreField>();
-		
+
 		for(AbstractSingleTheorem singleTheorem : singleTheorems) {
 			AbstractConstraint constraint = singleTheorem.constraint;
 
@@ -270,12 +270,12 @@ public abstract class Dialect {
 					if(!preFieldsList.contains(preField))
 						preFieldsList.add(preField);
 			}
-			
+
 			ConstraintParameter[] constraintParameters = new ConstraintParameter[singleTheorem.fields.length];
 			List<Field>[] parameterFields = singleTheorem.fields;
 			for(int i=0; i<singleTheorem.fields.length; i++)
 				constraintParameters[i] = new ConstraintParameter(component, i, parameterFields[i]);
-			
+
 			boolean skipTheorem = false;
 			for(ConstraintParameter constraintParameter : constraintParameters) {
 				if(!constraintParameter.isIncrementable()) {
@@ -285,10 +285,10 @@ public abstract class Dialect {
 			}
 			if(skipTheorem)
 				continue;
-			
+
 			List<ParameterObject> parameterObjects = new ArrayList<ParameterObject>();
 			ParameterObject currentParameterObject = null;
-			
+
 			do {
 				AbstractConstraint cConstraint = constraint.clone();
 
@@ -324,7 +324,7 @@ public abstract class Dialect {
 							index = currentParameterObject.index;
 						}
 						String prefixedVariableName = preField.preFieldsPrefixedName + "_" + index;
-						
+
 						variablesMap.put(prefixedVariableName, currentParameterObject);
 						VariableField variableField = new VariableField(prefixedVariableName, preField.field.getType());
 						if(!variableFields.contains(variableField))
@@ -332,7 +332,7 @@ public abstract class Dialect {
 						cConstraint.replaceAll(preField.constantTablePrefixedName, prefixedVariableName);
 					}
 				}
-				
+
 				AbstractConstraint abstractPartialConstraint = cConstraint.evaluate();
 				if(abstractPartialConstraint instanceof AbstractBooleanConstraint) {
 					AbstractBooleanConstraint abstractBooleanConstraint = (AbstractBooleanConstraint) abstractPartialConstraint;
@@ -342,13 +342,13 @@ public abstract class Dialect {
 					constraints.add(abstractPartialConstraint);
 			} while(KoselleckUtils.incrementIndices(constraintParameters));
 		}
-		
+
 		return new Theorem(constraints, variableFields, variablesMap);
 	}
-	
+
 	/** private methods
 	 * ----- ----- ----- ----- ----- */
-	
+
 	/**
 	 * getAttributeReplacement checks if the given prefixed field is an
 	 *  attribute type field and returns the replacement for this field.
@@ -366,10 +366,10 @@ public abstract class Dialect {
 			Logger.getLogger(Dialect.class).fatal("given field \"" + preField.field.getName() + "\" is no attribute field");
 			throw new IllegalArgumentException("given field \"" + preField.field.getName() + "\" is no attribute field");
 		}
-		
+
 		return this.getReplacement(preField, component);
 	}
-	
+
 	/**
 	 * getReplacement returns the replacement for the given prefixed field by
 	 *  reflectively getting its parameter objects and the value of this for
@@ -384,7 +384,7 @@ public abstract class Dialect {
 	 */
 	private String getReplacement(PreField preField, Object startingObject) {
 		Object replacement = this.getParameterObject(preField, startingObject);
-		
+
 		preField.field.setAccessible(true);
 		try{
 			replacement = preField.field.get(replacement);
@@ -392,10 +392,10 @@ public abstract class Dialect {
 			Logger.getLogger(Dialect.class).fatal("could not access field \"" + preField.field.getName() +"\"");
 			throw new IllegalArgumentException("could not access field \"" + preField.field.getName() +"\"");
 		}
-		
+
 		return replacement.toString();
 	}
-	
+
 	/**
 	 * getParameterObject returns the object for the given prefixed field by
 	 *  reflectively getting its parameter objects for the given starting
@@ -418,7 +418,7 @@ public abstract class Dialect {
 				throw new IllegalArgumentException(message + "\n" + e.getMessage());
 			}
 		}
-		
+
 		return parameterObject;
 	}
 }

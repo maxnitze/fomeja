@@ -14,10 +14,10 @@ import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 public enum BooleanConnector {
 	AND("&&"),
 	OR("||");
-	
+
 	/** the code */
 	public final String code;
-	
+
 	/**
 	 * Constructor for a new boolean connector.
 	 * 
@@ -26,7 +26,7 @@ public enum BooleanConnector {
 	BooleanConnector(String code) {
 		this.code = code;
 	}
-	
+
 	/**
 	 * 
 	 * @return

@@ -13,7 +13,7 @@ import de.agra.sat.koselleck.types.BooleanConnector;
 public class UnknownBooleanConnectorException extends RuntimeException {
 	/** serial id */
 	private static final long serialVersionUID = -3106570633706852303L;
-	
+
 	/**
 	 * Constructor for a new UnknownBooleanConnectorException.
 	 * 

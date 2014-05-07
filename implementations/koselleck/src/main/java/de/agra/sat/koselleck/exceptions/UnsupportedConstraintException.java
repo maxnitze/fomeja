@@ -13,7 +13,7 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 public class UnsupportedConstraintException extends RuntimeException {
 	/** serial id */
 	private static final long serialVersionUID = -6276514312554697460L;
-	
+
 	/**
 	 * Constructor for a new UnsupportedConstraintException.
 	 * 

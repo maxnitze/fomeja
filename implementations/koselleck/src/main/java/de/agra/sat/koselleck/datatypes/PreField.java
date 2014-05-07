@@ -55,7 +55,7 @@ public class PreField {
 		for(PreField preField : preFields)
 			preFieldsPrefixedNameBuilder
 					.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"));
-					
+
 		preFieldsPrefixedNameBuilder
 			.append(field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"))
 			.append(field.getName());
@@ -68,7 +68,7 @@ public class PreField {
 			return false;
 
 		PreField preField = (PreField) object;
-		
+
 		return this.field.equals(preField.field)
 				&& this.constantTablePrefixedName.equals(preField.constantTablePrefixedName);
 	}

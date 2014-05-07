@@ -54,7 +54,7 @@ public class Disassembler {
 	/**  */
 	private static final Pattern tableswitchCasePattern =
 			Pattern.compile("^(?<case>(\\d+|default)): (?<offset>\\d+)$");
-	
+
 	/** the component */
 	private final Class<?> componentClass;
 	/** the method to disassemble */
@@ -63,7 +63,7 @@ public class Disassembler {
 	private final String methodSignature;
 	/** the java byte code of the method */
 	private final String disassembledMethodString;
-	
+
 	/**
 	 * Constructor for a new disassembler.
 	 * 
@@ -78,7 +78,7 @@ public class Disassembler {
 		this.methodSignature = methodSignature;
 		this.disassembledMethodString = disassembledMethodString;
 	}
-	
+
 	/**
 	 * disassemble splits the disassembled method into its lines and returns a
 	 *  disassembled method with a map of the single byte code lines.
@@ -87,21 +87,21 @@ public class Disassembler {
 	 */
 	private DisassembledMethod disassemble() {
 		System.out.println(this.disassembledMethodString); // TODO delete output disassembledMethodString
-		
+
 		/** bytecode lines to return */
 		Map<Integer, BytecodeLine> bytecodeLines = new HashMap<Integer, BytecodeLine>();
-		
+
 		String[] disassembledMethodLines = this.disassembledMethodString.split("\n");
 		for(int i=0; i<disassembledMethodLines.length; i++) {
 			String disassembledMethodLine = disassembledMethodLines[i].trim().replaceAll("\\s+", " ");
-			
+
 			/** is simple bytecode line */
 			if(disassembledMethodLine.matches(simpleTypePattern.pattern())) {
 				Matcher matcher = simpleTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
-				
+
 				int lineNumber = Integer.parseInt(matcher.group("number"));
-				
+
 				bytecodeLines.put(lineNumber, new BytecodeLineSimple(
 						disassembledMethodLine, lineNumber,
 						Opcode.fromString(matcher.group("opcode"))));
@@ -110,11 +110,11 @@ public class Disassembler {
 			else if(disassembledMethodLine.matches(valueTypePattern.pattern())) {
 				Matcher matcher = valueTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
-				
+
 				int lineNumber = Integer.parseInt(matcher.group("number"));
 				String opcodeString = matcher.group("opcode").trim();
 				String valueString = matcher.group("value");
-				
+
 				Object value;
 				if(valueString.matches("^[+-]?[0-9]+(\\.[0-9]+)?$")) {
 					if(opcodeString.startsWith("f"))
@@ -125,7 +125,7 @@ public class Disassembler {
 						value = Integer.parseInt(valueString);
 				} else
 					value = valueString;
-				
+
 				bytecodeLines.put(lineNumber, new BytecodeLineValue(
 						disassembledMethodLine, lineNumber, Opcode.fromString(opcodeString), value));
 			}
@@ -133,10 +133,10 @@ public class Disassembler {
 			else if(disassembledMethodLine.matches(constantTableValueTypePattern.pattern())) {
 				Matcher matcher = constantTableValueTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
-				
+
 				int lineNumber = Integer.parseInt(matcher.group("number"));
 				String valueTypeString = matcher.group("valuetype");
-				
+
 				Object value;
 				if(valueTypeString.equals("f"))
 					value = Float.parseFloat(matcher.group("value"));
@@ -144,7 +144,7 @@ public class Disassembler {
 					value = Double.parseDouble(matcher.group("value"));
 				else
 					value = matcher.group("value");
-				
+
 				bytecodeLines.put(lineNumber, new BytecodeLineValue(
 						disassembledMethodLine, lineNumber,
 						Opcode.fromString(matcher.group("opcode")), value));
@@ -153,9 +153,9 @@ public class Disassembler {
 			else if(disassembledMethodLine.matches(offsetTypePattern.pattern())) {
 				Matcher matcher = offsetTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
-				
+
 				int lineNumber = Integer.parseInt(matcher.group("number"));
-				
+
 				bytecodeLines.put(lineNumber, new BytecodeLineOffset(
 						disassembledMethodLine, lineNumber,
 						Opcode.fromString(matcher.group("opcode")),
@@ -165,9 +165,9 @@ public class Disassembler {
 			else if(disassembledMethodLine.matches(constantTableClassTypePattern.pattern())) {
 				Matcher matcher = constantTableClassTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
-				
+
 				int lineNumber = Integer.parseInt(matcher.group("number"));
-				
+
 				Class<?> clazz;
 				try {
 					clazz = Class.forName(matcher.group("class"));
@@ -176,7 +176,7 @@ public class Disassembler {
 					Logger.getLogger(Disassembler.class).fatal(message);
 					throw new MissformattedBytecodeLineException(message);
 				}
-				
+
 				bytecodeLines.put(lineNumber, new BytecodeLineConstantTableClass(
 						disassembledMethodLine, lineNumber,
 						Opcode.fromString(matcher.group("opcode")),
@@ -186,11 +186,11 @@ public class Disassembler {
 			else if(disassembledMethodLine.matches(constantTableAccessibleObjectTypePattern.pattern())) {
 				Matcher matcher = constantTableAccessibleObjectTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
-				
+
 				int lineNumber = Integer.parseInt(matcher.group("number"));
-				
+
 				String accessibleObjectType = matcher.group("accessibleobjecttype");
-				
+
 				/** accessible object is a field */
 				if(accessibleObjectType.equals("Field")) {
 					String fieldString = matcher.group("accessibleobject");
@@ -211,7 +211,7 @@ public class Disassembler {
 						fieldClass = this.componentClass;
 						fieldName = fieldString;
 					}
-					
+
 					AccessibleObject object;
 					try {
 						object = fieldClass.getDeclaredField(fieldName);
@@ -220,7 +220,7 @@ public class Disassembler {
 						Logger.getLogger(Disassembler.class).fatal(message);
 						throw new MissformattedBytecodeLineException(message);
 					}
-					
+
 					bytecodeLines.put(lineNumber, new BytecodeLineConstantTableAccessibleObject(
 							disassembledMethodLine, lineNumber,
 							Opcode.fromString(matcher.group("opcode")),
@@ -246,7 +246,7 @@ public class Disassembler {
 						methodClass = this.componentClass;
 						methodName = methodString;
 					}
-					
+
 					/** get parameter types */
 					List<Class<?>> parameterTypesList = new ArrayList<Class<?>>();
 					if(matcher.group("parametertypes") != null) {
@@ -273,7 +273,7 @@ public class Disassembler {
 							}
 						}
 					}
-					
+
 					AccessibleObject object;
 					try {
 						if(methodName.equals("\"<init>\""))
@@ -287,7 +287,7 @@ public class Disassembler {
 								parameterString.append(", ");
 							parameterString.append(cls.getCanonicalName());
 						}
-						
+
 						String message;
 						if(methodName.equals("\"<init>\""))
 							message = "could not find constructor with parameters \"(" + parameterString.toString() + ")\" for class \"" + methodClass.getCanonicalName() + "\"";
@@ -296,7 +296,7 @@ public class Disassembler {
 						Logger.getLogger(Disassembler.class).fatal(message);
 						throw new MissformattedBytecodeLineException(message);
 					}
-					
+
 					bytecodeLines.put(lineNumber, new BytecodeLineConstantTableAccessibleObject(
 							disassembledMethodLine, lineNumber,
 							Opcode.fromString(matcher.group("opcode")),
@@ -307,21 +307,21 @@ public class Disassembler {
 			else if(disassembledMethodLine.matches(tableswitchPattern.pattern())) {
 				Matcher matcher = tableswitchPattern.matcher(disassembledMethodLine);
 				matcher.find();
-				
+
 				int lineNumber = Integer.parseInt(matcher.group("number"));
-				
+
 				BytecodeLineTableswitch bytecodeLineTableSwitch = new BytecodeLineTableswitch(
 						disassembledMethodLine, lineNumber,
 						Opcode.fromString(matcher.group("opcode")));
-				
+
 				while(i+1<disassembledMethodLines.length && disassembledMethodLines[i+1].matches(tableswitchCasePattern.pattern())) {
 					++i;
-					
+
 					bytecodeLineTableSwitch.offsetsMap.put(
 							disassembledMethodLines[i].replaceAll(tableswitchCasePattern.pattern(), "${case}"),
 							Integer.parseInt(disassembledMethodLines[i].replaceAll(tableswitchCasePattern.pattern(), "${offset}")));
 				}
-				
+
 				bytecodeLines.put(lineNumber, bytecodeLineTableSwitch);
 			}
 			/** otherwise */
@@ -331,13 +331,13 @@ public class Disassembler {
 				throw new MissformattedBytecodeLineException(message);
 			}
 		}
-		
+
 		return new DisassembledMethod(this.method, this.methodSignature, this.disassembledMethodString, bytecodeLines);
 	}
-	
+
 	/** static methods
 	 * ----- ----- ----- ----- */
-	
+
 	/**
 	 * disassemble instantiates a new disassembler with the given method and
 	 *  returns the disassembled method.

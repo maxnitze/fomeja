@@ -34,7 +34,7 @@ import de.agra.sat.koselleck.utils.KoselleckUtils;
 public abstract class DIAB {
 	/** instance of the theorem prover to use */
 	private static final Prover prover = new Z3("z3", new SMTII());
-	
+
 	/**
 	 * validate validates a given component by checking its constraints with a
 	 *  given configuration.
@@ -46,15 +46,15 @@ public abstract class DIAB {
 	 */
 	public static boolean validate(Object component) {
 		List<Method> constraintMethods = KoselleckUtils.getConstraintMethods(component.getClass());
-		
+
 		for(Method method : constraintMethods) {
 			int parameterCount = method.getGenericParameterTypes().length;
-			
+
 			ConstraintParameter[] constraintParameters = new ConstraintParameter[parameterCount];
 			List<Field>[] parameterFields = KoselleckUtils.getCollectionFieldsForMethod(method);
 			for(int i=0; i<parameterCount; i++)
 				constraintParameters[i] = new ConstraintParameter(component, i, parameterFields[i]);
-			
+
 			boolean skipTheorem = false;
 			for(ConstraintParameter constraintParameter : constraintParameters) {
 				if(!constraintParameter.isIncrementable()) {
@@ -64,12 +64,12 @@ public abstract class DIAB {
 			}
 			if(skipTheorem)
 				continue;
-			
+
 			Object[] methodParams = new Object[parameterCount];
 			do {
 				for(int i=0; i<parameterCount; i++)
 					methodParams[i] = constraintParameters[i].getCurrentCollectionObject();
-				
+
 				method.setAccessible(true);
 				try {
 					if(!(Boolean)method.invoke(component, methodParams))
@@ -80,10 +80,10 @@ public abstract class DIAB {
 				}
 			} while(KoselleckUtils.incrementIndices(constraintParameters));
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * satisfy tries to satisfy the given component by calculating a
 	 *  configuration for its variables that satisfies its constraints.
@@ -97,30 +97,30 @@ public abstract class DIAB {
 		List<Method> constraintMethods = KoselleckUtils.getConstraintMethods(component.getClass());
 		if(constraintMethods.size() <= 0)
 			return true;
-		
+
 		List<Field> variableFields = KoselleckUtils.getVariableFields(component.getClass());
 		if(variableFields.size() > 0) {
 			Map<String, DisassembledMethod> disassembledMethods = KoselleckUtils.getDisassembledConstraintMethods(component.getClass());
-			
+
 			List<AbstractSingleTheorem> singleTheorems = new ArrayList<AbstractSingleTheorem>();
-			
+
 			for(Method method : constraintMethods) {
 				List<Field>[] paramFields = KoselleckUtils.getCollectionFieldsForMethod(method);
-				
+
 				String methodSignature = (method.toGenericString().replaceFirst("^public boolean .*\\(", "public boolean "+ method.getName() +"(") + ";").replaceAll(", ", ",");;
 				DisassembledMethod disassembledMethod = disassembledMethods.get(methodSignature);
-				
+
 				AbstractConstraintValue[] arguments = new AbstractConstraintValue[disassembledMethod.method.getParameterTypes().length];
 				for (int i = 0; i < arguments.length; i++)
 					arguments[i] = new AbstractConstraintLiteralClass(
 							disassembledMethod.method.getParameterTypes()[i], Opcode.Xload, i+1);
-				
+
 				if(disassembledMethod != null)
 					singleTheorems.add(new AbstractSingleTheorem(
 							Decompiler.decompile(
 									disassembledMethod, new AbstractConstraintLiteralObject(component), arguments), paramFields));
 			}
-			
+
 			try {
 				prover.solveAndAssign(component, singleTheorems);
 			} catch (NotSatisfyableException e) {
@@ -130,10 +130,10 @@ public abstract class DIAB {
 				return false;
 			}
 		}
-		
+
 		return validate(component);
 	}
-	
+
 	/**
 	 * minimize tries to satisfy the given component by calculating a
 	 *  configuration for its variables that satisfies its constraints and
@@ -146,10 +146,10 @@ public abstract class DIAB {
 	 */
 	public static int minimize(Object component) {
 		KoselleckUtils.getVariableFields(component.getClass());
-		
+
 		return -1;
 	}
-	
+
 	/**
 	 * maximize tries to satisfy the given component by calculating a
 	 *  configuration for its variables that satisfies its constraints and
@@ -162,7 +162,7 @@ public abstract class DIAB {
 	 */
 	public static int maximize(Object component) {
 		KoselleckUtils.getVariableFields(component.getClass());
-		
+
 		return -1;
 	}
 }

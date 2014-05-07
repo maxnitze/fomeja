@@ -11,7 +11,7 @@ public class VariableField {
 	public final String variableName;
 	/** the type of the field */
 	public final Class<?> fieldType;
-	
+
 	/**
 	 * Constructor for a new Variable Field.
 	 * 
@@ -22,7 +22,7 @@ public class VariableField {
 		this.variableName = variableName;
 		this.fieldType = fieldType;
 	}
-	
+
 	/**
 	 * equals compares this object with another given one. if the other is also
 	 *  a variable field type the names are compared.
@@ -36,7 +36,7 @@ public class VariableField {
 	public boolean equals(Object object) {
 		if(!(object instanceof VariableField))
 			return false;
-		
+
 		return this.variableName.equals(((VariableField)object).variableName);
 	}
 }

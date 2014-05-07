@@ -13,7 +13,7 @@ import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraint
 public class NoComparableNumberTypeException extends RuntimeException {
 	/** serial id */
 	private static final long serialVersionUID = 6887195655605180373L;
-	
+
 	/**
 	 * Constructor for a new NoComparableNumberType.
 	 * 

@@ -2,7 +2,6 @@ package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 import de.agra.sat.koselleck.types.ArithmeticOperator;
 
-
 /**
  * AbstractConstraintLiteral represents a literal in a constraint value.
  * 

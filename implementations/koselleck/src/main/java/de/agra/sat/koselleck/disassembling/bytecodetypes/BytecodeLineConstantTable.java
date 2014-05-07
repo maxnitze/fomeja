@@ -11,8 +11,7 @@ import de.agra.sat.koselleck.types.Opcode;
 public abstract class BytecodeLineConstantTable extends BytecodeLine {
 	/** the constant table offset */
 	public final int constantTableIndex;
-	
-	
+
 	/**
 	 * 
 	 * 
@@ -23,7 +22,7 @@ public abstract class BytecodeLineConstantTable extends BytecodeLine {
 	 */
 	public BytecodeLineConstantTable(String line, int lineNumber, Opcode opcode, int constantTableIndex) {
 		super(line, lineNumber, opcode);
-		
+
 		this.constantTableIndex = constantTableIndex;
 	}
 }

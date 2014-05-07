@@ -14,7 +14,7 @@ public class Schedule {
 	public final List<Employee> employees;
 	/**  */
 	public final List<Task> tasks;
-	
+
 	/**
 	 * 
 	 * @param employees
@@ -34,7 +34,7 @@ public class Schedule {
 	 */
 	@Constraint(fields = { @Constraint.Field("tasks"), @Constraint.Field("tasks") })
 	public boolean testConstraint(Task task1, Task task2) {
-		return task1.equals(task2) || !task1.intersectsWith(task2);
+		return task1 == task2 || !task1.intersectsWith(task2);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class Schedule {
 		for(Task dependentTask : task.dependentTasks)
 			if(dependentTask.start + dependentTask.duration >= task.start)
 				return false;
-		
+
 		return true;
 	}
 }

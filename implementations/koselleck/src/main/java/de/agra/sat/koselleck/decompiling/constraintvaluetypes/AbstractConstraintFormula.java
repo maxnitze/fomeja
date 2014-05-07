@@ -18,7 +18,7 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	public final ArithmeticOperator operator;
 	/** the second value */
 	public AbstractConstraintValue value2;
-	
+
 	/**
 	 * Constructor for a new AbstractConstraintFormula.
 	 * 
@@ -42,7 +42,7 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	public AbstractConstraintValue evaluate() {
 		this.value1 = this.value1.evaluate();
 		this.value2 = this.value2.evaluate();
-		
+
 		if(this.value1 instanceof AbstractConstraintLiteral<?> && this.value2 instanceof AbstractConstraintLiteral<?>) {
 			AbstractConstraintLiteral<?> constraintLiteral1 = (AbstractConstraintLiteral<?>) this.value1;
 			AbstractConstraintLiteral<?> constraintLiteral2 = (AbstractConstraintLiteral<?>) this.value2;
@@ -72,9 +72,9 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	public boolean equals(Object object) {
 		if(!(object instanceof AbstractConstraintFormula))
 			return false;
-		
+
 		AbstractConstraintFormula constraintFormula = (AbstractConstraintFormula)object;
-		
+
 		return this.value1.equals(constraintFormula.value1) 
 				&& this.operator == constraintFormula.operator
 				&& this.value2.equals(constraintFormula.value2);

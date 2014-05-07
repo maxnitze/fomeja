@@ -20,7 +20,7 @@ import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
 public abstract class Prover {
 	/** the dialect of the prover */
 	final Dialect dialect;
-	
+
 	/**
 	 * Constructor for a new prover.
 	 * 
@@ -29,10 +29,10 @@ public abstract class Prover {
 	public Prover(Dialect dialect) {
 		this.dialect = dialect;
 	}
-	
+
 	/** abstract methods
 	 * ----- ----- ----- ----- ----- */
-	
+
 	/**
 	 * solve solves the given theorem by using the specific prover.
 	 * 
@@ -41,10 +41,10 @@ public abstract class Prover {
 	 * @return the solved configuration for the given theorem
 	 */
 	public abstract String solve(String theorem);
-	
+
 	/** protected methods
 	 * ----- ----- ----- ----- ----- */
-	
+
 	/**
 	 * solveAndAssign solves the theorem given by the single theorems using the
 	 *  prover (needs to be an smt2 prover). Afterwards the solved
@@ -70,7 +70,7 @@ public abstract class Prover {
 		Map<String, Object> resultMap = this.dialect.parseResult(proverResult);
 		for(Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {
 			Object result = resultMap.get(variable.getKey());
-			
+
 			if(result != null) {
 				variable.getValue().preField.field.setAccessible(true);
 				try {

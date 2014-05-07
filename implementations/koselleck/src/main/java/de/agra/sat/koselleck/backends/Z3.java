@@ -18,7 +18,7 @@ import de.agra.sat.koselleck.utils.IOUtils;
 public class Z3 extends Prover {
 	/** path to the binary file */
 	private String pathToBinary;
-	
+
 	/**
 	 * Constructor for a z3 theorem prover.
 	 * 
@@ -29,7 +29,7 @@ public class Z3 extends Prover {
 		super(dialect);
 		this.pathToBinary = pathToBinary;
 	}
-	
+
 	/**
 	 * solve solves the given smt2 theorem by calling the z3 binary given by
 	 *  the path with the given smt2 theorem and returns the result, that
@@ -60,9 +60,9 @@ public class Z3 extends Prover {
 				Logger.getLogger(Z3.class).error("the dialect type \"" + this.dialect.dialectType.name() + "\" is not supported by the z3 theorem prover.");
 				throw new UnsupportedDialectTypeException(this.dialect, "z3 theorem prover");
 			}
-			
+
 			IOUtils.writeToStream(process.getOutputStream(), smt2theorem);
-			
+
 			return IOUtils.readFromStream(process.getInputStream());
 		} catch (IOException e) {
 			String message = "could not execute z3 (\"" + this.pathToBinary + "\") with the given file";

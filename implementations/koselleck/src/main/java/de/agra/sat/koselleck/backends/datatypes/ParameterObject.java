@@ -16,7 +16,7 @@ public class ParameterObject {
 	public final PreField preField;
 	/** the index of the parameter */
 	public final int index;
-	
+
 	/**
 	 * Constructor for a new parameter object.
 	 * 
@@ -29,7 +29,7 @@ public class ParameterObject {
 		this.preField = preField;
 		this.index = index;
 	}
-	
+
 	/**
 	 * equals compares this object with another given one. if the other is also
 	 *  a parameter object type the object and prefixed field are compared.
@@ -43,7 +43,7 @@ public class ParameterObject {
 	public boolean equals(Object object) {
 		if(!(object instanceof ParameterObject))
 			return false;
-		
+
 		ParameterObject parameterObject = (ParameterObject)object;
 		return this.object.equals(parameterObject.object) && this.preField.equals(parameterObject.preField);
 	}
