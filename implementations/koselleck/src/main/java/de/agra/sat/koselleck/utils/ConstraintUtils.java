@@ -67,7 +67,7 @@ public final class ConstraintUtils {
 			case NOT_EQUAL:
 				return new AbstractBooleanConstraint(((AbstractConstraintLiteralObject) constraintLiteral1).value != ((AbstractConstraintLiteralObject) constraintLiteral2).value);
 			default:
-				Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+				Logger.getLogger(ConstraintUtils.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
 				throw new UnknownConstraintOperatorException(operator);
 			}
 		} else

@@ -7,12 +7,12 @@ package de.agra.sat.koselleck.types;
  * @author Max Nitze
  */
 public enum ConstraintOperator {
-	EQUAL("==", "!=", "==", "if_Xcmpeq", "if_Xcmpne"),
-	GREATER_EQUAL(">=", "<", "<=", "if_Xcmpge", "if_Xcmplt"),
-	GREATER(">", "<=", "<", "if_Xcmpgt", "if_Xcmple"),
-	LESS_EQUAL("<=", ">", ">=", "if_Xcmple", "if_Xcmpgt"),
-	LESS("<", ">=", ">", "if_Xcmplt", "if_Xcmpge"),
-	NOT_EQUAL("!=", "==", "!=", "if_Xcmpne", "if_Xcmpeq");
+	EQUAL("==", "!=", "==", "ifeq|if_Xcmpeq", "ifne|if_Xcmpne"),
+	GREATER_EQUAL(">=", "<", "<=", "ifge|if_Xcmpge", "iflt|if_Xcmplt"),
+	GREATER(">", "<=", "<", "ifgt|if_Xcmpgt", "ifle|if_Xcmple"),
+	LESS_EQUAL("<=", ">", ">=", "ifle|if_Xcmple", "ifgt|if_Xcmpgt"),
+	LESS("<", ">=", ">", "iflt|if_Xcmplt", "ifge|if_Xcmpge"),
+	NOT_EQUAL("!=", "==", "!=", "ifne|if_Xcmpne", "ifeq|if_Xcmpeq");
 
 	/** the ascii name */
 	public final String asciiName;
@@ -42,11 +42,26 @@ public enum ConstraintOperator {
 		this.oppositeOpcode = oppositeOpcode;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ConstraintOperator getOpposite() {
 		for(ConstraintOperator co : values())
 			if(this.oppositeAsciiName.equals(co.asciiName))
 				return co;
-		throw new IllegalArgumentException("no constant with ascii name \"" + asciiName + "\" found");
+		throw new IllegalArgumentException("no constant with opposite ascii name \"" + asciiName + "\" found");
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public ConstraintOperator getSwapped() {
+		for(ConstraintOperator co : values())
+			if(this.swappedAsciiName.equals(co.asciiName))
+				return co;
+		throw new IllegalArgumentException("no constant with swapped ascii name \"" + asciiName + "\" found");
 	}
 
 	/**

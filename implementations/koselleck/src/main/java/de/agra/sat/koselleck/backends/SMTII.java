@@ -173,7 +173,7 @@ public class SMTII extends Dialect {
 
 	@Override
 	public String prepareAbstractConstraintLiteral(AbstractConstraintLiteral<?> constraintLiteral) {
-		return constraintLiteral.value.toString();
+		return constraintLiteral.toString();
 	}
 
 	@Override

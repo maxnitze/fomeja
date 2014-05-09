@@ -2,7 +2,7 @@ package de.agra.sat.koselleck.datatypes;
 
 /** imports */
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.Set;
 
 import de.agra.sat.koselleck.annotations.Variable;
 import de.agra.sat.koselleck.types.Opcode;
@@ -28,7 +28,7 @@ public class PreField {
 	public final String constantTablePrefixedName;
 
 	/**  */
-	public final List<PreField> preFields;
+	public final Set<PreField> preFields;
 	/**  */
 	public final String preFieldsPrefixedName;
 
@@ -39,7 +39,7 @@ public class PreField {
 	 * @param fieldCode
 	 * @param fieldCodeIndex
 	 */
-	public PreField(Field field, String constantTablePrefix, Opcode fieldCode, int fieldCodeIndex, List<PreField> preFields) {
+	public PreField(Field field, String constantTablePrefix, Opcode fieldCode, int fieldCodeIndex, Set<PreField> preFields) {
 		this.field = field;
 		this.isVariable = field != null && field.getAnnotation(Variable.class) != null;
 

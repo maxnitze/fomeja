@@ -2,8 +2,8 @@ package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 /** imports */
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -31,7 +31,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 	public final String constantTablePrefixedName;
 
 	/** the fields accessed before this field */
-	public final List<PreField> preFields;
+	public final Set<PreField> preFields;
 	/** the prefixed name of this field with previous field names */
 	public final String preFieldsPrefixedName;
 
@@ -46,7 +46,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 	 * @param fieldCodeIndex
 	 * @param preFields
 	 */
-	public AbstractConstraintLiteralField(Field value, String constantTablePrefix, Opcode fieldCode, int fieldCodeIndex, List<PreField> preFields) {
+	public AbstractConstraintLiteralField(Field value, String constantTablePrefix, Opcode fieldCode, int fieldCodeIndex, Set<PreField> preFields) {
 		super(value, (value != null && value.getAnnotation(Variable.class) != null), false, false);
 
 		this.fieldCode = fieldCode;
@@ -158,7 +158,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 		if (this.replacedConstraintValue == null)
 			return this.constantTablePrefixedName;
 		else
-			return this.replacedConstraintValue + " [" + this.constantTablePrefixedName + "]";
+			return this.replacedConstraintValue.toString();
 	}
 
 	@Override

@@ -4,8 +4,10 @@ package de.agra.sat.koselleck.backends;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -258,10 +260,10 @@ public abstract class Dialect {
 		List<VariableField> variableFields = new ArrayList<VariableField>();
 		Map<String, ParameterObject> variablesMap = new HashMap<String, ParameterObject>();
 
-		List<PreField> preFieldsList = new ArrayList<PreField>();
-
 		for(AbstractSingleTheorem singleTheorem : singleTheorems) {
 			AbstractConstraint constraint = singleTheorem.constraint;
+
+			Set<PreField> preFieldsList = new HashSet<PreField>();
 
 			for(PreField preField : constraint.preFields) {
 				if(preField.fieldCode == Opcode.Xload && preField.fieldCodeIndex == 0 && !preField.isVariable && constraint.matches(preField.constantTablePrefixedName))

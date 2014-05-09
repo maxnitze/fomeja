@@ -50,7 +50,11 @@ public enum Opcode {
 	_goto("goto", 1, OpcodeType.OFFSET, "goto"),
 
 	ifeq("ifeq", 3, OpcodeType.OFFSET, "ifeq"),							/** jump if zero */
-	ifne("ifne", 3, OpcodeType.OFFSET, "ifne"),							/** jump if nonzero */
+	ifge("ifge", 3, OpcodeType.OFFSET, "ifge"),							/** jump if greater-equal zero */
+	ifgt("ifgt", 3, OpcodeType.OFFSET, "ifgt"),							/** jump if greater than zero */
+	ifle("ifle", 3, OpcodeType.OFFSET, "ifle"),							/** jump if lower equal zero */
+	iflt("iflt", 3, OpcodeType.OFFSET, "iflt"),							/** jump if lower than zero */
+	ifne("ifne", 3, OpcodeType.OFFSET, "ifne"),							/** jump if nonzero zero */
 
 	if_Xcmpeq("if_Xcmpeq", 3, OpcodeType.OFFSET, "if_[i|a]cmpeq"),		/** equal */
 	if_Xcmpge("if_Xcmpge", 3, OpcodeType.OFFSET, "if_[i|a]cmpge"),		/** greater-equal */

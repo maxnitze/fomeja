@@ -43,7 +43,7 @@ public class Schedule {
 	 * 
 	 * @return
 	 */
-//	@Constraint(fields = { @Constraint.Field("tasks") })
+	@Constraint(fields = { @Constraint.Field("tasks") })
 	public boolean startIsPositive(Task task) {
 		return task.start >= 0;
 	}

@@ -27,7 +27,7 @@ public class AbstractPrematureConstraintValueConstraint extends AbstractConstrai
 		this.constraint = this.constraint.evaluate();
 
 		if (this.constraint instanceof AbstractBooleanConstraint)
-			return ((AbstractBooleanConstraint) this.constraint).returnValue;
+			return ((AbstractBooleanConstraint) this.constraint).returnValue.evaluate();
 		else
 			return this;
 	}
