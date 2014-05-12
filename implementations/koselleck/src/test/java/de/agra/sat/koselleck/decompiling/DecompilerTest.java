@@ -1,67 +1,69 @@
 package de.agra.sat.koselleck.decompiling;
 
 /** imports */
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
-import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralClass;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralObject;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLine;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLineOffset;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLineSimple;
+import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLineValue;
 import de.agra.sat.koselleck.disassembling.bytecodetypes.DisassembledMethod;
 import de.agra.sat.koselleck.types.Opcode;
-import de.agra.sat.koselleck.util.VariableInteger;
-import de.agra.sat.koselleck.util.VariableIntegers;
-import de.agra.sat.koselleck.utils.KoselleckUtils;
 
 /**
  * 
  * @author Max Nitze
  */
 public class DecompilerTest {
-	/**  */
-	private static Map<String, DisassembledMethod> disassembledMethodsMap;
 
-	@BeforeClass
-	public static void SetUpBeforeClass() {
-		disassembledMethodsMap = KoselleckUtils.getDisassembledConstraintMethods(VariableIntegers.class);
-	}
-
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
-
-	/**
-	 * 
-	 */
 	@Test
-	public void testDecompile() {
-		AbstractConstraint abstractConstraint = Decompiler.decompile(
-				disassembledMethodsMap.get("public boolean variableIntegersDiffer(de.agra.sat.koselleck.util.VariableInteger,de.agra.sat.koselleck.util.VariableInteger);"),
-				new AbstractConstraintLiteralObject(new VariableIntegers(new HashSet<VariableInteger>())),
-				new AbstractConstraintLiteralClass[] {
-					new AbstractConstraintLiteralClass(VariableInteger.class, Opcode.Xload, 1),
-					new AbstractConstraintLiteralClass(VariableInteger.class, Opcode.Xload, 2) });
+	public void booleanConstraintMethod() {
+		/** constraint method with body 'return 1 == 1' */
+		Map<Integer, BytecodeLine> bytecodeLinesMap = new HashMap<Integer, BytecodeLine>();
+		bytecodeLinesMap.put(
+				0, new BytecodeLineValue("0: iconst_1", 0, Opcode.Xconst_, 1));
+		bytecodeLinesMap.put(
+				1, new BytecodeLineValue("1: iconst_1", 1, Opcode.Xconst_, 1));
+		bytecodeLinesMap.put(
+				2, new BytecodeLineOffset("2: if_icmpne 9", 2, Opcode.if_Xcmpne, 9));
+		bytecodeLinesMap.put(
+				5, new BytecodeLineValue("5: iconst_1", 5, Opcode.Xconst_, 1));
+		bytecodeLinesMap.put(
+				6, new BytecodeLineOffset("6: goto 10", 6, Opcode._goto, 10));
+		bytecodeLinesMap.put(
+				9, new BytecodeLineValue("9: iconst_0", 9, Opcode.Xconst_, 0));
+		bytecodeLinesMap.put(
+				10, new BytecodeLineSimple("10: ireturn", 10, Opcode._return));
 
-		assertFalse(abstractConstraint.equals(new AbstractBooleanConstraint(true)));
+		DisassembledMethod disassembledMethod = new DisassembledMethod(null, "", "", bytecodeLinesMap);
+
+		AbstractConstraint abstractTrueConstraint = Decompiler.decompile(
+				disassembledMethod,
+				new AbstractConstraintLiteralObject(null),
+				new AbstractConstraintValue[0]);
+
+		assertTrue(abstractTrueConstraint.evaluate().equals(new AbstractBooleanConstraint(true)));
+
+		/** change body of constraint method to 'return 1 == 0' */
+		bytecodeLinesMap.put(
+				5, new BytecodeLineValue("5: iconst_0", 5, Opcode.Xconst_, 0));
+
+		disassembledMethod = new DisassembledMethod(null, "", "", bytecodeLinesMap);
+
+		AbstractConstraint abstractFalseConstraint = Decompiler.decompile(
+				disassembledMethod,
+				new AbstractConstraintLiteralObject(null),
+				new AbstractConstraintValue[0]);
+
+		assertTrue(abstractFalseConstraint.evaluate().equals(new AbstractBooleanConstraint(false)));
 	}
 }
