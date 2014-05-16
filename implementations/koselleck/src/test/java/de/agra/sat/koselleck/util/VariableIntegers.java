@@ -24,7 +24,7 @@ public class VariableIntegers {
 	/** constraints
 	 * ----- ----- ----- ----- ----- */
 
-	@Constraint(fields = {})
+	@Constraint(fields = { @Constraint.Field(""), @Constraint.Field("") })
 	public boolean variableIntegersDiffer(VariableInteger variableInteger1, VariableInteger variableInteger2) {
 		return variableInteger1 == variableInteger2 || variableInteger1.integerValue != variableInteger2.integerValue;
 	}
@@ -34,7 +34,7 @@ public class VariableIntegers {
 		return variableInteger1 == variableInteger2 || variableInteger1.integerValue != variableInteger2.integerValue;
 	}
 
-	@Constraint(fields = {})
+	@Constraint(fields = { @Constraint.Field(""), @Constraint.Field("") })
 	public boolean variableIntegersDifferByGetter(VariableInteger variableInteger1, VariableInteger variableInteger2) {
 		return variableInteger1 == variableInteger2 || variableInteger1.getIntegerValue() != variableInteger2.getIntegerValue();
 	}

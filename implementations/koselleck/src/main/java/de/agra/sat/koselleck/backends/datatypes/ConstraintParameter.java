@@ -50,6 +50,7 @@ public class ConstraintParameter {
 		this.maxIndices = new int[this.size];
 		for(int i=0; i<fields.size(); i++) {
 			Collection<?> parameterCollection;
+			fields.get(i).setAccessible(true);
 			try {
 				parameterCollection = (Collection<?>)fields.get(i).get(component);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
