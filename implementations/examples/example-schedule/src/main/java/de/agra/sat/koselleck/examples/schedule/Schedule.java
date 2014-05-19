@@ -34,7 +34,7 @@ public class Schedule {
 	 */
 	@Constraint(fields = { @Constraint.Field("tasks"), @Constraint.Field("tasks") })
 	public boolean testConstraint(Task task1, Task task2) {
-		return task1 == task2 || !task1.intersectsWith(task2);
+		return task1 == task2 || !task1.intersectsWith(task2) || task1.doneBy != task2.doneBy;
 	}
 
 	/**

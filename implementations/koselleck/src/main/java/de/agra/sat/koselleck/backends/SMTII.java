@@ -25,6 +25,7 @@ import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 import de.agra.sat.koselleck.exceptions.UnsupportedVariableTypeException;
 import de.agra.sat.koselleck.types.BooleanConnector;
 import de.agra.sat.koselleck.types.ConstraintOperator;
+import de.agra.sat.koselleck.utils.CompareUtils;
 
 /**
  * SMTII implements the smt2 pseudo boolean dialect.
@@ -297,11 +298,11 @@ public class SMTII extends Dialect {
 		variableDeclaration.append("(declare-const ");
 		variableDeclaration.append(variableField.variableName);
 
-		if(variableField.fieldType.equals(int.class) || variableField.fieldType.equals(Integer.class))
+		if (CompareUtils.equalsAny(variableField.fieldType, CompareUtils.integerClasses))
 			variableDeclaration.append(" Int)");
-		else if(variableField.fieldType.equals(float.class) || variableField.fieldType.equals(Float.class))
+		else if (CompareUtils.equalsAny(variableField.fieldType, CompareUtils.floatClasses))
 			variableDeclaration.append(" Real)");
-		else if(variableField.fieldType.equals(double.class) || variableField.fieldType.equals(Double.class))
+		else if (CompareUtils.equalsAny(variableField.fieldType, CompareUtils.doubleClasses))
 			variableDeclaration.append(" Real)");
 		else {
 			String message = "could not translate class \"" + variableField.fieldType.getName() + "\" to Z3 syntax.";

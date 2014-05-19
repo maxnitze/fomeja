@@ -28,10 +28,10 @@ public class SchedulingProblem {
 		tasks.add(task1);
 		Task task2 = new Task("Task2", 1, new Skill[] {}, new Task[] { task1 });
 		tasks.add(task2);
-//		Task task3 = new Task("Task3", 4, new Skill[] { Skill.CPP }, new Task[] { task1 });
-//		tasks.add(task3);
-//		Task task4 = new Task("Task4", 6, new Skill[] { Skill.MANAGEMENT }, new Task[] {});
-//		tasks.add(task4);
+		Task task3 = new Task("Task3", 4, new Skill[] { Skill.CPP }, new Task[] { task1 });
+		tasks.add(task3);
+		Task task4 = new Task("Task4", 6, new Skill[] { Skill.MANAGEMENT }, new Task[] {});
+		tasks.add(task4);
 
 		Schedule schedule = new Schedule(employees, tasks);
 

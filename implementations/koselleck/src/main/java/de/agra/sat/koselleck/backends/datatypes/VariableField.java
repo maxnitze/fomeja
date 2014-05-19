@@ -37,6 +37,6 @@ public class VariableField {
 		if(!(object instanceof VariableField))
 			return false;
 
-		return this.variableName.equals(((VariableField)object).variableName);
+		return this.variableName.equals(((VariableField) object).variableName);
 	}
 }
