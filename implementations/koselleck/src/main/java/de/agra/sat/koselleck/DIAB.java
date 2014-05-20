@@ -11,8 +11,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.backends.Prover;
-import de.agra.sat.koselleck.backends.SMTII;
-import de.agra.sat.koselleck.backends.Z3;
+import de.agra.sat.koselleck.backends.Z3SMTIIBinary;
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
 import de.agra.sat.koselleck.backends.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.decompiling.Decompiler;
@@ -33,7 +32,7 @@ import de.agra.sat.koselleck.utils.KoselleckUtils;
  */
 public abstract class DIAB {
 	/** instance of the theorem prover to use */
-	private static final Prover prover = new Z3("z3", new SMTII());
+	private static final Prover<?> prover = new Z3SMTIIBinary("z3");
 
 	/**
 	 * validate validates a given component by checking its constraints with a

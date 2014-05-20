@@ -33,14 +33,14 @@ import de.agra.sat.koselleck.utils.CompareUtils;
  * @version 1.0.0
  * @author Max Nitze
  */
-public class SMTII extends Dialect {
+public class SMTIIString extends Dialect {
 	/** pattern for a smt2 result constant (function without parameters) */
 	private static final Pattern smt2ResultPattern = Pattern.compile("\\(define-fun (?<name>\\S+) \\(\\) (?<type>\\S+)(\n)?\\s*\\(?(?<value>(- \\d+|\\d+))\\)?");
 
 	/**
 	 * Constructor for a new SMTII dialect.
 	 */
-	public SMTII() {
+	public SMTIIString() {
 		super(Dialect.Type.smt2);
 	}
 
@@ -96,7 +96,7 @@ public class SMTII extends Dialect {
 						resultMatcher.group("name"),
 						new Float(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
 			else {
-				Logger.getLogger(SMTII.class).fatal("could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.");
+				Logger.getLogger(SMTIIString.class).fatal("could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.");
 				throw new UnsupportedVariableTypeException(resultMatcher.group("type"));
 			}
 		}
@@ -223,7 +223,7 @@ public class SMTII extends Dialect {
 		case OR:
 			return "or";
 		default:
-			Logger.getLogger(SMTII.class).fatal("boolean connector " + (connector == null ? "null" : "\"" + connector.code + "\"") + " is not known");
+			Logger.getLogger(SMTIIString.class).fatal("boolean connector " + (connector == null ? "null" : "\"" + connector.code + "\"") + " is not known");
 			throw new UnknownBooleanConnectorException(connector);
 		}
 	}
@@ -251,7 +251,7 @@ public class SMTII extends Dialect {
 		case NOT_EQUAL:
 			return "(not (=";
 		default:
-			Logger.getLogger(SMTII.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+			Logger.getLogger(SMTIIString.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
 			throw new UnknownConstraintOperatorException(operator);
 		}
 	}
@@ -279,7 +279,7 @@ public class SMTII extends Dialect {
 		case NOT_EQUAL:
 			return "))";
 		default:
-			Logger.getLogger(SMTII.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+			Logger.getLogger(SMTIIString.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
 			throw new UnknownConstraintOperatorException(operator);
 		}
 	}
@@ -306,7 +306,7 @@ public class SMTII extends Dialect {
 			variableDeclaration.append(" Real)");
 		else {
 			String message = "could not translate class \"" + variableField.fieldType.getName() + "\" to Z3 syntax.";
-			Logger.getLogger(SMTII.class).fatal(message);
+			Logger.getLogger(SMTIIString.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}
 

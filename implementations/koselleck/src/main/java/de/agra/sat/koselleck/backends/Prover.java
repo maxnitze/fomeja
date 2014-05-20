@@ -2,13 +2,8 @@ package de.agra.sat.koselleck.backends;
 
 /** imports */
 import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
-import de.agra.sat.koselleck.backends.datatypes.ParameterObject;
-import de.agra.sat.koselleck.backends.datatypes.Theorem;
 import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
 
 /**
@@ -17,32 +12,20 @@ import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
  * @version 1.0.0
  * @author Max Nitze
  */
-public abstract class Prover {
+public abstract class Prover<T extends Dialect> {
 	/** the dialect of the prover */
-	final Dialect dialect;
+	final T dialect;
 
 	/**
 	 * Constructor for a new prover.
 	 * 
 	 * @param dialect the dialect of the new prover
 	 */
-	public Prover(Dialect dialect) {
+	public Prover(T dialect) {
 		this.dialect = dialect;
 	}
 
 	/** abstract methods
-	 * ----- ----- ----- ----- ----- */
-
-	/**
-	 * solve solves the given theorem by using the specific prover.
-	 * 
-	 * @param theorem the theorem to solve
-	 * 
-	 * @return the solved configuration for the given theorem
-	 */
-	public abstract String solve(String theorem);
-
-	/** protected methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -56,31 +39,5 @@ public abstract class Prover {
 	 * @throws NotSatisfyableException if one of the single theorems is not
 	 *  satisfiable for the current component
 	 */
-	public void solveAndAssign(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
-		Theorem theorem = this.dialect.getConstraintForArguments(component, singleTheorems);
-
-		String formattedTheorem = this.dialect.format(theorem);
-
-		System.out.println(formattedTheorem); // TODO delete output formattedTheorem
-
-		String proverResult = this.solve(formattedTheorem);
-
-		System.out.println(proverResult); // TODO delete output proverResult
-
-		Map<String, Object> resultMap = this.dialect.parseResult(proverResult);
-		for(Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {
-			Object result = resultMap.get(variable.getKey());
-
-			if(result != null) {
-				variable.getValue().preField.field.setAccessible(true);
-				try {
-					variable.getValue().preField.field.set(variable.getValue().object, result);
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					String message = "could not access field \"" + variable.getValue().preField.field.getName() +"\"";
-					Logger.getLogger(SMTII.class).fatal(message);
-					throw new IllegalArgumentException(message);
-				}
-			}
-		}
-	}
+	public abstract void solveAndAssign(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException;
 }
