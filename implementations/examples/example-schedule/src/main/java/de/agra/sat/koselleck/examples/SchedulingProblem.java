@@ -47,9 +47,6 @@ public class SchedulingProblem {
 				System.out.println("there is a valid schedule for these tasks");
 			else
 				System.out.println("there is no valid schedule for these tasks");
-
-			for (Task task : tasks)
-				System.out.println("Task \"" + task.name + "\": " + task.start);
 		}
 
 		if(testMinimize) {

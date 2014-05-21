@@ -3,15 +3,13 @@ package de.agra.sat.koselleck.backends;
 /** imports */
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
-import de.agra.sat.koselleck.backends.datatypes.ParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
 import de.agra.sat.koselleck.exceptions.ExecutionErrorException;
-import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
+import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
 import de.agra.sat.koselleck.exceptions.UnsupportedDialectTypeException;
 import de.agra.sat.koselleck.utils.IOUtils;
 
@@ -36,32 +34,10 @@ public class Z3SMTIIBinary extends Prover<SMTIIString> {
 	}
 
 	@Override
-	public void solveAndAssign(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
+	public void solveAndAssign(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfiableException {
 		Theorem theorem = this.dialect.getConstraintForArguments(component, singleTheorems);
 
-		String formattedTheorem = this.dialect.format(theorem);
-
-		System.out.println(formattedTheorem); // TODO delete output formattedTheorem
-
-		String proverResult = this.solve(formattedTheorem);
-
-		System.out.println(proverResult); // TODO delete output proverResult
-
-		Map<String, Object> resultMap = this.dialect.parseResult(proverResult);
-		for(Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {
-			Object result = resultMap.get(variable.getKey());
-
-			if(result != null) {
-				variable.getValue().preField.field.setAccessible(true);
-				try {
-					variable.getValue().preField.field.set(variable.getValue().object, result);
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					String message = "could not access field \"" + variable.getValue().preField.field.getName() +"\"";
-					Logger.getLogger(SMTIIString.class).fatal(message);
-					throw new IllegalArgumentException(message);
-				}
-			}
-		}
+		this.assign(theorem, this.dialect.parseResult(this.solve(this.dialect.format(theorem))));
 	}
 
 	/** private methods

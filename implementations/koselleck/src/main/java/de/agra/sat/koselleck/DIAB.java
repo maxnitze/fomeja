@@ -11,7 +11,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.backends.Prover;
-import de.agra.sat.koselleck.backends.Z3SMTIIBinary;
+import de.agra.sat.koselleck.backends.Z3SMTIIJava;
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
 import de.agra.sat.koselleck.backends.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.decompiling.Decompiler;
@@ -19,7 +19,7 @@ import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraint
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralObject;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
 import de.agra.sat.koselleck.disassembling.bytecodetypes.DisassembledMethod;
-import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
+import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
 import de.agra.sat.koselleck.types.Opcode;
 import de.agra.sat.koselleck.utils.KoselleckUtils;
 
@@ -32,7 +32,7 @@ import de.agra.sat.koselleck.utils.KoselleckUtils;
  */
 public abstract class DIAB {
 	/** instance of the theorem prover to use */
-	private static final Prover<?> prover = new Z3SMTIIBinary("z3");
+	private static final Prover<?> prover = new Z3SMTIIJava();
 
 	/**
 	 * validate validates a given component by checking its constraints with a
@@ -69,13 +69,17 @@ public abstract class DIAB {
 				for(int i=0; i<parameterCount; i++)
 					methodParams[i] = constraintParameters[i].getCurrentCollectionObject();
 
+				boolean accessibility = method.isAccessible();
 				method.setAccessible(true);
 				try {
-					if(!(Boolean)method.invoke(component, methodParams))
+					if(!(Boolean) method.invoke(component, methodParams))
 						return false;
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					Logger.getLogger(DIAB.class).fatal("could not invoke method \"" + method.getName() + "\"");
-					throw new IllegalArgumentException("could not invoke method \"" + method.getName() + "\"");
+					String message = "could not invoke method \"" + method.getName() + "\"";
+					Logger.getLogger(DIAB.class).fatal(message);
+					throw new IllegalArgumentException(message);
+				} finally {
+					method.setAccessible(accessibility);
 				}
 			} while(KoselleckUtils.incrementIndices(constraintParameters));
 		}
@@ -122,7 +126,7 @@ public abstract class DIAB {
 
 			try {
 				prover.solveAndAssign(component, singleTheorems);
-			} catch (NotSatisfyableException e) {
+			} catch (NotSatisfiableException e) {
 				String message = "failed to satisfy given theorems due to:\n" + e.getMessage();
 				System.err.println(message);
 				Logger.getLogger(DIAB.class).info(message);

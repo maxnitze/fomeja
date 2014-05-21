@@ -80,7 +80,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 			else if (replacement.matches("^\\d+$"))
 				this.replacedConstraintValue = new AbstractConstraintLiteralInteger(Integer.parseInt(replacement));
 			else
-				this.replacedConstraintValue = new AbstractConstraintLiteralString(replacement);
+				this.replacedConstraintValue = new AbstractConstraintLiteralString(replacement, this.value.getType());
 		} else if (this.replacedConstraintValue != null)
 			this.replacedConstraintValue.replaceAll(regex, replacement);
 	}

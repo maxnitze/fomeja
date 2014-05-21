@@ -26,9 +26,7 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
-import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractPrematureConstraintValueAccessibleObject;
-import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractPrematureConstraintValueConstraint;
-import de.agra.sat.koselleck.exceptions.NotSatisfyableException;
+import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
 import de.agra.sat.koselleck.exceptions.UnsupportedConstraintException;
 import de.agra.sat.koselleck.exceptions.UnsupportedConstraintValueException;
 import de.agra.sat.koselleck.types.Opcode;
@@ -40,7 +38,7 @@ import de.agra.sat.koselleck.utils.KoselleckUtils;
  * @version 1.0.0
  * @author Max Nitze
  */
-public abstract class Dialect {
+public abstract class Dialect<T, V> {
 	/** dialect types */
 	public static enum Type {
 		smt,
@@ -72,18 +70,18 @@ public abstract class Dialect {
 	 * 
 	 * @return the specific string representation of the theorem prover
 	 * 
-	 * @throws NotSatisfyableException if one of the single theorems is not
+	 * @throws NotSatisfiableException if one of the single theorems is not
 	 *  satisfiable for the current component
 	 */
-	public abstract String format(Theorem theorem) throws NotSatisfyableException;
+	public abstract T format(Theorem theorem) throws NotSatisfiableException;
 
 	/**
 	 * 
-	 * @param result
+	 * @param resultObject
 	 * 
 	 * @return
 	 */
-	public abstract Map<String, Object> parseResult(String result);
+	public abstract Map<String, Object> parseResult(Object resultObject);
 
 	/** abstract constraints
 	 * ----- ----- ----- ----- ----- */
@@ -96,7 +94,7 @@ public abstract class Dialect {
 	 * 
 	 * @return the string representation of the abstract boolean constraint
 	 */
-	public abstract String prepareAbstractBooleanConstraint(AbstractBooleanConstraint booleanConstraint);
+	public abstract T prepareAbstractBooleanConstraint(AbstractBooleanConstraint booleanConstraint);
 
 	/**
 	 * prepareAbstractNotConstraint returns the string representation of a
@@ -106,7 +104,7 @@ public abstract class Dialect {
 	 * 
 	 * @return the string representation of the abstract not-constraint
 	 */
-	public abstract String prepareAbstractNotConstraint(AbstractNotConstraint notConstraint);
+	public abstract T prepareAbstractNotConstraint(AbstractNotConstraint notConstraint);
 
 	/**
 	 * prepareAbstractSingleConstraint returns the string representation of a
@@ -116,7 +114,7 @@ public abstract class Dialect {
 	 * 
 	 * @return the string representation of the abstract single constraint
 	 */
-	public abstract String prepareAbstractSingleConstraint(AbstractSingleConstraint singleConstraint);
+	public abstract T prepareAbstractSingleConstraint(AbstractSingleConstraint singleConstraint);
 
 	/**
 	 * prepareAbstractSubConstraint returns the string representation of a
@@ -126,7 +124,7 @@ public abstract class Dialect {
 	 * 
 	 * @return the string representation of the abstract sub constraint
 	 */
-	public abstract String prepareAbstractSubConstraint(AbstractSubConstraint subConstraint);
+	public abstract T prepareAbstractSubConstraint(AbstractSubConstraint subConstraint);
 
 	/**
 	 * prepareAbstractIfThenElseConstraint returns the string representation of
@@ -138,7 +136,7 @@ public abstract class Dialect {
 	 * @return the string representation of the abstract if-then-else
 	 *  constraint
 	 */
-	public abstract String prepareAbstractIfThenElseConstraint(AbstractIfThenElseConstraint ifThenElseConstraint);
+	public abstract T prepareAbstractIfThenElseConstraint(AbstractIfThenElseConstraint ifThenElseConstraint);
 
 	/** abstract constraint values
 	 * ----- ----- ----- ----- ----- */
@@ -151,7 +149,7 @@ public abstract class Dialect {
 	 * 
 	 * @return the string representation of the abstract constraint literal
 	 */
-	public abstract String prepareAbstractConstraintLiteral(AbstractConstraintLiteral<?> constraintLiteral);
+	public abstract V prepareAbstractConstraintLiteral(AbstractConstraintLiteral<?> constraintLiteral);
 
 	/**
 	 * prepareAbstractConstraintFormula returns the string representation of a
@@ -161,33 +159,7 @@ public abstract class Dialect {
 	 * 
 	 * @return the string representation of the abstract constraint formula
 	 */
-	public abstract String prepareAbstractConstraintFormula(AbstractConstraintFormula constraintFormula);
-
-	/**
-	 * prepareAbstractPrematureConstraintValue returns the string
-	 *  representation of a given abstract premature constraint value
-	 *  accessible object.
-	 * 
-	 * @param prematureConstraintValueAccessibleObject the abstract premature
-	 *  constraint value acessible object to proceed
-	 * 
-	 * @return the string representation of the abstract premature constraint
-	 *  value accessible object
-	 */
-	public abstract String prepareAbstractPrematureConstraintValueAccessibleObject(AbstractPrematureConstraintValueAccessibleObject prematureConstraintValueAccessibleObject);
-
-	/**
-	 * prepareAbstractPrematureConstraintValue returns the string
-	 *  representation of a given abstract premature constraint value
-	 *  accessible object.
-	 * 
-	 * @param prematureConstraintValueConstraint the abstract premature
-	 *  constraint value constraint to proceed
-	 * 
-	 * @return the string representation of the abstract premature constraint
-	 *  value accessible object
-	 */
-	public abstract String prepareAbstractPrematureConstraintValueConstraint(AbstractPrematureConstraintValueConstraint prematureConstraintValueConstraint);
+	public abstract V prepareAbstractConstraintFormula(AbstractConstraintFormula constraintFormula);
 
 	/** protected methods
 	 * ----- ----- ----- ----- ----- */
@@ -200,7 +172,7 @@ public abstract class Dialect {
 	 * 
 	 * @return the string representation of the abstract constraint
 	 */
-	protected String getBackendConstraint(AbstractConstraint constraint) {
+	protected T getBackendConstraint(AbstractConstraint constraint) {
 		if(constraint instanceof AbstractBooleanConstraint)
 			return prepareAbstractBooleanConstraint((AbstractBooleanConstraint) constraint);
 		else if(constraint instanceof AbstractNotConstraint)
@@ -226,15 +198,11 @@ public abstract class Dialect {
 	 * 
 	 * @return the string representation of the abstract constraint value
 	 */
-	protected String getBackendConstraintValue(AbstractConstraintValue constraintValue) {
+	protected V getBackendConstraintValue(AbstractConstraintValue constraintValue) {
 		if(constraintValue instanceof AbstractConstraintLiteral)
 			return prepareAbstractConstraintLiteral((AbstractConstraintLiteral<?>) constraintValue);
 		else if(constraintValue instanceof AbstractConstraintFormula)
 			return prepareAbstractConstraintFormula((AbstractConstraintFormula) constraintValue);
-		else if(constraintValue instanceof AbstractPrematureConstraintValueAccessibleObject)
-			return prepareAbstractPrematureConstraintValueAccessibleObject((AbstractPrematureConstraintValueAccessibleObject) constraintValue);
-		else if(constraintValue instanceof AbstractPrematureConstraintValueConstraint)
-			return prepareAbstractPrematureConstraintValueConstraint((AbstractPrematureConstraintValueConstraint) constraintValue);
 		else {
 			UnsupportedConstraintValueException exception = new UnsupportedConstraintValueException(constraintValue);
 			Logger.getLogger(Dialect.class).fatal(exception.getMessage());
@@ -252,10 +220,10 @@ public abstract class Dialect {
 	 * @return the assigned theorem for the given abstract single theorems and
 	 *  the component
 	 * 
-	 * @throws NotSatisfyableException if there is an assigned constraint that
+	 * @throws NotSatisfiableException if there is an assigned constraint that
 	 *  is not satisfiable
 	 */
-	protected Theorem getConstraintForArguments(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfyableException {
+	protected Theorem getConstraintForArguments(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfiableException {
 		List<AbstractConstraint> constraints = new ArrayList<AbstractConstraint>();
 		List<VariableField> variableFields = new ArrayList<VariableField>();
 		Map<String, ParameterObject> variablesMap = new HashMap<String, ParameterObject>();
@@ -339,7 +307,7 @@ public abstract class Dialect {
 				if(abstractPartialConstraint instanceof AbstractBooleanConstraint) {
 					AbstractBooleanConstraint abstractBooleanConstraint = (AbstractBooleanConstraint) abstractPartialConstraint;
 					if(!abstractBooleanConstraint.value)
-						throw new NotSatisfyableException("one or more of the constraints are not satisfyable for the given instance");
+						throw new NotSatisfiableException("one or more of the constraints are not satisfyable for the given instance");
 				} else
 					constraints.add(abstractPartialConstraint);
 			} while(KoselleckUtils.incrementIndices(constraintParameters));

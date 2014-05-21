@@ -13,12 +13,16 @@ import de.agra.sat.koselleck.types.ArithmeticOperator;
  * @author Max Nitze
  */
 public class AbstractConstraintLiteralString extends AbstractConstraintLiteral<String> {
+	/**  */
+	public final Class<?> type;
+
 	/**
 	 * 
 	 * @param value
 	 */
-	public AbstractConstraintLiteralString(String value) {
+	public AbstractConstraintLiteralString(String value, Class<?> type) {
 		super(value, true, false, false);
+		this.type = type;
 	}
 
 	@Override
@@ -60,7 +64,7 @@ public class AbstractConstraintLiteralString extends AbstractConstraintLiteral<S
 
 	@Override
 	public AbstractConstraintLiteralString clone() {
-		return new AbstractConstraintLiteralString(this.value);
+		return new AbstractConstraintLiteralString(this.value, this.type);
 	}
 
 	@Override

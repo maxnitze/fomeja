@@ -18,8 +18,6 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstrain
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
-import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractPrematureConstraintValueAccessibleObject;
-import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractPrematureConstraintValueConstraint;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 import de.agra.sat.koselleck.exceptions.UnsupportedVariableTypeException;
@@ -33,7 +31,7 @@ import de.agra.sat.koselleck.utils.CompareUtils;
  * @version 1.0.0
  * @author Max Nitze
  */
-public class SMTIIString extends Dialect {
+public class SMTIIString extends Dialect<String, String> {
 	/** pattern for a smt2 result constant (function without parameters) */
 	private static final Pattern smt2ResultPattern = Pattern.compile("\\(define-fun (?<name>\\S+) \\(\\) (?<type>\\S+)(\n)?\\s*\\(?(?<value>(- \\d+|\\d+))\\)?");
 
@@ -44,13 +42,6 @@ public class SMTIIString extends Dialect {
 		super(Dialect.Type.smt2);
 	}
 
-	/**
-	 * format returns the smt2 string representation of the given theorem.
-	 * 
-	 * @param theorem the theorem to get the smt2 string representation for
-	 * 
-	 * @return the smt2 string representation for the given theorem
-	 */
 	@Override
 	public String format(Theorem theorem) {
 		StringBuilder assignedConstraint = new StringBuilder();
@@ -73,35 +64,35 @@ public class SMTIIString extends Dialect {
 		return smt2theorem.toString();
 	}
 
-	/**
-	 * parseResult parses the result from the theorem prover and returns an map
-	 *  representing the result configuration.
-	 * 
-	 * @param result the result to parse
-	 * 
-	 * @return a map representing the result configuration
-	 */
 	@Override
-	public Map<String, Object> parseResult(String result) {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+	public Map<String, Object> parseResult(Object resultObject) {
+		if (resultObject instanceof String) {
+			String result = (String) resultObject;
 
-		Matcher resultMatcher = smt2ResultPattern.matcher(result);
-		while(resultMatcher.find()) {
-			if(resultMatcher.group("type").equals("Int"))
-				resultMap.put(
-						resultMatcher.group("name"),
-						new Integer(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
-			else if(resultMatcher.group("type").equals("Real"))
-				resultMap.put(
-						resultMatcher.group("name"),
-						new Float(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
-			else {
-				Logger.getLogger(SMTIIString.class).fatal("could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.");
-				throw new UnsupportedVariableTypeException(resultMatcher.group("type"));
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+
+			Matcher resultMatcher = smt2ResultPattern.matcher(result);
+			while(resultMatcher.find()) {
+				if(resultMatcher.group("type").equals("Int"))
+					resultMap.put(
+							resultMatcher.group("name"),
+							new Integer(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
+				else if(resultMatcher.group("type").equals("Real"))
+					resultMap.put(
+							resultMatcher.group("name"),
+							new Float(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
+				else {
+					Logger.getLogger(SMTIIString.class).fatal("could not translate type \"" + resultMatcher.group("type") + "\" to Z3 syntax.");
+					throw new UnsupportedVariableTypeException(resultMatcher.group("type"));
+				}
 			}
-		}
 
-		return resultMap;
+			return resultMap;
+		} else {
+			String message = "could not parse result of type \"" + resultObject.getClass().getCanonicalName() + "\"; only String supported";
+			Logger.getLogger(SMTIIString.class).fatal(message);
+			throw new IllegalArgumentException(message);
+		}
 	}
 
 	/** abstract constraints
@@ -190,20 +181,6 @@ public class SMTIIString extends Dialect {
 		constraintFormulaString.append(")");
 
 		return constraintFormulaString.toString();
-	}
-
-	@Override
-	public String prepareAbstractPrematureConstraintValueAccessibleObject(AbstractPrematureConstraintValueAccessibleObject prematureConstraintValueAccessibleObject) {
-		System.out.println("-- " + prematureConstraintValueAccessibleObject.toString());
-
-		throw new RuntimeException("PREMATURE Constraint Value Accessible Object");
-	}
-
-	@Override
-	public String prepareAbstractPrematureConstraintValueConstraint(AbstractPrematureConstraintValueConstraint prematureConstraintValueConstraint) {
-		System.out.println("-- " + prematureConstraintValueConstraint.toString());
-
-		throw new RuntimeException("PREMATURE Constraint Value Constraint");
 	}
 
 	/** private methods
