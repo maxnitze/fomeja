@@ -7,7 +7,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
+import de.agra.sat.koselleck.backends.datatypes.ComplexParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.ParameterObject;
+import de.agra.sat.koselleck.backends.datatypes.SimpleParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
 import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
 
@@ -49,17 +51,23 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	/**
 	 * 
 	 * @param theorem
-	 * @param proverResult
+	 * @param proverResults
 	 */
-	void assign(Theorem theorem, Map<String, Object> proverResult) {
+	void assign(Theorem theorem, Map<String, Object> proverResults) {
 		for (Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {
-			Object result = proverResult.get(variable.getKey());
+			Object proverResult = proverResults.get(variable.getKey());
 
-			if (result != null) {
+			if (proverResult != null) {
 				boolean accessibility = variable.getValue().preField.field.isAccessible(); 
 				variable.getValue().preField.field.setAccessible(true);
 				try {
-					variable.getValue().preField.field.set(variable.getValue().object, result);
+					if (variable.getValue() instanceof SimpleParameterObject)
+						variable.getValue().preField.field.set(variable.getValue().object, proverResult);
+					else if (variable.getValue() instanceof ComplexParameterObject) {
+						ComplexParameterObject complexParameterObject = (ComplexParameterObject) variable.getValue();
+						Object objectRangeElement = complexParameterObject.getObjectRangeElement((Integer) proverResult);
+						complexParameterObject.preField.field.set(variable.getValue().object, objectRangeElement);
+					}
 				} catch (IllegalArgumentException | IllegalAccessException e) {
 					String message = "could not access field \"" + variable.getValue().preField.field.getName() +"\"";
 					Logger.getLogger(SMTIIString.class).fatal(message);

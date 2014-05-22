@@ -3,6 +3,7 @@ package de.agra.sat.koselleck.backends;
 /** imports */
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,8 +13,10 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
+import de.agra.sat.koselleck.backends.datatypes.ComplexParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.backends.datatypes.ParameterObject;
+import de.agra.sat.koselleck.backends.datatypes.SimpleParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
 import de.agra.sat.koselleck.backends.datatypes.VariableField;
 import de.agra.sat.koselleck.datatypes.PreField;
@@ -25,11 +28,16 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstrain
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralInteger;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralString;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
 import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
 import de.agra.sat.koselleck.exceptions.UnsupportedConstraintException;
 import de.agra.sat.koselleck.exceptions.UnsupportedConstraintValueException;
+import de.agra.sat.koselleck.types.BooleanConnector;
+import de.agra.sat.koselleck.types.ConstraintOperator;
 import de.agra.sat.koselleck.types.Opcode;
+import de.agra.sat.koselleck.utils.CompareUtils;
 import de.agra.sat.koselleck.utils.KoselleckUtils;
 
 /**
@@ -227,6 +235,7 @@ public abstract class Dialect<T, V> {
 		List<AbstractConstraint> constraints = new ArrayList<AbstractConstraint>();
 		List<VariableField> variableFields = new ArrayList<VariableField>();
 		Map<String, ParameterObject> variablesMap = new HashMap<String, ParameterObject>();
+		Set<AbstractConstraint> objectRangeConstraints = new HashSet<AbstractConstraint>();
 
 		for (AbstractSingleTheorem singleTheorem : singleTheorems) {
 			AbstractConstraint constraint = singleTheorem.constraint;
@@ -255,6 +264,9 @@ public abstract class Dialect<T, V> {
 			if (skipTheorem)
 				continue;
 
+			/**  */
+			Set<String> complexParameterObjects = new HashSet<String>();
+
 			List<ParameterObject> parameterObjects = new ArrayList<ParameterObject>();
 			ParameterObject currentParameterObject = null;
 
@@ -267,7 +279,7 @@ public abstract class Dialect<T, V> {
 					constraintParametersMap.put(i+1, constraintParameters[i].getCurrentCollectionObject());
 				cConstraint.substitute(constraintParametersMap);
 
-				/** replace the prefields in the current constraint */
+				/** replace the previous fields in the current constraint */
 				for (PreField preField : preFieldsList) {
 					ConstraintParameter currentConstraintParameter = constraintParameters[preField.fieldCodeIndex-1];
 					if (!preField.isVariable) {
@@ -275,6 +287,7 @@ public abstract class Dialect<T, V> {
 						cConstraint.replaceAll(preField.constantTablePrefixedName, replacement);
 					} else {
 						Object parameterObject = this.getParameterObject(preField, currentConstraintParameter.getCurrentCollectionObject());
+
 						int index = -1;
 						for (ParameterObject paramObject : parameterObjects) {
 							if (paramObject.object.equals(parameterObject) && paramObject.preField.field.equals(preField.field)) {
@@ -283,34 +296,82 @@ public abstract class Dialect<T, V> {
 								break;
 							}
 						}
+
+						/**  */
 						if (index == -1) {
 							int maxIndex = 0;
 							for (ParameterObject paramObject : parameterObjects)
 								if (paramObject.preField.field.equals(preField.field))
 									maxIndex = (paramObject.index > maxIndex ? paramObject.index : maxIndex);
-							currentParameterObject = new ParameterObject(parameterObject, preField, maxIndex+1);
-							parameterObjects.add(currentParameterObject);
-							index = currentParameterObject.index;
-						}
-						String prefixedVariableName = preField.preFieldsPrefixedName + "_" + index;
+							index = maxIndex + 1;
 
-						variablesMap.put(prefixedVariableName, currentParameterObject);
-						VariableField variableField = new VariableField(prefixedVariableName, preField.field.getType());
-						if (!variableFields.contains(variableField))
-							variableFields.add(variableField);
-						cConstraint.replaceAll(preField.constantTablePrefixedName, prefixedVariableName);
+							Class<?> variableType = preField.field.getType();
+							if (CompareUtils.equalsAny(preField.field.getType(), CompareUtils.booleanClasses)
+									|| CompareUtils.equalsAny(preField.field.getType(), CompareUtils.integerClasses)
+									|| CompareUtils.equalsAny(preField.field.getType(), CompareUtils.floatClasses)
+									|| CompareUtils.equalsAny(preField.field.getType(), CompareUtils.doubleClasses))
+
+								currentParameterObject = new SimpleParameterObject(parameterObject, preField, index);
+							else {
+								List<Field> collectionFields = KoselleckUtils.getCollectionFields(component.getClass(), preField.field.getGenericType());
+								List<Collection<?>> componentCollections = new ArrayList<Collection<?>>();
+								int collectionElementsCount = 0;
+								for (Field collectionField : collectionFields) {
+									try {
+										Collection<?> componentCollection = (Collection<?>) collectionField.get(component);
+										collectionElementsCount += componentCollection.size();
+										componentCollections.add(componentCollection);
+									} catch (IllegalArgumentException | IllegalAccessException e) {
+										Logger.getLogger(Dialect.class).error("could not get field \"" + collectionField.getName() + "\" for component");
+									}
+								}
+
+								Set<PreField> currentPreFieldSet = new HashSet<PreField>();
+								currentPreFieldSet.add(preField);
+
+								objectRangeConstraints.add(new AbstractSubConstraint(
+										new AbstractSingleConstraint(
+												new AbstractConstraintLiteralString(preField.preFieldsPrefixedName + "_" + index, Integer.class),
+												ConstraintOperator.GREATER_EQUAL,
+												new AbstractConstraintLiteralInteger(0), new HashSet<PreField>(currentPreFieldSet)),
+										BooleanConnector.AND,
+										new AbstractSingleConstraint(
+												new AbstractConstraintLiteralString(preField.preFieldsPrefixedName + "_" + index, Integer.class),
+												ConstraintOperator.LESS,
+												new AbstractConstraintLiteralInteger(collectionElementsCount), new HashSet<PreField>(currentPreFieldSet))));
+
+								variableType = Integer.class;
+								complexParameterObjects.add(preField.preFieldsPrefixedName + "_" + index);
+
+								currentParameterObject = new ComplexParameterObject(parameterObject, preField, index, componentCollections);
+							}
+
+							parameterObjects.add(currentParameterObject);
+
+							variablesMap.put(preField.preFieldsPrefixedName + "_" + index, currentParameterObject);
+							VariableField variableField = new VariableField(preField.preFieldsPrefixedName + "_" + index, variableType);
+							if (!variableFields.contains(variableField))
+								variableFields.add(variableField);
+						}
+
+						cConstraint.replaceAll(preField.constantTablePrefixedName, preField.preFieldsPrefixedName + "_" + index);
 					}
 				}
+
+				for (String complexParameterObjectName : complexParameterObjects)
+					cConstraint.changeStringLiteralType(complexParameterObjectName, Integer.class);
 
 				AbstractConstraint abstractPartialConstraint = cConstraint.evaluate();
 				if (abstractPartialConstraint instanceof AbstractBooleanConstraint) {
 					AbstractBooleanConstraint abstractBooleanConstraint = (AbstractBooleanConstraint) abstractPartialConstraint;
 					if (!abstractBooleanConstraint.value)
-						throw new NotSatisfiableException("one or more of the constraints are not satisfyable for the given instance");
+						throw new NotSatisfiableException("one or more of the constraints are not satisfiable for the given instance");
 				} else
 					constraints.add(abstractPartialConstraint);
 			} while (KoselleckUtils.incrementIndices(constraintParameters));
 		}
+
+		constraints.addAll(objectRangeConstraints);
 
 		return new Theorem(constraints, variableFields, variablesMap);
 	}

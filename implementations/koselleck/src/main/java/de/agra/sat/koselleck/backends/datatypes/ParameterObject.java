@@ -9,7 +9,7 @@ import de.agra.sat.koselleck.datatypes.PreField;
  * @version 1.0.0
  * @author Max Nitze
  */
-public class ParameterObject {
+public abstract class ParameterObject {
 	/** the object */
 	public final Object object;
 	/** the prefixed field of the object */

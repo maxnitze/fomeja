@@ -14,7 +14,7 @@ import de.agra.sat.koselleck.types.ArithmeticOperator;
  */
 public class AbstractConstraintLiteralString extends AbstractConstraintLiteral<String> {
 	/**  */
-	public final Class<?> type;
+	public Class<?> type;
 
 	/**
 	 * 
@@ -28,6 +28,12 @@ public class AbstractConstraintLiteralString extends AbstractConstraintLiteral<S
 	@Override
 	public void replaceAll(String regex, String replacement) {
 		this.value.replaceAll(regex, replacement);
+	}
+
+	@Override
+	public void changeStringLiteralType(String regex, Class<?> type) {
+		if (this.value.matches(regex))
+			this.type = type;
 	}
 
 	@Override

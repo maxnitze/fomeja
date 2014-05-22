@@ -2,6 +2,7 @@ package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 import java.util.Map;
 
+
 /** imports */
 import de.agra.sat.koselleck.types.ArithmeticOperator;
 
@@ -36,6 +37,12 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	public void replaceAll(String regex, String replacement) {
 		this.value1.replaceAll(regex, replacement);
 		this.value2.replaceAll(regex, replacement);
+	}
+
+	@Override
+	public void changeStringLiteralType(String regex, Class<?> type) {
+		this.value1.changeStringLiteralType(regex, type);
+		this.value2.changeStringLiteralType(regex, type);
 	}
 
 	@Override

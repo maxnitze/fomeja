@@ -86,6 +86,14 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 	}
 
 	@Override
+	public void changeStringLiteralType(String regex, Class<?> type) {
+		if (this.replacedConstraintValue == null && this.constantTablePrefixedName.matches(regex))
+			this.replacedConstraintValue = new AbstractConstraintLiteralString(this.constantTablePrefixedName, type);
+		else if (this.replacedConstraintValue != null)
+			this.replacedConstraintValue.changeStringLiteralType(regex, type);
+	}
+
+	@Override
 	public AbstractConstraintValue evaluate() {
 		if (this.replacedConstraintValue != null)
 			return this.replacedConstraintValue;

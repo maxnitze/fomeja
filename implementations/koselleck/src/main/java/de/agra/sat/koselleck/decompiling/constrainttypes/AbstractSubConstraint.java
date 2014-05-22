@@ -47,6 +47,12 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	}
 
 	@Override
+	public void changeStringLiteralType(String regex, Class<?> type) {
+		this.constraint1.changeStringLiteralType(regex, type);
+		this.constraint2.changeStringLiteralType(regex, type);
+	}
+
+	@Override
 	public AbstractConstraint evaluate() {
 		this.constraint1 = this.constraint1.evaluate();
 		this.constraint2 = this.constraint2.evaluate();

@@ -50,12 +50,16 @@ public class ConstraintParameter {
 		this.maxIndices = new int[this.size];
 		for (int i = 0; i < fields.size(); i++) {
 			Collection<?> parameterCollection;
+			boolean accessibility = fields.get(i).isAccessible();
 			fields.get(i).setAccessible(true);
 			try {
 				parameterCollection = (Collection<?>)fields.get(i).get(component);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				Logger.getLogger(ConstraintParameter.class).fatal("could not access field \"" + fields.get(i).getName() +"\"");
-				throw new IllegalFieldAccessException(fields.get(i));
+				RuntimeException exception = new IllegalFieldAccessException(fields.get(i));
+				Logger.getLogger(ConstraintParameter.class).fatal(exception.getMessage());
+				throw exception;
+			} finally {
+				fields.get(i).setAccessible(accessibility);
 			}
 			this.collections.add(i, parameterCollection);
 			this.indices[i] = 0;

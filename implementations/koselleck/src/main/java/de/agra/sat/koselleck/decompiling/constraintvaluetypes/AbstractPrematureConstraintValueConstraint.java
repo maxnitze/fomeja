@@ -23,6 +23,11 @@ public class AbstractPrematureConstraintValueConstraint extends AbstractConstrai
 	}
 
 	@Override
+	public void changeStringLiteralType(String regex, Class<?> type) {
+		this.constraint.changeStringLiteralType(regex, type);
+	}
+
+	@Override
 	public AbstractConstraintValue evaluate() {
 		this.constraint = this.constraint.evaluate();
 

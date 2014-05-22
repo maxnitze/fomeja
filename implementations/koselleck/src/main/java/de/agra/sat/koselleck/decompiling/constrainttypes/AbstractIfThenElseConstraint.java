@@ -3,6 +3,7 @@ package de.agra.sat.koselleck.decompiling.constrainttypes;
 /** imports */
 import java.util.Map;
 
+
 /** imports */
 import de.agra.sat.koselleck.types.BooleanConnector;
 
@@ -42,6 +43,14 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 
 		this.thenCaseConstraint.replaceAll(regex, replacement);
 		this.elseCaseConstraint.replaceAll(regex, replacement);
+	}
+
+	@Override
+	public void changeStringLiteralType(String regex, Class<?> type) {
+		this.ifCondition.changeStringLiteralType(regex, type);
+
+		this.thenCaseConstraint.changeStringLiteralType(regex, type);
+		this.elseCaseConstraint.changeStringLiteralType(regex, type);
 	}
 
 	@Override

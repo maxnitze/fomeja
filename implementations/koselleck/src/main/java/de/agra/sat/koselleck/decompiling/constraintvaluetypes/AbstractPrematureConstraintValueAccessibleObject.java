@@ -47,6 +47,14 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 	}
 
 	@Override
+	public void changeStringLiteralType(String regex, Class<?> type) {
+		this.constraintValue.changeStringLiteralType(regex, type);
+
+		for (AbstractConstraintValue methodArgument : this.objectArguments)
+			methodArgument.changeStringLiteralType(regex, type);
+	}
+
+	@Override
 	public AbstractConstraintValue evaluate() {
 		/** evaluate this constraint value */
 		this.constraintValue = this.constraintValue.evaluate();

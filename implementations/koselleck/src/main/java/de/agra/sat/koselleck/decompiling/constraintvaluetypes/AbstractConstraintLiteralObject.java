@@ -25,6 +25,9 @@ public class AbstractConstraintLiteralObject extends AbstractConstraintLiteral<O
 	public void replaceAll(String regex, String replacement) {}
 
 	@Override
+	public void changeStringLiteralType(String regex, Class<?> type) {}
+
+	@Override
 	public AbstractConstraintValue evaluate() {
 		return this;
 	}
