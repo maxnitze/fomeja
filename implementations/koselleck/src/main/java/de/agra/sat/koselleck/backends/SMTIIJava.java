@@ -68,7 +68,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	@Override
 	public BoolExpr format(Theorem theorem) throws NotSatisfiableException {
 		BoolExpr[] booleanExpressions = new BoolExpr[theorem.constraintsSize];
-		for(int i = 0; i < theorem.constraintsSize; i++)
+		for (int i = 0; i < theorem.constraintsSize; i++)
 			booleanExpressions[i] = this.getBackendConstraint(theorem.abstractConstraints.get(i));
 
 		try {

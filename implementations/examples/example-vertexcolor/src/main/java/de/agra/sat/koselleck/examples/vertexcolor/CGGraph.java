@@ -39,21 +39,21 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 		CGVertex secondVertex = null;
 
 		String[] graphLines = graph.split("\n");
-		for(String graphLine : graphLines) {
-			if(graphLine.matches(commentLine))
+		for (String graphLine : graphLines) {
+			if (graphLine.matches(commentLine))
 				; // skip
-			else if(graphLine.matches(pLine))
+			else if (graphLine.matches(pLine))
 				; // skip
-			else if(graphLine.matches(edgeLine)) {
+			else if (graphLine.matches(edgeLine)) {
 				int firstVertexId = Integer.parseInt(graphLine.replaceAll(edgeLine, "${vertex1}"));
-				if((firstVertex = verticesMap.get(firstVertexId)) == null) {
+				if ((firstVertex = verticesMap.get(firstVertexId)) == null) {
 					firstVertex = new CGVertex(firstVertexId);
 					verticesMap.put(firstVertexId, firstVertex);
 					this.vertices.add(firstVertex);
 				}
 
 				int secondVertexId = Integer.parseInt(graphLine.replaceAll(edgeLine, "${vertex2}"));
-				if((secondVertex = verticesMap.get(secondVertexId)) == null) {
+				if ((secondVertex = verticesMap.get(secondVertexId)) == null) {
 					secondVertex = new CGVertex(secondVertexId);
 					verticesMap.put(secondVertexId, secondVertex);
 					this.vertices.add(secondVertex);
@@ -72,7 +72,7 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	@Objective
 	public int numberOfColors() {
 		Collection<Object> colors = new HashSet<Object>();
-		for(CGVertex v : this.vertices)
+		for (CGVertex v : this.vertices)
 			colors.add(v.color);
 
 		return colors.size();
@@ -108,10 +108,10 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	public Collection<CGVertex> getNeighbors(CGVertex vertex) {
 		Collection<CGVertex> neighbors = new HashSet<CGVertex>();
 
-		for(CGEdge e : this.edges) {
-			if(e.vertex1 == vertex)
+		for (CGEdge e : this.edges) {
+			if (e.vertex1 == vertex)
 				neighbors.add(e.vertex2);
-			if(e.vertex2 == vertex)
+			if (e.vertex2 == vertex)
 				neighbors.add(e.vertex1);
 		}
 
@@ -121,8 +121,8 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	public Collection<CGEdge> getIncidentEdges(CGVertex vertex) {
 		Collection<CGEdge> incidentEdges = new HashSet<CGEdge>();
 
-		for(CGEdge e : this.edges)
-			if(e.vertex1 == vertex || e.vertex2 == vertex)
+		for (CGEdge e : this.edges)
+			if (e.vertex1 == vertex || e.vertex2 == vertex)
 				incidentEdges.add(e);
 
 		return incidentEdges;
@@ -138,8 +138,8 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	}
 
 	public CGEdge findEdge(CGVertex v1, CGVertex v2) {
-		for(CGEdge e : this.edges)
-			if((e.vertex1 == v1 && e.vertex2 == v2) || (e.vertex1 == v2 && e.vertex2 == v1))
+		for (CGEdge e : this.edges)
+			if ((e.vertex1 == v1 && e.vertex2 == v2) || (e.vertex1 == v2 && e.vertex2 == v1))
 				return e;
 
 		return null;
@@ -148,8 +148,8 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	public Collection<CGEdge> findEdgeSet(CGVertex v1, CGVertex v2) {
 		Collection<CGEdge> edgeSet = new HashSet<CGEdge>();
 
-		for(CGEdge e : this.edges)
-			if((e.vertex1 == v1 && e.vertex2 == v2) || (e.vertex1 == v2 && e.vertex2 == v1))
+		for (CGEdge e : this.edges)
+			if ((e.vertex1 == v1 && e.vertex2 == v2) || (e.vertex1 == v2 && e.vertex2 == v1))
 				edgeSet.add(e);
 
 		return edgeSet;
@@ -160,28 +160,28 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	}
 
 	public boolean addEdge(CGEdge edge, Collection<? extends CGVertex> vertices) {
-		if(edge == null || vertices == null)
+		if (edge == null || vertices == null)
 			return false;
 
-		if(this.edges.contains(edge))
+		if (this.edges.contains(edge))
 			return false;
 
-		if(vertices.size() != 2)
+		if (vertices.size() != 2)
 			return false;
 
-		for(CGVertex v : vertices)
-			if(!this.vertices.contains(v))
+		for (CGVertex v : vertices)
+			if (!this.vertices.contains(v))
 				return false;
 
-		for(CGEdge e : this.edges)
-			if(edge.equals(e))
+		for (CGEdge e : this.edges)
+			if (edge.equals(e))
 				return false;
 
 		return this.edges.add(edge);
 	}
 
 	public boolean addEdge(CGEdge edge, Collection<? extends CGVertex> vertices, EdgeType edge_type) {
-		if(edge.edgeType != edge_type)
+		if (edge.edgeType != edge_type)
 			return false;
 
 		return addEdge(edge, vertices);
@@ -189,8 +189,8 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 
 	public boolean removeVertex(CGVertex vertex) {
 		Collection<CGEdge> removeEdges = new HashSet<CGEdge>();
-		for(CGEdge e : this.edges)
-			if(e.vertex1 == vertex || e.vertex2 == vertex)
+		for (CGEdge e : this.edges)
+			if (e.vertex1 == vertex || e.vertex2 == vertex)
 				removeEdges.add(e);
 
 		return this.edges.removeAll(removeEdges) || this.vertices.remove(vertex);
@@ -201,8 +201,8 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	}
 
 	public boolean isNeighbor(CGVertex v1, CGVertex v2) {
-		for(CGEdge e : this.edges)
-			if((e.vertex1 == v1 && e.vertex2 == v2) || (e.vertex1 == v2 && e.vertex2 == v1))
+		for (CGEdge e : this.edges)
+			if ((e.vertex1 == v1 && e.vertex2 == v2) || (e.vertex1 == v2 && e.vertex2 == v1))
 				return true;
 
 		return false;
@@ -215,8 +215,8 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	public int degree(CGVertex vertex) {
 		int degree = 0;
 
-		for(CGEdge e : this.edges)
-			if(e.vertex1 == vertex || e.vertex2 == vertex)
+		for (CGEdge e : this.edges)
+			if (e.vertex1 == vertex || e.vertex2 == vertex)
 				++degree;
 
 		return degree;
@@ -225,8 +225,8 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	public int getNeighborCount(CGVertex vertex) {
 		int neighborCount = 0;
 
-		for(CGEdge e : this.edges)
-			if(e.vertex1 == vertex || e.vertex2 == vertex)
+		for (CGEdge e : this.edges)
+			if (e.vertex1 == vertex || e.vertex2 == vertex)
 				++neighborCount;
 
 		return neighborCount;
@@ -247,8 +247,8 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	public Collection<CGEdge> getEdges(EdgeType edge_type) {
 		Collection<CGEdge> edgeTypeEdges = new HashSet<CGEdge>();
 
-		for(CGEdge e : this.edges)
-			if(e.edgeType == edge_type)
+		for (CGEdge e : this.edges)
+			if (e.edgeType == edge_type)
 				edgeTypeEdges.add(e);
 
 		return edgeTypeEdges;
@@ -257,8 +257,8 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	public int getEdgeCount(EdgeType edge_type) {
 		Collection<CGEdge> edgeTypeEdges = new HashSet<CGEdge>();
 
-		for(CGEdge e : this.edges)
-			if(e.edgeType == edge_type)
+		for (CGEdge e : this.edges)
+			if (e.edgeType == edge_type)
 				edgeTypeEdges.add(e);
 
 		return edgeTypeEdges.size();
@@ -267,12 +267,12 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	public Collection<CGEdge> getInEdges(CGVertex vertex) {
 		Collection<CGEdge> inEdges = new HashSet<CGEdge>();
 
-		for(CGEdge e : this.edges) {
-			if(e.edgeType == EdgeType.DIRECTED) {
-				if(e.vertex2 == vertex)
+		for (CGEdge e : this.edges) {
+			if (e.edgeType == EdgeType.DIRECTED) {
+				if (e.vertex2 == vertex)
 					inEdges.add(e);
-			} else if(e.edgeType == EdgeType.UNDIRECTED) {
-				if(e.vertex1 == vertex || e.vertex2 == vertex)
+			} else if (e.edgeType == EdgeType.UNDIRECTED) {
+				if (e.vertex1 == vertex || e.vertex2 == vertex)
 					inEdges.add(e);
 			}
 		}
@@ -283,12 +283,12 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	public Collection<CGEdge> getOutEdges(CGVertex vertex) {
 		Collection<CGEdge> outEdges = new HashSet<CGEdge>();
 
-		for(CGEdge e : this.edges) {
-			if(e.edgeType == EdgeType.DIRECTED) {
-				if(e.vertex1 == vertex)
+		for (CGEdge e : this.edges) {
+			if (e.edgeType == EdgeType.DIRECTED) {
+				if (e.vertex1 == vertex)
 					outEdges.add(e);
-			} else if(e.edgeType == EdgeType.UNDIRECTED) {
-				if(e.vertex1 == vertex || e.vertex2 == vertex)
+			} else if (e.edgeType == EdgeType.UNDIRECTED) {
+				if (e.vertex1 == vertex || e.vertex2 == vertex)
 					outEdges.add(e);
 			}
 		}
@@ -299,9 +299,9 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	public Collection<CGVertex> getPredecessors(CGVertex vertex) {
 		Collection<CGVertex> predecessors = new HashSet<CGVertex>();
 
-		for(CGEdge e : this.edges)
-			if(e.edgeType == EdgeType.DIRECTED)
-				if(e.vertex2 == vertex)
+		for (CGEdge e : this.edges)
+			if (e.edgeType == EdgeType.DIRECTED)
+				if (e.vertex2 == vertex)
 					predecessors.add(e.vertex1);
 
 		return predecessors;
@@ -310,9 +310,9 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	public Collection<CGVertex> getSuccessors(CGVertex vertex) {
 		Collection<CGVertex> successors = new HashSet<CGVertex>();
 
-		for(CGEdge e : this.edges)
-			if(e.edgeType == EdgeType.DIRECTED)
-				if(e.vertex1 == vertex)
+		for (CGEdge e : this.edges)
+			if (e.edgeType == EdgeType.DIRECTED)
+				if (e.vertex1 == vertex)
 					successors.add(e.vertex2);
 
 		return successors;
@@ -327,18 +327,18 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	}
 
 	public boolean isPredecessor(CGVertex v1, CGVertex v2) {
-		for(CGEdge e : this.edges)
-			if(e.edgeType == EdgeType.DIRECTED)
-				if(e.vertex1 == v1 && e.vertex2 == v2)
+		for (CGEdge e : this.edges)
+			if (e.edgeType == EdgeType.DIRECTED)
+				if (e.vertex1 == v1 && e.vertex2 == v2)
 					return true;
 
 		return false;
 	}
 
 	public boolean isSuccessor(CGVertex v1, CGVertex v2) {
-		for(CGEdge e : this.edges)
-			if(e.edgeType == EdgeType.DIRECTED)
-				if(e.vertex1 == v2 && e.vertex2 == v1)
+		for (CGEdge e : this.edges)
+			if (e.edgeType == EdgeType.DIRECTED)
+				if (e.vertex1 == v2 && e.vertex2 == v1)
 					return true;
 
 		return false;
@@ -353,28 +353,28 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	}
 
 	public CGVertex getSource(CGEdge directed_edge) {
-		if(directed_edge.edgeType != EdgeType.DIRECTED)
+		if (directed_edge.edgeType != EdgeType.DIRECTED)
 			return null;
 
 		return directed_edge.vertex1;
 	}
 
 	public CGVertex getDest(CGEdge directed_edge) {
-		if(directed_edge.edgeType != EdgeType.DIRECTED)
+		if (directed_edge.edgeType != EdgeType.DIRECTED)
 			return null;
 
 		return directed_edge.vertex2;
 	}
 
 	public boolean isSource(CGVertex vertex, CGEdge edge) {
-		if(edge.edgeType != EdgeType.DIRECTED)
+		if (edge.edgeType != EdgeType.DIRECTED)
 			return false;
 
 		return edge.vertex1 == vertex;
 	}
 
 	public boolean isDest(CGVertex vertex, CGEdge edge) {
-		if(edge.edgeType != EdgeType.DIRECTED)
+		if (edge.edgeType != EdgeType.DIRECTED)
 			return false;
 
 		return edge.vertex2 == vertex;
@@ -393,9 +393,9 @@ public class CGGraph implements Graph<CGVertex, CGEdge> {
 	}
 
 	public CGVertex getOpposite(CGVertex vertex, CGEdge edge) {
-		if(edge.vertex1 == vertex)
+		if (edge.vertex1 == vertex)
 			return edge.vertex2;
-		else if(edge.vertex2 == vertex)
+		else if (edge.vertex2 == vertex)
 			return edge.vertex1;
 		else
 			return null;

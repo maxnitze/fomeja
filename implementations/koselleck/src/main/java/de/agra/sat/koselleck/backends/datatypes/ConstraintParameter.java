@@ -48,7 +48,7 @@ public class ConstraintParameter {
 		this.collections = new ArrayList<Collection<?>>();
 		this.indices = new int[this.size];
 		this.maxIndices = new int[this.size];
-		for(int i=0; i<fields.size(); i++) {
+		for (int i = 0; i < fields.size(); i++) {
 			Collection<?> parameterCollection;
 			fields.get(i).setAccessible(true);
 			try {
@@ -98,8 +98,8 @@ public class ConstraintParameter {
 	 *  can be incremented, {@code false} otherwise
 	 */
 	public boolean isIncrementable() {
-		for(int i=0; i<this.size; i++)
-			if(this.indices[i] < this.maxIndices[i]-1)
+		for (int i = 0; i < this.size; i++)
+			if (this.indices[i] < this.maxIndices[i]-1)
 				return true;
 
 		return false;
@@ -112,10 +112,10 @@ public class ConstraintParameter {
 	 *  can be incremented, {@code false} otherwise
 	 */
 	public boolean incrementIndex() {
-		if(this.indices[this.currentCollectionIndex] < this.maxIndices[this.currentCollectionIndex]-1) {
+		if (this.indices[this.currentCollectionIndex] < this.maxIndices[this.currentCollectionIndex]-1) {
 			++this.indices[this.currentCollectionIndex];
 			return true;
-		} else if(this.currentCollectionIndex < this.size-1) {
+		} else if (this.currentCollectionIndex < this.size-1) {
 			++this.currentCollectionIndex;
 			return true;
 		} else
@@ -126,7 +126,7 @@ public class ConstraintParameter {
 	 * resetIndex resets all indices of the parameter object to {@code 0}.
 	 */
 	public void resetIndex() {
-		for(int i=0; i<this.size; i++)
+		for (int i = 0; i < this.size; i++)
 			this.indices[i] = 0;
 		this.currentCollectionIndex = 0;
 	}

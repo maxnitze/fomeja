@@ -109,7 +109,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof AbstractSingleConstraint))
+		if (!(obj instanceof AbstractSingleConstraint))
 			return false;
 
 		AbstractSingleConstraint singleConstraint = (AbstractSingleConstraint) obj;

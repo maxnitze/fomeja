@@ -41,10 +41,10 @@ public class ParameterObject {
 	 */
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof ParameterObject))
+		if (!(object instanceof ParameterObject))
 			return false;
 
-		ParameterObject parameterObject = (ParameterObject)object;
+		ParameterObject parameterObject = (ParameterObject) object;
 		return this.object.equals(parameterObject.object) && this.preField.equals(parameterObject.preField);
 	}
 }

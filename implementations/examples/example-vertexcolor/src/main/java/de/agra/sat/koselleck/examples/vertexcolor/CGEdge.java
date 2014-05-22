@@ -28,9 +28,9 @@ public class CGEdge {
 	}
 
 	public CGVertex getVertex(int vertex) {
-		if(vertex == 1)
+		if (vertex == 1)
 			return this.vertex1;
-		else if(vertex == 2)
+		else if (vertex == 2)
 			return this.vertex2;
 		else
 			throw new RuntimeException();

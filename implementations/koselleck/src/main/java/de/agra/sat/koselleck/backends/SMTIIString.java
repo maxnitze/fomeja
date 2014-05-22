@@ -45,7 +45,7 @@ public class SMTIIString extends Dialect<String, String> {
 	@Override
 	public String format(Theorem theorem) {
 		StringBuilder assignedConstraint = new StringBuilder();
-		for(AbstractConstraint theoremConstraint : theorem.abstractConstraints) {
+		for (AbstractConstraint theoremConstraint : theorem.abstractConstraints) {
 			String z3Constraint = this.getBackendConstraint(theoremConstraint);
 
 			assignedConstraint.append("\n\t");
@@ -53,7 +53,7 @@ public class SMTIIString extends Dialect<String, String> {
 		}
 
 		StringBuilder smt2theorem = new StringBuilder();
-		for(VariableField prefixedVariable : theorem.variables) {
+		for (VariableField prefixedVariable : theorem.variables) {
 			smt2theorem.append(this.getVariableDeclaration(prefixedVariable));
 			smt2theorem.append("\n");
 		}
@@ -72,12 +72,12 @@ public class SMTIIString extends Dialect<String, String> {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 
 			Matcher resultMatcher = smt2ResultPattern.matcher(result);
-			while(resultMatcher.find()) {
-				if(resultMatcher.group("type").equals("Int"))
+			while (resultMatcher.find()) {
+				if (resultMatcher.group("type").equals("Int"))
 					resultMap.put(
 							resultMatcher.group("name"),
 							new Integer(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));
-				else if(resultMatcher.group("type").equals("Real"))
+				else if (resultMatcher.group("type").equals("Real"))
 					resultMap.put(
 							resultMatcher.group("name"),
 							new Float(resultMatcher.group("value").replaceAll("- (\\d+)", "-$1")));

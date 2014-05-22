@@ -35,25 +35,25 @@ public class SchedulingProblem {
 
 		Schedule schedule = new Schedule(employees, tasks);
 
-		if(testValidate) {
-			if(DIAB.validate(schedule))
+		if (testValidate) {
+			if (DIAB.validate(schedule))
 				System.out.println("the current schedule is valid");
 			else
 				System.out.println("the current schedule is not valid");
 		}
 
-		if(testSatisfy) {
-			if(DIAB.satisfy(schedule))
+		if (testSatisfy) {
+			if (DIAB.satisfy(schedule))
 				System.out.println("there is a valid schedule for these tasks");
 			else
 				System.out.println("there is no valid schedule for these tasks");
 		}
 
-		if(testMinimize) {
+		if (testMinimize) {
 			DIAB.minimize(schedule);
 		}
 
-		if(testMaximize) {
+		if (testMaximize) {
 			DIAB.maximize(schedule);
 		}
 	}

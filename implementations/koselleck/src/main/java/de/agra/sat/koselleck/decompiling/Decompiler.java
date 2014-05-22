@@ -647,7 +647,7 @@ public class Decompiler {
 			}
 
 			bytecodeLine = bytecodeLines.get(nextOffset);
-		} while(nextOffset > 0);
+		} while (nextOffset > 0);
 
 		/** should never happen */
 		return new AbstractBooleanConstraint(true, null);

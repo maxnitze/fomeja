@@ -23,7 +23,7 @@ public class ResourceManagement {
 	@Objective // @Objective(X) / @Objective(value=X) ?
 	public int totalAccessTime() {
 		int totalAccessTime = 0;
-		for(Access access : accesses)
+		for (Access access : accesses)
 			totalAccessTime += access.time;
 
 		return totalAccessTime;

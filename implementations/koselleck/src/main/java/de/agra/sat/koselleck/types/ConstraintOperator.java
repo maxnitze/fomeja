@@ -47,8 +47,8 @@ public enum ConstraintOperator {
 	 * @return
 	 */
 	public ConstraintOperator getOpposite() {
-		for(ConstraintOperator co : values())
-			if(this.oppositeAsciiName.equals(co.asciiName))
+		for (ConstraintOperator co : values())
+			if (this.oppositeAsciiName.equals(co.asciiName))
 				return co;
 		throw new IllegalArgumentException("no constant with opposite ascii name \"" + asciiName + "\" found");
 	}
@@ -58,8 +58,8 @@ public enum ConstraintOperator {
 	 * @return
 	 */
 	public ConstraintOperator getSwapped() {
-		for(ConstraintOperator co : values())
-			if(this.swappedAsciiName.equals(co.asciiName))
+		for (ConstraintOperator co : values())
+			if (this.swappedAsciiName.equals(co.asciiName))
 				return co;
 		throw new IllegalArgumentException("no constant with swapped ascii name \"" + asciiName + "\" found");
 	}
@@ -72,8 +72,8 @@ public enum ConstraintOperator {
 	 * @return the constraint operator with the given ascii name
 	 */
 	public static ConstraintOperator fromAsciiName(String asciiName) {
-		for(ConstraintOperator co : values())
-			if(asciiName.equals(co.asciiName))
+		for (ConstraintOperator co : values())
+			if (asciiName.equals(co.asciiName))
 				return co;
 		throw new IllegalArgumentException("no constant with ascii name \"" + asciiName + "\" found");
 	}
@@ -87,8 +87,8 @@ public enum ConstraintOperator {
 	 * @return the constraint operator with the given opposite ascii name
 	 */
 	public static ConstraintOperator fromOppositeAsciiName(String oppositeAsciiName) {
-		for(ConstraintOperator co : values())
-			if(oppositeAsciiName.equals(co.oppositeAsciiName))
+		for (ConstraintOperator co : values())
+			if (oppositeAsciiName.equals(co.oppositeAsciiName))
 				return co;
 		throw new IllegalArgumentException("no constant with opposite ascii name \"" + oppositeAsciiName + "\" found");
 	}
@@ -102,8 +102,8 @@ public enum ConstraintOperator {
 	 * @return the constraint operator with the given swapped ascii name
 	 */
 	public static ConstraintOperator fromSwappedAsciiName(String swappedAsciiName) {
-		for(ConstraintOperator co : values())
-			if(swappedAsciiName.equals(co.swappedAsciiName))
+		for (ConstraintOperator co : values())
+			if (swappedAsciiName.equals(co.swappedAsciiName))
 				return co;
 		throw new IllegalArgumentException("no constant with swapped ascii name \"" + swappedAsciiName + "\" found");
 	}
@@ -116,8 +116,8 @@ public enum ConstraintOperator {
 	 * @return the constraint operator with the given opcode
 	 */
 	public static ConstraintOperator fromOpcode(String opcode) {
-		for(ConstraintOperator co : values())
-			if(opcode.matches(co.opcode))
+		for (ConstraintOperator co : values())
+			if (opcode.matches(co.opcode))
 				return co;
 		throw new IllegalArgumentException("no constant with opcode \"" + opcode + "\" found");
 	}
@@ -131,8 +131,8 @@ public enum ConstraintOperator {
 	 * @return the constraint operator with the given opposite opcode
 	 */
 	public static ConstraintOperator fromOppositeOpcode(String oppositeOpcode) {
-		for(ConstraintOperator co : values())
-			if(oppositeOpcode.matches(co.oppositeOpcode))
+		for (ConstraintOperator co : values())
+			if (oppositeOpcode.matches(co.oppositeOpcode))
 				return co;
 		throw new IllegalArgumentException("no constant with opposite opcode \"" + oppositeOpcode + "\" found");
 	}

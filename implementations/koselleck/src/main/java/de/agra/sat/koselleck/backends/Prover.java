@@ -52,10 +52,10 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	 * @param proverResult
 	 */
 	void assign(Theorem theorem, Map<String, Object> proverResult) {
-		for(Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {
+		for (Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {
 			Object result = proverResult.get(variable.getKey());
 
-			if(result != null) {
+			if (result != null) {
 				boolean accessibility = variable.getValue().preField.field.isAccessible(); 
 				variable.getValue().preField.field.setAccessible(true);
 				try {

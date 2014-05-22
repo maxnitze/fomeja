@@ -81,7 +81,7 @@ public class Z3SMTIIBinary extends Prover<SMTIIString> {
 			Logger.getLogger(SMTIIString.class).fatal(message);
 			throw new ExecutionErrorException(message);
 		} finally {
-			if(process != null)
+			if (process != null)
 				process.destroy();
 		}
 	}

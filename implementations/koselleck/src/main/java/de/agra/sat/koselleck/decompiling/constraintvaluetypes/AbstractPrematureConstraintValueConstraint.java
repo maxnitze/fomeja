@@ -46,7 +46,7 @@ public class AbstractPrematureConstraintValueConstraint extends AbstractConstrai
 
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractPrematureConstraintValueConstraint))
+		if (!(object instanceof AbstractPrematureConstraintValueConstraint))
 			return false;
 
 		AbstractPrematureConstraintValueConstraint constraintValue = (AbstractPrematureConstraintValueConstraint) object;

@@ -49,7 +49,7 @@ public final class IOUtils {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		StringBuilder stringBuilder = new StringBuilder();
 		String line = null;
-		while((line = bufferedReader.readLine()) != null) {
+		while ((line = bufferedReader.readLine()) != null) {
 			stringBuilder.append(line);
 			stringBuilder.append("\n");
 		}

@@ -26,8 +26,8 @@ public final class StringUtils {
 	 *  matches the given text, {@code false} otherwise
 	 */
 	public static boolean matchesAny(String text, String[] regexes) {
-		for(String regex : regexes)
-			if(text.matches(regex))
+		for (String regex : regexes)
+			if (text.matches(regex))
 				return true;
 		return false;
 	}
@@ -43,8 +43,8 @@ public final class StringUtils {
 	 *  matches the given text, {@code false} otherwise
 	 */
 	public static boolean matchesAny(String text, List<String> regexes) {
-		for(String regex : regexes)
-			if(text.matches(regex))
+		for (String regex : regexes)
+			if (text.matches(regex))
 				return true;
 		return false;
 	}

@@ -43,11 +43,11 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 		this.value1 = this.value1.evaluate();
 		this.value2 = this.value2.evaluate();
 
-		if(this.value1 instanceof AbstractConstraintLiteral<?> && this.value2 instanceof AbstractConstraintLiteral<?>) {
+		if (this.value1 instanceof AbstractConstraintLiteral<?> && this.value2 instanceof AbstractConstraintLiteral<?>) {
 			AbstractConstraintLiteral<?> constraintLiteral1 = (AbstractConstraintLiteral<?>) this.value1;
 			AbstractConstraintLiteral<?> constraintLiteral2 = (AbstractConstraintLiteral<?>) this.value2;
 
-			if(constraintLiteral1.isNumberType && constraintLiteral2.isNumberType)
+			if (constraintLiteral1.isNumberType && constraintLiteral2.isNumberType)
 				return constraintLiteral1.calc(constraintLiteral2, this.operator);
 			else
 				return this;
@@ -70,7 +70,7 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractConstraintFormula))
+		if (!(object instanceof AbstractConstraintFormula))
 			return false;
 
 		AbstractConstraintFormula constraintFormula = (AbstractConstraintFormula)object;

@@ -91,7 +91,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	 */
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractBooleanConstraint))
+		if (!(object instanceof AbstractBooleanConstraint))
 			return false;
 
 		AbstractBooleanConstraint booleanConstraint = (AbstractBooleanConstraint)object;

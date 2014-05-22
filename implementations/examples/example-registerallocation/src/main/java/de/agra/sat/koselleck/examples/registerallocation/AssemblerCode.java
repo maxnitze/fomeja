@@ -18,7 +18,7 @@ public class AssemblerCode {
 	@Objective
 	public int numberOfColors() {
 		Set<Integer> addresses = new HashSet<Integer>();
-		for(Register register : this.registers)
+		for (Register register : this.registers)
 			addresses.add(register.address);
 
 		return registers.size();

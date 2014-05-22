@@ -33,7 +33,7 @@ public class PreClass {
 
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof PreClass))
+		if (!(object instanceof PreClass))
 			return false;
 
 		PreClass preClass = (PreClass) object;

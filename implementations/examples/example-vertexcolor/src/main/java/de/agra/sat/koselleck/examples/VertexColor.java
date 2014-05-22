@@ -22,25 +22,25 @@ public class VertexColor {
 			e.printStackTrace();
 		}
 
-		if(testValidate) {
-			if(DIAB.validate(graph))
+		if (testValidate) {
+			if (DIAB.validate(graph))
 				System.out.println("the current configuration for graph \"" + graphfile + "\" is valid");
 			else
 				System.out.println("the current configuration for graph \"" + graphfile + "\" is not valid");
 		}
 
-		if(testSatisfy) {
-			if(DIAB.satisfy(graph))
+		if (testSatisfy) {
+			if (DIAB.satisfy(graph))
 				System.out.println("the graph \"" + graphfile + "\" is assigned with a satisfying assignment");
 			else
 				System.out.println("the graph \"" + graphfile + "\" is not assigned with a satisfying assignment");
 		}
 
-		if(testMinimize) {
+		if (testMinimize) {
 			DIAB.minimize(graph);
 		}
 
-		if(testMaximize) {
+		if (testMaximize) {
 			DIAB.maximize(graph);
 		}
 	}

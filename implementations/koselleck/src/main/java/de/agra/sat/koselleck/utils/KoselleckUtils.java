@@ -61,8 +61,8 @@ public final class KoselleckUtils {
 	public static List<Method> getConstraintMethods(Class<?> clazz) {
 		List<Method> methods = new ArrayList<Method>();
 
-		for(Method method : clazz.getDeclaredMethods())
-			if(method.getAnnotation(Constraint.class) != null)
+		for (Method method : clazz.getDeclaredMethods())
+			if (method.getAnnotation(Constraint.class) != null)
 				methods.add(method);
 
 		return methods;
@@ -89,17 +89,17 @@ public final class KoselleckUtils {
 		lastClasses.add(clazz);
 
 		/** as long as there are new classes found */
-		while(lastClasses.size() > 0) {
+		while (lastClasses.size() > 0) {
 			List<Class<?>> currentClasses = new ArrayList<Class<?>>();
 
-			for(Class<?> cls : lastClasses) {
+			for (Class<?> cls : lastClasses) {
 				visitedClasses.add(cls);
 
 				/** add all field types and generic types of those */
-				for(Field field : cls.getDeclaredFields()) {
+				for (Field field : cls.getDeclaredFields()) {
 					currentClasses.add(field.getType());
 
-					if(!field.getType().getName().equals(field.getGenericType().toString()))
+					if (!field.getType().getName().equals(field.getGenericType().toString()))
 						currentClasses.addAll(getGenericClasses(field.getGenericType().toString()));
 				}
 			}
@@ -107,15 +107,15 @@ public final class KoselleckUtils {
 			lastClasses.clear();
 
 			/** add classes to lastClasses if not already visited */
-			for(Class<?> cls : currentClasses)
-				if(!visitedClasses.contains(cls))
+			for (Class<?> cls : currentClasses)
+				if (!visitedClasses.contains(cls))
 					lastClasses.add(cls);
 		}
 
 		/** get variable fields of all visited classes */
-		for(Class<?> cls : visitedClasses)
-			for(Field field : cls.getDeclaredFields())
-				if(field.getAnnotation(Variable.class) != null)
+		for (Class<?> cls : visitedClasses)
+			for (Field field : cls.getDeclaredFields())
+				if (field.getAnnotation(Variable.class) != null)
 					fields.add(field);
 
 		return fields;
@@ -134,11 +134,11 @@ public final class KoselleckUtils {
 		List<Class<?>> classes = new ArrayList<Class<?>>();
 
 		Matcher matcher = genericPattern.matcher(genericType);
-		while(matcher.find()) {
+		while (matcher.find()) {
 			String replacedMatch = matcher.group("genericClass").replaceAll(bracketRegex, "");
 
 			String[] genericClasses = replacedMatch.split(",");
-			for(String genericClass : genericClasses) {
+			for (String genericClass : genericClasses) {
 				try {
 					classes.add(Class.forName(genericClass.trim()));
 				} catch (ClassNotFoundException e) {
@@ -146,7 +146,7 @@ public final class KoselleckUtils {
 				}
 			}
 
-			if(matcher.group("genericClass").matches(bracketRegex))
+			if (matcher.group("genericClass").matches(bracketRegex))
 				classes.addAll(getGenericClasses(matcher.group("genericClass")));
 		}
 
@@ -168,7 +168,7 @@ public final class KoselleckUtils {
 	 */
 	public static List<Field>[] getCollectionFieldsForMethod(Method method) {
 		Constraint constraintAnnotation = method.getAnnotation(Constraint.class);
-		if(constraintAnnotation == null) {
+		if (constraintAnnotation == null) {
 			Logger.getLogger(KoselleckUtils.class).fatal("method \"" + method.toGenericString() + "\" is not a constraint method");
 			throw new NoConstraintMethodException(method);
 		}
@@ -176,7 +176,7 @@ public final class KoselleckUtils {
 		Type[] methodParameterTypes = method.getGenericParameterTypes();
 
 		Constraint.Field[] constraintFields = constraintAnnotation.fields();
-		if(methodParameterTypes.length != constraintFields.length) {
+		if (methodParameterTypes.length != constraintFields.length) {
 			String message = "count of annotated fields of method \"" + method.toGenericString() + "\" does not match its parameter count";
 			Logger.getLogger(KoselleckUtils.class).fatal(message);
 			throw new IllegalArgumentException(message);
@@ -186,10 +186,10 @@ public final class KoselleckUtils {
 		int parameterCount = method.getParameterTypes().length;
 
 		List<Field>[] methodCollectionFields = new FieldList[parameterCount];
-		for(int i=0; i<parameterCount; i++) {
+		for (int i=0; i<parameterCount; i++) {
 			String constraintFieldName = constraintFields[i].value();
 			/** empty field name */
-			if(constraintFieldName == null || constraintFieldName.equals(""))
+			if (constraintFieldName == null || constraintFieldName.equals(""))
 				methodCollectionFields[i] = getCollectionFields(declaringClass, methodParameterTypes[i]);
 			/** field name set */
 			else {
@@ -201,19 +201,19 @@ public final class KoselleckUtils {
 					throw new NoSuchFieldForClassException(constraintFieldName, declaringClass);
 				}
 
-				if(collectionField == null) {
+				if (collectionField == null) {
 					Logger.getLogger(KoselleckUtils.class).fatal("no such field \"" + constraintFieldName + "\" for declaring class \"" + declaringClass.getCanonicalName() + "\"");
 					throw new NoSuchFieldForClassException(constraintFieldName, declaringClass);
 				}
 
-				if(!Collection.class.isAssignableFrom(collectionField.getType())) {
+				if (!Collection.class.isAssignableFrom(collectionField.getType())) {
 					Logger.getLogger(KoselleckUtils.class).fatal("field \"" + collectionField.getName() + "\" is not a collection field (assignable from Collection)");
 					throw new NoCollectionFieldException(collectionField);
 				}
 
 				String genericCollectionFieldType = collectionField.getGenericType().toString().replaceAll(collectionTypeRegex, "${genericType}");
 				String methodParameterType = methodParameterTypes[i].toString().replaceAll(genericTypeRegex, "${genericType}");
-				if(!genericCollectionFieldType.equals(methodParameterType)) {
+				if (!genericCollectionFieldType.equals(methodParameterType)) {
 					String message = "\"" + genericCollectionFieldType + "\" is not a collection of \"" + methodParameterType + "\"";
 					Logger.getLogger(KoselleckUtils.class).fatal(message);
 					throw new IllegalArgumentException(message);
@@ -242,12 +242,12 @@ public final class KoselleckUtils {
 	public static FieldList getCollectionFields(Class<?> clazz, Type type) {
 		FieldList collectionFields = new FieldList();
 
-		for(Field field : clazz.getDeclaredFields()) {
-			if(Collection.class.isAssignableFrom(field.getType())) {
-				if(type != null) {
+		for (Field field : clazz.getDeclaredFields()) {
+			if (Collection.class.isAssignableFrom(field.getType())) {
+				if (type != null) {
 					String genericCollectionFieldTypeName = field.getGenericType().toString().replaceAll(collectionTypeRegex, "${genericType}");
 					String genericTypeName = type.toString().replaceAll(genericTypeRegex, "${genericType}");
-					if(genericCollectionFieldTypeName.equals(genericTypeName))
+					if (genericCollectionFieldTypeName.equals(genericTypeName))
 						collectionFields.add(field);
 				} else
 					collectionFields.add(field);
@@ -285,8 +285,8 @@ public final class KoselleckUtils {
 	 *  is no more index to increment
 	 */
 	private static boolean incrementIndices(ConstraintParameter[] constraintParameters, int index) {
-		if(!constraintParameters[index].incrementIndex()) {
-			if(index > 0) {
+		if (!constraintParameters[index].incrementIndex()) {
+			if (index > 0) {
 				constraintParameters[index].resetIndex();
 				return incrementIndices(constraintParameters, index-1);
 			} else
@@ -316,8 +316,8 @@ public final class KoselleckUtils {
 		methodSignature.append(method.getName());
 		methodSignature.append("(");
 		boolean firstParameterType = true;
-		for(Class<?> cls : method.getParameterTypes()) {
-			if(!firstParameterType)
+		for (Class<?> cls : method.getParameterTypes()) {
+			if (!firstParameterType)
 				methodSignature.append(", ");
 			else
 				firstParameterType = false;
@@ -327,18 +327,18 @@ public final class KoselleckUtils {
 		methodSignature.append(");");
 
 		/** split methods */
-		for(String methodCode : disassembledClass.toString().split("\n\n")) {
+		for (String methodCode : disassembledClass.toString().split("\n\n")) {
 			StringBuilder trimmedMethod = new StringBuilder();
 			/** split lines of the method */
 			boolean signatureLine = true;
-			for(String methodCodeLine : methodCode.split("\n")) {
-				if(methodCodeLine.trim().matches("^(class|public class|}|Code:|Compiled).*"))
+			for (String methodCodeLine : methodCode.split("\n")) {
+				if (methodCodeLine.trim().matches("^(class|public class|}|Code:|Compiled).*"))
 					continue;
 
 				/** check for method with right signature */
-				if(signatureLine && !methodCodeLine.trim().equals(methodSignature.toString()))
+				if (signatureLine && !methodCodeLine.trim().equals(methodSignature.toString()))
 					break;
-				else if(signatureLine) {
+				else if (signatureLine) {
 					signatureLine = false;
 					continue;
 				}
@@ -348,7 +348,7 @@ public final class KoselleckUtils {
 				trimmedMethod.append("\n");
 			}
 
-			if(!signatureLine) {
+			if (!signatureLine) {
 				return Disassembler.disassemble(
 						method.getDeclaringClass(),
 						method,
@@ -380,12 +380,12 @@ public final class KoselleckUtils {
 		List<Method> constraintMethods = getConstraintMethods(componentClass);
 		Map<String, DisassembledMethod> disassembledMethods = new HashMap<String, DisassembledMethod>();
 
-		for(String methodCode : disassembledClass.toString().split("\n\n")) {
+		for (String methodCode : disassembledClass.toString().split("\n\n")) {
 			String trimmedMethodSignature = "";
 			StringBuilder trimmedMethod = new StringBuilder();
-			for(String methodCodeLine : methodCode.split("\n")) {
-				if(!(methodCodeLine.trim().matches("^(class|public class|}|Code:).*"))) {
-					if(methodCodeLine.trim().matches("^(public )?boolean .*"))
+			for (String methodCodeLine : methodCode.split("\n")) {
+				if (!(methodCodeLine.trim().matches("^(class|public class|}|Code:).*"))) {
+					if (methodCodeLine.trim().matches("^(public )?boolean .*"))
 						trimmedMethodSignature = methodCodeLine.trim().replaceAll(", ", ",");
 					else {
 						trimmedMethod.append(methodCodeLine.trim());
@@ -396,15 +396,15 @@ public final class KoselleckUtils {
 
 			boolean skip = true;
 			Method method = null;
-			for(Method m : constraintMethods) {
-				if((m.toGenericString().replaceAll(" \\S*\\.([^\\.]+)\\(", " $1(") + ";").replaceAll(", ", ",").equals(trimmedMethodSignature)) {
+			for (Method m : constraintMethods) {
+				if ((m.toGenericString().replaceAll(" \\S*\\.([^\\.]+)\\(", " $1(") + ";").replaceAll(", ", ",").equals(trimmedMethodSignature)) {
 					method = m;
 					skip = false;
 					break;
 				}
 			}
 
-			if(!skip && trimmedMethodSignature != "")
+			if (!skip && trimmedMethodSignature != "")
 				disassembledMethods.put(trimmedMethodSignature, Disassembler.disassemble(componentClass, method, trimmedMethodSignature, trimmedMethod.toString()));
 		}
 
@@ -423,7 +423,7 @@ public final class KoselleckUtils {
 	 */
 	private static String getDisassembledClass(Class<?> componentClass) {
 		StringBuilder command = new StringBuilder("javap -classpath / -c ");
-		if(componentClass.getProtectionDomain().getCodeSource() == null) {
+		if (componentClass.getProtectionDomain().getCodeSource() == null) {
 			String message = "could not read class file for class \"" + componentClass.getSimpleName() + "\"";
 			Logger.getLogger(KoselleckUtils.class).fatal(message);
 			throw new IllegalArgumentException(message);
@@ -441,7 +441,7 @@ public final class KoselleckUtils {
 			Logger.getLogger(KoselleckUtils.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		} finally {
-			if(p != null)
+			if (p != null)
 				p.destroy();
 		}
 	}
@@ -465,7 +465,7 @@ public final class KoselleckUtils {
 		 * @param fields the fields to add to the list initially
 		 */
 		public FieldList(Field... fields) {
-			for(Field f : fields)
+			for (Field f : fields)
 				add(f);
 		}
 	}

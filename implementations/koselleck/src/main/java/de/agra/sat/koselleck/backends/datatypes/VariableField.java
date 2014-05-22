@@ -34,7 +34,7 @@ public class VariableField {
 	 */
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof VariableField))
+		if (!(object instanceof VariableField))
 			return false;
 
 		return this.variableName.equals(((VariableField) object).variableName);

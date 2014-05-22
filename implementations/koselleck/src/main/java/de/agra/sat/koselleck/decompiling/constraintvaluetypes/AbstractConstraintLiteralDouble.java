@@ -42,7 +42,7 @@ public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<D
 
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractConstraintLiteralDouble))
+		if (!(object instanceof AbstractConstraintLiteralDouble))
 			return false;
 
 		AbstractConstraintLiteralDouble abstractConstraintLiteralDouble = (AbstractConstraintLiteralDouble)object;

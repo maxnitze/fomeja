@@ -58,7 +58,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 		this.preFields = preFields;
 
 		StringBuilder preFieldsPrefixedNameBuilder = new StringBuilder("v_");
-		for(PreField preField : preFields)
+		for (PreField preField : preFields)
 			preFieldsPrefixedNameBuilder
 					.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"));
 
@@ -138,7 +138,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractConstraintLiteralField))
+		if (!(object instanceof AbstractConstraintLiteralField))
 			return false;
 
 		AbstractConstraintLiteralField abstractConstraintLiteralField = (AbstractConstraintLiteralField) object;

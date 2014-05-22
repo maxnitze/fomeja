@@ -42,7 +42,7 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractConstraintLiteralFloat))
+		if (!(object instanceof AbstractConstraintLiteralFloat))
 			return false;
 
 		AbstractConstraintLiteralFloat abstractConstraintLiteralFloat = (AbstractConstraintLiteralFloat)object;

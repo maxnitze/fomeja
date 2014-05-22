@@ -109,8 +109,8 @@ public enum Opcode {
 	 *  given opcode name
 	 */
 	public static Opcode fromString(String opcode) {
-		for(Opcode oc : values())
-			if(opcode.matches("^" + oc.opcodeRegex + "$"))
+		for (Opcode oc : values())
+			if (opcode.matches("^" + oc.opcodeRegex + "$"))
 				return oc;
 		Logger.getLogger(Opcode.class).fatal("no opcode matching \"" + opcode + "\"");
 		throw new IllegalArgumentException("no opcode matching \"" + opcode + "\"");
@@ -125,9 +125,9 @@ public enum Opcode {
 	 */
 	public static String getSimpleTypeGroup() {
 		StringBuilder simpleTypeGroup = new StringBuilder("");
-		for(Opcode opcode : values()) {
-			if(opcode.type == OpcodeType.SIMPLE) {
-				if(simpleTypeGroup.length() > 0)
+		for (Opcode opcode : values()) {
+			if (opcode.type == OpcodeType.SIMPLE) {
+				if (simpleTypeGroup.length() > 0)
 					simpleTypeGroup.append("|");
 				simpleTypeGroup.append(opcode.opcodeRegex);
 			}
@@ -144,9 +144,9 @@ public enum Opcode {
 	 */
 	public static String getSimpleValueTypeGroup() {
 		StringBuilder simpleValueTypeGroup = new StringBuilder("");
-		for(Opcode opcode : values()) {
-			if(opcode.type == OpcodeType.SIMPLE_VALUE) {
-				if(simpleValueTypeGroup.length() > 0)
+		for (Opcode opcode : values()) {
+			if (opcode.type == OpcodeType.SIMPLE_VALUE) {
+				if (simpleValueTypeGroup.length() > 0)
 					simpleValueTypeGroup.append("|");
 				simpleValueTypeGroup.append(opcode.opcodeRegex);
 			}
@@ -164,9 +164,9 @@ public enum Opcode {
 	 */
 	public static String getConstantTableValueTypeGroup() {
 		StringBuilder valueTypeGroup = new StringBuilder("");
-		for(Opcode opcode : values()) {
-			if(opcode.type == OpcodeType.CONSTANT_TABLE_VALUE) {
-				if(valueTypeGroup.length() > 0)
+		for (Opcode opcode : values()) {
+			if (opcode.type == OpcodeType.CONSTANT_TABLE_VALUE) {
+				if (valueTypeGroup.length() > 0)
 					valueTypeGroup.append("|");
 				valueTypeGroup.append(opcode.opcodeRegex);
 			}
@@ -183,9 +183,9 @@ public enum Opcode {
 	 */
 	public static String getOffsetTypeGroup() {
 		StringBuilder offsetTypeGroup = new StringBuilder("");
-		for(Opcode opcode : values()) {
-			if(opcode.type == OpcodeType.OFFSET) {
-				if(offsetTypeGroup.length() > 0)
+		for (Opcode opcode : values()) {
+			if (opcode.type == OpcodeType.OFFSET) {
+				if (offsetTypeGroup.length() > 0)
 					offsetTypeGroup.append("|");
 				offsetTypeGroup.append(opcode.opcodeRegex);
 			}
@@ -203,9 +203,9 @@ public enum Opcode {
 	 */
 	public static String getConstantTableIndexTypeGroup() {
 		StringBuilder constantTableIndexTypeGroup = new StringBuilder("");
-		for(Opcode opcode : values()) {
-			if(opcode.type == OpcodeType.CONSTANT_TABLE_INDEX) {
-				if(constantTableIndexTypeGroup.length() > 0)
+		for (Opcode opcode : values()) {
+			if (opcode.type == OpcodeType.CONSTANT_TABLE_INDEX) {
+				if (constantTableIndexTypeGroup.length() > 0)
 					constantTableIndexTypeGroup.append("|");
 				constantTableIndexTypeGroup.append(opcode.opcodeRegex);
 			}
@@ -222,9 +222,9 @@ public enum Opcode {
 	 */
 	public static String getConstantSwitchGroup() {
 		StringBuilder constantSwitchGroup = new StringBuilder("");
-		for(Opcode opcode : values()) {
-			if(opcode.type == OpcodeType.SWITCH) {
-				if(constantSwitchGroup.length() > 0)
+		for (Opcode opcode : values()) {
+			if (opcode.type == OpcodeType.SWITCH) {
+				if (constantSwitchGroup.length() > 0)
 					constantSwitchGroup.append("|");
 				constantSwitchGroup.append(opcode.opcodeRegex);
 			}

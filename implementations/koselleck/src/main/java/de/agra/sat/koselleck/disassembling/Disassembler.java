@@ -92,11 +92,11 @@ public class Disassembler {
 		Map<Integer, BytecodeLine> bytecodeLines = new HashMap<Integer, BytecodeLine>();
 
 		String[] disassembledMethodLines = this.disassembledMethodString.split("\n");
-		for(int i=0; i<disassembledMethodLines.length; i++) {
+		for (int i=0; i<disassembledMethodLines.length; i++) {
 			String disassembledMethodLine = disassembledMethodLines[i].trim().replaceAll("\\s+", " ");
 
 			/** is simple bytecode line */
-			if(disassembledMethodLine.matches(simpleTypePattern.pattern())) {
+			if (disassembledMethodLine.matches(simpleTypePattern.pattern())) {
 				Matcher matcher = simpleTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
 
@@ -107,7 +107,7 @@ public class Disassembler {
 						Opcode.fromString(matcher.group("opcode"))));
 			}
 			/** is value bytecode line */
-			else if(disassembledMethodLine.matches(valueTypePattern.pattern())) {
+			else if (disassembledMethodLine.matches(valueTypePattern.pattern())) {
 				Matcher matcher = valueTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
 
@@ -116,10 +116,10 @@ public class Disassembler {
 				String valueString = matcher.group("value");
 
 				Object value;
-				if(valueString.matches("^[+-]?[0-9]+(\\.[0-9]+)?$")) {
-					if(opcodeString.startsWith("f"))
+				if (valueString.matches("^[+-]?[0-9]+(\\.[0-9]+)?$")) {
+					if (opcodeString.startsWith("f"))
 						value = Float.parseFloat(valueString);
-					else if(opcodeString.startsWith("d"))
+					else if (opcodeString.startsWith("d"))
 						value = Double.parseDouble(valueString);
 					else
 						value = Integer.parseInt(valueString);
@@ -130,7 +130,7 @@ public class Disassembler {
 						disassembledMethodLine, lineNumber, Opcode.fromString(opcodeString), value));
 			}
 			/** is offset bytecode line */
-			else if(disassembledMethodLine.matches(constantTableValueTypePattern.pattern())) {
+			else if (disassembledMethodLine.matches(constantTableValueTypePattern.pattern())) {
 				Matcher matcher = constantTableValueTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
 
@@ -138,9 +138,9 @@ public class Disassembler {
 				String valueTypeString = matcher.group("valuetype");
 
 				Object value;
-				if(valueTypeString.equals("f"))
+				if (valueTypeString.equals("f"))
 					value = Float.parseFloat(matcher.group("value"));
-				else if(valueTypeString.equals("d"))
+				else if (valueTypeString.equals("d"))
 					value = Double.parseDouble(matcher.group("value"));
 				else
 					value = matcher.group("value");
@@ -150,7 +150,7 @@ public class Disassembler {
 						Opcode.fromString(matcher.group("opcode")), value));
 			}
 			/** is offset bytecode line */
-			else if(disassembledMethodLine.matches(offsetTypePattern.pattern())) {
+			else if (disassembledMethodLine.matches(offsetTypePattern.pattern())) {
 				Matcher matcher = offsetTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
 
@@ -162,7 +162,7 @@ public class Disassembler {
 						Integer.parseInt(matcher.group("offset"))));
 			}
 			/** is constant table class bytecode line */
-			else if(disassembledMethodLine.matches(constantTableClassTypePattern.pattern())) {
+			else if (disassembledMethodLine.matches(constantTableClassTypePattern.pattern())) {
 				Matcher matcher = constantTableClassTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
 
@@ -183,7 +183,7 @@ public class Disassembler {
 						Integer.parseInt(matcher.group("index")), clazz));
 			}
 			/** is constant table accessible object bytecode line */
-			else if(disassembledMethodLine.matches(constantTableAccessibleObjectTypePattern.pattern())) {
+			else if (disassembledMethodLine.matches(constantTableAccessibleObjectTypePattern.pattern())) {
 				Matcher matcher = constantTableAccessibleObjectTypePattern.matcher(disassembledMethodLine);
 				matcher.find();
 
@@ -192,11 +192,11 @@ public class Disassembler {
 				String accessibleObjectType = matcher.group("accessibleobjecttype");
 
 				/** accessible object is a field */
-				if(accessibleObjectType.equals("Field")) {
+				if (accessibleObjectType.equals("Field")) {
 					String fieldString = matcher.group("accessibleobject");
 					Class<?> fieldClass;
 					String fieldName;
-					if(fieldString.contains(".")) {
+					if (fieldString.contains(".")) {
 						String[] splittedField = fieldString.split("\\.");
 						String className = splittedField[0].replaceAll("/", ".");
 						try {
@@ -227,11 +227,11 @@ public class Disassembler {
 							Integer.parseInt(matcher.group("index")), object));
 				}
 				/** accessible object is a method */
-				else if(accessibleObjectType.equals("Method")) {
+				else if (accessibleObjectType.equals("Method")) {
 					String methodString = matcher.group("accessibleobject");
 					Class<?> methodClass;
 					String methodName;
-					if(methodString.contains(".")) {
+					if (methodString.contains(".")) {
 						String[] splittedField = methodString.split("\\.");
 						String className = splittedField[0].replaceAll("/", ".");
 						try {
@@ -249,17 +249,17 @@ public class Disassembler {
 
 					/** get parameter types */
 					List<Class<?>> parameterTypesList = new ArrayList<Class<?>>();
-					if(matcher.group("parametertypes") != null) {
+					if (matcher.group("parametertypes") != null) {
 						String[] parameterTypes = matcher.group("parametertypes").split(";");
-						for(String paramType : parameterTypes) {
+						for (String paramType : parameterTypes) {
 							String parameterTypeClassName = paramType.replaceAll("/", ".");
-							if(parameterTypeClassName == null || parameterTypeClassName.equals(""))
+							if (parameterTypeClassName == null || parameterTypeClassName.equals(""))
 								continue;
-							else if(parameterTypeClassName.equals("D"))
+							else if (parameterTypeClassName.equals("D"))
 								parameterTypesList.add(double.class);
-							else if(parameterTypeClassName.equals("F"))
+							else if (parameterTypeClassName.equals("F"))
 								parameterTypesList.add(float.class);
-							else if(parameterTypeClassName.equals("I"))
+							else if (parameterTypeClassName.equals("I"))
 								parameterTypesList.add(int.class);
 							else {
 								try {
@@ -276,20 +276,20 @@ public class Disassembler {
 
 					AccessibleObject object;
 					try {
-						if(methodName.equals("\"<init>\""))
+						if (methodName.equals("\"<init>\""))
 							object = methodClass.getDeclaredConstructor(parameterTypesList.toArray(new Class[parameterTypesList.size()]));
 						else
 							object = methodClass.getDeclaredMethod(methodName, parameterTypesList.toArray(new Class[parameterTypesList.size()]));
 					} catch (NoSuchMethodException | SecurityException e) {
 						StringBuilder parameterString = new StringBuilder();
-						for(Class<?> cls : parameterTypesList) {
-							if(parameterString.length() > 0)
+						for (Class<?> cls : parameterTypesList) {
+							if (parameterString.length() > 0)
 								parameterString.append(", ");
 							parameterString.append(cls.getCanonicalName());
 						}
 
 						String message;
-						if(methodName.equals("\"<init>\""))
+						if (methodName.equals("\"<init>\""))
 							message = "could not find constructor with parameters \"(" + parameterString.toString() + ")\" for class \"" + methodClass.getCanonicalName() + "\"";
 						else
 							message = "could not find method \"" + methodName + "(" + parameterString.toString() + ")\" for class \"" + methodClass.getCanonicalName() + "\"";
@@ -304,7 +304,7 @@ public class Disassembler {
 				}
 			}
 			/** is tableswitch bytecode line */
-			else if(disassembledMethodLine.matches(tableswitchPattern.pattern())) {
+			else if (disassembledMethodLine.matches(tableswitchPattern.pattern())) {
 				Matcher matcher = tableswitchPattern.matcher(disassembledMethodLine);
 				matcher.find();
 
@@ -314,7 +314,7 @@ public class Disassembler {
 						disassembledMethodLine, lineNumber,
 						Opcode.fromString(matcher.group("opcode")));
 
-				while(i+1<disassembledMethodLines.length && disassembledMethodLines[i+1].matches(tableswitchCasePattern.pattern())) {
+				while (i+1<disassembledMethodLines.length && disassembledMethodLines[i+1].matches(tableswitchCasePattern.pattern())) {
 					++i;
 
 					bytecodeLineTableSwitch.offsetsMap.put(

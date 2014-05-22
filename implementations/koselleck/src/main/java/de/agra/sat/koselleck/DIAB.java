@@ -46,33 +46,33 @@ public abstract class DIAB {
 	public static boolean validate(Object component) {
 		List<Method> constraintMethods = KoselleckUtils.getConstraintMethods(component.getClass());
 
-		for(Method method : constraintMethods) {
+		for (Method method : constraintMethods) {
 			int parameterCount = method.getGenericParameterTypes().length;
 
 			ConstraintParameter[] constraintParameters = new ConstraintParameter[parameterCount];
 			List<Field>[] parameterFields = KoselleckUtils.getCollectionFieldsForMethod(method);
-			for(int i=0; i<parameterCount; i++)
+			for (int i=0; i<parameterCount; i++)
 				constraintParameters[i] = new ConstraintParameter(component, i, parameterFields[i]);
 
 			boolean skipTheorem = false;
-			for(ConstraintParameter constraintParameter : constraintParameters) {
-				if(!constraintParameter.isIncrementable()) {
+			for (ConstraintParameter constraintParameter : constraintParameters) {
+				if (!constraintParameter.isIncrementable()) {
 					skipTheorem = true;
 					break;
 				}
 			}
-			if(skipTheorem)
+			if (skipTheorem)
 				continue;
 
 			Object[] methodParams = new Object[parameterCount];
 			do {
-				for(int i=0; i<parameterCount; i++)
+				for (int i=0; i<parameterCount; i++)
 					methodParams[i] = constraintParameters[i].getCurrentCollectionObject();
 
 				boolean accessibility = method.isAccessible();
 				method.setAccessible(true);
 				try {
-					if(!(Boolean) method.invoke(component, methodParams))
+					if (!(Boolean) method.invoke(component, methodParams))
 						return false;
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					String message = "could not invoke method \"" + method.getName() + "\"";
@@ -81,7 +81,7 @@ public abstract class DIAB {
 				} finally {
 					method.setAccessible(accessibility);
 				}
-			} while(KoselleckUtils.incrementIndices(constraintParameters));
+			} while (KoselleckUtils.incrementIndices(constraintParameters));
 		}
 
 		return true;
@@ -98,16 +98,16 @@ public abstract class DIAB {
 	 */
 	public static boolean satisfy(Object component) {
 		List<Method> constraintMethods = KoselleckUtils.getConstraintMethods(component.getClass());
-		if(constraintMethods.size() <= 0)
+		if (constraintMethods.size() <= 0)
 			return true;
 
 		List<Field> variableFields = KoselleckUtils.getVariableFields(component.getClass());
-		if(variableFields.size() > 0) {
+		if (variableFields.size() > 0) {
 			Map<String, DisassembledMethod> disassembledMethods = KoselleckUtils.getDisassembledConstraintMethods(component.getClass());
 
 			List<AbstractSingleTheorem> singleTheorems = new ArrayList<AbstractSingleTheorem>();
 
-			for(Method method : constraintMethods) {
+			for (Method method : constraintMethods) {
 				List<Field>[] paramFields = KoselleckUtils.getCollectionFieldsForMethod(method);
 
 				String methodSignature = (method.toGenericString().replaceFirst("^public boolean .*\\(", "public boolean "+ method.getName() +"(") + ";").replaceAll(", ", ",");;
@@ -118,7 +118,7 @@ public abstract class DIAB {
 					arguments[i] = new AbstractConstraintLiteralClass(
 							disassembledMethod.method.getParameterTypes()[i], Opcode.Xload, i+1);
 
-				if(disassembledMethod != null)
+				if (disassembledMethod != null)
 					singleTheorems.add(new AbstractSingleTheorem(
 							Decompiler.decompile(
 									disassembledMethod, new AbstractConstraintLiteralObject(component), arguments), paramFields));

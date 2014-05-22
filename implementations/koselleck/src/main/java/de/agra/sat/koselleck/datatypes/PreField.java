@@ -52,7 +52,7 @@ public class PreField {
 		this.preFields = preFields;
 
 		StringBuilder preFieldsPrefixedNameBuilder = new StringBuilder("v_");
-		for(PreField preField : preFields)
+		for (PreField preField : preFields)
 			preFieldsPrefixedNameBuilder
 					.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"));
 
@@ -64,7 +64,7 @@ public class PreField {
 
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof PreField))
+		if (!(object instanceof PreField))
 			return false;
 
 		PreField preField = (PreField) object;

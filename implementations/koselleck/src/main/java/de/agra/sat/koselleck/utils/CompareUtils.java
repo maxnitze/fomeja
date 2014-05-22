@@ -35,8 +35,8 @@ public final class CompareUtils {
 	 *  identical to the given element, {@code false} otherwise
 	 */
 	public static <T> boolean identsAny(T element, T[] array){
-		for(T e : array)
-			if(e == element)
+		for (T e : array)
+			if (e == element)
 				return true;
 		return false;
 	}
@@ -53,8 +53,8 @@ public final class CompareUtils {
 	 *  identical to the given element, {@code false} otherwise
 	 */
 	public static <T> boolean identsAny(T element, List<T> list){
-		for(T e : list)
-			if(e == element)
+		for (T e : list)
+			if (e == element)
 				return true;
 		return false;
 	}
@@ -71,8 +71,8 @@ public final class CompareUtils {
 	 *  equal to the given element, {@code false} otherwise
 	 */
 	public static <T> boolean equalsAny(T element, T[] array) {
-		for(T e : array)
-			if(e.equals(element))
+		for (T e : array)
+			if (e.equals(element))
 				return true;
 		return false;
 	}
@@ -89,8 +89,8 @@ public final class CompareUtils {
 	 *  equal to the given element, {@code false} otherwise
 	 */
 	public static <T> boolean equalsAny(T element, List<T> list) {
-		for(T e : list)
-			if(e.equals(element))
+		for (T e : list)
+			if (e.equals(element))
 				return true;
 		return false;
 	}
@@ -106,8 +106,8 @@ public final class CompareUtils {
 	 *  of the given classes array, {@code false} otherwise
 	 */
 	public static boolean instanceofAny(Object object, Class<?>[] classes) {
-		for(Class<?> clazz : classes)
-			if(clazz.isInstance(object))
+		for (Class<?> clazz : classes)
+			if (clazz.isInstance(object))
 				return true;
 		return false;
 	}
@@ -123,8 +123,8 @@ public final class CompareUtils {
 	 *  of the given classes list, {@code false} otherwise
 	 */
 	public static boolean instanceofAny(Object object, List<Class<?>> classes) {
-		for(Class<?> clazz : classes)
-			if(clazz.isInstance(object))
+		for (Class<?> clazz : classes)
+			if (clazz.isInstance(object))
 				return true;
 		return false;
 	}
@@ -143,7 +143,7 @@ public final class CompareUtils {
 	 */
 	public static <T extends Comparable<T>> boolean isBetween(T value, T start, T end) {
 		/** compare the value to the borders of the area */
-		if(start.compareTo(value) <= 0 && end.compareTo(value) >= 0)
+		if (start.compareTo(value) <= 0 && end.compareTo(value) >= 0)
 			return true;
 		else
 			return false;

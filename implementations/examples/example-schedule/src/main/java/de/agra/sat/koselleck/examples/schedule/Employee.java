@@ -31,15 +31,15 @@ public class Employee {
 	 * @return
 	 */
 	public boolean hasSkills(Skill[] neededSkills) {
-		for(Skill neededSkill : neededSkills) {
+		for (Skill neededSkill : neededSkills) {
 			boolean found = false;
-			for(Skill skill : this.skills) {
-				if(skill == neededSkill) {
+			for (Skill skill : this.skills) {
+				if (skill == neededSkill) {
 					found = true;
 					break;
 				}
 			}
-			if(!found)
+			if (!found)
 				return false;
 		}
 

@@ -65,7 +65,7 @@ public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Cl
 
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractConstraintLiteralClass))
+		if (!(object instanceof AbstractConstraintLiteralClass))
 			return false;
 
 		AbstractConstraintLiteralClass abstractConstraintLiteralObject = (AbstractConstraintLiteralClass)object;

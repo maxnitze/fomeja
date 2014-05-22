@@ -12,19 +12,19 @@ public class MutualExclusion {
 		Object obj = new Object();
 		// prepare Object
 
-		if(testValidate) {
+		if (testValidate) {
 			DIAB.validate(obj);
 		}
 
-		if(testSatisfy) {
+		if (testSatisfy) {
 			DIAB.satisfy(obj);
 		}
 
-		if(testMinimize) {
+		if (testMinimize) {
 			DIAB.minimize(obj);
 		}
 
-		if(testMaximize) {
+		if (testMaximize) {
 			DIAB.maximize(obj);
 		}
 	}

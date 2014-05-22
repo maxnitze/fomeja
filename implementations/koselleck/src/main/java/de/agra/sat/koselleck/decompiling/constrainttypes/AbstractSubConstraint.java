@@ -53,7 +53,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 
 		/** evaluate to boolean if both sub-constraints are boolean
 		 * constraints */
-		if(
+		if (
 				this.constraint1 instanceof AbstractBooleanConstraint &&
 				this.constraint2 instanceof AbstractBooleanConstraint)
 			return evaluateConstraint(
@@ -61,30 +61,30 @@ public class AbstractSubConstraint extends AbstractConstraint {
 						((AbstractBooleanConstraint)this.constraint2).value);
 		/** evaluate constraint if the first sub-constraints is a boolean
 		 * constraint */
-		else if(this.constraint1 instanceof AbstractBooleanConstraint)
+		else if (this.constraint1 instanceof AbstractBooleanConstraint)
 			return evaluateConstraint(
 					((AbstractBooleanConstraint)this.constraint1).value,
 					this.constraint2);
 		/** evaluate constraint if the second sub-constraints is a boolean
 		 * constraint */
-		else if(this.constraint2 instanceof AbstractBooleanConstraint)
+		else if (this.constraint2 instanceof AbstractBooleanConstraint)
 			return evaluateConstraint(
 					((AbstractBooleanConstraint)this.constraint2).value,
 					this.constraint1);
 		/** try to evaluate constraint if both sub-constraints are single
 		 * constraints */
-		else if(
+		else if (
 				this.constraint1 instanceof AbstractSingleConstraint &&
 				this.constraint2 instanceof AbstractSingleConstraint) {
 			AbstractSingleConstraint singleConstraint1 = (AbstractSingleConstraint)this.constraint1;
 			AbstractSingleConstraint singleConstraint2 = (AbstractSingleConstraint)this.constraint2;
 
 			/** evaluate to one constraint if both constraints are equal */
-			if(singleConstraint1.equals(singleConstraint2))
+			if (singleConstraint1.equals(singleConstraint2))
 				return singleConstraint1;
 			/** evaluate the constraint if the values of both sub-constraints
 			 * are equal */
-			else if(
+			else if (
 					singleConstraint1.value1.equals(singleConstraint2.value1) &&
 					singleConstraint1.value2.equals(singleConstraint2.value2))
 				return evaluateEqualConstraints(
@@ -92,7 +92,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 						singleConstraint2.operator);
 			/** evaluate the constraint if the values of both sub-constraints
 			 * are equal */
-			else if(
+			else if (
 					singleConstraint1.value1.equals(singleConstraint2.value2) &&
 					singleConstraint1.value2.equals(singleConstraint2.value1))
 				return evaluateEqualConstraints(
@@ -117,7 +117,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractSubConstraint))
+		if (!(object instanceof AbstractSubConstraint))
 			return false;
 
 		AbstractSubConstraint subConstraint = (AbstractSubConstraint)object;

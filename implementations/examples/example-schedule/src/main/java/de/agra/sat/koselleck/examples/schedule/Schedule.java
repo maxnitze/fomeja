@@ -34,7 +34,7 @@ public class Schedule {
 	 */
 	@Constraint(fields = { @Constraint.Field("tasks"), @Constraint.Field("tasks") })
 	public boolean testConstraint(Task task1, Task task2) {
-		return task1 == task2 || !task1.intersectsWith(task2);
+		return task1 == task2 || !task1.intersectsWith(task2) || task1.doneBy != task2.doneBy;
 	}
 
 	/**
@@ -79,8 +79,8 @@ public class Schedule {
 	 */
 //	@Constraint(fields = { @Constraint.Field("tasks") })
 	public boolean dependentTasksAreFinished(Task task) {
-		for(Task dependentTask : task.dependentTasks)
-			if(dependentTask.start + dependentTask.duration >= task.start)
+		for (Task dependentTask : task.dependentTasks)
+			if (dependentTask.start + dependentTask.duration >= task.start)
 				return false;
 
 		return true;

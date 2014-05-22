@@ -42,7 +42,7 @@ public class AbstractConstraintLiteralInteger extends AbstractConstraintLiteral<
 
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractConstraintLiteralInteger))
+		if (!(object instanceof AbstractConstraintLiteralInteger))
 			return false;
 
 		AbstractConstraintLiteralInteger abstractConstraintLiteralInteger = (AbstractConstraintLiteralInteger)object;
