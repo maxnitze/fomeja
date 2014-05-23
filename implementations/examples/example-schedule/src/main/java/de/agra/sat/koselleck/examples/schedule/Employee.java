@@ -10,17 +10,21 @@ public class Employee {
 	/**  */
 	public final String lastName;
 	/**  */
+	public final Skill skill;
+	/**  */
 	public final Skill[] skills;
 
 	/**
 	 * 
 	 * @param firstName
 	 * @param lastName
+	 * @param skill
 	 * @param skills
 	 */
-	public Employee(String firstName, String lastName, Skill[] skills) {
+	public Employee(String firstName, String lastName, Skill skill, Skill[] skills) {
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.skill = skill;
 		this.skills = skills;
 	}
 

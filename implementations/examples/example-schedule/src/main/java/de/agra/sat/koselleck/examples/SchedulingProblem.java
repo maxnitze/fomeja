@@ -17,20 +17,20 @@ public class SchedulingProblem {
 		boolean testMaximize	= false;
 
 		List<Employee> employees = new ArrayList<Employee>();
-		employees.add(new Employee("Firstname1", "Lastname1", new Skill[] { Skill.JAVA, Skill.MANAGEMENT }));
-		employees.add(new Employee("Firstname2", "Lastname2", new Skill[] { Skill.CPP, Skill.MANAGEMENT }));
-//		employees.add(new Employee("Firstname3", "Lastname3", new Skill[] { Skill.C, Skill.JAVA }));
-//		employees.add(new Employee("Firstname4", "Lastname4", new Skill[] { Skill.C, Skill.CPP, Skill.MANAGEMENT }));
-//		employees.add(new Employee("Firstname5", "Lastname5", new Skill[] { Skill.JAVA, Skill.CPP }));
+		employees.add(new Employee("Firstname1", "Lastname1", Skill.JAVA, new Skill[] { Skill.JAVA, Skill.MANAGEMENT }));
+		employees.add(new Employee("Firstname2", "Lastname2", Skill.CPP, new Skill[] { Skill.CPP, Skill.MANAGEMENT }));
+//		employees.add(new Employee("Firstname3", "Lastname3", SkILL.C, new Skill[] { Skill.C, Skill.JAVA }));
+//		employees.add(new Employee("Firstname4", "Lastname4", Skill.MANAGEMENT, new Skill[] { Skill.C, Skill.CPP, Skill.MANAGEMENT }));
+//		employees.add(new Employee("Firstname5", "Lastname5", Skill.JAVA, new Skill[] { Skill.JAVA, Skill.CPP }));
 
 		List<Task> tasks = new ArrayList<Task>();
-		Task task1 = new Task("Task1", 2, new Skill[] { Skill.JAVA }, new Task[] {});
+		Task task1 = new Task("Task1", 2, Skill.JAVA, new Skill[] { Skill.JAVA }, new Task[] {});
 		tasks.add(task1);
-		Task task2 = new Task("Task2", 1, new Skill[] {}, new Task[] { task1 });
+		Task task2 = new Task("Task2", 1, Skill.C, new Skill[] { Skill.C }, new Task[] { task1 });
 		tasks.add(task2);
-		Task task3 = new Task("Task3", 4, new Skill[] { Skill.CPP }, new Task[] { task1 });
+		Task task3 = new Task("Task3", 4, Skill.CPP, new Skill[] { Skill.CPP }, new Task[] { task1 });
 		tasks.add(task3);
-		Task task4 = new Task("Task4", 6, new Skill[] { Skill.MANAGEMENT }, new Task[] {});
+		Task task4 = new Task("Task4", 6, Skill.MANAGEMENT, new Skill[] { Skill.MANAGEMENT }, new Task[] {});
 		tasks.add(task4);
 
 		Schedule schedule = new Schedule(employees, tasks);
