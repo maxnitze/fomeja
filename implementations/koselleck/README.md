@@ -8,13 +8,13 @@ Supported Examples
 
 ### Vertex-Color
 
-[Vertex-Color Example](../example-vertexcolor "implementation of vertex-color example")
+[Vertex-Color Example](../examples/example-vertexcolor "implementation of vertex-color example")
 
 ...
 
 ### Scheduling
 
-[Scheduling Example](../example-schedule "implementation of scheduling example")
+[Scheduling Example](../examples/example-schedule "implementation of scheduling example")
 
 ...
 
