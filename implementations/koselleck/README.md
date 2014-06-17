@@ -1,3 +1,11 @@
+DIAB -- Koselleck -- JAVA2SAT
+=============================
+
+...
+
+Other Informations
+------------------
+
 - needs java-7-oracle for javap to recognize generics in parameter types
 
 - data types
