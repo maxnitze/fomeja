@@ -763,6 +763,7 @@ public class Decompiler {
 		Field bytecodeLineField = (Field) bytecodeLineConstantTableAccessibleObject.accessibleObject;
 
 		if (constraintLiteral.isFinishedType && bytecodeLineField.getAnnotation(Variable.class) == null) {
+			boolean accessibility = bytecodeLineField.isAccessible();
 			bytecodeLineField.setAccessible(true);
 
 			Object value;
@@ -772,6 +773,8 @@ public class Decompiler {
 				String message = "could not get field \"" + bytecodeLineField.getName() + "\" for value \"" + this.store.get(0) + "\"";
 				Logger.getLogger(Decompiler.class).fatal(message);
 				throw new IllegalArgumentException(message);
+			} finally {
+				bytecodeLineField.setAccessible(accessibility);
 			}
 
 			if (CompareUtils.equalsAny(bytecodeLineField.getType(), CompareUtils.doubleClasses))
