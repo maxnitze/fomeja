@@ -16,8 +16,8 @@ public enum Opcode {
 	Xstore_("Xstore_", 1, OpcodeType.SIMPLE_VALUE, "[i|f|d|a]store_"),
 	Xstore("Xstore", 2, OpcodeType.SIMPLE_VALUE, "[i|f|d|a]store( )?"),
 
-	Xconst_("bconst_", 1, OpcodeType.SIMPLE_VALUE, "[i|f|b]const_"),
-	Xconst("bconst", 2, OpcodeType.SIMPLE_VALUE, "[i|f|b]const( )?"),
+	Xconst_("Xconst_", 1, OpcodeType.SIMPLE_VALUE, "[i|f|b]const_"),
+	Xconst("Xconst", 2, OpcodeType.SIMPLE_VALUE, "[i|f|b]const( )?"),
 	bipush("bipush", 2, OpcodeType.SIMPLE_VALUE, "bipush "),
 
 	getfield("getfield", 3, OpcodeType.CONSTANT_TABLE_INDEX, "getfield"),
