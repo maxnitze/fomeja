@@ -37,18 +37,7 @@ public class Edge {
 }
 ~~~
 
-With a class that contains all vertices and edges of a graph:
-
-~~~java
-public class Graph {
-	private Set<Vertex> vertices;
-	private Set<Edge> edges;
-
-	...
-}
-~~~
-
-One can define the constraints for the given problem:
+With a class that contains all vertices and edges of a graph, one can define the constraints for the given problem:
 
 ~~~java
 public class Graph {
