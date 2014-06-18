@@ -19,12 +19,12 @@ links at the end of each example.
 
 ### Vertex-Color
 
-The Vertex-Color problem describes the question is there a coloring for the
-graph regarding that two vertices, that have a edge connecting them, are not
-allowed to have the same color.
+The Vertex-Color problem describes the question if there is a coloring for the
+vertices of the graph regarding that two vertices, that have a edge connecting
+them, are not allowed to have the same color.
 
 In extension to the basic problem one can ask for the minimum number of colors
-needed to color the given graph.
+needed to color the vertices of the given graph.
 
 For example having a class for the vertices with a attribute color marked as variable:
 
@@ -117,7 +117,7 @@ public class Task {
 ~~~
 
 One can define a constraint that requires the different tasks to be done by
-different employees if they intersect each other.
+different employees if they intersect each other:
 
 ~~~java
 public class Schedule {
