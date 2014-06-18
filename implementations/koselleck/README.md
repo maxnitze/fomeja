@@ -8,9 +8,12 @@ Supported Examples
 
 ### Vertex-Color
 
-The Vertex-Color problem describes the question how many colors do I need to
-color the vertices of a given graph regarding that two vertices, that have a
-edge connecting them, are not allowed to have the same color.
+The Vertex-Color problem describes the question is there a coloring for the
+graph regarding that two vertices, that have a edge connecting them, are not
+allowed to have the same color.
+
+In extension to the basic problem one can ask for the minimum number of colors
+needed to color the given graph.
 
 For example having a class for the vertices with a attribute color marked as variable:
 
@@ -38,8 +41,8 @@ With a class that contains all vertices and edges of a graph:
 
 ~~~java
 public class Graph {
-	private List<Vertex> vertices;
-	private List<Edge> edges;
+	private Set<Vertex> vertices;
+	private Set<Edge> edges;
 
 	...
 }
@@ -52,7 +55,7 @@ public class Graph {
 	private List<Vertex> vertices;
 	private List<Edge> edges;
 
-	@Constraint
+	@Constraint(fields = { @Constraint.Field("edges") })
 	public boolean adjacentHaveDifferentColors(Edge edge) {
 		return edge.getVertex1().getColor() != edge.getVertex2().getColor();
 	}
@@ -64,26 +67,81 @@ public class Graph {
 And satisfy them by using this tool:
 
 ~~~java
-Graph g = new Graph(listOfVertices, listOfEdges);
+Graph g = new Graph(setOfVertices, setOfEdges);
 
 boolean isSatisfiable = DIAB.satisfy(g);
 ~~~
 
-For a complete example look for
+For a complete example look for the
 [Vertex-Color Example](../../tree/master/implementations/examples/example-vertexcolor "implementation of vertex-color example")
 in this Project
 
 ### Scheduling
 
-Scheduling is ...
+The Scheduling problem describes the situation that you have different tasks
+need to be done by employees. Is there a scheduling for theses tasks and
+employees with the result that two different tasks just overlap if they are
+done by different employees.
+
+In extension one can define skills needed for the specific tasks and accept
+only employees to do the tasks who have those skills.
+
+Having a class describing an emloyee:
 
 ~~~java
-public class Task {
-
+public class Employee {
+	...
 }
 ~~~
 
-For a complete example look for
+And one describing a task that has a duration and a variable start and employee
+doing it:
+
+~~~java
+public class Task {
+	private final int duration;
+
+	@Variable
+	public int start;
+
+	@Variable
+	public Employee doneBy;
+
+	public boolean intersectsWith(Task task) {
+		return (this.start >= task.start && this.start < task.start + task.duration)
+				|| (task.start >= this.start && task.start < this.start + this.duration);
+	}
+
+	...
+}
+~~~
+
+One can define a constraint that requires the different tasks to be done by
+different employees if they intersect each other.
+
+~~~java
+public class Schedule {
+	private Set<Employee> employees;
+	private Set<Task> tasks;
+
+	@Constraint(fields = { @Constraint.Field("tasks"), @Constraint.Field("tasks") })
+	public boolean oneTaskAtATime(Task task1, Task task2) {
+		return task1 == task2 || !task1.intersectsWith(task2) || task1.doneBy != task2.doneBy;
+	}
+
+	...
+}
+~~~
+
+And satisfy this again by using this tool:
+
+~~~java
+Schedule s = new Schedule(setOfEmployees, setOfTasks);
+
+boolean isSatisfiable = DIAB.satisfy(s);
+~~~
+
+For a complete example look for the
 [Scheduling Example](../../tree/master/implementations/examples/example-schedule "implementation of scheduling example") as an example in this Project
 in this Project
 
