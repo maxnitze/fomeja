@@ -68,9 +68,9 @@ in this Project
 ### Scheduling
 
 The Scheduling problem describes the situation that you have different tasks
-need to be done by employees. Is there a scheduling for theses tasks and
-employees with the result that two different tasks just overlap if they are
-done by different employees.
+need to be done by employees. The question is if there is a scheduling for
+theses tasks and employees with the result that two different tasks just
+overlap if they are done by different employees.
 
 In extension one can define skills needed for the specific tasks and accept
 only employees to do the tasks who have those skills.
