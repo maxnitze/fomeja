@@ -132,7 +132,7 @@ boolean isSatisfiable = DIAB.satisfy(s);
 
 For a complete example look for the
 [Scheduling Example](../../tree/master/implementations/examples/example-schedule "implementation of scheduling example")
-as an example in this Project
+in this Project
 
 Supported Bytecode-Opcodes
 --------------------------
