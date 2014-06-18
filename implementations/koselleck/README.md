@@ -18,6 +18,8 @@ For example having a class for the vertices with a attribute color marked as var
 public class Vertex {
 	@Variable
 	private int color;
+
+	...
 }
 ~~~
 
@@ -27,6 +29,8 @@ And a class `Edge` containing the two vertices it connects:
 public class Edge {
 	private Vertex vertex1;
 	private Vertex vertex2;
+
+	...
 }
 ~~~
 
@@ -36,7 +40,7 @@ With a class that contains all vertices and edges of a graph:
 public class Graph {
 	private List<Vertex> vertices;
 	private List<Edge> edges;
-	
+
 	...
 }
 ~~~
@@ -47,16 +51,26 @@ One can define the constraints for the given problem:
 public class Graph {
 	private List<Vertex> vertices;
 	private List<Edge> edges;
-	
+
 	@Constraint
-	public boolean adjacentHaveDifferentColors(CGEdge edge) {
+	public boolean adjacentHaveDifferentColors(Edge edge) {
 		return edge.getVertex1().getColor() != edge.getVertex2().getColor();
 	}
+
+	...
 }
 ~~~
 
+And satisfy them by using this tool:
+
+~~~java
+Graph g = new Graph(listOfVertices, listOfEdges);
+
+boolean isSatisfiable = DIAB.satisfy(g);
+~~~
+
 For a complete example look for
-[Vertex-Color Example](/maxnitze/diab/tree/master/implementations/examples/example-vertexcolor "implementation of vertex-color example")
+[Vertex-Color Example](../../tree/master/implementations/examples/example-vertexcolor "implementation of vertex-color example")
 in this Project
 
 ### Scheduling
@@ -70,7 +84,7 @@ public class Task {
 ~~~
 
 For a complete example look for
-[Scheduling Example](/maxnitze/diab/tree/master/implementations/examples/example-schedule "implementation of scheduling example") as an example in this Project
+[Scheduling Example](../../tree/master/implementations/examples/example-schedule "implementation of scheduling example") as an example in this Project
 in this Project
 
 Supported Bytecode-Opcodes
