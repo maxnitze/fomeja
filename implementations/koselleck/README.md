@@ -1,10 +1,21 @@
 DIAB – Koselleck – JavaSAT
 =============================
 
-...
+With formal methods complex problems can be solved exactly, but today most
+tools are not easy to use and claim a deep understanding of the problem and
+the underlying algorithms.
+
+With this tool we try to introduce a method to use formal methods without
+leaving the familiar environment of a common programming language, in this case
+Java.
 
 Supported Examples
 --------------------------
+
+To demonstrate the features of this tool two example-problems are implemented:
+*Vertex-Color* and *Scheduling*. Below there is a short description of those and
+the way the tool is used to satisfy them. For a full working example follow the
+links at the end of each example.
 
 ### Vertex-Color
 
@@ -88,13 +99,13 @@ doing it:
 
 ~~~java
 public class Task {
-	private final int duration;
+	private int duration;
 
 	@Variable
-	public int start;
+	private int start;
 
 	@Variable
-	public Employee doneBy;
+	private Employee doneBy;
 
 	public boolean intersectsWith(Task task) {
 		return (this.start >= task.start && this.start < task.start + task.duration)
@@ -115,7 +126,7 @@ public class Schedule {
 
 	@Constraint(fields = { @Constraint.Field("tasks"), @Constraint.Field("tasks") })
 	public boolean oneTaskAtATime(Task task1, Task task2) {
-		return task1 == task2 || !task1.intersectsWith(task2) || task1.doneBy != task2.doneBy;
+		return task1 == task2 || !task1.intersectsWith(task2) || task1.getDoingEmployee() != task2.getDoingEmployee();
 	}
 
 	...
@@ -137,7 +148,11 @@ in this Project
 Supported Bytecode-Opcodes
 --------------------------
 
-Bytecode-Opcodes are ...
+Bytecode-Opcodes are the operation codes of the bytecode which the java code is
+compiled to. The operation codes define the action done interpreting this line
+as calculating some values or jumping to another line of the bytecode.
+
+These are the bytecodes that are supported by this tool:
 
 - `aload_<VALUE>`
 
@@ -446,4 +461,6 @@ Bytecode-Opcodes are ...
 Other Informations
 ------------------
 
-- needs java 7 for javap to recognize generics in parameter types
+- To recognize generics from the bytecode (important for all kinds of
+collections), this tool needs Java 7 as a runtime environment (especially the
+javap binary from that package).
