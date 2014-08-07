@@ -1,0 +1,16 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{manfnt}
+
+% Notes
+\def\hang{\hangindent19pt}
+\def\d@anger{\medbreak\begingroup\clubpenalty=10000
+ \def\par{\endgraf\endgroup\medbreak} \noindent\hang\hangafter=-2
+ \hbox to0pt{\hskip-\hangindent\dbend\hfill}\small}
+\outer\def\danger{\d@anger}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
