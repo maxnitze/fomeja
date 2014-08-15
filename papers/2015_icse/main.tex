@@ -51,6 +51,9 @@ the respective platform, so the interpreted programs are platform-independent.
 The interpreted binary code is called \emph{java bytecode}. This bytecode is
 similar to the Assembler-Code on regular processors or microcontrollers.
 
+\danger \textbf{MS:} Can we give some example of a Java Bytecode sequence for
+some 2- or 3-statement excerpt from some Java program?
+
 \subsection{Java Class File Disassembler}
 \label{sec:prelim_javap}
 
@@ -68,46 +71,36 @@ is delivered with the \emph{Java Development Kit~(JDK)}.
 
 An illustrative Example for an application of the described approach is the
 Graph-Coloring Problem. The setup for that problem is given by the
-Listings~\ref{lst:graph_coloring_vertex} to~\ref{lst:graph_coloring_graph}.
+Listing~\ref{lst:graph_coloring}.
 
-\begin{lstlisting}[language=java,label=lst:graph_coloring_vertex,
-    caption=Example -- Vertex]
+\begin{lstlisting}[language=java,label=lst:graph_coloring,
+    caption=Example]
 public class Vertex {
-	private int color;
-	...
+  private int color;
+  ...
 }
-\end{lstlisting}
 
-A graph consist of \emph{vertices}~(\prettyref{lst:graph_coloring_vertex}) and
-\emph{edges}~(\prettyref{lst:graph_coloring_edge}). Edges are connectors
-between two vertices. Every vertex has a \emph{color}-attribute~(here
-represented by an integer).
-
-\begin{lstlisting}[language=java,label=lst:graph_coloring_edge,
-    caption=Example -- Edge]
 public class Edge {
-    private Vertex vertex1;
-    private Vertex vertex2;
-    ...
+  private Vertex vertex1;
+  private Vertex vertex2;
+  ...
 }
-\end{lstlisting}
 
-A explicit graph is represented by a
-\emph{graph object}~(\prettyref{lst:graph_coloring_graph}), that consists of a
-collection of vertices and edges between those.
-
-\begin{lstlisting}[language=java,label=lst:graph_coloring_graph,
-  caption=Example -- Graph]
 public class Graph {
-    private Collection<Vertex> vertices;
-    private Collection<Edge> edges;
+  private Collection<Vertex> vertices;
+  private Collection<Edge> edges;
 
-    public boolean adjacentsHaveDifferentColors(Edge edge) {
-        return edge.getVertex1().getColor() != edge.getVertex2().getColor();
-    }
-    ...
+  public boolean adjacentsHaveDifferentColors(Edge edge) {
+    return edge.getVertex1().getColor() != edge.getVertex2().getColor();
+  }
+  ...
 }
 \end{lstlisting}
+
+A graph consist of \emph{vertices} and \emph{edges} that connect two vertices.
+Every vertex has a \emph{color}-attribute~(here represented by an integer).
+Then, a graph is represented by a \emph{graph object} that consists of a
+collection of vertices and edges between those.
 
 For an accepting graph there are \emph{constraints} that this graph must
 fulfill. For this example there is the constraint, that two vertices, that are
