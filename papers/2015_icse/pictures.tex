@@ -1,5 +1,29 @@
+%!TEX root = main.tex
 \usepackage{tikz}
+\usepackage{tikz-uml}
 
+% overview of the architecture
+\newcommand{\tikzarchitecture}{
+  \begin{tikzpicture}
+    %\begin{umlstate}[name=javasat]{JavaSAT}
+      \begin{umlstate}[name=disassembler]{Disassembler}
+        \umlbasicstate[name=disassemble]{disassemble class-File};
+        \umlbasicstate[name=convert,y=-3]{convert to bytecode};
+        \umltrans[with port]{disassemble}{convert};
+      \end{umlstate}
+      \begin{umlstate}[name=decompiler,x=6]{Decompiler}
+        \umlbasicstate[name=decompile]{decompile bytecode};
+      \end{umlstate}
+      \begin{umlstate}[name=constraintapplication,x=12]{Constraint Application}
+        \umlbasicstate[name=assignment]{get assignment};
+        \umlbasicstate[name=apply,y=-3]{apply assignment};
+        \umltrans[with port]{assignment}{apply};
+      \end{umlstate}
+      \umlHVHtrans[with port]{disassembler}{decompiler};
+      \umlHVHtrans[with port]{decompiler}{constraintapplication};
+    %\end{umlstate}
+  \end{tikzpicture}
+}
 
 %%% Local Variables:
 %%% mode: latex

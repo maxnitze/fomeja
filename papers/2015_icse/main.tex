@@ -40,15 +40,70 @@
 
 \danger Graph coloring example (Max)
 
+\begin{lstlisting}[caption=Example -- Vertex]
+public class Vertex {
+	private int color;
+	...
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Example -- Edge]
+public class Edge {
+    private Vertex vertex1;
+    private Vertex vertex2;
+    ...
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Example -- Graph]
+public class Graph {
+    private List<Vertex> vertices;
+    private List<Edge> edges;
+
+    public boolean adjacentHaveDifferentColors(Edge edge) {
+        return edge.getVertex1().getColor() != edge.getVertex2().getColor();
+    }
+    ...
+}
+\end{lstlisting}
+
 \section{Implementation}
 \label{sec:implementation}
 
 \danger Partition into sub-sections (Max)
 
 \subsection{Overview of the Architecture}
-\label{sec:overv-arch}
+\label{sec:impl_overv-arch}
 
 \danger First draft of the flow (Max), maybe part of implementation
+
+\danger perhaps as introduction for this section, ergo no subsection ``Overview
+of the Architecture''?
+
+\begin{figure*}
+  \centering
+  \label{fig:architecture}
+  \tikzarchitecture
+  \caption{Overview of the Architecture}
+\end{figure*}
+
+\subsection{Disassembling class-Files}
+\label{sec:impl_disassembling}
+
+\danger using javap to decompile and convert every string line into a abstract
+object and add this to a map from line numbers to abstract line objects
+
+\subsection{Decompiling the Bytecode}
+\label{sec:impl_decompiling}
+
+\danger move through the abstract line objects and reconstruct the constraints
+from that
+
+\subsection{Apply Constraints on Explicit Object}
+\label{sec:impl_applying}
+
+\danger iterate over all collections matching the parameters of the constraints
+and create a constraint for that assignment
 
 \section{Experimental Evaluation}
 \label{sec:exper-eval}
