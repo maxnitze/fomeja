@@ -33,36 +33,58 @@
 \section{Preliminaries}
 \label{sec:preliminaries}
 
-\danger JVM and Java Bytecode (javap) (Max), SAT Modulo Theories (Mathias)
+\ldots
 
 \subsection{Java Virtual Machine}
 \label{sec:prelim_jvm}
 
-\ldots
+The \emph{Java Virtual Machine~(JVM)} is the interpreter for compiled java
+binary code. The JVM is the part of the java environment, that abstracts from
+the respective platform, so the interpreted programs are platform-independent.
+
+\begin{figure}[!ht]
+  \centering
+  JVM Description Graphic
+  \caption{Java Virtual Machine}
+\end{figure}
+
+The interpreted binary code is called \emph{java bytecode}. This bytecode is
+similar to the Assembler-Code on regular processors or microcontrollers.
 
 \subsection{Java Class File Disassembler}
 \label{sec:prelim_javap}
 
-\ldots
+The \emph{Java Class File Disassembler~(javap)} is a class file disassembler
+that reconstructs the bytecode from one or more java class files. The program
+is delivered with the \emph{Java Development Kit~(JDK)}.
 
 \subsection{Satisfiability Modulo Theories}
 \label{sec:prelim_smt}
 
-\ldots
+\danger Mathias
 
-\section{Illustrative Example}
+\section{Example -- Graph-Coloring}
 \label{sec:example}
 
-\danger Graph coloring example (Max)
+An illustrative Example for an application of the described approach is the
+Graph-Coloring Problem. The setup for that problem is given by the
+Listings~\ref{lst:graph_coloring_vertex} to~\ref{lst:graph_coloring_graph}.
 
-\begin{lstlisting}[caption=Example -- Vertex]
+\begin{lstlisting}[language=java,label=lst:graph_coloring_vertex,
+    caption=Example -- Vertex]
 public class Vertex {
 	private int color;
 	...
 }
 \end{lstlisting}
 
-\begin{lstlisting}[caption=Example -- Edge]
+A graph consist of \emph{vertices}~(\prettyref{lst:graph_coloring_vertex}) and
+\emph{edges}~(\prettyref{lst:graph_coloring_edge}). Edges are connectors
+between two vertices. Every vertex has a \emph{color}-attribute~(here
+represented by an integer).
+
+\begin{lstlisting}[language=java,label=lst:graph_coloring_edge,
+    caption=Example -- Edge]
 public class Edge {
     private Vertex vertex1;
     private Vertex vertex2;
@@ -70,17 +92,29 @@ public class Edge {
 }
 \end{lstlisting}
 
-\begin{lstlisting}[caption=Example -- Graph]
-public class Graph {
-    private List<Vertex> vertices;
-    private List<Edge> edges;
+A explicit graph is represented by a
+\emph{graph object}~(\prettyref{lst:graph_coloring_graph}), that consists of a
+collection of vertices and edges between those.
 
-    public boolean adjacentHaveDifferentColors(Edge edge) {
+\begin{lstlisting}[language=java,label=lst:graph_coloring_graph,
+  caption=Example -- Graph]
+public class Graph {
+    private Collection<Vertex> vertices;
+    private Collection<Edge> edges;
+
+    public boolean adjacentsHaveDifferentColors(Edge edge) {
         return edge.getVertex1().getColor() != edge.getVertex2().getColor();
     }
     ...
 }
 \end{lstlisting}
+
+For an accepting graph there are \emph{constraints} that this graph must
+fulfill. For this example there is the constraint, that two vertices, that are
+connected by an edge, must have different
+colors~(\emph{adjacentsHaveDifferentColors(Edge)}).
+
+\danger show how to proceed without tool
 
 \section{Implementation}
 \label{sec:implementation}
@@ -95,7 +129,7 @@ public class Graph {
 \danger perhaps as introduction for this section, ergo no subsection ``Overview
 of the Architecture''?
 
-\begin{figure*}
+\begin{figure*}[!ht]
   \centering
   \label{fig:architecture}
   \tikzarchitecture
@@ -124,6 +158,8 @@ and create a constraint for that assignment
 \label{sec:exper-eval}
 
 \danger Experimental setup (Max)
+
+\danger implementations for same problem by students/other people $\longrigharrow$ compared versions; currently waiting for first implementations
 
 \section{Threats To Validity}
 \label{sec:threats-validity}
