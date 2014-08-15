@@ -1,27 +1,45 @@
 %!TEX root = main.tex
 \usepackage{tikz}
-\usepackage{tikz-uml}
+\usetikzlibrary{backgrounds,positioning,fit}
 
 % overview of the architecture
 \newcommand{\tikzarchitecture}{
-  \begin{tikzpicture}
-    %\begin{umlstate}[name=javasat]{JavaSAT}
-      \begin{umlstate}[name=disassembler]{Disassembler}
-        \umlbasicstate[name=disassemble]{disassemble class-File};
-        \umlbasicstate[name=convert,y=-3]{convert to bytecode};
-        \umltrans[with port]{disassemble}{convert};
-      \end{umlstate}
-      \begin{umlstate}[name=decompiler,x=6]{Decompiler}
-        \umlbasicstate[name=decompile]{decompile bytecode};
-      \end{umlstate}
-      \begin{umlstate}[name=constraintapplication,x=12]{Constraint Application}
-        \umlbasicstate[name=assignment]{get assignment};
-        \umlbasicstate[name=apply,y=-3]{apply assignment};
-        \umltrans[with port]{assignment}{apply};
-      \end{umlstate}
-      \umlHVHtrans[with port]{disassembler}{decompiler};
-      \umlHVHtrans[with port]{decompiler}{constraintapplication};
-    %\end{umlstate}
+  \begin{tikzpicture}[node distance=2.5cm]
+    \tikzstyle{block} = [rectangle, draw, fill=blue!20, text width=8em,
+        text centered, rounded corners, minimum height=4em]
+    \tikzstyle{line} = [draw, ->]
+    \tikzstyle{container} = [rectangle, draw, ultra thick, rounded corners,
+        inner sep=.25cm, fill=yellow!35]
+
+    % Disassembler
+    \node[] (disname) {Disassembler};
+    \node[block, below=.5cm of disname] (disassemble) {disassemble class-File};
+    \node[block, below of=disassemble] (convert) {convert to abstract bytecode
+        representation};
+    \draw[line] (disassemble) -- (convert);
+    \begin{scope}[on background layer]
+      \node[container,fit=(disname) (disassemble) (convert)] (disassembler) {};
+    \end{scope}
+    % Decompiler
+    \node[right=3cm of disname] (decname) {Decompiler};
+    \node[block, below=.5cm of decname] (decompile) {decompile bytecode to
+        abstract constraint};
+    \begin{scope}[on background layer]
+      \node[container,fit=(decname) (decompile)] (disassembler) {};
+    \end{scope}
+    % Assigner
+    \node[right=3cm of decname] (assname) {Assigner};
+    \node[block, below=.5cm of assname] (assign) {determine assignments from
+        explicit object};
+    \node[block, below of=assign] (apply) {apply assignments to copys of
+        abstract constraint};
+    \draw[line] (assign) -- (apply);
+    \begin{scope}[on background layer]
+      \node[container,fit=(assname) (assign) (apply)] (assigner) {};
+    \end{scope}
+
+    \draw[line] (convert.east) -- ++(1,0) |-  (decompile.west);
+    \draw[line] (decompile.east) -- (assign.west);
   \end{tikzpicture}
 }
 
