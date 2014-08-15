@@ -102,7 +102,7 @@ public class Graph {
     private Collection<Vertex> vertices;
     private Collection<Edge> edges;
 
-    public boolean adjacentsHaveDifferentColors(Edge edge) {
+    public boolean adjacentsColorsDiffer(Edge edge) {
         return edge.getVertex1().getColor() != edge.getVertex2().getColor();
     }
     ...
@@ -112,7 +112,7 @@ public class Graph {
 For an accepting graph there are \emph{constraints} that this graph must
 fulfill. For this example there is the constraint, that two vertices, that are
 connected by an edge, must have different
-colors~(\emph{adjacentsHaveDifferentColors(Edge)}).
+colors~(\emph{adjacentsColorsDiffer(Edge)}).
 
 \danger show how to proceed without tool
 
