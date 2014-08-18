@@ -43,6 +43,31 @@
   \end{tikzpicture}
 }
 
+\newcommand{\tikzjvm}{
+  \begin{tikzpicture}
+    \draw[very thick,fill=yellow!35] (0,0) rectangle (10,6);
+
+    \draw[very thick] (0,2) rectangle (10,5);
+    \draw[very thick] (0,5) rectangle (10,6) node[midway,align=center]
+      {\Large JVM};
+    \draw[very thick,fill=blue!20] (0,2) rectangle (4,5) node[midway,
+      align=center] {Memory\\manager};
+    \draw[very thick] (4,2) rectangle (10,5);
+    \draw[very thick,fill=blue!20] (4,4) rectangle (10,5) node[midway,
+      align=center] {Bytecode verifier};
+    \draw[very thick,fill=blue!20] (4,2) rectangle (10,4) node[midway,
+      align=center] {Interpreter / \\JIT compiler};
+    \draw[very thick] (0,1) rectangle (6,2) node[midway,align=center] {Java
+      APIs};
+    \draw[very thick] (0,0) rectangle (10,2);
+    \draw[draw=none] (0,0) rectangle (10,1) node[midway,align=center]
+      {Operating System};
+
+    \draw[draw=none] (0,0) rectangle (10,-.2) node[anchor=north east]
+      {\scriptsize based on \emph{Java Virtual Machine}-Article on Wikipedia};
+  \end{tikzpicture}
+}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "main"

@@ -44,22 +44,52 @@ the respective platform, so the interpreted programs are platform-independent.
 
 \begin{figure}[!ht]
   \centering
-  JVM Description Graphic
+  \resizebox{.8\columnwidth}{!}{\tikzjvm}
   \caption{Java Virtual Machine}
 \end{figure}
 
 The interpreted binary code is called \emph{java bytecode}. This bytecode is
 similar to the Assembler-Code on regular processors or microcontrollers.
 
-\danger \textbf{MS:} Can we give some example of a Java Bytecode sequence for
-some 2- or 3-statement excerpt from some Java program?
+For example for a method thats adds two to an integer, given as parameter to
+the method, the java bytecode looks like the code given in
+\prettyref{lst:example_bytecode_add_up_2}.
+
+\begin{javalisting}[caption=Java bytecode list for a Method that adds up 2,
+    label=lst:example_bytecode_add_up_2]
+public int add2(int);
+  Code:
+   0: iload_1
+   1: iconst_2
+   2: iadd
+   3: ireturn
+\end{javalisting}
+
+\texttt{iload\_1} in line three means, that the first integer parameter of the
+method is pushed on top of the methods stack. In the next line the integer
+constant~\texttt{2} is pushed on top of the stack. And in line five the two top
+integer elements are pulled down and their sum is re-pushed on top of the
+methods stack again. Finally the top integer element of the stack is returned.
+
+A complete list of all bytecode instructions, in this case for Java~7, is shown
+in~\cite{LindholmYBB11}.
 
 \subsection{Java Class File Disassembler}
 \label{sec:prelim_javap}
 
-The \emph{Java Class File Disassembler~(javap)} is a class file disassembler
-that reconstructs the bytecode from one or more java class files. The program
-is delivered with the \emph{Java Development Kit~(JDK)}.
+The \emph{Java Class File Disassembler~(javap)} is a class file disassembler,
+that reconstructs the bytecode from one or more java class files. Based on the
+options set with the command call, the tool prints the disassembled class out
+to \texttt{stdout}. One of the options is \texttt{-c}, to get the disassembled
+code of the methods, besides their method signatures. Another one is the option
+\texttt{-p}, that indicates, that additionally all private methods should get
+disassembled.
+
+The program is delivered with the \emph{Java Development Kit~(JDK)}. Since
+JDK~1.7 it also reconstructs the generic values of methods, fields and classes
+of class-files that have been compiled with a compiler from JDK~1.7 or higher.
+
+\danger ref!
 
 \subsection{Satisfiability Modulo Theories}
 \label{sec:prelim_smt}
@@ -73,8 +103,7 @@ An illustrative Example for an application of the described approach is the
 Graph-Coloring Problem. The setup for that problem is given by the
 Listing~\ref{lst:graph_coloring}.
 
-\begin{lstlisting}[language=java,label=lst:graph_coloring,
-    caption=Example]
+\begin{javalisting}[label=lst:graph_coloring,caption=Example]
 public class Vertex {
   private int color;
   ...
@@ -90,12 +119,12 @@ public class Graph {
   private Collection<Vertex> vertices;
   private Collection<Edge> edges;
 
-  public boolean adjacentsHaveDifferentColors(Edge edge) {
+  public boolean adjacentsColorsDiffer(Edge edge) {
     return edge.getVertex1().getColor() != edge.getVertex2().getColor();
   }
   ...
 }
-\end{lstlisting}
+\end{javalisting}
 
 A graph consist of \emph{vertices} and \emph{edges} that connect two vertices.
 Every vertex has a \emph{color}-attribute~(here represented by an integer).
@@ -173,8 +202,8 @@ Research Foundation~(DFG)~(DR 287/23-1) within a \emph{Reinhart-Koselleck}
 project.
 
 
-%\bibliographystyle{IEEEtran}
-%\bibliography{refs}
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
 
 
 \end{document}
