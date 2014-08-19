@@ -39,20 +39,28 @@
 \label{sec:prelim_jvm}
 
 The \emph{Java Virtual Machine~(JVM)} is the interpreter for compiled java
-binary code. The JVM is the part of the java environment, that abstracts from
-the respective platform, so the interpreted programs are platform-independent.
+code. The JVM is the part of the \emph{Java Runtime Environment~(JRE)}, that
+abstracts from the respective platform, so the interpreted programs are
+platform-independent.
+
+As shown in \prettyref{fig:jvm} the JVM consist of three important parts: The
+\emph{memory manager} manages all accesses to the memory of the running
+program. Before interpreting the bytecode of the given program, it is checked
+for syntactic faults by the \emph{bytecode verifier}. Afterwards the bytecode
+is interpreted by the \emph{Interpreter} component. Together the JVM and the Java~APIs represent the JRE.
 
 \begin{figure}[!ht]
   \centering
   \resizebox{.8\columnwidth}{!}{\tikzjvm}
   \caption{Java Virtual Machine}
+  \label{fig:jvm}
 \end{figure}
 
 The interpreted binary code is called \emph{java bytecode}. This bytecode is
 similar to the Assembler-Code on regular processors or microcontrollers.
 
 For example for a method thats adds two to an integer, given as parameter to
-the method, the java bytecode looks like the code given in
+the method, the java bytecode looks like the one given in
 \prettyref{lst:example_bytecode_add_up_2}.
 
 \begin{javalisting}[caption=Java bytecode list for a Method that adds up 2,
@@ -71,7 +79,7 @@ constant~\texttt{2} is pushed on top of the stack. And in line five the two top
 integer elements are pulled down and their sum is re-pushed on top of the
 methods stack again. Finally the top integer element of the stack is returned.
 
-A complete list of all bytecode instructions, in this case for Java~7, is shown
+A description for all bytecode instructions, in this case for Java~7, is shown
 in~\cite{LindholmYBB11}.
 
 \subsection{Java Class File Disassembler}
@@ -94,8 +102,10 @@ of class-files that have been compiled with a compiler from JDK~1.7 or higher.
 
 \danger Mathias
 
-\section{Example -- Graph-Coloring}
-\label{sec:example}
+\section{Example -- Vertex Coloring}
+\label{sec:example_vertex_coloring}
+
+A \emph{vertex coloring} is an assignment of colors to each vertex of a graph
 
 An illustrative Example for an application of the described approach is the
 Graph-Coloring Problem. The setup for that problem is given by the

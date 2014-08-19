@@ -41,7 +41,7 @@
     % AssignmentHandler
     \node[containertitle,right=2cm of confname] (smt2name) {SMT2Handler};
     \node[block, below=.5cm of smt2name] (smt2converter) {convert abstract
-        abstracts to \emph{smt2}-expression};
+        constraints to \emph{smt2}-expression};
     \node[block, below of=smt2converter] (smt2solver) {solve smt2-expression};
     \draw[line] (smt2converter) -- (smt2solver);
     \begin{scope}[on background layer]
@@ -77,7 +77,7 @@
     \draw[very thick,fill=blue!20] (4,4) rectangle (10,5) node[midway,
       align=center] {Bytecode verifier};
     \draw[very thick,fill=blue!20] (4,2) rectangle (10,4) node[midway,
-      align=center] {Interpreter / \\JIT compiler};
+      align=center] {Interpreter};
     \draw[very thick] (0,1) rectangle (6,2) node[midway,align=center] {Java
       APIs};
     \draw[very thick] (0,0) rectangle (10,2);
