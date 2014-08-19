@@ -49,7 +49,7 @@
           (smt2handler) {};
     \end{scope}
     % Allocator
-    \node[containertitle,right=2cm of smt2name] (modname) {ModelHandler};
+    \node[containertitle,below=1cm of smt2handler] (modname) {ModelHandler};
     \node[block, below=.5cm of modname] (assigner) {assign \emph{smt2-model}
         values to explicit object};
     \begin{scope}[on background layer]
@@ -60,7 +60,7 @@
     \draw[line] (convert.west) -| ++(-.5,0) |-  (decompile.west);
     \draw[line] (decompile.east) -- ++(.85,0) |- (config.west);
     \draw[line] (apply.east) -- ++(.85,0) |-  (smt2converter.west);
-    \draw[line] (smt2solver.east) -- ++(.85,0) |-  (assigner.west);
+    \draw[line] (smt2solver.east) -| ++(.5,0) |-  (assigner.east);
   \end{tikzpicture}
 }
 
