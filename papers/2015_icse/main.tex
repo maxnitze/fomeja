@@ -65,8 +65,8 @@ public int add2(int);
    3: ireturn
 \end{javalisting}
 
-\texttt{iload\_1} in line three means, that the first integer parameter of the
-method is pushed on top of the methods stack. In the next line the integer
+In line three (\texttt{iload\_1}) the first integer parameter of the method is
+pushed on top of the methods stack. In the next line the integer
 constant~\texttt{2} is pushed on top of the stack. And in line five the two top
 integer elements are pulled down and their sum is re-pushed on top of the
 methods stack again. Finally the top integer element of the stack is returned.
@@ -81,15 +81,13 @@ The \emph{Java Class File Disassembler~(javap)} is a class file disassembler,
 that reconstructs the bytecode from one or more java class files. Based on the
 options set with the command call, the tool prints the disassembled class out
 to \texttt{stdout}. One of the options is \texttt{-c}, to get the disassembled
-code of the methods, besides their method signatures. Another one is the option
-\texttt{-p}, that indicates, that additionally all private methods should get
-disassembled.
+code of the methods, besides their signatures. Another one is the
+option~\texttt{-p}, that indicates, that additionally all private methods
+should get disassembled.
 
 The program is delivered with the \emph{Java Development Kit~(JDK)}. Since
 JDK~1.7 it also reconstructs the generic values of methods, fields and classes
 of class-files that have been compiled with a compiler from JDK~1.7 or higher.
-
-\danger ref!
 
 \subsection{Satisfiability Modulo Theories}
 \label{sec:prelim_smt}

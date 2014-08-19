@@ -10,9 +10,10 @@
     \tikzstyle{line} = [draw, ->]
     \tikzstyle{container} = [rectangle, draw, ultra thick, rounded corners,
         inner sep=.25cm, fill=yellow!35]
+    \tikzstyle{containertitle} = [minimum width=8em]
 
     % Disassembler
-    \node[] (disname) {Disassembler};
+    \node[minimum width=8em] (disname) {Disassembler};
     \node[block, below=.5cm of disname] (disassemble) {disassemble class-File};
     \node[block, below of=disassemble] (convert) {convert to abstract bytecode
         representation};
@@ -21,25 +22,45 @@
       \node[container,fit=(disname) (disassemble) (convert)] (disassembler) {};
     \end{scope}
     % Decompiler
-    \node[right=3cm of disname] (decname) {Decompiler};
+    \node[containertitle,below=1cm of disassembler] (decname) {Decompiler};
     \node[block, below=.5cm of decname] (decompile) {decompile bytecode to
         abstract constraint};
     \begin{scope}[on background layer]
       \node[container,fit=(decname) (decompile)] (disassembler) {};
     \end{scope}
-    % Assigner
-    \node[right=3cm of decname] (assname) {Assigner};
-    \node[block, below=.5cm of assname] (assign) {determine assignments from
+    % AssignmentHandler
+    \node[containertitle,right=2cm of disname] (confname) {ConfigHandler};
+    \node[block, below=.5cm of confname] (config) {determine configuration from
         explicit object};
-    \node[block, below of=assign] (apply) {apply assignments to copys of
+    \node[block, below of=config] (apply) {apply configuration to copys of
         abstract constraint};
-    \draw[line] (assign) -- (apply);
+    \draw[line] (config) -- (apply);
     \begin{scope}[on background layer]
-      \node[container,fit=(assname) (assign) (apply)] (assigner) {};
+      \node[container,fit=(confname) (config) (apply)] (confighandler) {};
+    \end{scope}
+    % AssignmentHandler
+    \node[containertitle,right=2cm of confname] (smt2name) {SMT2Handler};
+    \node[block, below=.5cm of smt2name] (smt2converter) {convert abstract
+        abstracts to \emph{smt2}-expression};
+    \node[block, below of=smt2converter] (smt2solver) {solve smt2-expression};
+    \draw[line] (smt2converter) -- (smt2solver);
+    \begin{scope}[on background layer]
+      \node[container,fit=(smt2name) (smt2converter) (smt2solver)]
+          (smt2handler) {};
+    \end{scope}
+    % Allocator
+    \node[containertitle,right=2cm of smt2name] (modname) {ModelHandler};
+    \node[block, below=.5cm of modname] (assigner) {assign \emph{smt2-model}
+        values to explicit object};
+    \begin{scope}[on background layer]
+      \node[container,fit=(modname) (assigner)]
+          (modelhandler) {};
     \end{scope}
 
-    \draw[line] (convert.east) -- ++(1,0) |-  (decompile.west);
-    \draw[line] (decompile.east) -- (assign.west);
+    \draw[line] (convert.west) -| ++(-.5,0) |-  (decompile.west);
+    \draw[line] (decompile.east) -- ++(.85,0) |- (config.west);
+    \draw[line] (apply.east) -- ++(.85,0) |-  (smt2converter.west);
+    \draw[line] (smt2solver.east) -- ++(.85,0) |-  (assigner.west);
   \end{tikzpicture}
 }
 
@@ -48,8 +69,8 @@
     \draw[very thick,fill=yellow!35] (0,0) rectangle (10,6);
 
     \draw[very thick] (0,2) rectangle (10,5);
-    \draw[very thick] (0,5) rectangle (10,6) node[midway,align=center]
-      {\Large JVM};
+    \draw[very thick,fill=blue!36] (0,5) rectangle (10,6)
+      node[midway,align=center] {\Large JVM};
     \draw[very thick,fill=blue!20] (0,2) rectangle (4,5) node[midway,
       align=center] {Memory\\manager};
     \draw[very thick] (4,2) rectangle (10,5);
