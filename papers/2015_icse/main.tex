@@ -89,13 +89,12 @@ The \emph{Java Class File Disassembler~(javap)} is a class file disassembler,
 that reconstructs the bytecode from one or more java class files. Based on the
 options set with the command call, the tool prints the disassembled class out
 to \texttt{stdout}. One of the options is \texttt{-c}, to get the disassembled
-code of the methods, besides their signatures. Another one is the
-option~\texttt{-p}, that indicates, that additionally all private methods
-should get disassembled.
+code of the methods, besides their signatures. To disassemble additionally all
+private methods, the option \texttt{-p} is used.
 
 The program is delivered with the \emph{Java Development Kit~(JDK)}. Since
 JDK~1.7 it also reconstructs the generic values of methods, fields and classes
-of class-files that have been compiled with a compiler from JDK~1.7 or higher.
+of class-files that have been compiled with a compiler of JDK~1.7 or higher.
 
 \subsection{Satisfiability Modulo Theories}
 \label{sec:prelim_smt}
@@ -106,10 +105,27 @@ of class-files that have been compiled with a compiler from JDK~1.7 or higher.
 \label{sec:example_vertex_coloring}
 
 A \emph{vertex coloring} is an assignment of colors to each vertex of a graph
+with the restriction that two adjacent vertices must not have the same color.
+A graph that can be assigned with a vertex coloring with $k$ colors is
+\emph{$k$-colorable}.
 
-An illustrative Example for an application of the described approach is the
-Graph-Coloring Problem. The setup for that problem is given by the
-Listing~\ref{lst:graph_coloring}.
+If one wants to get a coloring for a given graph in a java program, there are
+basically two different approaches: The first, admittedly very naive, approach
+is to assign a random coloring to the vertices of the graph, as long as the
+restriction does not apply. The second one is to use a backtracking algorithm
+to color the vertices one after another and check the restriction for every
+coloring.
+
+The first one has the problem that it might never halt, e.g. if the random
+coloring accidentally always is the same not applying one. If the backtracking
+algorithm always adds one color to the color-pool, if there was no coloring
+with the previous one, it will always find the coloring with the smallest
+amount of colors. But in the worst case this will take \(1^{|V|} + \ldots +
+|V|^{|V|} \) backtracking-steps, with \(|V|\) being the amount of vertices of
+the graph. And each of these backtracking-steps include the restriction-check
+for all edges of the graph. Additionally the algorithms to \ldots
+
+\danger to close to / needs understanding of the problem
 
 \begin{javalisting}[label=lst:graph_coloring,caption=Example]
 public class Vertex {
