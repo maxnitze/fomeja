@@ -71,6 +71,19 @@ public enum Opcode {
 
 	_return("return", 1, OpcodeType.SIMPLE, "[i|f|d|a]return");
 
+	/** regexp group of simple typed opcodes */
+	public static final String simpleTypeGroup = getGroupForType(OpcodeType.SIMPLE);
+	/** regexp group of simple typed opcodes */
+	public static final String simpleValueTypeGroup = getGroupForType(OpcodeType.SIMPLE_VALUE);
+	/** regexp group of simple typed opcodes */
+	public static final String constantTableValueTypeGroup = getGroupForType(OpcodeType.CONSTANT_TABLE_VALUE);
+	/** regexp group of simple typed opcodes */
+	public static final String offsetTypeGroup = getGroupForType(OpcodeType.OFFSET);
+	/** regexp group of simple typed opcodes */
+	public static final String constantTableIndexTypeGroup = getGroupForType(OpcodeType.CONSTANT_TABLE_INDEX);
+	/** regexp group of simple typed opcodes */
+	public static final String switchTypeGroup = getGroupForType(OpcodeType.SWITCH);
+
 	/** enumeration of the types of an opcode */
 	private enum OpcodeType { SIMPLE, SIMPLE_VALUE, CONSTANT_TABLE_VALUE, OFFSET, CONSTANT_TABLE_INDEX, SWITCH };
 
@@ -117,118 +130,23 @@ public enum Opcode {
 	}
 
 	/**
-	 * getSimpleTypeGroup returns the '|'-separated list of the regular
-	 *  expressions of the opcodes thats types are simple.
+	 * getGroupForType returns the '|'-separated list of the regular
+	 *  expressions of the opcodes with the given type.
+	 * 
+	 * @param type the type of the opcodes to create the group for
 	 * 
 	 * @return the '|'-separated list of the regular expressions of the opcodes
-	 *  thats types are simple
+	 *  with the given type
 	 */
-	public static String getSimpleTypeGroup() {
+	private static String getGroupForType(OpcodeType type) {
 		StringBuilder simpleTypeGroup = new StringBuilder("");
 		for (Opcode opcode : values()) {
-			if (opcode.type == OpcodeType.SIMPLE) {
+			if (opcode.type == type) {
 				if (simpleTypeGroup.length() > 0)
 					simpleTypeGroup.append("|");
 				simpleTypeGroup.append(opcode.opcodeRegex);
 			}
 		}
 		return simpleTypeGroup.toString();
-	}
-
-	/**
-	 * getSimpleValueTypeGroup returns the '|'-separated list of the regular
-	 *  expressions of the opcodes thats types are simple value.
-	 * 
-	 * @return the '|'-separated list of the regular expressions of the opcodes
-	 *  thats types are simple value
-	 */
-	public static String getSimpleValueTypeGroup() {
-		StringBuilder simpleValueTypeGroup = new StringBuilder("");
-		for (Opcode opcode : values()) {
-			if (opcode.type == OpcodeType.SIMPLE_VALUE) {
-				if (simpleValueTypeGroup.length() > 0)
-					simpleValueTypeGroup.append("|");
-				simpleValueTypeGroup.append(opcode.opcodeRegex);
-			}
-		}
-		return simpleValueTypeGroup.toString();
-	}
-
-	/**
-	 * getConstantTableValueTypeGroup returns the '|'-separated list of the
-	 *  regular expressions of the opcodes thats types are constant table
-	 *  value.
-	 * 
-	 * @return the '|'-separated list of the regular expressions of the opcodes
-	 *  thats types are constant table value
-	 */
-	public static String getConstantTableValueTypeGroup() {
-		StringBuilder valueTypeGroup = new StringBuilder("");
-		for (Opcode opcode : values()) {
-			if (opcode.type == OpcodeType.CONSTANT_TABLE_VALUE) {
-				if (valueTypeGroup.length() > 0)
-					valueTypeGroup.append("|");
-				valueTypeGroup.append(opcode.opcodeRegex);
-			}
-		}
-		return valueTypeGroup.toString();
-	}
-
-	/**
-	 * getOffsetTypeGroup returns the '|'-separated list of the regular
-	 *  expressions of the opcodes thats types are offset.
-	 * 
-	 * @return the '|'-separated list of the regular expressions of the opcodes
-	 *  thats types are offset
-	 */
-	public static String getOffsetTypeGroup() {
-		StringBuilder offsetTypeGroup = new StringBuilder("");
-		for (Opcode opcode : values()) {
-			if (opcode.type == OpcodeType.OFFSET) {
-				if (offsetTypeGroup.length() > 0)
-					offsetTypeGroup.append("|");
-				offsetTypeGroup.append(opcode.opcodeRegex);
-			}
-		}
-		return offsetTypeGroup.toString();
-	}
-
-	/**
-	 * getConstantTableIndexTypeGroup returns the '|'-separated list of the
-	 *  regular expressions of the opcodes thats types are constant table
-	 *  index.
-	 * 
-	 * @return the '|'-separated list of the regular expressions of the opcodes
-	 *  thats types are constant table index
-	 */
-	public static String getConstantTableIndexTypeGroup() {
-		StringBuilder constantTableIndexTypeGroup = new StringBuilder("");
-		for (Opcode opcode : values()) {
-			if (opcode.type == OpcodeType.CONSTANT_TABLE_INDEX) {
-				if (constantTableIndexTypeGroup.length() > 0)
-					constantTableIndexTypeGroup.append("|");
-				constantTableIndexTypeGroup.append(opcode.opcodeRegex);
-			}
-		}
-		return constantTableIndexTypeGroup.toString();
-	}
-
-	/**
-	 * getConstantSwitchGroup returns the '|'-separated list of the regular
-	 *  expressions of the opcodes thats types are switch.
-	 * 
-	 * @return the '|'-separated list of the regular expressions of the opcodes
-	 *  thats types are switch
-	 */
-	public static String getConstantSwitchGroup() {
-		StringBuilder constantSwitchGroup = new StringBuilder("");
-		for (Opcode opcode : values()) {
-			if (opcode.type == OpcodeType.SWITCH) {
-				if (constantSwitchGroup.length() > 0)
-					constantSwitchGroup.append("|");
-				constantSwitchGroup.append(opcode.opcodeRegex);
-			}
-		}
-		return constantSwitchGroup.toString();
 	}
 }

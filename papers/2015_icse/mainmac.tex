@@ -2,6 +2,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 
+\usepackage{tikz-uml}
+
 \usepackage{xcolor}
 \definecolor{javared}{rgb}{0.6,0,0} % for strings
 \definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
@@ -16,10 +18,21 @@
   xleftmargin=5ex,
   breaklines
 }
-\lstnewenvironment{javalisting}[1][]{
+\lstnewenvironment{javalst}[1][]{
   \lstset{
     language=java,
     keywordstyle=\color{javapurple}\bfseries,
+    stringstyle=\color{javared},
+    commentstyle=\color{javagreen},
+    morecomment=[s][\color{javadocblue}]{/**}{*/},
+    #1
+  }
+}{}
+\lstnewenvironment{bytecodelst}[1][]{
+  \lstset{
+    language=java,
+    keywords={Code},
+    keywordstyle=\color{black}\bfseries,
     stringstyle=\color{javared},
     commentstyle=\color{javagreen},
     morecomment=[s][\color{javadocblue}]{/**}{*/},

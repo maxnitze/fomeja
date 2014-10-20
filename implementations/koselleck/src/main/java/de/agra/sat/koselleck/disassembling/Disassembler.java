@@ -32,25 +32,25 @@ import de.agra.sat.koselleck.types.Opcode;
 public class Disassembler {
 	/**  */
 	private static final Pattern simpleTypePattern =
-			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleTypeGroup() + ")$");
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.simpleTypeGroup + ")$");
 	/**  */
 	private static final Pattern valueTypePattern =
-			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getSimpleValueTypeGroup() + ")(?<value>[+-]?[0-9]+(\\.[0-9]+)?)$");
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.simpleValueTypeGroup + ")(?<value>[+-]?[0-9]+(\\.[0-9]+)?)$");
 	/**  */
 	private static final Pattern constantTableValueTypePattern =
-			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableValueTypeGroup() + ") #\\d+ // (float|double) (?<value>[+-]?[0-9]+(\\.[0-9]+)?)(?<valuetype>[f|d])$");
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.constantTableValueTypeGroup + ") #\\d+ // (float|double) (?<value>[+-]?[0-9]+(\\.[0-9]+)?)(?<valuetype>[f|d])$");
 	/**  */
 	private static final Pattern offsetTypePattern =
-			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getOffsetTypeGroup() + ") (?<offset>\\d+)$");
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.offsetTypeGroup + ") (?<offset>\\d+)$");
 	/**  */
 	private static final Pattern constantTableAccessibleObjectTypePattern =
-			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableIndexTypeGroup() + ") #(?<index>\\d+) // (?<accessibleobjecttype>Field|Method) (?<accessibleobject>\\S+):(\\((?<parametertypes>\\S+)\\))?(?<returntype>\\S+)$");
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.constantTableIndexTypeGroup + ") #(?<index>\\d+) // (?<accessibleobjecttype>Field|Method) (?<accessibleobject>\\S+):(\\((?<parametertypes>\\S+)\\))?(?<returntype>\\S+)$");
 	/**  */
 	private static final Pattern constantTableClassTypePattern =
-			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantTableIndexTypeGroup() + ") #(?<index>\\d+) // class (?<class>\\S+):(\\((?<parametertypes>\\S+)\\))?(?<returntype>\\S+)$"); // TODO might not be right
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.constantTableIndexTypeGroup + ") #(?<index>\\d+) // class (?<class>\\S+):(\\((?<parametertypes>\\S+)\\))?(?<returntype>\\S+)$");
 	/**  */
 	private static final Pattern tableswitchPattern =
-			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.getConstantSwitchGroup() + ") \\{ // \\d+ to \\d+$");
+			Pattern.compile("^(?<number>\\d+): (?<opcode>" + Opcode.switchTypeGroup + ") \\{ // \\d+ to \\d+$");
 	/**  */
 	private static final Pattern tableswitchCasePattern =
 			Pattern.compile("^(?<case>(\\d+|default)): (?<offset>\\d+)$");
