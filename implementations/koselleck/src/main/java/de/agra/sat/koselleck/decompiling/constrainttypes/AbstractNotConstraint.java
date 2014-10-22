@@ -27,11 +27,6 @@ public class AbstractNotConstraint extends AbstractConstraint {
 	}
 
 	@Override
-	public void changeStringLiteralType(String regex, Class<?> type) {
-		this.constraint.changeStringLiteralType(regex, type);
-	}
-
-	@Override
 	public AbstractConstraint evaluate() {
 		this.constraint = this.constraint.evaluate();
 

@@ -27,12 +27,10 @@ import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraint
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralDouble;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralFloat;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralInteger;
-import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralString;
 import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
 import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
-import de.agra.sat.koselleck.utils.CompareUtils;
 
 /**
  * 
@@ -215,20 +213,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 				return this.context.MkReal(constraintLiteral.toString());
 			else if (constraintLiteral instanceof AbstractConstraintLiteralInteger)
 				return this.context.MkInt(constraintLiteral.toString());
-			else if (constraintLiteral instanceof AbstractConstraintLiteralString) {
-				AbstractConstraintLiteralString constraintLiteralString = (AbstractConstraintLiteralString) constraintLiteral;
-				if (CompareUtils.equalsAny(constraintLiteralString.type, CompareUtils.doubleClasses))
-					return this.context.MkRealConst(constraintLiteralString.value);
-				else if (CompareUtils.equalsAny(constraintLiteralString.type, CompareUtils.floatClasses))
-					return this.context.MkRealConst(constraintLiteralString.value);
-				else if (CompareUtils.equalsAny(constraintLiteralString.type, CompareUtils.integerClasses))
-					return this.context.MkIntConst(constraintLiteralString.value);
-				else {
-					String message = "could not create arithmetic expression from literal string \"" + constraintLiteralString + "\"";
-					Logger.getLogger(SMTIIJava.class).fatal(message);
-					throw new IllegalArgumentException(message);
-				}
-			} else {
+			else {
 				String message = "could not create arithmetic expression from literal \"" + constraintLiteral + "\"";
 				Logger.getLogger(SMTIIJava.class).fatal(message);
 				throw new IllegalArgumentException(message);

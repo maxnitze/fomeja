@@ -46,14 +46,6 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	}
 
 	@Override
-	public void changeStringLiteralType(String regex, Class<?> type) {
-		this.ifCondition.changeStringLiteralType(regex, type);
-
-		this.thenCaseConstraint.changeStringLiteralType(regex, type);
-		this.elseCaseConstraint.changeStringLiteralType(regex, type);
-	}
-
-	@Override
 	public AbstractConstraint evaluate() {
 		this.ifCondition = this.ifCondition.evaluate();
 

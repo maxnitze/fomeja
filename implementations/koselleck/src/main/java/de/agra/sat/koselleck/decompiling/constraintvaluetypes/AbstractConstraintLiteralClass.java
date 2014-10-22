@@ -28,7 +28,7 @@ public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Cl
 	 * @param fieldCodeIndex
 	 */
 	public AbstractConstraintLiteralClass(Class<?> value, Opcode fieldCode, int fieldCodeIndex) {
-		super(value, false, false, false);
+		super(value, "", false, false, false);
 
 		this.fieldCode = fieldCode;
 		this.fieldCodeIndex = fieldCodeIndex;
@@ -36,9 +36,6 @@ public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Cl
 
 	@Override
 	public void replaceAll(String regex, String replacement) {}
-
-	@Override
-	public void changeStringLiteralType(String regex, Class<?> type) {}
 
 	@Override
 	public AbstractConstraintValue evaluate() {

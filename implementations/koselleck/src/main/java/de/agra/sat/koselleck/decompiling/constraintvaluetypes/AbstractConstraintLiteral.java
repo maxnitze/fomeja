@@ -12,6 +12,9 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	/** the value of the literal */
 	public final T value;
 
+	/** the name of the value */
+	String name;
+
 	/** flag if the value is variable */
 	public final boolean isVariable;
 
@@ -25,16 +28,27 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	 * Constructor for a new AbstractConstraintLiteral.
 	 * 
 	 * @param value the new value for the literal
+	 * @param name the new name of the variable
 	 * @param isVariable the new variable flag for the value
 	 * @param isNumberType the new number type flag for the value
 	 * @param isFinishedType the new finished type flag for the value
 	 */
-	public AbstractConstraintLiteral(T value, boolean isVariable, boolean isNumberType, boolean isFinishedType) {
+	public AbstractConstraintLiteral(T value, String name, boolean isVariable, boolean isNumberType, boolean isFinishedType) {
 		this.value = value;
+
+		this.name = name;
 
 		this.isVariable = isVariable;
 		this.isNumberType = isNumberType;
 		this.isFinishedType = isFinishedType;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return this.name;
 	}
 
 	/**

@@ -330,12 +330,12 @@ public abstract class Dialect<T, V> {
 
 								objectRangeConstraints.add(new AbstractSubConstraint(
 										new AbstractSingleConstraint(
-												new AbstractConstraintLiteralString(preField.preFieldsPrefixedName + "_" + index, Integer.class),
+												new AbstractConstraintLiteralInteger(preField.preFieldsPrefixedName + "_" + index),
 												ConstraintOperator.GREATER_EQUAL,
 												new AbstractConstraintLiteralInteger(0), new HashSet<PreField>(currentPreFieldSet)),
 										BooleanConnector.AND,
 										new AbstractSingleConstraint(
-												new AbstractConstraintLiteralString(preField.preFieldsPrefixedName + "_" + index, Integer.class),
+												new AbstractConstraintLiteralInteger(preField.preFieldsPrefixedName + "_" + index),
 												ConstraintOperator.LESS,
 												new AbstractConstraintLiteralInteger(collectionElementsCount), new HashSet<PreField>(currentPreFieldSet))));
 
@@ -357,8 +357,8 @@ public abstract class Dialect<T, V> {
 					}
 				}
 
-				for (String complexParameterObjectName : complexParameterObjects)
-					cConstraint.changeStringLiteralType(complexParameterObjectName, Integer.class);
+//				for (String complexParameterObjectName : complexParameterObjects)
+//					cConstraint.changeStringLiteralType(complexParameterObjectName, Integer.class);
 
 				AbstractConstraint abstractPartialConstraint = cConstraint.evaluate();
 				if (abstractPartialConstraint instanceof AbstractBooleanConstraint) {
@@ -415,7 +415,7 @@ public abstract class Dialect<T, V> {
 		Object replacement = this.getParameterObject(preField, startingObject);
 
 		preField.field.setAccessible(true);
-		try{
+		try {
 			replacement = preField.field.get(replacement);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			Logger.getLogger(Dialect.class).fatal("could not access field \"" + preField.field.getName() +"\"");

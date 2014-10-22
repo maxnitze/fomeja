@@ -19,14 +19,19 @@ public class AbstractConstraintLiteralInteger extends AbstractConstraintLiteral<
 	 * @param value
 	 */
 	public AbstractConstraintLiteralInteger(Integer value) {
-		super(value, false, true, true);
+		super(value, null, false, true, true);
+	}
+
+	/**
+	 * 
+	 * @param name
+	 */
+	public AbstractConstraintLiteralInteger(String name) {
+		super(null, name, true, true, true);
 	}
 
 	@Override
 	public void replaceAll(String regex, String replacement) {}
-
-	@Override
-	public void changeStringLiteralType(String regex, Class<?> type) {}
 
 	@Override
 	public AbstractConstraintValue evaluate() {

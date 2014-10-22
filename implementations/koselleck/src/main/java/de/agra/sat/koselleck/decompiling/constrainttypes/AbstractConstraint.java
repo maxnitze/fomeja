@@ -34,15 +34,6 @@ public abstract class AbstractConstraint implements Cloneable {
 	public abstract void replaceAll(String regex, String replacement);
 
 	/**
-	 * changeStringLiteralType changes the type of all string literals matching
-	 *  the given regular expression with the given type.
-	 * 
-	 * @param regex the string literal to change
-	 * @param type the new type of the string literals
-	 */
-	public abstract void changeStringLiteralType(String regex, Class<?> type);
-
-	/**
 	 * evaluate evaluates the abstract constraint.
 	 * 
 	 * @return the evaluated abstract constraint

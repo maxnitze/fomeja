@@ -47,7 +47,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 	 * @param preFields
 	 */
 	public AbstractConstraintLiteralField(Field value, String constantTablePrefix, Opcode fieldCode, int fieldCodeIndex, Set<PreField> preFields) {
-		super(value, (value != null && value.getAnnotation(Variable.class) != null), false, false);
+		super(value, null, (value != null && value.getAnnotation(Variable.class) != null), false, false);
 
 		this.fieldCode = fieldCode;
 		this.fieldCodeIndex = fieldCodeIndex;
@@ -79,18 +79,10 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 				this.replacedConstraintValue = new AbstractConstraintLiteralFloat(Float.parseFloat(replacement));
 			else if (replacement.matches("^\\d+$"))
 				this.replacedConstraintValue = new AbstractConstraintLiteralInteger(Integer.parseInt(replacement));
-			else
-				this.replacedConstraintValue = new AbstractConstraintLiteralString(replacement, this.value.getType());
+			else 
+				this.name = replacement;
 		} else if (this.replacedConstraintValue != null)
 			this.replacedConstraintValue.replaceAll(regex, replacement);
-	}
-
-	@Override
-	public void changeStringLiteralType(String regex, Class<?> type) {
-		if (this.replacedConstraintValue == null && this.constantTablePrefixedName.matches(regex))
-			this.replacedConstraintValue = new AbstractConstraintLiteralString(this.constantTablePrefixedName, type);
-		else if (this.replacedConstraintValue != null)
-			this.replacedConstraintValue.changeStringLiteralType(regex, type);
 	}
 
 	@Override

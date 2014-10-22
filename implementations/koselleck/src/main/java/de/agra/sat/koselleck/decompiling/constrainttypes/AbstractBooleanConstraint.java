@@ -52,11 +52,6 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 		this.returnValue.replaceAll(regex, replacement);
 	}
 
-	@Override
-	public void changeStringLiteralType(String regex, Class<?> type) {
-		this.returnValue.changeStringLiteralType(regex, type);
-	}
-
 	/**
 	 * evaluate returns this object.
 	 * 

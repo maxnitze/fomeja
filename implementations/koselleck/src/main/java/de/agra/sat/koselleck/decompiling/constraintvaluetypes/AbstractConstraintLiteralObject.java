@@ -18,14 +18,11 @@ public class AbstractConstraintLiteralObject extends AbstractConstraintLiteral<O
 	 * @param value
 	 */
 	public AbstractConstraintLiteralObject(Object value) {
-		super(value, false, false, true);
+		super(value, null, false, false, true);
 	}
 
 	@Override
 	public void replaceAll(String regex, String replacement) {}
-
-	@Override
-	public void changeStringLiteralType(String regex, Class<?> type) {}
 
 	@Override
 	public AbstractConstraintValue evaluate() {

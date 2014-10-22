@@ -19,14 +19,19 @@ public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<D
 	 * @param value
 	 */
 	public AbstractConstraintLiteralDouble(Double value) {
-		super(value, false, true, true);
+		super(value, null, false, true, true);
+	}
+
+	/**
+	 * 
+	 * @param name
+	 */
+	public AbstractConstraintLiteralDouble(String name) {
+		super(null, name, true, true, true);
 	}
 
 	@Override
 	public void replaceAll(String regex, String replacement) {}
-
-	@Override
-	public void changeStringLiteralType(String regex, Class<?> type) {}
 
 	@Override
 	public AbstractConstraintValue evaluate() {
