@@ -29,7 +29,6 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralInteger;
-import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralString;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
 import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
 import de.agra.sat.koselleck.exceptions.UnsupportedConstraintException;
