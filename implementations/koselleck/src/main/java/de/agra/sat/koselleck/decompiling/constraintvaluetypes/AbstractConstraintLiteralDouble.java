@@ -1,9 +1,11 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.exceptions.NoCalculatableNumberTypeException;
 import de.agra.sat.koselleck.exceptions.NoComparableNumberTypeException;
 import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
@@ -26,8 +28,8 @@ public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<D
 	 * 
 	 * @param name
 	 */
-	public AbstractConstraintLiteralDouble(String name) {
-		super(null, name, true, true, true);
+	public AbstractConstraintLiteralDouble(String name, List<PreField> preFields) {
+		super(null, name, true, true, true, preFields);
 	}
 
 	@Override
@@ -130,7 +132,7 @@ public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<D
 			}
 		} else {
 			NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(constraintLiteral);
-			Logger.getLogger(AbstractConstraintLiteralField.class).fatal(exception.getMessage());
+			Logger.getLogger(AbstractConstraintLiteralDouble.class).fatal(exception.getMessage());
 			throw exception;
 		}
 	}

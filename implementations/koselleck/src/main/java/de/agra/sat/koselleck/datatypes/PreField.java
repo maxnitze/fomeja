@@ -23,14 +23,7 @@ public class PreField {
 	private int fieldCodeIndex;
 
 	/**  */
-	private String constantTablePrefix;
-	/**  */
-	private String constantTablePrefixedName;
-
-	/**  */
-	private Set<PreField> preFields;
-	/**  */
-	private String preFieldsPrefixedName;
+	private String constantTableIndex;
 
 	/**
 	 * 
@@ -39,27 +32,14 @@ public class PreField {
 	 * @param fieldCode
 	 * @param fieldCodeIndex
 	 */
-	public PreField(Field field, String constantTablePrefix, Opcode fieldCode, int fieldCodeIndex, Set<PreField> preFields) {
+	public PreField(Field field, String constantTableIndex, Opcode fieldCode, int fieldCodeIndex, Set<PreField> preFields) {
 		this.field = field;
 		this.isVariable = field != null && field.getAnnotation(Variable.class) != null;
 
 		this.fieldCode = fieldCode;
 		this.fieldCodeIndex = fieldCodeIndex;
 
-		this.constantTablePrefix = constantTablePrefix;
-		this.constantTablePrefixedName = constantTablePrefix + field.getName();
-
-		this.preFields = preFields;
-
-		StringBuilder preFieldsPrefixedNameBuilder = new StringBuilder("v_");
-		for (PreField preField : preFields)
-			preFieldsPrefixedNameBuilder
-					.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"));
-
-		preFieldsPrefixedNameBuilder
-			.append(field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"))
-			.append(field.getName());
-		this.preFieldsPrefixedName = preFieldsPrefixedNameBuilder.toString();
+		this.constantTableIndex = constantTableIndex;
 	}
 
 	/** getter/setter methods
@@ -101,32 +81,16 @@ public class PreField {
 	 * 
 	 * @return
 	 */
-	public String getConstantTablePrefix() {
-		return this.constantTablePrefix;
+	public String getConstantTableIndex() {
+		return this.constantTableIndex;
 	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public String getConstantTablePrefixedName() {
-		return this.constantTablePrefixedName;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public Set<PreField> getPreFields() {
-		return this.preFields;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String getPreFieldsPrefixedName() {
-		return this.preFieldsPrefixedName;
+	public String getSubName() {
+		return "_" + this.constantTableIndex + "-" + this.field.getName();
 	}
 
 	/** class methods
@@ -140,11 +104,11 @@ public class PreField {
 		PreField preField = (PreField) object;
 
 		return this.field.equals(preField.field)
-				&& this.constantTablePrefixedName.equals(preField.constantTablePrefixedName);
+				&& this.constantTableIndex.equals(preField.constantTableIndex);
 	}
 
 	@Override
 	public String toString() {
-		return this.constantTablePrefixedName + " (" + this.preFieldsPrefixedName + ")";
+		return this.field.getName() + " (" + this.constantTableIndex + ")";
 	}
 }
