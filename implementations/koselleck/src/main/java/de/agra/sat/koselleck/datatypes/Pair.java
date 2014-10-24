@@ -11,9 +11,9 @@ package de.agra.sat.koselleck.datatypes;
  */
 public class Pair<T1, T2> {
 	/** the first object of type T1 of the pair */
-	public T1 first;
+	private final T1 first;
 	/** the second object of type T2 of the pair */
-	public T2 second;
+	private final T2 second;
 
 	/**
 	 * Constructor for a new pair.
@@ -24,5 +24,24 @@ public class Pair<T1, T2> {
 	public Pair(T1 first, T2 second) {
 		this.first = first;
 		this.second = second;
+	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public T1 getFirst() {
+		return this.first;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public T2 getSecond() {
+		return this.second;
 	}
 }

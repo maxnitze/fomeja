@@ -15,9 +15,9 @@ import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraint
  */
 public class AbstractBooleanConstraint extends AbstractConstraint {
 	/** the boolean value */
-	public final boolean value;
+	private final boolean value;
 	/** the return value of the method evaluated to {@code value} */
-	public AbstractConstraintValue returnValue;
+	private AbstractConstraintValue returnValue;
 
 	/**
 	 * Constructor for a new AbstractBooleanConstraint.
@@ -30,6 +30,28 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 		this.value = value;
 		this.returnValue = returnValue;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean getValue() {
+		return this.value;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AbstractConstraintValue getReturnValue() {
+		return this.returnValue;
+	}
+
+	/** class methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * Constructor for a new AbstractBooleanConstraint.
@@ -65,8 +87,7 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	}
 
 	@Override
-	public void substitute(Map<Integer, Object> constraintArguments) {
-	}
+	public void substitute(Map<Integer, Object> constraintArguments) {}
 
 	/**
 	 * matches returns {@code false}.

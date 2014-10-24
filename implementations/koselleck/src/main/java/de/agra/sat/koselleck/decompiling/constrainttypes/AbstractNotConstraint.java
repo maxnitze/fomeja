@@ -9,17 +9,31 @@ import java.util.Map;
  */
 public class AbstractNotConstraint extends AbstractConstraint {
 	/**  */
-	public AbstractConstraint constraint;
+	private AbstractConstraint constraint;
 
 	/**
 	 * 
 	 * @param constraint
 	 */
 	public AbstractNotConstraint(AbstractConstraint constraint) {
-		this.preFields.addAll(constraint.preFields);
+		this.getPreFields().addAll(constraint.getPreFields());
 
 		this.constraint = constraint;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AbstractConstraint getConstraint() {
+		return this.constraint;
+	}
+
+	/** inherited methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public void replaceAll(String regex, String replacement) {
@@ -31,7 +45,7 @@ public class AbstractNotConstraint extends AbstractConstraint {
 		this.constraint = this.constraint.evaluate();
 
 		if (this.constraint instanceof AbstractBooleanConstraint)
-			return new AbstractBooleanConstraint(!((AbstractBooleanConstraint) this.constraint).value);
+			return new AbstractBooleanConstraint(!((AbstractBooleanConstraint) this.constraint).getValue());
 		else
 			return this;
 	}

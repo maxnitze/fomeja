@@ -20,11 +20,11 @@ import de.agra.sat.koselleck.utils.CompareUtils;
  */
 public class AbstractPrematureConstraintValueAccessibleObject extends AbstractConstraintValue {
 	/**  */
-	public AbstractConstraintValue constraintValue;
+	private AbstractConstraintValue constraintValue;
 	/**  */
-	public final AccessibleObject accessibleObject;
+	private final AccessibleObject accessibleObject;
 	/**  */
-	public final List<AbstractConstraintValue> objectArguments;
+	private final List<AbstractConstraintValue> objectArguments;
 
 	/**
 	 * 
@@ -37,6 +37,36 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 		this.accessibleObject = accessibleObject;
 		this.objectArguments = objectArguments;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AbstractConstraintValue getConstraintValue() {
+		return this.constraintValue;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AccessibleObject getAccessibleObject() {
+		return this.accessibleObject;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<AbstractConstraintValue> getObjectArguments() {
+		return this.objectArguments;
+	}
+
+	/** inherited methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public void replaceAll(String regex, String replacement) {
@@ -62,10 +92,10 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 			Object[] arguments = new Object[this.objectArguments.size()];
 			for (int i = 0; i < this.objectArguments.size(); i++) {
 				if (!(this.objectArguments.get(i) instanceof AbstractConstraintLiteral<?>) ||
-						!((AbstractConstraintLiteral<?>) this.objectArguments.get(i)).isFinishedType)
+						!((AbstractConstraintLiteral<?>) this.objectArguments.get(i)).isFinishedType())
 					return this;
 
-				arguments[i] = ((AbstractConstraintLiteral<?>) this.objectArguments.get(i)).value;
+				arguments[i] = ((AbstractConstraintLiteral<?>) this.objectArguments.get(i)).getValue();
 			}
 
 			/** try to invoke the accessible object (method or constructor) */
@@ -77,7 +107,7 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 					if (Modifier.isStatic(method.getModifiers()))
 						invokationObject = null;
 					else
-						invokationObject = constraintLiteral.value;
+						invokationObject = constraintLiteral.getValue();
 
 					if (CompareUtils.equalsAny(method.getReturnType(), CompareUtils.doubleClasses))
 						return new AbstractConstraintLiteralDouble(
@@ -192,7 +222,7 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 		if (this.accessibleObject instanceof Method)
 			return this.constraintValue.toString() + "." + ((Method)this.accessibleObject).getName() + "(" + argumentString.toString() + ")";
 		else if (this.accessibleObject instanceof Constructor<?>)
-			return "new " + ((Class<?>)((AbstractConstraintLiteral<?>)this.constraintValue).value).getName() + "(" + argumentString.toString() + ")";
+			return "new " + ((Class<?>)((AbstractConstraintLiteral<?>)this.constraintValue).getValue()).getName() + "(" + argumentString.toString() + ")";
 		else
 			return this.accessibleObject.toString();
 	}

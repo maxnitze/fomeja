@@ -317,7 +317,7 @@ public class Disassembler {
 				while (i+1<disassembledMethodLines.length && disassembledMethodLines[i+1].matches(tableswitchCasePattern.pattern())) {
 					++i;
 
-					bytecodeLineTableSwitch.offsetsMap.put(
+					bytecodeLineTableSwitch.getOffsetsMap().put(
 							disassembledMethodLines[i].replaceAll(tableswitchCasePattern.pattern(), "${case}"),
 							Integer.parseInt(disassembledMethodLines[i].replaceAll(tableswitchCasePattern.pattern(), "${offset}")));
 				}

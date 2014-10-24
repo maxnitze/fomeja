@@ -18,11 +18,11 @@ import de.agra.sat.koselleck.types.ConstraintOperator;
  */
 public class AbstractSubConstraint extends AbstractConstraint {
 	/** the first constraint */
-	public AbstractConstraint constraint1;
-	/** the boolean connector of both constraints */
-	public BooleanConnector connector;
+	private AbstractConstraint constraint1;
 	/** the second constraint */
-	public AbstractConstraint constraint2;
+	private AbstractConstraint constraint2;
+	/** the boolean connector of both constraints */
+	private final BooleanConnector connector;
 
 	/**
 	 * Constructor for a new abstract sub constraint.
@@ -32,13 +32,43 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	 * @param constraint2 the new second constraint
 	 */
 	public AbstractSubConstraint(AbstractConstraint constraint1, BooleanConnector connector, AbstractConstraint constraint2) {
-		this.preFields.addAll(constraint1.preFields);
-		this.preFields.addAll(constraint2.preFields);
+		this.getPreFields().addAll(constraint1.getPreFields());
+		this.getPreFields().addAll(constraint2.getPreFields());
 
 		this.constraint1 = constraint1;
 		this.connector = connector;
 		this.constraint2 = constraint2;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AbstractConstraint getConstraint1() {
+		return this.constraint1;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AbstractConstraint getConstraint2() {
+		return this.constraint2;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public BooleanConnector getConnector() {
+		return this.connector;
+	}
+
+	/** inherited methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public void replaceAll(String regex, String replacement) {
@@ -57,27 +87,27 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				this.constraint1 instanceof AbstractBooleanConstraint &&
 				this.constraint2 instanceof AbstractBooleanConstraint)
 			return evaluateConstraint(
-						((AbstractBooleanConstraint)this.constraint1).value,
-						((AbstractBooleanConstraint)this.constraint2).value);
+						((AbstractBooleanConstraint) this.constraint1).getValue(),
+						((AbstractBooleanConstraint) this.constraint2).getValue());
 		/** evaluate constraint if the first sub-constraints is a boolean
 		 * constraint */
 		else if (this.constraint1 instanceof AbstractBooleanConstraint)
 			return evaluateConstraint(
-					((AbstractBooleanConstraint)this.constraint1).value,
+					((AbstractBooleanConstraint) this.constraint1).getValue(),
 					this.constraint2);
 		/** evaluate constraint if the second sub-constraints is a boolean
 		 * constraint */
 		else if (this.constraint2 instanceof AbstractBooleanConstraint)
 			return evaluateConstraint(
-					((AbstractBooleanConstraint)this.constraint2).value,
+					((AbstractBooleanConstraint) this.constraint2).getValue(),
 					this.constraint1);
 		/** try to evaluate constraint if both sub-constraints are single
 		 * constraints */
 		else if (
 				this.constraint1 instanceof AbstractSingleConstraint &&
 				this.constraint2 instanceof AbstractSingleConstraint) {
-			AbstractSingleConstraint singleConstraint1 = (AbstractSingleConstraint)this.constraint1;
-			AbstractSingleConstraint singleConstraint2 = (AbstractSingleConstraint)this.constraint2;
+			AbstractSingleConstraint singleConstraint1 = (AbstractSingleConstraint) this.constraint1;
+			AbstractSingleConstraint singleConstraint2 = (AbstractSingleConstraint) this.constraint2;
 
 			/** evaluate to one constraint if both constraints are equal */
 			if (singleConstraint1.equals(singleConstraint2))
@@ -85,19 +115,19 @@ public class AbstractSubConstraint extends AbstractConstraint {
 			/** evaluate the constraint if the values of both sub-constraints
 			 * are equal */
 			else if (
-					singleConstraint1.value1.equals(singleConstraint2.value1) &&
-					singleConstraint1.value2.equals(singleConstraint2.value2))
+					singleConstraint1.getValue1().equals(singleConstraint2.getValue1()) &&
+					singleConstraint1.getValue2().equals(singleConstraint2.getValue2()))
 				return evaluateEqualConstraints(
-						singleConstraint1.operator,
-						singleConstraint2.operator);
+						singleConstraint1.getOperator(),
+						singleConstraint2.getOperator());
 			/** evaluate the constraint if the values of both sub-constraints
 			 * are equal */
 			else if (
-					singleConstraint1.value1.equals(singleConstraint2.value2) &&
-					singleConstraint1.value2.equals(singleConstraint2.value1))
+					singleConstraint1.getValue1().equals(singleConstraint2.getValue2()) &&
+					singleConstraint1.getValue2().equals(singleConstraint2.getValue1()))
 				return evaluateEqualConstraints(
-						singleConstraint1.operator,
-						ConstraintOperator.fromSwappedAsciiName(singleConstraint2.operator.asciiName));
+						singleConstraint1.getOperator(),
+						ConstraintOperator.fromSwappedAsciiName(singleConstraint2.getOperator().getAsciiName()));
 			else
 				return this;
 		} else
@@ -139,7 +169,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 		StringBuilder stringRepresentation = new StringBuilder();
 		stringRepresentation.append(this.constraint1.toString());
 		stringRepresentation.append(" ");
-		stringRepresentation.append(this.connector.code);
+		stringRepresentation.append(this.connector.getCode());
 		stringRepresentation.append(" ");
 		stringRepresentation.append(this.constraint2.toString());
 		return stringRepresentation.toString();
@@ -166,7 +196,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 		case OR:
 			return new AbstractBooleanConstraint(value1 || value2);
 		default:
-			Logger.getLogger(AbstractSubConstraint.class).fatal("boolean connector " + (this.connector == null ? "null" : "\"" + this.connector.code + "\"") + " is not known");
+			Logger.getLogger(AbstractSubConstraint.class).fatal("boolean connector " + (this.connector == null ? "null" : "\"" + this.connector.getCode() + "\"") + " is not known");
 			throw new UnknownBooleanConnectorException(this.connector);
 		}
 	}
@@ -194,7 +224,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 		case OR:
 			return booleanValue ? new AbstractBooleanConstraint(true) : constraint;
 		default:
-			Logger.getLogger(AbstractSubConstraint.class).fatal("boolean connector " + (this.connector == null ? "null" : "\"" + this.connector.code + "\"") + " is not known");
+			Logger.getLogger(AbstractSubConstraint.class).fatal("boolean connector " + (this.connector == null ? "null" : "\"" + this.connector.getCode() + "\"") + " is not known");
 			throw new UnknownBooleanConnectorException(this.connector);
 		}
 	}
@@ -228,7 +258,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				case LESS_EQUAL:
 					return this;
 				default:
-					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.asciiName + "\"") + " is not known");
+					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.getAsciiName() + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(operator2);
 				}
 			case GREATER:
@@ -242,7 +272,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				case NOT_EQUAL:
 					return this;
 				default:
-					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.asciiName + "\"") + " is not known");
+					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.getAsciiName() + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(operator2);
 				}
 			case GREATER_EQUAL:
@@ -256,7 +286,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				case NOT_EQUAL:
 					return this;
 				default:
-					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.asciiName + "\"") + " is not known");
+					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.getAsciiName() + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(operator2);
 				}
 			case LESS:
@@ -270,7 +300,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				case NOT_EQUAL:
 					return this;
 				default:
-					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.asciiName + "\"") + " is not known");
+					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.getAsciiName() + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(operator2);
 				}
 			case LESS_EQUAL:
@@ -284,7 +314,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				case NOT_EQUAL:
 					return this;
 				default:
-					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.asciiName + "\"") + " is not known");
+					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.getAsciiName() + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(operator2);
 				}
 			case NOT_EQUAL:
@@ -297,11 +327,11 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				case LESS_EQUAL:
 				case NOT_EQUAL:
 				default:
-					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.asciiName + "\"") + " is not known");
+					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.getAsciiName() + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(operator2);
 				}
 			default:
-				Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator1 == null ? "null" : "\"" + operator1.asciiName + "\"") + " is not known");
+				Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator1 == null ? "null" : "\"" + operator1.getAsciiName() + "\"") + " is not known");
 				throw new UnknownConstraintOperatorException(operator1);
 			}
 		case OR:
@@ -317,7 +347,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				case LESS_EQUAL:
 					return this;
 				default:
-					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.asciiName + "\"") + " is not known");
+					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.getAsciiName() + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(operator2);
 				}
 			case GREATER:
@@ -331,7 +361,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				case NOT_EQUAL:
 					return this;
 				default:
-					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.asciiName + "\"") + " is not known");
+					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.getAsciiName() + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(operator2);
 				}
 			case GREATER_EQUAL:
@@ -345,7 +375,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				case NOT_EQUAL:
 					return this;
 				default:
-					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.asciiName + "\"") + " is not known");
+					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.getAsciiName() + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(operator2);
 				}
 			case LESS:
@@ -359,7 +389,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				case NOT_EQUAL:
 					return this;
 				default:
-					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.asciiName + "\"") + " is not known");
+					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.getAsciiName() + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(operator2);
 				}
 			case LESS_EQUAL:
@@ -373,7 +403,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				case NOT_EQUAL:
 					return this;
 				default:
-					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.asciiName + "\"") + " is not known");
+					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.getAsciiName() + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(operator2);
 				}
 			case NOT_EQUAL:
@@ -387,15 +417,15 @@ public class AbstractSubConstraint extends AbstractConstraint {
 				case NOT_EQUAL:
 					return this;
 				default:
-					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.asciiName + "\"") + " is not known");
+					Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator2 == null ? "null" : "\"" + operator2.getAsciiName() + "\"") + " is not known");
 					throw new UnknownConstraintOperatorException(operator2);
 				}
 			default:
-				Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator1 == null ? "null" : "\"" + operator1.asciiName + "\"") + " is not known");
+				Logger.getLogger(AbstractSubConstraint.class).fatal("constraint operator " + (operator1 == null ? "null" : "\"" + operator1.getAsciiName() + "\"") + " is not known");
 				throw new UnknownConstraintOperatorException(operator1);
 			}
 		default:
-			Logger.getLogger(AbstractSubConstraint.class).fatal("boolean connector " + (this.connector == null ? "null" : "\"" + this.connector.code + "\"") + " is not known");
+			Logger.getLogger(AbstractSubConstraint.class).fatal("boolean connector " + (this.connector == null ? "null" : "\"" + this.connector.getCode() + "\"") + " is not known");
 			throw new UnknownBooleanConnectorException(this.connector);
 		}
 	}

@@ -13,7 +13,7 @@ import de.agra.sat.koselleck.datatypes.PreField;
  */
 public class ComplexParameterObject extends ParameterObject {
 	/**  */
-	public final List<Collection<?>> objectRange;
+	private final List<Collection<?>> objectRange;
 
 	/**
 	 * 
@@ -26,6 +26,20 @@ public class ComplexParameterObject extends ParameterObject {
 
 		this.objectRange = objectRange;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<Collection<?>> getObjectRange() {
+		return this.objectRange;
+	}
+
+	/** class methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * 

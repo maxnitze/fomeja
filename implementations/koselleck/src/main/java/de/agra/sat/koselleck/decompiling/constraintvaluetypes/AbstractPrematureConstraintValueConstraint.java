@@ -1,5 +1,6 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
+/** imports */
 import java.util.Map;
 
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
@@ -7,7 +8,7 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 
 public class AbstractPrematureConstraintValueConstraint extends AbstractConstraintValue {
 	/**  */
-	public AbstractConstraint constraint;
+	private AbstractConstraint constraint;
 
 	/**
 	 * 
@@ -16,6 +17,20 @@ public class AbstractPrematureConstraintValueConstraint extends AbstractConstrai
 	public AbstractPrematureConstraintValueConstraint(AbstractConstraint constraint) {
 		this.constraint = constraint;
 	}
+
+	/** inherited methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AbstractConstraint getConstraint() {
+		return this.constraint;
+	}
+
+	/** inherited methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public void replaceAll(String regex, String replacement) {
@@ -27,7 +42,7 @@ public class AbstractPrematureConstraintValueConstraint extends AbstractConstrai
 		this.constraint = this.constraint.evaluate();
 
 		if (this.constraint instanceof AbstractBooleanConstraint)
-			return ((AbstractBooleanConstraint) this.constraint).returnValue.evaluate();
+			return ((AbstractBooleanConstraint) this.constraint).getReturnValue().evaluate();
 		else
 			return this;
 	}

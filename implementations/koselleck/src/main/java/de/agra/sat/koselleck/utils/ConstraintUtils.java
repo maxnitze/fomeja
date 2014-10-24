@@ -33,11 +33,11 @@ public final class ConstraintUtils {
 	 * @return
 	 */
 	public static AbstractConstraint evaluate(AbstractConstraintLiteral<?> constraintLiteral1, ConstraintOperator operator, AbstractConstraintLiteral<?> constraintLiteral2, AbstractConstraint backupConstraint) {
-		if (constraintLiteral1.isNumberType && constraintLiteral2.isNumberType)
+		if (constraintLiteral1.isNumberType() && constraintLiteral2.isNumberType())
 			return evaluateNumberTypes(constraintLiteral1, operator, constraintLiteral2);
 		else if (constraintLiteral1 instanceof AbstractConstraintLiteralField
 				&& constraintLiteral2 instanceof AbstractConstraintLiteralField
-				&& ((AbstractConstraintLiteralField) constraintLiteral1).value == ((AbstractConstraintLiteralField) constraintLiteral2).value) {
+				&& ((AbstractConstraintLiteralField) constraintLiteral1).getValue() == ((AbstractConstraintLiteralField) constraintLiteral2).getValue()) {
 			switch (operator) {
 			case EQUAL:
 				return new AbstractBooleanConstraint(true);
@@ -52,7 +52,7 @@ public final class ConstraintUtils {
 			case NOT_EQUAL:
 				return new AbstractBooleanConstraint(false);
 			default:
-				Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+				Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");
 				throw new UnknownConstraintOperatorException(operator);
 			}
 		} else if (constraintLiteral1 instanceof AbstractConstraintLiteralObject
@@ -61,13 +61,13 @@ public final class ConstraintUtils {
 			case EQUAL:
 			case GREATER_EQUAL:
 			case LESS_EQUAL:
-				return new AbstractBooleanConstraint(((AbstractConstraintLiteralObject) constraintLiteral1).value == ((AbstractConstraintLiteralObject) constraintLiteral2).value);
+				return new AbstractBooleanConstraint(((AbstractConstraintLiteralObject) constraintLiteral1).getValue() == ((AbstractConstraintLiteralObject) constraintLiteral2).getValue());
 			case GREATER:
 			case LESS:
 			case NOT_EQUAL:
-				return new AbstractBooleanConstraint(((AbstractConstraintLiteralObject) constraintLiteral1).value != ((AbstractConstraintLiteralObject) constraintLiteral2).value);
+				return new AbstractBooleanConstraint(((AbstractConstraintLiteralObject) constraintLiteral1).getValue() != ((AbstractConstraintLiteralObject) constraintLiteral2).getValue());
 			default:
-				Logger.getLogger(ConstraintUtils.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+				Logger.getLogger(ConstraintUtils.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");
 				throw new UnknownConstraintOperatorException(operator);
 			}
 		} else
@@ -100,7 +100,7 @@ public final class ConstraintUtils {
 		case NOT_EQUAL:
 			return new AbstractBooleanConstraint(constraintLiteral1.compareTo(constraintLiteral2) != 0);
 		default:
-			Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+			Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");
 			throw new UnknownConstraintOperatorException(operator);
 		}
 	}

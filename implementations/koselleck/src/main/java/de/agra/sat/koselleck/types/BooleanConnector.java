@@ -16,7 +16,7 @@ public enum BooleanConnector {
 	OR("||");
 
 	/** the code */
-	public final String code;
+	private final String code;
 
 	/**
 	 * Constructor for a new boolean connector.
@@ -26,6 +26,20 @@ public enum BooleanConnector {
 	BooleanConnector(String code) {
 		this.code = code;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getCode() {
+		return this.code;
+	}
+
+	/** class methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * 

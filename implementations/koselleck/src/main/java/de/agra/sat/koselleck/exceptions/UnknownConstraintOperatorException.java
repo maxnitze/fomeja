@@ -20,6 +20,6 @@ public class UnknownConstraintOperatorException extends RuntimeException {
 	 * @param operator the unknown constraint operator
 	 */
 	public UnknownConstraintOperatorException(ConstraintOperator operator) {
-		super("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+		super("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");
 	}
 }

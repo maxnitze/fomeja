@@ -10,7 +10,7 @@ import de.agra.sat.koselleck.types.Opcode;
  */
 public class BytecodeLineValue extends BytecodeLine {
 	/** the value */
-	public final Object value;
+	private final Object value;
 
 	/**
 	 * 
@@ -23,5 +23,16 @@ public class BytecodeLineValue extends BytecodeLine {
 		super(line, lineNumber, opcode);
 
 		this.value = value;
+	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Object getValue() {
+		return this.value;
 	}
 }

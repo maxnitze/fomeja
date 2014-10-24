@@ -15,10 +15,10 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
  */
 public class AbstractSingleTheorem {
 	/** the abstract constraint of the theorem */
-	public final AbstractConstraint constraint;
+	private final AbstractConstraint constraint;
 	/** array of lists where each list describes the collections to iterate
 	 * over the constraint parameters at the index of the list */
-	public final List<Field>[] fields;
+	private final List<Field>[] fields;
 
 	/**
 	 * Constructor for a new abstract single theorem.
@@ -29,5 +29,21 @@ public class AbstractSingleTheorem {
 	public AbstractSingleTheorem(AbstractConstraint constraint, List<Field>[] fields) {
 		this.constraint = constraint;
 		this.fields = fields;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AbstractConstraint getConstraint() {
+		return this.constraint;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<Field>[] getFields() {
+		return this.fields;
 	}
 }

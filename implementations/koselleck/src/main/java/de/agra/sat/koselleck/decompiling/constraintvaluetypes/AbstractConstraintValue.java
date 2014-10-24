@@ -1,5 +1,6 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
+/** imports */
 import java.util.Map;
 
 /**
@@ -9,6 +10,7 @@ import java.util.Map;
  * @author Max Nitze
  */
 public abstract class AbstractConstraintValue {
+	/**  */
 	public static AbstractConstraintValue NULLValue = new AbstractConstraintLiteralObject(null);
 
 	/**

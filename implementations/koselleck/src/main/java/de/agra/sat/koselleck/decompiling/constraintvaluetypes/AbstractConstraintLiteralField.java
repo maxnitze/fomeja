@@ -20,20 +20,18 @@ import de.agra.sat.koselleck.types.Opcode;
  */
 public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Field> {
 	/** the opcode of the field */
-	public final Opcode fieldCode;
+	private final Opcode fieldCode;
 
 	/** the index of the field code */
-	public final int fieldCodeIndex;
+	private final int fieldCodeIndex;
 
 	/** constant table prefix of the field */
-	public final String constantTablePrefix;
+	private final String constantTablePrefix;
 	/** the prefixed name of this field */
-	public final String constantTablePrefixedName;
+	private final String constantTablePrefixedName;
 
 	/** the fields accessed before this field */
-	public final Set<PreField> preFields;
-	/** the prefixed name of this field with previous field names */
-	public final String preFieldsPrefixedName;
+	private final Set<PreField> preFields;
 
 	/** the replaced constraint value */
 	private AbstractConstraintValue replacedConstraintValue;
@@ -57,18 +55,46 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 
 		this.preFields = preFields;
 
-		StringBuilder preFieldsPrefixedNameBuilder = new StringBuilder("v_");
-		for (PreField preField : preFields)
-			preFieldsPrefixedNameBuilder
-					.append(preField.field.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"));
-
-		preFieldsPrefixedNameBuilder
-				.append(value.getDeclaringClass().getName().replaceAll(".*\\.([^\\.]+)$", "$1_"))
-				.append(value.getName());
-		this.preFieldsPrefixedName = preFieldsPrefixedNameBuilder.toString();
-
 		this.replacedConstraintValue = null;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Opcode getFieldCode() {
+		return this.fieldCode;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getFieldCodeIndex() {
+		return this.fieldCodeIndex;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getConstantTablePrefix() {
+		return this.constantTablePrefix;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Set<PreField> getPreFields() {
+		return this.preFields;
+	}
+
+	/** inherited methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public void replaceAll(String regex, String replacement) {
@@ -80,7 +106,7 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 			else if (replacement.matches("^\\d+$"))
 				this.replacedConstraintValue = new AbstractConstraintLiteralInteger(Integer.parseInt(replacement));
 			else 
-				this.name = replacement;
+				this.setName(replacement);
 		} else if (this.replacedConstraintValue != null)
 			this.replacedConstraintValue.replaceAll(regex, replacement);
 	}
@@ -95,25 +121,25 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 
 	@Override
 	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
-		if (this.isVariable || constraintArguments.get(this.fieldCodeIndex) == null)
+		if (this.isVariable() || constraintArguments.get(this.fieldCodeIndex) == null)
 			return this;
 
 		Object constraintArgument = constraintArguments.get(this.fieldCodeIndex);
 		for (PreField preField : this.preFields) {
-			preField.field.setAccessible(true);
+			preField.getField().setAccessible(true);
 			try {
-				constraintArgument = preField.field.get(constraintArgument);
+				constraintArgument = preField.getField().get(constraintArgument);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				String message = "could not access field \"" + preField.field + "\" on object \"" + constraintArgument + "\"";
+				String message = "could not access field \"" + preField.getField() + "\" on object \"" + constraintArgument + "\"";
 				Logger.getLogger(AbstractConstraintLiteralField.class).fatal(message);
 				throw new IllegalArgumentException(message);
 			}
 		}
 
 		try {
-			constraintArgument = this.value.get(constraintArgument);
+			constraintArgument = this.getValue().get(constraintArgument);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
-			String message = "could not access field \"" + this.value + "\" on object \"" + constraintArgument + "\"";
+			String message = "could not access field \"" + this.getValue() + "\" on object \"" + constraintArgument + "\"";
 			Logger.getLogger(AbstractConstraintLiteralField.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}
@@ -143,14 +169,14 @@ public class AbstractConstraintLiteralField extends AbstractConstraintLiteral<Fi
 
 		AbstractConstraintLiteralField abstractConstraintLiteralField = (AbstractConstraintLiteralField) object;
 
-		return this.value.equals(abstractConstraintLiteralField.value)
+		return this.getValue().equals(abstractConstraintLiteralField.getValue())
 				&& this.constantTablePrefix.equals(abstractConstraintLiteralField.constantTablePrefix)
-				&& this.isVariable == abstractConstraintLiteralField.isVariable;
+				&& this.isVariable() == abstractConstraintLiteralField.isVariable();
 	}
 
 	@Override
 	public AbstractConstraintLiteralField clone() {
-		return new AbstractConstraintLiteralField(this.value, this.constantTablePrefix, this.fieldCode, this.fieldCodeIndex, this.preFields);
+		return new AbstractConstraintLiteralField(this.getValue(), this.constantTablePrefix, this.fieldCode, this.fieldCodeIndex, this.preFields);
 	}
 
 	@Override

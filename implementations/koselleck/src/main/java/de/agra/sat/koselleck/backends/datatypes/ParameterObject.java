@@ -11,11 +11,11 @@ import de.agra.sat.koselleck.datatypes.PreField;
  */
 public abstract class ParameterObject {
 	/** the object */
-	public final Object object;
+	private final Object object;
 	/** the prefixed field of the object */
-	public final PreField preField;
+	private final PreField preField;
 	/** the index of the parameter */
-	public final int index;
+	private final int index;
 
 	/**
 	 * Constructor for a new parameter object.
@@ -29,6 +29,36 @@ public abstract class ParameterObject {
 		this.preField = preField;
 		this.index = index;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Object getObject() {
+		return this.object;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public PreField getPreField() {
+		return this.preField;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getIndex() {
+		return this.index;
+	}
+
+	/** class methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * equals compares this object with another given one. if the other is also

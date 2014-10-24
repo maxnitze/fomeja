@@ -23,11 +23,11 @@ import de.agra.sat.koselleck.utils.ConstraintUtils;
  */
 public class AbstractSingleConstraint extends AbstractConstraint {
 	/** the first value */
-	public AbstractConstraintValue value1;
-	/** the constraint operator of the values */
-	public ConstraintOperator operator;
+	private AbstractConstraintValue value1;
 	/** the second value */
-	public AbstractConstraintValue value2;
+	private AbstractConstraintValue value2;
+	/** the constraint operator of the values */
+	private final ConstraintOperator operator;
 
 	/**
 	 * Constructor for a new abstract single constraint.
@@ -37,12 +37,42 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	 * @param value2 the new second value
 	 */
 	public AbstractSingleConstraint(AbstractConstraintValue value1, ConstraintOperator operator, AbstractConstraintValue value2, Set<PreField> preFields) {
-		this.preFields.addAll(preFields);
+		this.getPreFields().addAll(preFields);
 
 		this.value1 = value1;
 		this.operator = operator;
 		this.value2 = value2;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AbstractConstraintValue getValue1() {
+		return this.value1;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AbstractConstraintValue getValue2() {
+		return this.value2;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public ConstraintOperator getOperator() {
+		return this.operator;
+	}
+
+	/** inherited methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public void replaceAll(String regex, String replacement) {
@@ -64,13 +94,13 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 			ConstraintOperator operator;
 			if (this.value1 instanceof AbstractPrematureConstraintValueConstraint && this.value2 instanceof AbstractConstraintLiteral<?>) {
 				prematureConstraintValue = (AbstractPrematureConstraintValueConstraint) this.value1;
-				if (((AbstractConstraintLiteral<?>) this.value2).value.equals(0))
+				if (((AbstractConstraintLiteral<?>) this.value2).getValue().equals(0))
 					operator = this.operator;
 				else
 					operator = this.operator.getOpposite();
 			} else {
 				prematureConstraintValue = (AbstractPrematureConstraintValueConstraint) this.value2;
-				if (((AbstractConstraintLiteral<?>) this.value1).value.equals(0))
+				if (((AbstractConstraintLiteral<?>) this.value1).getValue().equals(0))
 					operator = this.operator.getSwapped();
 				else
 					operator = this.operator.getSwapped().getOpposite();
@@ -79,17 +109,17 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 			switch (operator) {
 			case EQUAL:
 				return new AbstractNotConstraint(
-						prematureConstraintValue.constraint);
+						prematureConstraintValue.getConstraint());
 			case NOT_EQUAL:
-				return prematureConstraintValue.constraint;
+				return prematureConstraintValue.getConstraint();
 			case GREATER:
 			case GREATER_EQUAL:
 			case LESS:
 			case LESS_EQUAL:
-				Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not supported to check on a constraint, only equality checks are supported ([not] equal) are");
+				Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not supported to check on a constraint, only equality checks are supported ([not] equal) are");
 				throw new UnknownConstraintOperatorException(operator);
 			default:
-				Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+				Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");
 				throw new UnknownConstraintOperatorException(operator);
 			}
 		} else
@@ -120,13 +150,13 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 						(this.operator == singleConstraint.operator)) ||
 				(this.value1.equals(singleConstraint.value2) &&
 						this.value2.equals(singleConstraint.value1) &&
-						(this.operator == ConstraintOperator.fromSwappedAsciiName(singleConstraint.operator.opcode))));
+						(this.operator == ConstraintOperator.fromSwappedAsciiName(singleConstraint.operator.getOpcode()))));
 	}
 
 	@Override
 	public AbstractConstraint clone() {
 		return new AbstractSingleConstraint(
-				this.value1.clone(), this.operator, this.value2.clone(), new HashSet<PreField>(this.preFields));
+				this.value1.clone(), this.operator, this.value2.clone(), new HashSet<PreField>(this.getPreFields()));
 	}
 
 	@Override
@@ -134,7 +164,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 		StringBuilder stringRepresentation = new StringBuilder();
 		stringRepresentation.append(this.value1.toString());
 		stringRepresentation.append(" ");
-		stringRepresentation.append(this.operator.asciiName);
+		stringRepresentation.append(this.operator.getAsciiName());
 		stringRepresentation.append(" ");
 		stringRepresentation.append(this.value2.toString());
 		return stringRepresentation.toString();

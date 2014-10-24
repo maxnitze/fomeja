@@ -20,6 +20,6 @@ public class UnknownArithmeticOperatorException extends RuntimeException {
 	 * @param operator the unknown arithmetic operator
 	 */
 	public UnknownArithmeticOperatorException(ArithmeticOperator operator) {
-		super("arithmetic operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+		super("arithmetic operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");
 	}
 }

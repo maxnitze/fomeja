@@ -21,6 +21,6 @@ public class UnsupportedDialectTypeException extends RuntimeException {
 	 * @param theoremProverString the name of the theorem prover
 	 */
 	public UnsupportedDialectTypeException(Dialect<?, ?> dialect, String theoremProverName) {
-		super("the dialect type \"" + dialect.dialectType.name() + "\" is not supported by \"" + theoremProverName + "\".");
+		super("the dialect type \"" + dialect.getDialectType().name() + "\" is not supported by \"" + theoremProverName + "\".");
 	}
 }

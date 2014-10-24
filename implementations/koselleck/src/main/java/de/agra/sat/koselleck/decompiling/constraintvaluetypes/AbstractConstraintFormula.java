@@ -14,11 +14,11 @@ import de.agra.sat.koselleck.types.ArithmeticOperator;
  */
 public class AbstractConstraintFormula extends AbstractConstraintValue {
 	/** the first value */
-	public AbstractConstraintValue value1;
-	/** the arithmetic operator */
-	public final ArithmeticOperator operator;
+	private AbstractConstraintValue value1;
 	/** the second value */
-	public AbstractConstraintValue value2;
+	private AbstractConstraintValue value2;
+	/** the arithmetic operator */
+	private final ArithmeticOperator operator;
 
 	/**
 	 * Constructor for a new AbstractConstraintFormula.
@@ -32,6 +32,36 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 		this.operator = operator;
 		this.value2 = value2;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AbstractConstraintValue getValue1() {
+		return this.value1;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AbstractConstraintValue getValue2() {
+		return this.value2;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public ArithmeticOperator getOperator() {
+		return this.operator;
+	}
+
+	/** inherit methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public void replaceAll(String regex, String replacement) {
@@ -48,7 +78,7 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 			AbstractConstraintLiteral<?> constraintLiteral1 = (AbstractConstraintLiteral<?>) this.value1;
 			AbstractConstraintLiteral<?> constraintLiteral2 = (AbstractConstraintLiteral<?>) this.value2;
 
-			if (constraintLiteral1.isNumberType && constraintLiteral2.isNumberType)
+			if (constraintLiteral1.isNumberType() && constraintLiteral2.isNumberType())
 				return constraintLiteral1.calc(constraintLiteral2, this.operator);
 			else
 				return this;
@@ -93,7 +123,7 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 		stringRepresentation.append("(");
 		stringRepresentation.append(this.value1.toString());
 		stringRepresentation.append(" ");
-		stringRepresentation.append(this.operator.asciiName);
+		stringRepresentation.append(this.operator.getAsciiName());
 		stringRepresentation.append(" ");
 		stringRepresentation.append(this.value2.toString());
 		stringRepresentation.append(")");

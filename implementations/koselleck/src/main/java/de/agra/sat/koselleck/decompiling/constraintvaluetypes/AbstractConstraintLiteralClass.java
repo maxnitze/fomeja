@@ -16,10 +16,10 @@ import de.agra.sat.koselleck.types.Opcode;
  */
 public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Class<?>> {
 	/** the opcode of the field */
-	public final Opcode fieldCode;
+	private final Opcode fieldCode;
 
 	/**  */
-	public final int fieldCodeIndex;
+	private final int fieldCodeIndex;
 
 	/**
 	 * 
@@ -33,6 +33,28 @@ public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Cl
 		this.fieldCode = fieldCode;
 		this.fieldCodeIndex = fieldCodeIndex;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Opcode getFieldCode() {
+		return this.fieldCode;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getFieldCodeIndex() {
+		return this.fieldCodeIndex;
+	}
+
+	/** inherited methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public void replaceAll(String regex, String replacement) {}
@@ -70,18 +92,18 @@ public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Cl
 
 		AbstractConstraintLiteralClass abstractConstraintLiteralObject = (AbstractConstraintLiteralClass)object;
 
-		return this.value.equals(abstractConstraintLiteralObject.value)
-				&& this.isVariable == abstractConstraintLiteralObject.isVariable;
+		return this.getValue().equals(abstractConstraintLiteralObject.getValue())
+				&& this.isVariable() == abstractConstraintLiteralObject.isVariable();
 	}
 
 	@Override
 	public AbstractConstraintLiteralClass clone() {
-		return new AbstractConstraintLiteralClass(this.value, this.fieldCode, this.fieldCodeIndex);
+		return new AbstractConstraintLiteralClass(this.getValue(), this.fieldCode, this.fieldCodeIndex);
 	}
 
 	@Override
 	public String toString() {
-		return this.value + "[" + (this.isVariable ? "variable;" : "not variable;") + " no number type]";
+		return this.getValue() + "[" + (this.isVariable() ? "variable;" : "not variable;") + " no number type]";
 	}
 
 	@Override

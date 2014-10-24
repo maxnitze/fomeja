@@ -11,12 +11,12 @@ import de.agra.sat.koselleck.types.Opcode;
  */
 public class PreClass {
 	/**  */
-	public final Class<?> clazz;
+	private final Class<?> clazz;
 
 	/** the opcode of the field */
-	public final Opcode fieldCode;
+	private final Opcode fieldCode;
 	/**  */
-	public final int fieldCodeIndex;
+	private final int fieldCodeIndex;
 
 	/**
 	 * 
@@ -30,6 +30,36 @@ public class PreClass {
 		this.fieldCode = fieldCode;
 		this.fieldCodeIndex = fieldCodeIndex;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Class<?> getClazz() {
+		return this.clazz;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Opcode getFieldCode() {
+		return this.fieldCode;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getFieldCodeIndex() {
+		return this.fieldCodeIndex;
+	}
+
+	/** class methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public boolean equals(Object object) {

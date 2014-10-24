@@ -14,15 +14,15 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
  */
 public class Theorem {
 	/** the abstract constraints of the theorem */
-	public final List<AbstractConstraint> abstractConstraints;
+	private final List<AbstractConstraint> abstractConstraints;
 	/** the variables of the theorem */
-	public final List<VariableField> variables;
+	private final List<VariableField> variables;
 	/** an assignment of variable names to their parameter objects */
-	public final Map<String, ParameterObject> variablesMap;
+	private final Map<String, ParameterObject> variablesMap;
 	/** the size of the constraints list */
-	public final int constraintsSize;
+	private final int constraintsSize;
 	/** the size of the variables list */
-	public final int variablesSize;
+	private final int variablesSize;
 
 	/**
 	 * Constructor for a new theorem.
@@ -38,5 +38,48 @@ public class Theorem {
 
 		this.constraintsSize = constraints.size();
 		this.variablesSize = variables.size();
+	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<AbstractConstraint> getAbstractConstraint() {
+		return this.abstractConstraints;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<VariableField> getVariables() {
+		return this.variables;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Map<String, ParameterObject> getVariablesMap() {
+		return this.variablesMap;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getConstraintSize() {
+		return this.constraintsSize;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getVariablesSize() {
+		return this.variablesSize;
 	}
 }

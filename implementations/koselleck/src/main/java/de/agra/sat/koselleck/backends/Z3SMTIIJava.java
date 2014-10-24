@@ -19,21 +19,21 @@ import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
  */
 public class Z3SMTIIJava extends Prover<SMTIIJava> {
 	/**  */
-	private Context context;
+	private final Context context;
 	/**
 	 * 
 	 */
 	public Z3SMTIIJava() {
 		super(new SMTIIJava());
 
-		this.context = this.dialect.getContext();
+		this.context = this.getDialect().getContext();
 	}
 
 	@Override
 	public void solveAndAssign(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfiableException {
-		Theorem theorem = this.dialect.getConstraintForArguments(component, singleTheorems);
+		Theorem theorem = this.getDialect().getConstraintForArguments(component, singleTheorems);
 
-		BoolExpr booleanExpression = this.dialect.format(theorem);
+		BoolExpr booleanExpression = this.getDialect().format(theorem);
 
 		Solver solver;
 		try {
@@ -48,7 +48,7 @@ public class Z3SMTIIJava extends Prover<SMTIIJava> {
 				throw new NotSatisfiableException("one or more of the constraints are not satisfyable for the given instance");
 			else {
 				System.out.println(solver.Model()); // TODO delete model output
-				this.assign(theorem, this.dialect.parseResult(solver.Model()));
+				this.assign(theorem, this.getDialect().parseResult(solver.Model()));
 			}
 		} catch (Z3Exception e) {
 			throw new NotSatisfiableException("could not solve and/or assign due to z3 exception: " + e.getMessage());

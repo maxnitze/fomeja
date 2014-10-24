@@ -113,10 +113,10 @@ public abstract class DIAB {
 				String methodSignature = (method.toGenericString().replaceFirst("^public boolean .*\\(", "public boolean "+ method.getName() +"(") + ";").replaceAll(", ", ",");;
 				DisassembledMethod disassembledMethod = disassembledMethods.get(methodSignature);
 
-				AbstractConstraintValue[] arguments = new AbstractConstraintValue[disassembledMethod.method.getParameterTypes().length];
+				AbstractConstraintValue[] arguments = new AbstractConstraintValue[disassembledMethod.getMethod().getParameterTypes().length];
 				for (int i = 0; i < arguments.length; i++)
 					arguments[i] = new AbstractConstraintLiteralClass(
-							disassembledMethod.method.getParameterTypes()[i], Opcode.Xload, i+1);
+							disassembledMethod.getMethod().getParameterTypes()[i], Opcode.Xload, i+1);
 
 				if (disassembledMethod != null)
 					singleTheorems.add(new AbstractSingleTheorem(

@@ -19,12 +19,12 @@ import de.agra.sat.koselleck.exceptions.IllegalFieldAccessException;
  */
 public class ConstraintParameter {
 	/** the index of the parameter that is described */
-	public final int parameterIndex;
+	private final int parameterIndex;
 
 	/** count of the collections to iterate over */
-	public final int size;
+	private final int size;
 	/** the collections to iterate over */
-	public final List<Collection<?>> collections;
+	private final List<Collection<?>> collections;
 
 	/** the index of the current collection */
 	private int currentCollectionIndex;
@@ -68,6 +68,17 @@ public class ConstraintParameter {
 		this.currentCollectionIndex = 0;
 	}
 
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getParameterIndex() {
+		return this.parameterIndex;
+	}
+
 	/**
 	 * Getter method for the current index.
 	 * 
@@ -94,6 +105,9 @@ public class ConstraintParameter {
 	public Object getCurrentCollectionObject() {
 		return this.collections.get(this.currentCollectionIndex).toArray()[this.indices[this.currentCollectionIndex]];
 	}
+
+	/** increment methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * isIncrementable tests if the parameter object can be incremented.

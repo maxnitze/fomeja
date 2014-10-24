@@ -10,7 +10,7 @@ import de.agra.sat.koselleck.types.Opcode;
  */
 public class BytecodeLineConstantTableClass extends BytecodeLineConstantTable {
 	/** the accessible object */
-	public final Class<?> clazz;
+	private final Class<?> clazz;
 
 	/**
 	 * 
@@ -25,5 +25,16 @@ public class BytecodeLineConstantTableClass extends BytecodeLineConstantTable {
 		super(line, lineNumber, opcode, constantTableOffset);
 
 		this.clazz = clazz;
+	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Class<?> getClazz() {
+		return this.clazz;
 	}
 }

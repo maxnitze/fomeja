@@ -10,7 +10,7 @@ import de.agra.sat.koselleck.types.Opcode;
  */
 public class BytecodeLineOffset extends BytecodeLine {
 	/** the value */
-	public final int offset;
+	private final int offset;
 
 	/**
 	 * 
@@ -23,5 +23,16 @@ public class BytecodeLineOffset extends BytecodeLine {
 		super(line, lineNumber, opcode);
 
 		this.offset = offset;
+	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getOffset() {
+		return this.offset;
 	}
 }

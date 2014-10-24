@@ -1,5 +1,6 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
+/** imports */
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -20,6 +21,9 @@ public class AbstractConstraintLiteralObject extends AbstractConstraintLiteral<O
 	public AbstractConstraintLiteralObject(Object value) {
 		super(value, null, false, false, true);
 	}
+
+	/** inherited methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public void replaceAll(String regex, String replacement) {}
@@ -46,18 +50,18 @@ public class AbstractConstraintLiteralObject extends AbstractConstraintLiteral<O
 
 		AbstractConstraintLiteralObject abstractConstraintLiteralObject = (AbstractConstraintLiteralObject)object;
 
-		return this.value != null && this.value.equals(abstractConstraintLiteralObject.value)
-				&& this.isVariable == abstractConstraintLiteralObject.isVariable;
+		return this.getValue() != null && this.getValue().equals(abstractConstraintLiteralObject.getValue())
+				&& this.isVariable() == abstractConstraintLiteralObject.isVariable();
 	}
 
 	@Override
 	public AbstractConstraintLiteralObject clone() {
-		return new AbstractConstraintLiteralObject(this.value);
+		return new AbstractConstraintLiteralObject(this.getValue());
 	}
 
 	@Override
 	public String toString() {
-		return this.value + "[" + (this.isVariable ? " variable;" : " not variable;") + " no number type]";
+		return this.getValue() + "[" + (this.isVariable() ? " variable;" : " not variable;") + " no number type]";
 	}
 
 	@Override

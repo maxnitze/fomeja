@@ -38,7 +38,7 @@ import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
  */
 public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	/**  */
-	private Context context;
+	private final Context context;
 
 	/**
 	 * 
@@ -65,9 +65,9 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 
 	@Override
 	public BoolExpr format(Theorem theorem) throws NotSatisfiableException {
-		BoolExpr[] booleanExpressions = new BoolExpr[theorem.constraintsSize];
-		for (int i = 0; i < theorem.constraintsSize; i++)
-			booleanExpressions[i] = this.getBackendConstraint(theorem.abstractConstraints.get(i));
+		BoolExpr[] booleanExpressions = new BoolExpr[theorem.getConstraintSize()];
+		for (int i = 0; i < theorem.getConstraintSize(); i++)
+			booleanExpressions[i] = this.getBackendConstraint(theorem.getAbstractConstraint().get(i));
 
 		try {
 			return this.context.MkAnd(booleanExpressions);
@@ -111,7 +111,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	@Override
 	public BoolExpr prepareAbstractBooleanConstraint(AbstractBooleanConstraint booleanConstraint) {
 		try {
-			return this.context.MkBool(booleanConstraint.value);
+			return this.context.MkBool(booleanConstraint.getValue());
 		} catch (Z3Exception e) {
 			String message = "could not make boolean expression from boolean constraint \"" + booleanConstraint + "\"";
 			Logger.getLogger(SMTIIJava.class).fatal(message);
@@ -122,7 +122,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	@Override
 	public BoolExpr prepareAbstractNotConstraint(AbstractNotConstraint notConstraint) {
 		try {
-			return this.context.MkNot(this.getBackendConstraint(notConstraint.constraint));
+			return this.context.MkNot(this.getBackendConstraint(notConstraint.getConstraint()));
 		} catch (Z3Exception e) {
 			String message = "could not negotiate boolean expression \"" + notConstraint + "\"";
 			Logger.getLogger(SMTIIJava.class).fatal(message);
@@ -133,21 +133,21 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	@Override
 	public BoolExpr prepareAbstractSingleConstraint(AbstractSingleConstraint singleConstraint) {
 		try {
-			switch (singleConstraint.operator) {
+			switch (singleConstraint.getOperator()) {
 			case EQUAL:
-				return this.context.MkEq(this.getBackendConstraintValue(singleConstraint.value1), this.getBackendConstraintValue(singleConstraint.value2));
+				return this.context.MkEq(this.getBackendConstraintValue(singleConstraint.getValue1()), this.getBackendConstraintValue(singleConstraint.getValue2()));
 			case GREATER:
-				return this.context.MkGt(this.getBackendConstraintValue(singleConstraint.value1), this.getBackendConstraintValue(singleConstraint.value2));
+				return this.context.MkGt(this.getBackendConstraintValue(singleConstraint.getValue1()), this.getBackendConstraintValue(singleConstraint.getValue2()));
 			case GREATER_EQUAL:
-				return this.context.MkGe(this.getBackendConstraintValue(singleConstraint.value1), this.getBackendConstraintValue(singleConstraint.value2));
+				return this.context.MkGe(this.getBackendConstraintValue(singleConstraint.getValue1()), this.getBackendConstraintValue(singleConstraint.getValue2()));
 			case LESS:
-				return this.context.MkLt(this.getBackendConstraintValue(singleConstraint.value1), this.getBackendConstraintValue(singleConstraint.value2));
+				return this.context.MkLt(this.getBackendConstraintValue(singleConstraint.getValue1()), this.getBackendConstraintValue(singleConstraint.getValue2()));
 			case LESS_EQUAL:
-				return this.context.MkLe(this.getBackendConstraintValue(singleConstraint.value1), this.getBackendConstraintValue(singleConstraint.value2));
+				return this.context.MkLe(this.getBackendConstraintValue(singleConstraint.getValue1()), this.getBackendConstraintValue(singleConstraint.getValue2()));
 			case NOT_EQUAL:
-				return this.context.MkNot(this.context.MkEq(this.getBackendConstraintValue(singleConstraint.value1), this.getBackendConstraintValue(singleConstraint.value2)));
+				return this.context.MkNot(this.context.MkEq(this.getBackendConstraintValue(singleConstraint.getValue1()), this.getBackendConstraintValue(singleConstraint.getValue2())));
 			default:
-				RuntimeException exception = new UnknownConstraintOperatorException(singleConstraint.operator);
+				RuntimeException exception = new UnknownConstraintOperatorException(singleConstraint.getOperator());
 				Logger.getLogger(SMTIIJava.class).fatal(exception.getMessage());
 				throw exception;
 			}
@@ -161,19 +161,19 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	@Override
 	public BoolExpr prepareAbstractSubConstraint(AbstractSubConstraint subConstraint) {
 		try {
-			switch (subConstraint.connector) {
+			switch (subConstraint.getConnector()) {
 			case AND:
 				return this.context.MkAnd(new BoolExpr[] {
-						this.getBackendConstraint(subConstraint.constraint1),
-						this.getBackendConstraint(subConstraint.constraint2)
+						this.getBackendConstraint(subConstraint.getConstraint1()),
+						this.getBackendConstraint(subConstraint.getConstraint2())
 				});
 			case OR:
 				return this.context.MkOr(new BoolExpr[] {
-						this.getBackendConstraint(subConstraint.constraint1),
-						this.getBackendConstraint(subConstraint.constraint2)
+						this.getBackendConstraint(subConstraint.getConstraint1()),
+						this.getBackendConstraint(subConstraint.getConstraint2())
 				});
 			default:
-				RuntimeException exception = new UnknownBooleanConnectorException(subConstraint.connector);
+				RuntimeException exception = new UnknownBooleanConnectorException(subConstraint.getConnector());
 				Logger.getLogger(SMTIIJava.class).fatal(exception.getMessage());
 				throw exception;
 			}
@@ -189,12 +189,12 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 		try {
 			return this.context.MkOr(new BoolExpr[] {
 					this.context.MkAnd(new BoolExpr[] {
-							this.getBackendConstraint(ifThenElseConstraint.ifCondition),
-							this.getBackendConstraint(ifThenElseConstraint.thenCaseConstraint)
+							this.getBackendConstraint(ifThenElseConstraint.getIfCondition()),
+							this.getBackendConstraint(ifThenElseConstraint.getThenCaseConstraint())
 					}),
 					this.context.MkAnd(new BoolExpr[] {
-							this.context.MkNot(this.getBackendConstraint(ifThenElseConstraint.ifCondition)),
-							this.getBackendConstraint(ifThenElseConstraint.elseCaseConstraint)
+							this.context.MkNot(this.getBackendConstraint(ifThenElseConstraint.getIfCondition())),
+							this.getBackendConstraint(ifThenElseConstraint.getElseCaseConstraint())
 					})
 			});
 		} catch (Z3Exception e) {
@@ -228,28 +228,28 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	@Override
 	public ArithExpr prepareAbstractConstraintFormula(AbstractConstraintFormula constraintFormula) {
 		try {
-			switch (constraintFormula.operator) {
+			switch (constraintFormula.getOperator()) {
 			case ADD:
 				return this.context.MkAdd(new ArithExpr[] {
-						this.getBackendConstraintValue(constraintFormula.value1),
-						this.getBackendConstraintValue(constraintFormula.value2)
+						this.getBackendConstraintValue(constraintFormula.getValue1()),
+						this.getBackendConstraintValue(constraintFormula.getValue2())
 				});
 			case SUB:
 				return this.context.MkSub(new ArithExpr[] {
-						this.getBackendConstraintValue(constraintFormula.value1),
-						this.getBackendConstraintValue(constraintFormula.value2)
+						this.getBackendConstraintValue(constraintFormula.getValue1()),
+						this.getBackendConstraintValue(constraintFormula.getValue2())
 				});
 			case MUL:
 				return this.context.MkMul(new ArithExpr[] {
-						this.getBackendConstraintValue(constraintFormula.value1),
-						this.getBackendConstraintValue(constraintFormula.value2)
+						this.getBackendConstraintValue(constraintFormula.getValue1()),
+						this.getBackendConstraintValue(constraintFormula.getValue2())
 				});
 			case DIV:
 				return this.context.MkDiv(
-						this.getBackendConstraintValue(constraintFormula.value1),
-						this.getBackendConstraintValue(constraintFormula.value2));
+						this.getBackendConstraintValue(constraintFormula.getValue1()),
+						this.getBackendConstraintValue(constraintFormula.getValue2()));
 			default:
-				RuntimeException exception = new UnknownArithmeticOperatorException(constraintFormula.operator);
+				RuntimeException exception = new UnknownArithmeticOperatorException(constraintFormula.getOperator());
 				Logger.getLogger(SMTIIJava.class).fatal(exception.getMessage());
 				throw exception;
 			}

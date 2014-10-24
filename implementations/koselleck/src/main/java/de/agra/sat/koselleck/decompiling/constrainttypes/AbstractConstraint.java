@@ -15,7 +15,7 @@ import de.agra.sat.koselleck.datatypes.PreField;
  */
 public abstract class AbstractConstraint implements Cloneable {
 	/** the set of prefixed fields of the constraint */
-	public final Set<PreField> preFields;
+	private final Set<PreField> preFields;
 
 	/**
 	 * Constructor for a new abstract constraint.
@@ -23,6 +23,20 @@ public abstract class AbstractConstraint implements Cloneable {
 	public AbstractConstraint() {
 		this.preFields = new HashSet<PreField>();
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Set<PreField> getPreFields() {
+		return this.preFields;
+	}
+
+	/** abstract methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * replaceAll replaces all occurrences of the string {@code regex} with the

@@ -18,7 +18,7 @@ public enum ArithmeticOperator {
 	DIV("/");
 
 	/** the ascii name */
-	public final String asciiName;
+	private final String asciiName;
 
 	/**
 	 * Constructor for a new arithmetic operator.
@@ -28,6 +28,20 @@ public enum ArithmeticOperator {
 	ArithmeticOperator(String asciiName) {
 		this.asciiName = asciiName;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getAsciiName() {
+		return this.asciiName;
+	}
+
+	/** class methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * fromOpcode returns the corresponding arithmetic operator for the

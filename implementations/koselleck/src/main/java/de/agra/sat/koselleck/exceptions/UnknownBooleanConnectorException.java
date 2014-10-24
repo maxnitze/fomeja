@@ -20,6 +20,6 @@ public class UnknownBooleanConnectorException extends RuntimeException {
 	 * @param connector the unknown boolean connector
 	 */
 	public UnknownBooleanConnectorException(BooleanConnector connector) {
-		super("boolean connector " + (connector == null ? "null" : "\"" + connector.code + "\"") + " is not known");
+		super("boolean connector " + (connector == null ? "null" : "\"" + connector.getCode() + "\"") + " is not known");
 	}
 }

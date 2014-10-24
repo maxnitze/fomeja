@@ -15,15 +15,15 @@ public enum ConstraintOperator {
 	NOT_EQUAL("!=", "==", "!=", "ifne|if_Xcmpne", "ifeq|if_Xcmpeq");
 
 	/** the ascii name */
-	public final String asciiName;
+	private final String asciiName;
 	/** the opposite ascii name */
-	public final String oppositeAsciiName;
+	private final String oppositeAsciiName;
 	/** the swapped ascii name */
-	public final String swappedAsciiName;
+	private final String swappedAsciiName;
 	/** the opcode regex */
-	public final String opcode;
+	private final String opcode;
 	/** the opposite opcode regex */
-	public final String oppositeOpcode;
+	private final String oppositeOpcode;
 
 	/**
 	 * Constructor for a new constraint operator.
@@ -41,6 +41,52 @@ public enum ConstraintOperator {
 		this.opcode = opcode;
 		this.oppositeOpcode = oppositeOpcode;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getAsciiName() {
+		return this.asciiName;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getOppositeAsciiName() {
+		return this.oppositeAsciiName;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getSwappedAsciiName() {
+		return this.swappedAsciiName;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getOpcode() {
+		return this.opcode;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getOppositeOpcode() {
+		return this.oppositeOpcode;
+	}
+
+	/** class methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * 

@@ -88,9 +88,9 @@ public enum Opcode {
 	private enum OpcodeType { SIMPLE, SIMPLE_VALUE, CONSTANT_TABLE_VALUE, OFFSET, CONSTANT_TABLE_INDEX, SWITCH };
 
 	/** the name */
-	public final String name;
+	private final String name;
 	/** the offset to the following line */
-	public final int followingLineOffset;
+	private final int followingLineOffset;
 	/** the type */
 	private final OpcodeType type;
 	/** the regular expression for this opcode */
@@ -110,6 +110,28 @@ public enum Opcode {
 		this.type = type;
 		this.opcodeRegex = opcodeRegex;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getFollowingLineOffset() {
+		return this.followingLineOffset;
+	}
+
+	/** class methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * fromString returns the opcode thats representing regular expression

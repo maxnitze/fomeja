@@ -21,7 +21,7 @@ import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
  */
 public abstract class Prover<T extends Dialect<?, ?>> {
 	/** the dialect of the prover */
-	final T dialect;
+	private final T dialect;
 
 	/**
 	 * Constructor for a new prover.
@@ -30,6 +30,17 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	 */
 	public Prover(T dialect) {
 		this.dialect = dialect;
+	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public T getDialect() {
+		return this.dialect;
 	}
 
 	/** abstract methods
@@ -54,26 +65,26 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	 * @param proverResults
 	 */
 	void assign(Theorem theorem, Map<String, Object> proverResults) {
-		for (Map.Entry<String, ParameterObject> variable : theorem.variablesMap.entrySet()) {
+		for (Map.Entry<String, ParameterObject> variable : theorem.getVariablesMap().entrySet()) {
 			Object proverResult = proverResults.get(variable.getKey());
 
 			if (proverResult != null) {
-				boolean accessibility = variable.getValue().preField.field.isAccessible(); 
-				variable.getValue().preField.field.setAccessible(true);
+				boolean accessibility = variable.getValue().getPreField().getField().isAccessible(); 
+				variable.getValue().getPreField().getField().setAccessible(true);
 				try {
 					if (variable.getValue() instanceof SimpleParameterObject)
-						variable.getValue().preField.field.set(variable.getValue().object, proverResult);
+						variable.getValue().getPreField().getField().set(variable.getValue().getObject(), proverResult);
 					else if (variable.getValue() instanceof ComplexParameterObject) {
 						ComplexParameterObject complexParameterObject = (ComplexParameterObject) variable.getValue();
 						Object objectRangeElement = complexParameterObject.getObjectRangeElement((Integer) proverResult);
-						complexParameterObject.preField.field.set(variable.getValue().object, objectRangeElement);
+						complexParameterObject.getPreField().getField().set(variable.getValue().getObject(), objectRangeElement);
 					}
 				} catch (IllegalArgumentException | IllegalAccessException e) {
-					String message = "could not access field \"" + variable.getValue().preField.field.getName() +"\"";
+					String message = "could not access field \"" + variable.getValue().getPreField().getField().getName() +"\"";
 					Logger.getLogger(SMTIIString.class).fatal(message);
 					throw new IllegalArgumentException(message);
 				} finally {
-					variable.getValue().preField.field.setAccessible(accessibility);
+					variable.getValue().getPreField().getField().setAccessible(accessibility);
 				}
 			}
 		}

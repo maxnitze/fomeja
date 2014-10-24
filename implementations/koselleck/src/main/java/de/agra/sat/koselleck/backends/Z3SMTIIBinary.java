@@ -21,7 +21,7 @@ import de.agra.sat.koselleck.utils.IOUtils;
  */
 public class Z3SMTIIBinary extends Prover<SMTIIString> {
 	/** path to the binary file */
-	private String pathToBinary;
+	private final String pathToBinary;
 
 	/**
 	 * Constructor for a z3 theorem prover.
@@ -35,9 +35,9 @@ public class Z3SMTIIBinary extends Prover<SMTIIString> {
 
 	@Override
 	public void solveAndAssign(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfiableException {
-		Theorem theorem = this.dialect.getConstraintForArguments(component, singleTheorems);
+		Theorem theorem = this.getDialect().getConstraintForArguments(component, singleTheorems);
 
-		this.assign(theorem, this.dialect.parseResult(this.solve(this.dialect.format(theorem))));
+		this.assign(theorem, this.getDialect().parseResult(this.solve(this.getDialect().format(theorem))));
 	}
 
 	/** private methods
@@ -55,7 +55,7 @@ public class Z3SMTIIBinary extends Prover<SMTIIString> {
 	private String solve(String smt2theorem) {
 		Process process = null;
 		try {
-			switch(this.dialect.dialectType) {
+			switch(this.getDialect().getDialectType()) {
 			case smt:
 				process = Runtime.getRuntime().exec(this.pathToBinary + " -smt -in");
 				break;
@@ -69,8 +69,8 @@ public class Z3SMTIIBinary extends Prover<SMTIIString> {
 				process = Runtime.getRuntime().exec(this.pathToBinary + " -dimacs -in");
 				break;
 			default:
-				Logger.getLogger(Z3SMTIIBinary.class).error("the dialect type \"" + this.dialect.dialectType.name() + "\" is not supported by the z3 theorem prover.");
-				throw new UnsupportedDialectTypeException(this.dialect, "z3 theorem prover");
+				Logger.getLogger(Z3SMTIIBinary.class).error("the dialect type \"" + this.getDialect().getDialectType().name() + "\" is not supported by the z3 theorem prover.");
+				throw new UnsupportedDialectTypeException(this.getDialect(), "z3 theorem prover");
 			}
 
 			IOUtils.writeToStream(process.getOutputStream(), smt2theorem);

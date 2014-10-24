@@ -13,24 +13,24 @@ import de.agra.sat.koselleck.types.Opcode;
  */
 public class PreField {
 	/**  */
-	public final Field field;
+	private Field field;
 	/**  */
-	public final boolean isVariable;
+	private boolean isVariable;
 
 	/**  */
-	public final Opcode fieldCode;
+	private Opcode fieldCode;
 	/**  */
-	public final int fieldCodeIndex;
+	private int fieldCodeIndex;
 
 	/**  */
-	public final String constantTablePrefix;
+	private String constantTablePrefix;
 	/**  */
-	public final String constantTablePrefixedName;
+	private String constantTablePrefixedName;
 
 	/**  */
-	public final Set<PreField> preFields;
+	private Set<PreField> preFields;
 	/**  */
-	public final String preFieldsPrefixedName;
+	private String preFieldsPrefixedName;
 
 	/**
 	 * 
@@ -61,6 +61,76 @@ public class PreField {
 			.append(field.getName());
 		this.preFieldsPrefixedName = preFieldsPrefixedNameBuilder.toString();
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Field getField() {
+		return this.field;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isVariable() {
+		return this.isVariable;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Opcode getFieldCode() {
+		return this.fieldCode;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getFieldCodeIndex() {
+		return this.fieldCodeIndex;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getConstantTablePrefix() {
+		return this.constantTablePrefix;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getConstantTablePrefixedName() {
+		return this.constantTablePrefixedName;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Set<PreField> getPreFields() {
+		return this.preFields;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getPreFieldsPrefixedName() {
+		return this.preFieldsPrefixedName;
+	}
+
+	/** class methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public boolean equals(Object object) {

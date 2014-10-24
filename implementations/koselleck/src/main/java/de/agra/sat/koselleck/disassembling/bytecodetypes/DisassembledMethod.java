@@ -12,15 +12,15 @@ import java.util.Map;
  */
 public class DisassembledMethod {
 	/** the method to disassemble */
-	public final Method method;
+	private final Method method;
 
 	/** the signature of the method */
-	public final String methodSignature;
+	private final String methodSignature;
 	/** the disassembled method */
-	public final String disassembledMethod;
+	private final String disassembledMethod;
 
 	/** a map of all lines of the disassembled method */
-	public final Map<Integer, BytecodeLine> bytecodeLines;
+	private final Map<Integer, BytecodeLine> bytecodeLines;
 
 	/**
 	 * Constructor for a new disassembled method.
@@ -38,6 +38,44 @@ public class DisassembledMethod {
 
 		this.bytecodeLines = bytecodeLines;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Method getMethod() {
+		return this.method;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getMethodSignature() {
+		return this.methodSignature;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getDisassembledMethod() {
+		return this.disassembledMethod;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Map<Integer, BytecodeLine> getBytecodeLines() {
+		return this.bytecodeLines;
+	}
+
+	/** class methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * toString returns the string representation of the disassembled method.

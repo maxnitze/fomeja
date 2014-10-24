@@ -10,19 +10,19 @@ import de.agra.sat.koselleck.types.ArithmeticOperator;
  */
 public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintValue {
 	/** the value of the literal */
-	public final T value;
+	private final T value;
 
 	/** the name of the value */
-	String name;
+	private String name;
 
 	/** flag if the value is variable */
-	public final boolean isVariable;
+	private final boolean isVariable;
 
 	/** flag that indicates if the value is a number type */
-	public final boolean isNumberType;
+	private final boolean isNumberType;
 
 	/** flag that indicates if the value is a finished type */
-	public final boolean isFinishedType;
+	private final boolean isFinishedType;
 
 	/**
 	 * Constructor for a new AbstractConstraintLiteral.
@@ -43,6 +43,17 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 		this.isFinishedType = isFinishedType;
 	}
 
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public T getValue() {
+		return this.value;
+	}
+
 	/**
 	 * 
 	 * @return
@@ -50,6 +61,41 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	public String getName() {
 		return this.name;
 	}
+
+	/**
+	 * 
+	 * @param name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isVariable() {
+		return this.isVariable;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isNumberType() {
+		return this.isNumberType;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isFinishedType() {
+		return this.isFinishedType;
+	}
+
+	/** abstract methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * 

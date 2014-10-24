@@ -14,7 +14,7 @@ import de.agra.sat.koselleck.types.Opcode;
  */
 public class BytecodeLineTableswitch extends BytecodeLine {
 	/** the constant table offset */
-	public final Map<String, Integer> offsetsMap;
+	private final Map<String, Integer> offsetsMap;
 
 	/**
 	 * 
@@ -27,5 +27,16 @@ public class BytecodeLineTableswitch extends BytecodeLine {
 		super(line, lineNumber, opcode);
 
 		this.offsetsMap = new HashMap<String, Integer>();
+	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Map<String, Integer> getOffsetsMap() {
+		return this.offsetsMap;
 	}
 }

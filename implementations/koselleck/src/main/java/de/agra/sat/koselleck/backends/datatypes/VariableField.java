@@ -8,9 +8,9 @@ package de.agra.sat.koselleck.backends.datatypes;
  */
 public class VariableField {
 	/** the name of the field */
-	public final String variableName;
+	private final String variableName;
 	/** the type of the field */
-	public final Class<?> fieldType;
+	private final Class<?> fieldType;
 
 	/**
 	 * Constructor for a new Variable Field.
@@ -22,6 +22,28 @@ public class VariableField {
 		this.variableName = variableName;
 		this.fieldType = fieldType;
 	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getVariableName() {
+		return this.variableName;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Class<?> getFieldType() {
+		return this.fieldType;
+	}
+
+	/** class methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * equals compares this object with another given one. if the other is also

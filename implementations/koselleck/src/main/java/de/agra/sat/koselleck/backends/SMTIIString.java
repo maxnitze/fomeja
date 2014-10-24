@@ -45,7 +45,7 @@ public class SMTIIString extends Dialect<String, String> {
 	@Override
 	public String format(Theorem theorem) {
 		StringBuilder assignedConstraint = new StringBuilder();
-		for (AbstractConstraint theoremConstraint : theorem.abstractConstraints) {
+		for (AbstractConstraint theoremConstraint : theorem.getAbstractConstraint()) {
 			String z3Constraint = this.getBackendConstraint(theoremConstraint);
 
 			assignedConstraint.append("\n\t");
@@ -53,7 +53,7 @@ public class SMTIIString extends Dialect<String, String> {
 		}
 
 		StringBuilder smt2theorem = new StringBuilder();
-		for (VariableField prefixedVariable : theorem.variables) {
+		for (VariableField prefixedVariable : theorem.getVariables()) {
 			smt2theorem.append(this.getVariableDeclaration(prefixedVariable));
 			smt2theorem.append("\n");
 		}
@@ -100,7 +100,7 @@ public class SMTIIString extends Dialect<String, String> {
 
 	@Override
 	public String prepareAbstractBooleanConstraint(AbstractBooleanConstraint booleanConstraint) {
-		return booleanConstraint.value ? "True" : "False";
+		return booleanConstraint.getValue() ? "True" : "False";
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class SMTIIString extends Dialect<String, String> {
 		StringBuilder notConstraintString = new StringBuilder();
 
 		notConstraintString.append("(not ");
-		notConstraintString.append(this.getBackendConstraint(notConstraint.constraint));
+		notConstraintString.append(this.getBackendConstraint(notConstraint.getConstraint()));
 		notConstraintString.append(")");
 
 		return notConstraintString.toString();
@@ -118,12 +118,12 @@ public class SMTIIString extends Dialect<String, String> {
 	public String prepareAbstractSingleConstraint(AbstractSingleConstraint singleConstraint) {
 		StringBuilder singleConstraintString = new StringBuilder();
 
-		singleConstraintString.append(this.getOperatorOpening(singleConstraint.operator));
+		singleConstraintString.append(this.getOperatorOpening(singleConstraint.getOperator()));
 		singleConstraintString.append(" ");
-		singleConstraintString.append(this.getBackendConstraintValue(singleConstraint.value1));
+		singleConstraintString.append(this.getBackendConstraintValue(singleConstraint.getValue1()));
 		singleConstraintString.append(" ");
-		singleConstraintString.append(this.getBackendConstraintValue(singleConstraint.value2));
-		singleConstraintString.append(this.getOperatorClosing(singleConstraint.operator));
+		singleConstraintString.append(this.getBackendConstraintValue(singleConstraint.getValue2()));
+		singleConstraintString.append(this.getOperatorClosing(singleConstraint.getOperator()));
 
 		return singleConstraintString.toString();
 	}
@@ -133,11 +133,11 @@ public class SMTIIString extends Dialect<String, String> {
 		StringBuilder subConstraintString = new StringBuilder();
 
 		subConstraintString.append("(");
-		subConstraintString.append(this.getConnectorName(subConstraint.connector));
+		subConstraintString.append(this.getConnectorName(subConstraint.getConnector()));
 		subConstraintString.append(" ");
-		subConstraintString.append(this.getBackendConstraint(subConstraint.constraint1));
+		subConstraintString.append(this.getBackendConstraint(subConstraint.getConstraint1()));
 		subConstraintString.append(" ");
-		subConstraintString.append(this.getBackendConstraint(subConstraint.constraint2));
+		subConstraintString.append(this.getBackendConstraint(subConstraint.getConstraint2()));
 		subConstraintString.append(")");
 
 		return subConstraintString.toString();
@@ -148,13 +148,13 @@ public class SMTIIString extends Dialect<String, String> {
 		StringBuilder ifThenElseConstraintString = new StringBuilder();
 
 		ifThenElseConstraintString.append("(or (and ");
-		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.ifCondition));
+		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.getIfCondition()));
 		ifThenElseConstraintString.append(" ");
-		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.thenCaseConstraint));
+		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.getThenCaseConstraint()));
 		ifThenElseConstraintString.append(") (and (not ");
-		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.ifCondition));
+		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.getIfCondition()));
 		ifThenElseConstraintString.append(") ");
-		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.elseCaseConstraint));
+		ifThenElseConstraintString.append(this.getBackendConstraint(ifThenElseConstraint.getElseCaseConstraint()));
 		ifThenElseConstraintString.append("))");
 
 		return ifThenElseConstraintString.toString();
@@ -173,11 +173,11 @@ public class SMTIIString extends Dialect<String, String> {
 		StringBuilder constraintFormulaString = new StringBuilder();
 
 		constraintFormulaString.append("(");
-		constraintFormulaString.append(constraintFormula.operator.asciiName);
+		constraintFormulaString.append(constraintFormula.getOperator().getAsciiName());
 		constraintFormulaString.append(" ");
-		constraintFormulaString.append(this.getBackendConstraintValue(constraintFormula.value1));
+		constraintFormulaString.append(this.getBackendConstraintValue(constraintFormula.getValue1()));
 		constraintFormulaString.append(" ");
-		constraintFormulaString.append(this.getBackendConstraintValue(constraintFormula.value2));
+		constraintFormulaString.append(this.getBackendConstraintValue(constraintFormula.getValue2()));
 		constraintFormulaString.append(")");
 
 		return constraintFormulaString.toString();
@@ -200,7 +200,7 @@ public class SMTIIString extends Dialect<String, String> {
 		case OR:
 			return "or";
 		default:
-			Logger.getLogger(SMTIIString.class).fatal("boolean connector " + (connector == null ? "null" : "\"" + connector.code + "\"") + " is not known");
+			Logger.getLogger(SMTIIString.class).fatal("boolean connector " + (connector == null ? "null" : "\"" + connector.getCode() + "\"") + " is not known");
 			throw new UnknownBooleanConnectorException(connector);
 		}
 	}
@@ -228,7 +228,7 @@ public class SMTIIString extends Dialect<String, String> {
 		case NOT_EQUAL:
 			return "(not (=";
 		default:
-			Logger.getLogger(SMTIIString.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+			Logger.getLogger(SMTIIString.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");
 			throw new UnknownConstraintOperatorException(operator);
 		}
 	}
@@ -256,7 +256,7 @@ public class SMTIIString extends Dialect<String, String> {
 		case NOT_EQUAL:
 			return "))";
 		default:
-			Logger.getLogger(SMTIIString.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.asciiName + "\"") + " is not known");
+			Logger.getLogger(SMTIIString.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");
 			throw new UnknownConstraintOperatorException(operator);
 		}
 	}
@@ -273,16 +273,16 @@ public class SMTIIString extends Dialect<String, String> {
 	private String getVariableDeclaration(VariableField variableField) {
 		StringBuilder variableDeclaration = new StringBuilder();
 		variableDeclaration.append("(declare-const ");
-		variableDeclaration.append(variableField.variableName);
+		variableDeclaration.append(variableField.getVariableName());
 
-		if (CompareUtils.equalsAny(variableField.fieldType, CompareUtils.integerClasses))
+		if (CompareUtils.equalsAny(variableField.getFieldType(), CompareUtils.integerClasses))
 			variableDeclaration.append(" Int)");
-		else if (CompareUtils.equalsAny(variableField.fieldType, CompareUtils.floatClasses))
+		else if (CompareUtils.equalsAny(variableField.getFieldType(), CompareUtils.floatClasses))
 			variableDeclaration.append(" Real)");
-		else if (CompareUtils.equalsAny(variableField.fieldType, CompareUtils.doubleClasses))
+		else if (CompareUtils.equalsAny(variableField.getFieldType(), CompareUtils.doubleClasses))
 			variableDeclaration.append(" Real)");
 		else {
-			String message = "could not translate class \"" + variableField.fieldType.getName() + "\" to Z3 syntax.";
+			String message = "could not translate class \"" + variableField.getFieldType().getName() + "\" to Z3 syntax.";
 			Logger.getLogger(SMTIIString.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}
