@@ -1,7 +1,10 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralInteger;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
 
@@ -18,6 +21,16 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	private final boolean value;
 	/** the return value of the method evaluated to {@code value} */
 	private AbstractConstraintValue returnValue;
+
+	/**
+	 * Constructor for a new AbstractBooleanConstraint.
+	 * 
+	 * @param value the new boolean value
+	 */
+	public AbstractBooleanConstraint(boolean value) {
+		this.value = value;
+		this.returnValue = new AbstractConstraintLiteralInteger(value ? 1 : 0);
+	}
 
 	/**
 	 * Constructor for a new AbstractBooleanConstraint.
@@ -50,35 +63,14 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 		return this.returnValue;
 	}
 
-	/** class methods
+	/** overridden methods
 	 * ----- ----- ----- ----- ----- */
 
-	/**
-	 * Constructor for a new AbstractBooleanConstraint.
-	 * 
-	 * @param value the new boolean value
-	 */
-	public AbstractBooleanConstraint(boolean value) {
-		this.value = value;
-		this.returnValue = new AbstractConstraintLiteralInteger(value ? 1 : 0);
-	}
-
-	/**
-	 * replaceAll does nothing.
-	 * 
-	 * @param regex is ignored
-	 * @param replacement is ignored
-	 */
 	@Override
 	public void replaceAll(String regex, String replacement) {
 		this.returnValue.replaceAll(regex, replacement);
 	}
 
-	/**
-	 * evaluate returns this object.
-	 * 
-	 * @return this object
-	 */
 	@Override
 	public AbstractConstraint evaluate() {
 		this.returnValue = this.returnValue.evaluate();
@@ -89,27 +81,19 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 	@Override
 	public void substitute(Map<Integer, Object> constraintArguments) {}
 
-	/**
-	 * matches returns {@code false}.
-	 * 
-	 * @param regex is ignored
-	 * 
-	 * @return {@code false}
-	 */
 	@Override
 	public boolean matches(String regex) {
 		return this.returnValue.matches(regex);
 	}
 
-	/**
-	 * equals tests if this abstract boolean constraint and the given object
-	 *  are equal.
-	 * 
-	 * @param object the object to check for equality
-	 * 
-	 * @return {@code true} if the given object is an abstract boolean
-	 *  constraint and the values are equal, {@code false} otherwise
-	 */
+	@Override
+	public Set<AbstractConstraintLiteral<?>> getUnfinishedConstraintLiterals() {
+		Set<AbstractConstraintLiteral<?>> unfinishedConstraintLiterals = new HashSet<AbstractConstraintLiteral<?>>();
+		unfinishedConstraintLiterals.addAll(this.returnValue.getUnfinishedConstraintLiterals());
+
+		return unfinishedConstraintLiterals;
+	}
+
 	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof AbstractBooleanConstraint))
@@ -121,23 +105,11 @@ public class AbstractBooleanConstraint extends AbstractConstraint {
 				this.returnValue.equals(booleanConstraint.returnValue);
 	}
 
-	/**
-	 * clone returns a new abstract boolean constraint with the same boolean
-	 *  value.
-	 * 
-	 * @return a new abstract boolean constraint with the same value
-	 */
 	@Override
 	public AbstractBooleanConstraint clone() {
 		return new AbstractBooleanConstraint(this.value, this.returnValue);
 	}
 
-	/**
-	 * toString returns the string representation of the abstract boolean
-	 *  value.
-	 * 
-	 * @return the string representation of the abstract boolean value
-	 */
 	@Override
 	public String toString() {
 		return (this.value ? "true" : "false") + " [" + this.returnValue.toString() + "]";

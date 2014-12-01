@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
-import de.agra.sat.koselleck.backends.datatypes.VariableField;
+import de.agra.sat.koselleck.backends.datatypes.TheoremStringBuilder;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConstraint;
@@ -23,7 +23,7 @@ import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 import de.agra.sat.koselleck.exceptions.UnsupportedVariableTypeException;
 import de.agra.sat.koselleck.types.BooleanConnector;
 import de.agra.sat.koselleck.types.ConstraintOperator;
-import de.agra.sat.koselleck.utils.CompareUtils;
+import de.agra.sat.koselleck.utils.ClassUtils;
 
 /**
  * SMTII implements the smt2 pseudo boolean dialect.
@@ -35,6 +35,9 @@ public class SMTIIString extends Dialect<String, String> {
 	/** pattern for a smt2 result constant (function without parameters) */
 	private static final Pattern smt2ResultPattern = Pattern.compile("\\(define-fun (?<name>\\S+) \\(\\) (?<type>\\S+)(\n)?\\s*\\(?(?<value>(- \\d+|\\d+))\\)?");
 
+	/** COMMENT */
+	private TheoremStringBuilder smt2theorem;
+
 	/**
 	 * Constructor for a new SMTII dialect.
 	 */
@@ -44,24 +47,12 @@ public class SMTIIString extends Dialect<String, String> {
 
 	@Override
 	public String format(Theorem theorem) {
-		StringBuilder assignedConstraint = new StringBuilder();
-		for (AbstractConstraint theoremConstraint : theorem.getAbstractConstraint()) {
-			String z3Constraint = this.getBackendConstraint(theoremConstraint);
+		this.smt2theorem = new TheoremStringBuilder();
 
-			assignedConstraint.append("\n\t");
-			assignedConstraint.append(z3Constraint);
-		}
+		for (AbstractConstraint theoremConstraint : theorem.getAbstractConstraint())
+			this.smt2theorem.appendConstraint(this.getBackendConstraint(theoremConstraint));
 
-		StringBuilder smt2theorem = new StringBuilder();
-		for (VariableField prefixedVariable : theorem.getVariables()) {
-			smt2theorem.append(this.getVariableDeclaration(prefixedVariable));
-			smt2theorem.append("\n");
-		}
-		smt2theorem.append("(assert (and ");
-		smt2theorem.append(assignedConstraint.toString());
-		smt2theorem.append("\n))\n(check-sat)\n(get-model)");
-
-		return smt2theorem.toString();
+		return this.smt2theorem.toString();
 	}
 
 	@Override
@@ -95,7 +86,7 @@ public class SMTIIString extends Dialect<String, String> {
 		}
 	}
 
-	/** abstract constraints
+	/* abstract constraints
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -160,12 +151,17 @@ public class SMTIIString extends Dialect<String, String> {
 		return ifThenElseConstraintString.toString();
 	}
 
-	/** abstract constraint values
+	/* abstract constraint values
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public String prepareAbstractConstraintLiteral(AbstractConstraintLiteral<?> constraintLiteral) {
-		return constraintLiteral.toString();
+		if (constraintLiteral.isVariable()) {
+			this.smt2theorem.appendVariableDeclaration(
+					constraintLiteral.getName(), this.getVariableDeclaration(constraintLiteral.getName(), constraintLiteral.getValue().getClass()));
+			return constraintLiteral.getName();
+		} else
+			return constraintLiteral.getValue().toString();
 	}
 
 	@Override
@@ -183,7 +179,7 @@ public class SMTIIString extends Dialect<String, String> {
 		return constraintFormulaString.toString();
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -270,19 +266,19 @@ public class SMTIIString extends Dialect<String, String> {
 	 * @return the smt2 representation of a variable declaration for the given
 	 *  variable field
 	 */
-	private String getVariableDeclaration(VariableField variableField) {
+	private String getVariableDeclaration(String name, Class<?> type) {
 		StringBuilder variableDeclaration = new StringBuilder();
 		variableDeclaration.append("(declare-const ");
-		variableDeclaration.append(variableField.getVariableName());
+		variableDeclaration.append(name);
 
-		if (CompareUtils.equalsAny(variableField.getFieldType(), CompareUtils.integerClasses))
+		if (ClassUtils.isDoubleClass(type))
+			variableDeclaration.append(" Real)");
+		else if (ClassUtils.isFloatClass(type))
+			variableDeclaration.append(" Real)");
+		else if (ClassUtils.isIntegerClass(type))
 			variableDeclaration.append(" Int)");
-		else if (CompareUtils.equalsAny(variableField.getFieldType(), CompareUtils.floatClasses))
-			variableDeclaration.append(" Real)");
-		else if (CompareUtils.equalsAny(variableField.getFieldType(), CompareUtils.doubleClasses))
-			variableDeclaration.append(" Real)");
 		else {
-			String message = "could not translate class \"" + variableField.getFieldType().getName() + "\" to Z3 syntax.";
+			String message = "could not translate class \"" + type.getSimpleName() + "\" to Z3 syntax.";
 			Logger.getLogger(SMTIIString.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}

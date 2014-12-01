@@ -27,21 +27,23 @@ import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraint
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralDouble;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralFloat;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralInteger;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralObject;
 import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
 import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 
 /**
+ * COMMENT
  * 
  * @author Max Nitze
  */
 public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
-	/**  */
+	/** COMMENT */
 	private final Context context;
 
 	/**
-	 * 
+	 * COMMENT
 	 */
 	public SMTIIJava() {
 		super(Type.smt2);
@@ -49,13 +51,14 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 		try {
 			this.context = new Context(new HashMap<String, String>());
 		} catch (Z3Exception e) {
-			String message = "could not instantiate SMTIIJava due to z3 exception: " + e.getMessage();
+			String message = "could not instantiate SMTIIJava due to exception: " + e.getMessage();
 			Logger.getLogger(SMTIIJava.class).fatal(message);
 			throw new RuntimeException(message);
 		}
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -66,13 +69,13 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	@Override
 	public BoolExpr format(Theorem theorem) throws NotSatisfiableException {
 		BoolExpr[] booleanExpressions = new BoolExpr[theorem.getConstraintSize()];
-		for (int i = 0; i < theorem.getConstraintSize(); i++)
+		for (int i=0; i<theorem.getConstraintSize(); i++)
 			booleanExpressions[i] = this.getBackendConstraint(theorem.getAbstractConstraint().get(i));
 
 		try {
 			return this.context.MkAnd(booleanExpressions);
 		} catch (Z3Exception e) {
-			String message = "could not prepare all constraints";
+			String message = "could not prepare all constraints due to exception: " + e.getMessage();
 			Logger.getLogger(SMTIIJava.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}
@@ -113,7 +116,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 		try {
 			return this.context.MkBool(booleanConstraint.getValue());
 		} catch (Z3Exception e) {
-			String message = "could not make boolean expression from boolean constraint \"" + booleanConstraint + "\"";
+			String message = "could not make boolean expression from boolean constraint \"" + booleanConstraint + "\" due to exception: " + e.getMessage();
 			Logger.getLogger(SMTIIJava.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}
@@ -124,7 +127,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 		try {
 			return this.context.MkNot(this.getBackendConstraint(notConstraint.getConstraint()));
 		} catch (Z3Exception e) {
-			String message = "could not negotiate boolean expression \"" + notConstraint + "\"";
+			String message = "could not negotiate boolean expression \"" + notConstraint + "\" due to exception: " + e.getMessage();
 			Logger.getLogger(SMTIIJava.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}
@@ -152,7 +155,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 				throw exception;
 			}
 		} catch (Z3Exception e) {
-			String message = "could not prepare single constraint \"" + singleConstraint + "\"";
+			String message = "could not prepare single constraint \"" + singleConstraint + "\" due to exception: " + e.getMessage();
 			Logger.getLogger(SMTIIJava.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}
@@ -178,7 +181,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 				throw exception;
 			}
 		} catch (Z3Exception e) {
-			String message = "could not prepare single constraint \"" + subConstraint + "\"";
+			String message = "could not prepare single constraint \"" + subConstraint + "\" due to exception: " + e.getMessage();
 			Logger.getLogger(SMTIIJava.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}
@@ -198,7 +201,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 					})
 			});
 		} catch (Z3Exception e) {
-			String message = "could not prepare if-then-else constraint \"" + ifThenElseConstraint + "\"";
+			String message = "could not prepare if-then-else constraint \"" + ifThenElseConstraint + "\" due to exception: " + e.getMessage();
 			Logger.getLogger(SMTIIJava.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}
@@ -207,19 +210,35 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	@Override
 	public ArithExpr prepareAbstractConstraintLiteral(AbstractConstraintLiteral<?> constraintLiteral) {
 		try {
-			if (constraintLiteral instanceof AbstractConstraintLiteralDouble)
-				return this.context.MkReal(constraintLiteral.toString());
-			else if (constraintLiteral instanceof AbstractConstraintLiteralFloat)
-				return this.context.MkReal(constraintLiteral.toString());
-			else if (constraintLiteral instanceof AbstractConstraintLiteralInteger)
-				return this.context.MkInt(constraintLiteral.toString());
-			else {
-				String message = "could not create arithmetic expression from literal \"" + constraintLiteral + "\"";
-				Logger.getLogger(SMTIIJava.class).fatal(message);
-				throw new IllegalArgumentException(message);
+			if (!constraintLiteral.isVariable()) {
+				if (constraintLiteral instanceof AbstractConstraintLiteralDouble)
+					return this.context.MkReal(constraintLiteral.getValue().toString());
+				else if (constraintLiteral instanceof AbstractConstraintLiteralFloat)
+					return this.context.MkReal(constraintLiteral.getValue().toString());
+				else if (constraintLiteral instanceof AbstractConstraintLiteralInteger)
+					return this.context.MkInt(constraintLiteral.getValue().toString());
+				else {
+					String message = "could not create arithmetic expression from non-variable literal \"" + constraintLiteral + "\"";
+					Logger.getLogger(SMTIIJava.class).fatal(message);
+					throw new IllegalArgumentException(message);
+				}
+			} else {
+				if (constraintLiteral instanceof AbstractConstraintLiteralDouble)
+					return this.context.MkRealConst(constraintLiteral.getName());
+				else if (constraintLiteral instanceof AbstractConstraintLiteralFloat)
+					return this.context.MkRealConst(constraintLiteral.getName());
+				else if (constraintLiteral instanceof AbstractConstraintLiteralInteger)
+					return this.context.MkIntConst(constraintLiteral.getName());
+				else if (constraintLiteral instanceof AbstractConstraintLiteralObject)
+					return this.context.MkIntConst(constraintLiteral.getName());
+				else {
+					String message = "could not create arithmetic expression from variable literal \"" + constraintLiteral + "\"";
+					Logger.getLogger(SMTIIJava.class).fatal(message);
+					throw new IllegalArgumentException(message);
+				}
 			}
 		} catch (Z3Exception e) {
-			String message = "could not prepare constraint literal \"" + constraintLiteral + "\"\n\t" + e.getMessage();
+			String message = "could not prepare constraint literal \"" + constraintLiteral + "\" of type \"" + constraintLiteral.getClass().getSimpleName() + "\" due to exception: " + e.getMessage();
 			Logger.getLogger(SMTIIJava.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}
@@ -254,7 +273,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 				throw exception;
 			}
 		} catch (Z3Exception e) {
-			String message = "could not prepare constraint formula \"" + constraintFormula + "\"";
+			String message = "could not prepare constraint formula \"" + constraintFormula + "\" due to exception: " + e.getMessage();
 			Logger.getLogger(SMTIIJava.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}

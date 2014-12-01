@@ -1,11 +1,10 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import de.agra.sat.koselleck.datatypes.PreField;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 
 /**
  * AbstractConstraint is an abstract class for all types of constraints.
@@ -14,27 +13,6 @@ import de.agra.sat.koselleck.datatypes.PreField;
  * @author Max Nitze
  */
 public abstract class AbstractConstraint implements Cloneable {
-	/** the set of prefixed fields of the constraint */
-	private final Set<PreField> preFields;
-
-	/**
-	 * Constructor for a new abstract constraint.
-	 */
-	public AbstractConstraint() {
-		this.preFields = new HashSet<PreField>();
-	}
-
-	/** getter/setter methods
-	 * ----- ----- ----- ----- ----- */
-
-	/**
-	 * 
-	 * @return
-	 */
-	public Set<PreField> getPreFields() {
-		return this.preFields;
-	}
-
 	/** abstract methods
 	 * ----- ----- ----- ----- ----- */
 
@@ -73,6 +51,13 @@ public abstract class AbstractConstraint implements Cloneable {
 	 *  {@code regex}, {@code false} otherwise
 	 */
 	public abstract boolean matches(String regex);
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public abstract Set<AbstractConstraintLiteral<?>> getUnfinishedConstraintLiterals();
 
 	/**
 	 * equals checks if this abstract constraint and the given object are

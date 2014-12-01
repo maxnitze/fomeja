@@ -1,12 +1,18 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
-/** imports */
+/* imports */
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.apache.log4j.Logger;
+
+import de.agra.sat.koselleck.annotations.Variable;
 import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.types.ArithmeticOperator;
+import de.agra.sat.koselleck.types.Opcode;
 
 /**
  * AbstractConstraintLiteral represents a literal in a constraint value.
@@ -16,108 +22,119 @@ import de.agra.sat.koselleck.types.ArithmeticOperator;
  */
 public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintValue {
 	/** the value of the literal */
-	private final T value;
+	private T value;
 
 	/** the name of the value */
 	private String name;
 
-	/**  */
-	private final Field field;
-	/**  */
-	private final List<PreField> preFields;
-	/**  */
-	private final int constantTableIndex;
+	/** COMMENT */
+	private Field field;
+	/** COMMENT */
+	private int constantTableIndex;
 
 	/** flag if the value is variable */
-	private final boolean isVariable;
+	private boolean isVariable;
 
 	/** flag that indicates if the value is a number type */
-	private final boolean isNumberType;
+	private boolean isNumberType;
 
 	/** flag that indicates if the value is a finished type */
-	private final boolean isFinishedType;
+	private boolean isFinishedType;
 
 	/**
 	 * Constructor for a new AbstractConstraintLiteral.
 	 * 
 	 * @param value the new value for the literal
-	 * @param name the new name of the variable
-	 * @param isVariable the new variable flag for the value
 	 * @param isNumberType the new number type flag for the value
 	 * @param isFinishedType the new finished type flag for the value
 	 */
-	public AbstractConstraintLiteral(T value, boolean isVariable, boolean isNumberType, boolean isFinishedType) {
+	public AbstractConstraintLiteral(T value, boolean isNumberType, boolean isFinishedType) {
 		this.value = value;
 
-		this.isVariable = isVariable;
+		this.isVariable = false;
 		this.isNumberType = isNumberType;
 		this.isFinishedType = isFinishedType;
 
 		this.field = null;
 		this.constantTableIndex = -1;
-		this.preFields = new ArrayList<PreField>();
-		this.name = "";
+		this.name = value.getClass().getCanonicalName() + "_" + value.toString();
 	}
 
 	/**
 	 * Constructor for a new AbstractConstraintLiteral.
 	 * 
 	 * @param value the new value for the literal
-	 * @param field
-	 * @param fieldCodeIndex
-	 * @param constantTableIndex
-	 * @param name the new name of the variable
-	 * @param isVariable the new variable flag for the value
+	 * @param fieldCodeIndex COMMENT
+	 * @param opcode COMMENT
 	 * @param isNumberType the new number type flag for the value
 	 * @param isFinishedType the new finished type flag for the value
 	 */
-	public AbstractConstraintLiteral(T value, Field field, int fieldCodeIndex, int constantTableIndex, boolean isVariable, boolean isNumberType, boolean isFinishedType) {
+	public AbstractConstraintLiteral(T value, int fieldCodeIndex, Opcode opcode, boolean isNumberType, boolean isFinishedType) {
+		super(fieldCodeIndex, opcode);
 		this.value = value;
 
-		this.isVariable = isVariable;
+		this.isVariable = false;
 		this.isNumberType = isNumberType;
 		this.isFinishedType = isFinishedType;
 
-		this.field = field;
-		this.constantTableIndex = constantTableIndex;
-		this.preFields = new ArrayList<PreField>();
-		this.name = "v" + fieldCodeIndex + "_" + this.constantTableIndex + "-" + this.field.getName();
+		this.field = null;
+		this.constantTableIndex = -1;
+		this.name = value.getClass().getSimpleName() + "_" + value.toString();
 	}
 
 	/**
 	 * Constructor for a new AbstractConstraintLiteral.
 	 * 
-	 * @param value the new value for the literal
 	 * @param field
 	 * @param fieldCodeIndex
+	 * @param opcode
 	 * @param constantTableIndex
-	 * @param name the new name of the variable
-	 * @param isVariable the new variable flag for the value
+	 * @param isNumberType the new number type flag for the value
+	 * @param isFinishedType the new finished type flag for the value
+	 */
+	public AbstractConstraintLiteral(Field field, int fieldCodeIndex, Opcode opcode, int constantTableIndex, boolean isNumberType, boolean isFinishedType) {
+		super(fieldCodeIndex, opcode);
+		this.value = null;
+
+		this.field = field;
+		this.constantTableIndex = constantTableIndex;
+		this.name = "v" + fieldCodeIndex + "_" + this.constantTableIndex + "-" + this.field.getName();
+
+		this.isVariable = (this.field != null && this.field.getAnnotation(Variable.class) != null);
+		this.isNumberType = isNumberType;
+		this.isFinishedType = isFinishedType;
+	}
+
+	/**
+	 * Constructor for a new AbstractConstraintLiteral.
+	 * 
+	 * @param field
+	 * @param fieldCodeIndex
+	 * @param opcode
+	 * @param constantTableIndex
 	 * @param isNumberType the new number type flag for the value
 	 * @param isFinishedType the new finished type flag for the value
 	 * @param preFields
 	 */
-	public AbstractConstraintLiteral(T value, Field field, int fieldCodeIndex, int constantTableIndex, boolean isVariable, boolean isNumberType, boolean isFinishedType, List<PreField> preFields) {
-		this.value = value;
-
-		this.isVariable = isVariable;
-		this.isNumberType = isNumberType;
-		this.isFinishedType = isFinishedType;
+	public AbstractConstraintLiteral(Field field, int fieldCodeIndex, Opcode opcode, int constantTableIndex, boolean isNumberType, boolean isFinishedType, List<PreField> preFields) {
+		super(fieldCodeIndex, opcode, preFields);
+		this.value = null;
 
 		this.field = field;
-		this.preFields = new ArrayList<PreField>(preFields);
-
-		this.name = "v" + fieldCodeIndex;
 		this.constantTableIndex = constantTableIndex;
-		for (PreField preField : this.preFields)
-			this.name += preField.getSubName();
-		this.name += "_" + this.constantTableIndex + "-" + this.field.getName();
+
+		this.name = this.getPreFieldList().getName() +  "_" + this.constantTableIndex + "-" + this.field.getName();
+
+		this.isVariable = (this.field != null && this.field.getAnnotation(Variable.class) != null);
+		this.isNumberType = isNumberType;
+		this.isFinishedType = isFinishedType;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -126,6 +143,7 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -134,6 +152,7 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @param name
 	 */
@@ -142,6 +161,7 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -150,14 +170,7 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	}
 
 	/**
-	 * 
-	 * @return
-	 */
-	public List<PreField> getPreFields() {
-		return this.preFields;
-	}
-
-	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -166,6 +179,7 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -174,6 +188,7 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -182,6 +197,7 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -189,10 +205,152 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 		return this.isFinishedType;
 	}
 
-	/** abstract methods
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public boolean isFinishedNumberType() {
+		return this.isNumberType && this.isFinishedType;
+	}
+
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
+	 * 
+	 * @param value
+	 */
+	void setValue(T value) {
+		this.value = value;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param value
+	 */
+	void setValueAndFinish(T value) {
+		this.value = value;
+
+		this.setFinished();
+	}
+
+	/**
+	 * COMMENT
+	 */
+	void setFinished() {
+		this.field = null;
+
+		this.isVariable = false;
+		this.isFinishedType = true;
+
+		this.field = null;
+		this.constantTableIndex = -1;
+		this.name = (this.value != null ? this.value.getClass().getCanonicalName() + "_" + this.value.toString() : "");
+	}
+
+	/* overridden methods
+	 * ----- ----- ----- ----- ----- */
+
+	@Override
+	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
+		if (!this.isFinishedNumberType()) {
+			Object constraintArgument = constraintArguments.get(this.getFieldCodeIndex());
+			if (this.isVariable || this.getPreFieldList().isVariable() || constraintArgument == null)
+				return this;
+
+			for (PreField preField : this.getPreFieldList()) {
+				boolean accessibility = preField.getField().isAccessible();
+				preField.getField().setAccessible(true);
+				try {
+					constraintArgument = preField.getField().get(constraintArgument);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					String message = "could not access field \"" + preField.getField() + "\" on object \"" + constraintArgument + "\"";
+					Logger.getLogger(AbstractConstraintLiteralInteger.class).fatal(message);
+					throw new IllegalArgumentException(message);
+				} finally {
+					preField.getField().setAccessible(accessibility);
+				}
+			}
+
+			boolean accessibility = this.getField().isAccessible();
+			this.getField().setAccessible(true);
+			try {
+				constraintArgument = this.getField().get(constraintArgument);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				String message = "could not access field \"" + this.getValue() + "\" on object \"" + constraintArgument + "\"";
+				Logger.getLogger(AbstractConstraintLiteralInteger.class).fatal(message);
+				throw new IllegalArgumentException(message);
+			} finally {
+				this.getField().setAccessible(accessibility);
+			}
+
+			if (constraintArgument instanceof Integer)
+				return new AbstractConstraintLiteralInteger((Integer) constraintArgument);
+			else if (constraintArgument instanceof Float)
+				return new AbstractConstraintLiteralFloat((Float) constraintArgument);
+			else if (constraintArgument instanceof Double)
+				return new AbstractConstraintLiteralDouble((Double) constraintArgument);
+			else
+				return new AbstractConstraintLiteralObject(constraintArgument);
+		} else
+			return this;
+	}
+
+	@Override
+	public boolean matches(String regex) {
+		if (this.isFinishedType)
+			return this.value.toString().matches(regex);
+		else
+			return this.name.matches(regex);
+	}
+
+	@Override
+	public Set<AbstractConstraintLiteral<?>> getUnfinishedConstraintLiterals() {
+		Set<AbstractConstraintLiteral<?>> unfinishedConstraintLiterals = new HashSet<AbstractConstraintLiteral<?>>();
+		if (!this.isFinishedType)
+			unfinishedConstraintLiterals.add(this);
+
+		return unfinishedConstraintLiterals;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof AbstractConstraintLiteral<?>))
+			return false;
+
+		AbstractConstraintLiteral<?> abstractConstraintLiteral = (AbstractConstraintLiteral<?>) object;
+
+		if (this.isFinishedType())
+			return this.getValue().equals(abstractConstraintLiteral.getValue());
+		else
+			return this.field.equals(abstractConstraintLiteral.field)
+					&& this.name.equals(abstractConstraintLiteral.name)
+					&& this.getFieldCodeIndex() == abstractConstraintLiteral.getFieldCodeIndex()
+					&& this.getOpcode().equals(abstractConstraintLiteral.getOpcode())
+					&& this.constantTableIndex == abstractConstraintLiteral.constantTableIndex;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder stringRepresentation = new StringBuilder();
+		stringRepresentation.append(this.isFinishedType ? this.getValue().toString() : this.getName());
+		stringRepresentation.append("<--[");
+		stringRepresentation.append(this.isVariable ? "variable" : "not_variable");
+		stringRepresentation.append(";");
+		stringRepresentation.append(this.isNumberType ? "number_type" : "not_number_type");
+		stringRepresentation.append("]");
+
+		return stringRepresentation.toString();
+	}
+
+	/* abstract methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * COMMENT
 	 * 
 	 * @param constraintLiteral
 	 * 
@@ -201,10 +359,24 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	public abstract int compareTo(AbstractConstraintLiteral<?> constraintLiteral);
 
 	/**
+	 * COMMENT
 	 * 
 	 * @param constraintLiteral
+	 * @param operator
 	 * 
 	 * @return
 	 */
-	public abstract AbstractConstraintLiteral<?> calc(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator);
+	public abstract AbstractConstraintValue calc(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator);
+
+	/* class methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public PreField toPreField() {
+		return new PreField(this.field, this.constantTableIndex, this.getOpcode(), this.getPreFieldList().getFieldCodeIndex(), this.getPreFieldList());
+	}
 }

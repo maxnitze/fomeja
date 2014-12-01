@@ -1,7 +1,11 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
+import java.util.HashSet;
 /** imports */
 import java.util.Map;
+import java.util.Set;
+
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 
 /**
  * 
@@ -16,8 +20,6 @@ public class AbstractNotConstraint extends AbstractConstraint {
 	 * @param constraint
 	 */
 	public AbstractNotConstraint(AbstractConstraint constraint) {
-		this.getPreFields().addAll(constraint.getPreFields());
-
 		this.constraint = constraint;
 	}
 
@@ -32,7 +34,7 @@ public class AbstractNotConstraint extends AbstractConstraint {
 		return this.constraint;
 	}
 
-	/** inherited methods
+	/** overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -58,6 +60,14 @@ public class AbstractNotConstraint extends AbstractConstraint {
 	@Override
 	public boolean matches(String regex) {
 		return this.constraint.matches(regex);
+	}
+
+	@Override
+	public Set<AbstractConstraintLiteral<?>> getUnfinishedConstraintLiterals() {
+		Set<AbstractConstraintLiteral<?>> unfinishedConstraintLiterals = new HashSet<AbstractConstraintLiteral<?>>();
+		unfinishedConstraintLiterals.addAll(this.constraint.getUnfinishedConstraintLiterals());
+
+		return unfinishedConstraintLiterals;
 	}
 
 	@Override

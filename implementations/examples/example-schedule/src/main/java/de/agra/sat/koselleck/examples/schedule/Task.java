@@ -31,6 +31,7 @@ public class Task {
 	 * 
 	 * @param name
 	 * @param duration
+	 * @param neededSkill
 	 * @param neededSkills
 	 * @param dependentTasks
 	 */

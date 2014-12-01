@@ -1,6 +1,7 @@
 package de.agra.sat.koselleck.backends;
 
 /** imports */
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import de.agra.sat.koselleck.backends.datatypes.ComplexParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.ParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.SimpleParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
+import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
 
 /**
@@ -32,10 +34,11 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 		this.dialect = dialect;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -43,7 +46,7 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 		return this.dialect;
 	}
 
-	/** abstract methods
+	/* abstract methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -60,33 +63,102 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	public abstract void solveAndAssign(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfiableException;
 
 	/**
+	 * COMMENT
 	 * 
 	 * @param theorem
 	 * @param proverResults
 	 */
 	void assign(Theorem theorem, Map<String, Object> proverResults) {
-		for (Map.Entry<String, ParameterObject> variable : theorem.getVariablesMap().entrySet()) {
-			Object proverResult = proverResults.get(variable.getKey());
+		for (ParameterObject parameterObject : theorem.getVariablesMap().values())
+			if (!parameterObject.isAssigned())
+				this.assign(proverResults, parameterObject);
+	}
 
-			if (proverResult != null) {
-				boolean accessibility = variable.getValue().getPreField().getField().isAccessible(); 
-				variable.getValue().getPreField().getField().setAccessible(true);
-				try {
-					if (variable.getValue() instanceof SimpleParameterObject)
-						variable.getValue().getPreField().getField().set(variable.getValue().getObject(), proverResult);
-					else if (variable.getValue() instanceof ComplexParameterObject) {
-						ComplexParameterObject complexParameterObject = (ComplexParameterObject) variable.getValue();
-						Object objectRangeElement = complexParameterObject.getObjectRangeElement((Integer) proverResult);
-						complexParameterObject.getPreField().getField().set(variable.getValue().getObject(), objectRangeElement);
-					}
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					String message = "could not access field \"" + variable.getValue().getPreField().getField().getName() +"\"";
-					Logger.getLogger(SMTIIString.class).fatal(message);
-					throw new IllegalArgumentException(message);
-				} finally {
-					variable.getValue().getPreField().getField().setAccessible(accessibility);
-				}
+	/**
+	 * COMMENT
+	 * 
+	 * @param proverResults
+	 * @param parameterObject
+	 */
+	private void assign(Map<String, Object> proverResults, ParameterObject parameterObject) {
+		Object proverResult = proverResults.get(parameterObject.getName());
+		if (proverResult != null) {
+			if (parameterObject.hasDependentParameterObject() && !parameterObject.getDependentParameterObject().isAssigned())
+				this.assign(proverResults, parameterObject.getDependentParameterObject());
+
+			Object fieldObject = this.getFieldValue(parameterObject.getPreField().getField(),
+					this.getFieldValue(parameterObject.getPreField().getPreFieldList(), parameterObject.getStartingObject())).toString();
+
+			this.assignVariable(parameterObject, fieldObject, proverResult);
+		}
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param parameterObject
+	 * @param fieldObject
+	 * @param proverResult
+	 */
+	private void assignVariable(ParameterObject parameterObject, Object fieldObject, Object proverResult) {
+		Field field = parameterObject.getPreField().getField();
+		boolean accessibility = field.isAccessible(); 
+		field.setAccessible(true);
+		try {
+			if (parameterObject instanceof SimpleParameterObject)
+				field.set(fieldObject, proverResult);
+			else if (parameterObject instanceof ComplexParameterObject) {
+				ComplexParameterObject complexParameterObject = (ComplexParameterObject) parameterObject;
+				Object objectRangeElement = complexParameterObject.getObjectRangeElement((Integer) proverResult);
+				complexParameterObject.getPreField().getField().set(fieldObject, objectRangeElement);
 			}
+
+			parameterObject.setAssigned();
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			String message = "could not access field \"" + field.getName() +"\"";
+			Logger.getLogger(Prover.class).fatal(message);
+			throw new IllegalArgumentException(message);
+		} finally {
+			field.setAccessible(accessibility);
+		}
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param preFields
+	 * @param startingObject
+	 * 
+	 * @return
+	 */
+	private Object getFieldValue(List<PreField> preFields, Object startingObject) {
+		Object object = startingObject;
+
+		for (PreField preField : preFields)
+			object = this.getFieldValue(preField.getField(), object);
+
+		return object;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param field
+	 * @param object
+	 * 
+	 * @return
+	 */
+	private Object getFieldValue(Field field, Object object) {
+		boolean accessibility = field.isAccessible();
+		field.setAccessible(true);
+		try {
+			return field.get(object);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			String message = "could not access field \"" + field.getName() + "\" on object \"" + object + "\"";
+			Logger.getLogger(Dialect.class).fatal(message);
+			throw new IllegalArgumentException(message + "\n" + e.getMessage());
+		} finally {
+			field.setAccessible(accessibility);
 		}
 	}
 }

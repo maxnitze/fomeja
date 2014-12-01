@@ -6,16 +6,21 @@ import java.util.List;
 import de.agra.sat.koselleck.annotations.Constraint;
 
 /**
+ * COMMENT
  * 
  * @author Max Nitze
  */
 public class Schedule {
-	/**  */
+	/** COMMENT */
 	public final List<Employee> employees;
-	/**  */
+	/** COMMENT */
 	public final List<Task> tasks;
 
+	/** COMMENT */
+	private final int taskStart;
+
 	/**
+	 * COMMENT
 	 * 
 	 * @param employees
 	 * @param tasks
@@ -23,17 +28,20 @@ public class Schedule {
 	public Schedule(List<Employee> employees, List<Task> tasks) {
 		this.employees = employees;
 		this.tasks = tasks;
+
+		this.taskStart = 5;
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @param task
 	 * 
 	 * @return
 	 */
-	@Constraint(fields = { @Constraint.Field("tasks") })
+	@Constraint( fields = { @Constraint.Field("tasks") })
 	public boolean startIsPositive(Task task) {
-		return task.start >= 0;
+		return task.start >= this.taskStart;
 	}
 
 	/**
@@ -43,7 +51,7 @@ public class Schedule {
 	 * 
 	 * @return
 	 */
-	@Constraint(fields = { @Constraint.Field("tasks"), @Constraint.Field("tasks") })
+//	@Constraint(fields = { @Constraint.Field("tasks"), @Constraint.Field("tasks") })
 	public boolean oneTaskAtATime(Task task1, Task task2) {
 		return task1 == task2 || !task1.intersectsWith(task2) || task1.doneBy != task2.doneBy;
 	}
@@ -54,7 +62,7 @@ public class Schedule {
 	 * 
 	 * @return
 	 */
-//	@Constraint(fields = { @Constraint.Field("tasks") })
+	@Constraint(fields = { @Constraint.Field("tasks") })
 	public boolean employeeHasNeededSkill(Task task) {
 		return task.neededSkill == task.doneBy.skill;
 	}

@@ -1,10 +1,13 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 import de.agra.sat.koselleck.types.BooleanConnector;
@@ -32,9 +35,6 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	 * @param constraint2 the new second constraint
 	 */
 	public AbstractSubConstraint(AbstractConstraint constraint1, BooleanConnector connector, AbstractConstraint constraint2) {
-		this.getPreFields().addAll(constraint1.getPreFields());
-		this.getPreFields().addAll(constraint2.getPreFields());
-
 		this.constraint1 = constraint1;
 		this.connector = connector;
 		this.constraint2 = constraint2;
@@ -67,7 +67,7 @@ public class AbstractSubConstraint extends AbstractConstraint {
 		return this.connector;
 	}
 
-	/** inherited methods
+	/** overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -143,6 +143,15 @@ public class AbstractSubConstraint extends AbstractConstraint {
 	@Override
 	public boolean matches(String regex) {
 		return this.constraint1.matches(regex) || this.constraint2.matches(regex);
+	}
+
+	@Override
+	public Set<AbstractConstraintLiteral<?>> getUnfinishedConstraintLiterals() {
+		Set<AbstractConstraintLiteral<?>> unfinishedConstraintLiterals = new HashSet<AbstractConstraintLiteral<?>>();
+		unfinishedConstraintLiterals.addAll(this.constraint1.getUnfinishedConstraintLiterals());
+		unfinishedConstraintLiterals.addAll(this.constraint2.getUnfinishedConstraintLiterals());
+
+		return unfinishedConstraintLiterals;
 	}
 
 	@Override

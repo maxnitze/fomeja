@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractPrematureConstraintValueConstraint;
@@ -35,10 +34,9 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	 * @param value1 the new first value
 	 * @param operator the new constraint operator of the values
 	 * @param value2 the new second value
+	 * @param preFields
 	 */
-	public AbstractSingleConstraint(AbstractConstraintValue value1, ConstraintOperator operator, AbstractConstraintValue value2, Set<PreField> preFields) {
-		this.getPreFields().addAll(preFields);
-
+	public AbstractSingleConstraint(AbstractConstraintValue value1, ConstraintOperator operator, AbstractConstraintValue value2) {
 		this.value1 = value1;
 		this.operator = operator;
 		this.value2 = value2;
@@ -71,7 +69,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 		return this.operator;
 	}
 
-	/** inherited methods
+	/** overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -138,6 +136,15 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	}
 
 	@Override
+	public Set<AbstractConstraintLiteral<?>> getUnfinishedConstraintLiterals() {
+		Set<AbstractConstraintLiteral<?>> unfinishedConstraintLiterals = new HashSet<AbstractConstraintLiteral<?>>();
+		unfinishedConstraintLiterals.addAll(this.value1.getUnfinishedConstraintLiterals());
+		unfinishedConstraintLiterals.addAll(this.value2.getUnfinishedConstraintLiterals());
+
+		return unfinishedConstraintLiterals;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof AbstractSingleConstraint))
 			return false;
@@ -156,7 +163,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	@Override
 	public AbstractConstraint clone() {
 		return new AbstractSingleConstraint(
-				this.value1.clone(), this.operator, this.value2.clone(), new HashSet<PreField>(this.getPreFields()));
+				this.value1.clone(), this.operator, this.value2.clone());
 	}
 
 	@Override

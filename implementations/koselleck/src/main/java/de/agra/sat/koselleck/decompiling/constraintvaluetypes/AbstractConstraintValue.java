@@ -1,7 +1,13 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 /** imports */
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import de.agra.sat.koselleck.datatypes.PreField;
+import de.agra.sat.koselleck.datatypes.PreFieldList;
+import de.agra.sat.koselleck.types.Opcode;
 
 /**
  * AbstractConstraint is an abstract class for all types of constraint values.
@@ -10,8 +16,69 @@ import java.util.Map;
  * @author Max Nitze
  */
 public abstract class AbstractConstraintValue {
-	/**  */
-	public static AbstractConstraintValue NULLValue = new AbstractConstraintLiteralObject(null);
+	/** COMMENT */
+	private PreFieldList preFieldList;
+
+	/**
+	 * COMMENT
+	 */
+	public AbstractConstraintValue() {
+		this.preFieldList = new PreFieldList(-1, null);
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param fieldCodeIndex
+	 * @param opcode
+	 */
+	public AbstractConstraintValue(int fieldCodeIndex, Opcode opcode) {
+		this.preFieldList = new PreFieldList(fieldCodeIndex, opcode);
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param fieldCodeIndex
+	 * @param opcode
+	 * @param preFields
+	 */
+	public AbstractConstraintValue(int fieldCodeIndex, Opcode opcode, List<PreField> preFields) {
+		this.preFieldList = new PreFieldList(fieldCodeIndex, opcode, preFields);
+	}
+
+	/** getter/setter methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public PreFieldList getPreFieldList() {
+		return this.preFieldList;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public int getFieldCodeIndex() {
+		return this.preFieldList.getFieldCodeIndex();
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public Opcode getOpcode() {
+		return this.preFieldList.getOpcode();
+	}
+
+	/** abstract methods
+	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * replaceAll replaces all occurrences of the given regular expression
@@ -48,6 +115,13 @@ public abstract class AbstractConstraintValue {
 	 *  regular expression {@code regex}, {@code false} otherwise
 	 */
 	public abstract boolean matches(String regex);
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public abstract Set<AbstractConstraintLiteral<?>> getUnfinishedConstraintLiterals();
 
 	/**
 	 * equals checks if this abstract constraint value and the given object are

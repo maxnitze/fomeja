@@ -7,32 +7,37 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import de.agra.sat.koselleck.utils.CompareUtils;
+import de.agra.sat.koselleck.utils.ClassUtils;
 
 /**
+ * COMMENT
  * 
  * @author Max Nitze
  */
 public class AbstractPrematureConstraintValueAccessibleObject extends AbstractConstraintValue {
-	/**  */
+	/** COMMENT */
 	private AbstractConstraintValue constraintValue;
-	/**  */
+	/** COMMENT */
 	private final AccessibleObject accessibleObject;
-	/**  */
+	/** COMMENT */
 	private final List<AbstractConstraintValue> objectArguments;
 
 	/**
+	 * COMMENT
 	 * 
 	 * @param constraintValue
 	 * @param accessibleObject
 	 * @param objectArguments
 	 */
 	public AbstractPrematureConstraintValueAccessibleObject(AbstractConstraintValue constraintValue, AccessibleObject accessibleObject, List<AbstractConstraintValue> objectArguments) {
+		super(constraintValue.getFieldCodeIndex(), constraintValue.getOpcode(), constraintValue.getPreFieldList());
 		this.constraintValue = constraintValue;
 		this.accessibleObject = accessibleObject;
 		this.objectArguments = objectArguments;
@@ -42,6 +47,7 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -50,6 +56,7 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -58,6 +65,7 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -65,7 +73,7 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 		return this.objectArguments;
 	}
 
-	/** inherited methods
+	/** overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -109,16 +117,16 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 					else
 						invokationObject = constraintLiteral.getValue();
 
-					if (CompareUtils.equalsAny(method.getReturnType(), CompareUtils.doubleClasses))
+					if (ClassUtils.isDoubleClass(method.getReturnType()))
 						return new AbstractConstraintLiteralDouble(
 								(Double) method.invoke(invokationObject, arguments));
-					else if (CompareUtils.equalsAny(method.getReturnType(), CompareUtils.floatClasses))
+					else if (ClassUtils.isFloatClass(method.getReturnType()))
 						return new AbstractConstraintLiteralFloat(
 								(Float) method.invoke(invokationObject, arguments));
-					else if (CompareUtils.equalsAny(method.getReturnType(), CompareUtils.integerClasses))
+					else if (ClassUtils.isIntegerClass(method.getReturnType()))
 						return new AbstractConstraintLiteralInteger(
 								(Integer) method.invoke(invokationObject, arguments));
-					else if (CompareUtils.equalsAny(method.getReturnType(), CompareUtils.booleanClasses))
+					else if (ClassUtils.isBooleanClass(method.getReturnType()))
 						return new AbstractConstraintLiteralInteger(
 								method.invoke(invokationObject, arguments).equals(true) ? 1 : 0);
 					else
@@ -129,16 +137,16 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 				else if (this.accessibleObject instanceof Constructor<?>) {
 					Constructor<?> constructor = (Constructor<?>)this.accessibleObject;
 
-					if (CompareUtils.equalsAny(
-							constructor.getDeclaringClass(), CompareUtils.doubleClasses))
+					if (ClassUtils.isDoubleClass(
+							constructor.getDeclaringClass()))
 						return new AbstractConstraintLiteralDouble(
 								(Double) constructor.newInstance(arguments));
-					else if (CompareUtils.equalsAny(
-							constructor.getDeclaringClass(), CompareUtils.floatClasses))
+					else if (ClassUtils.isFloatClass(
+							constructor.getDeclaringClass()))
 						return new AbstractConstraintLiteralFloat(
 								(Float) constructor.newInstance(arguments));
-					else if (CompareUtils.equalsAny(
-							constructor.getDeclaringClass(), CompareUtils.integerClasses))
+					else if (ClassUtils.isIntegerClass(
+							constructor.getDeclaringClass()))
 						return new AbstractConstraintLiteralInteger(
 								(Integer) constructor.newInstance(arguments));
 					else
@@ -178,7 +186,7 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
 		this.constraintValue = this.constraintValue.substitute(constraintArguments);
 
-		for (int i = 0; i < this.objectArguments.size(); i++)
+		for (int i=0; i<this.objectArguments.size(); i++)
 			this.objectArguments.set(i, this.objectArguments.get(i).substitute(constraintArguments));
 
 		return this;
@@ -187,6 +195,16 @@ public class AbstractPrematureConstraintValueAccessibleObject extends AbstractCo
 	@Override
 	public boolean matches(String regex) {
 		return this.constraintValue.matches(regex);
+	}
+
+	@Override
+	public Set<AbstractConstraintLiteral<?>> getUnfinishedConstraintLiterals() {
+		Set<AbstractConstraintLiteral<?>> unfinishedConstraintLiterals = new HashSet<AbstractConstraintLiteral<?>>();
+		unfinishedConstraintLiterals.addAll(this.constraintValue.getUnfinishedConstraintLiterals());
+		for (AbstractConstraintValue objectArgument : this.objectArguments)
+			unfinishedConstraintLiterals.addAll(objectArgument.getUnfinishedConstraintLiterals());
+
+		return unfinishedConstraintLiterals;
 	}
 
 	@Override

@@ -1,9 +1,11 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
 /** imports */
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 /** imports */
 import de.agra.sat.koselleck.types.BooleanConnector;
 
@@ -27,10 +29,6 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 	 * @param elseCaseConstraint
 	 */
 	public AbstractIfThenElseConstraint(AbstractConstraint ifCondition, AbstractConstraint thenCaseConstraint, AbstractConstraint elseCaseConstraint) {
-		this.getPreFields().addAll(ifCondition.getPreFields());
-		this.getPreFields().addAll(thenCaseConstraint.getPreFields());
-		this.getPreFields().addAll(elseCaseConstraint.getPreFields());
-
 		this.ifCondition = ifCondition;
 
 		this.thenCaseConstraint = thenCaseConstraint;
@@ -64,7 +62,7 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 		return this.elseCaseConstraint;
 	}
 
-	/** inherited methods
+	/** overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -143,6 +141,16 @@ public class AbstractIfThenElseConstraint extends AbstractConstraint {
 		return this.ifCondition.matches(regex)
 				|| this.thenCaseConstraint.matches(regex)
 				|| this.elseCaseConstraint.matches(regex);
+	}
+
+	@Override
+	public Set<AbstractConstraintLiteral<?>> getUnfinishedConstraintLiterals() {
+		Set<AbstractConstraintLiteral<?>> unfinishedConstraintLiterals = new HashSet<AbstractConstraintLiteral<?>>();
+		unfinishedConstraintLiterals.addAll(this.ifCondition.getUnfinishedConstraintLiterals());
+		unfinishedConstraintLiterals.addAll(this.thenCaseConstraint.getUnfinishedConstraintLiterals());
+		unfinishedConstraintLiterals.addAll(this.elseCaseConstraint.getUnfinishedConstraintLiterals());
+
+		return unfinishedConstraintLiterals;
 	}
 
 	@Override

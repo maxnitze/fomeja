@@ -1,13 +1,16 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 /** imports */
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.exceptions.NoCalculatableNumberTypeException;
 import de.agra.sat.koselleck.exceptions.NoComparableNumberTypeException;
 import de.agra.sat.koselleck.types.ArithmeticOperator;
+import de.agra.sat.koselleck.types.Opcode;
 
 /**
  * 
@@ -19,10 +22,33 @@ public class AbstractConstraintLiteralObject extends AbstractConstraintLiteral<O
 	 * @param value
 	 */
 	public AbstractConstraintLiteralObject(Object value) {
-		super(value, null, false, false, true);
+		super(value, false, true);
 	}
 
-	/** inherited methods
+	/**
+	 * 
+	 * @param field
+	 * @param fieldCodeIndex
+	 * @param opcode
+	 * @param constantTableIndex
+	 */
+	public AbstractConstraintLiteralObject(Field field, int fieldCodeIndex, Opcode opcode, int constantTableIndex) {
+		super(field, fieldCodeIndex, opcode, constantTableIndex, false, false);
+	}
+
+	/**
+	 * 
+	 * @param field
+	 * @param fieldCodeIndex
+	 * @param opcode
+	 * @param constantTableIndex
+	 * @param preFields
+	 */
+	public AbstractConstraintLiteralObject(Field field, int fieldCodeIndex, Opcode opcode, int constantTableIndex, List<PreField> preFields) {
+		super(field, fieldCodeIndex, opcode, constantTableIndex, false, false, preFields);
+	}
+
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -34,34 +60,11 @@ public class AbstractConstraintLiteralObject extends AbstractConstraintLiteral<O
 	}
 
 	@Override
-	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
-		return this;
-	}
-
-	@Override
-	public boolean matches(String regex) {
-		return false;
-	}
-
-	@Override
-	public boolean equals(Object object) {
-		if (!(object instanceof AbstractConstraintLiteralObject))
-			return false;
-
-		AbstractConstraintLiteralObject abstractConstraintLiteralObject = (AbstractConstraintLiteralObject)object;
-
-		return this.getValue() != null && this.getValue().equals(abstractConstraintLiteralObject.getValue())
-				&& this.isVariable() == abstractConstraintLiteralObject.isVariable();
-	}
-
-	@Override
 	public AbstractConstraintLiteralObject clone() {
-		return new AbstractConstraintLiteralObject(this.getValue());
-	}
-
-	@Override
-	public String toString() {
-		return this.getValue() + "[" + (this.isVariable() ? " variable;" : " not variable;") + " no number type]";
+		if (this.isFinishedType())
+			return new AbstractConstraintLiteralObject(this.getValue());
+		else
+			return new AbstractConstraintLiteralObject(this.getField(), this.getFieldCodeIndex(), this.getOpcode(), this.getConstantTableIndex(), this.getPreFieldList());
 	}
 
 	@Override

@@ -1,8 +1,6 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 /** imports */
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.exceptions.NoCalculatableNumberTypeException;
@@ -15,42 +13,16 @@ import de.agra.sat.koselleck.types.Opcode;
  * @author Max Nitze
  */
 public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Class<?>> {
-	/** the opcode of the field */
-	private final Opcode fieldCode;
-
-	/**  */
-	private final int fieldCodeIndex;
 
 	/**
+	 * COMMENT
 	 * 
 	 * @param value
-	 * @param fieldCode
+	 * @param opcode
 	 * @param fieldCodeIndex
 	 */
-	public AbstractConstraintLiteralClass(Class<?> value, Opcode fieldCode, int fieldCodeIndex) {
-		super(value, "", false, false, false);
-
-		this.fieldCode = fieldCode;
-		this.fieldCodeIndex = fieldCodeIndex;
-	}
-
-	/** getter/setter methods
-	 * ----- ----- ----- ----- ----- */
-
-	/**
-	 * 
-	 * @return
-	 */
-	public Opcode getFieldCode() {
-		return this.fieldCode;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public int getFieldCodeIndex() {
-		return this.fieldCodeIndex;
+	public AbstractConstraintLiteralClass(Class<?> value, Opcode opcode, int fieldCodeIndex) {
+		super(value, fieldCodeIndex, opcode, false, false);
 	}
 
 	/** inherited methods
@@ -65,45 +37,25 @@ public class AbstractConstraintLiteralClass extends AbstractConstraintLiteral<Cl
 	}
 
 	@Override
-	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
-		if (constraintArguments.get(this.fieldCodeIndex) != null) {
-			Object constraintArgument = constraintArguments.get(this.fieldCodeIndex);
-			if (constraintArgument instanceof Integer)
-				return new AbstractConstraintLiteralInteger((Integer) constraintArgument);
-			else if (constraintArgument instanceof Float)
-				return new AbstractConstraintLiteralFloat((Float) constraintArgument);
-			else if (constraintArgument instanceof Double)
-				return new AbstractConstraintLiteralDouble((Double) constraintArgument);
-			else
-				return new AbstractConstraintLiteralObject(constraintArgument);
-		} else
-			return this;
-	}
-
-	@Override
-	public boolean matches(String regex) {
-		return false;
-	}
-
-	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof AbstractConstraintLiteralClass))
 			return false;
 
-		AbstractConstraintLiteralClass abstractConstraintLiteralObject = (AbstractConstraintLiteralClass)object;
+		AbstractConstraintLiteralClass abstractConstraintLiteralObject = (AbstractConstraintLiteralClass) object;
 
-		return this.getValue().equals(abstractConstraintLiteralObject.getValue())
-				&& this.isVariable() == abstractConstraintLiteralObject.isVariable();
+		if (this.isFinishedType())
+			return this.getValue().equals(abstractConstraintLiteralObject.getValue());
+		else
+			return this.getField().equals(abstractConstraintLiteralObject.getField())
+					&& this.getName().equals(abstractConstraintLiteralObject.getName())
+					&& this.getFieldCodeIndex() == abstractConstraintLiteralObject.getFieldCodeIndex()
+					&& this.getOpcode().equals(abstractConstraintLiteralObject.getOpcode())
+					&& this.getConstantTableIndex() == abstractConstraintLiteralObject.getConstantTableIndex();
 	}
 
 	@Override
 	public AbstractConstraintLiteralClass clone() {
-		return new AbstractConstraintLiteralClass(this.getValue(), this.fieldCode, this.fieldCodeIndex);
-	}
-
-	@Override
-	public String toString() {
-		return this.getValue() + "[" + (this.isVariable() ? "variable;" : "not variable;") + " no number type]";
+		return new AbstractConstraintLiteralClass(this.getValue(), this.getOpcode(), this.getFieldCodeIndex());
 	}
 
 	@Override

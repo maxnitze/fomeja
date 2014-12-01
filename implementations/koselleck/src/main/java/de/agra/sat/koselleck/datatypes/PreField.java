@@ -1,38 +1,44 @@
 package de.agra.sat.koselleck.datatypes;
 
-/** imports */
+/* imports */
 import java.lang.reflect.Field;
-import java.util.Set;
+import java.util.List;
 
 import de.agra.sat.koselleck.annotations.Variable;
 import de.agra.sat.koselleck.types.Opcode;
 
 /**
+ * COMMENT
  * 
  * @author Max Nitze
  */
 public class PreField {
-	/**  */
+	/** COMMENT */
 	private Field field;
-	/**  */
+	/** COMMENT */
 	private boolean isVariable;
 
-	/**  */
+	/** COMMENT */
 	private Opcode fieldCode;
-	/**  */
+	/** COMMENT */
 	private int fieldCodeIndex;
 
-	/**  */
-	private String constantTableIndex;
+	/** COMMENT */
+	private int constantTableIndex;
+
+	/** COMMENT */
+	private PreFieldList preFieldList;
 
 	/**
+	 * COMMENT
 	 * 
 	 * @param field
 	 * @param constantTablePrefix
 	 * @param fieldCode
 	 * @param fieldCodeIndex
+	 * @param preFields
 	 */
-	public PreField(Field field, String constantTableIndex, Opcode fieldCode, int fieldCodeIndex, Set<PreField> preFields) {
+	public PreField(Field field, int constantTableIndex, Opcode fieldCode, int fieldCodeIndex, List<PreField> preFields) {
 		this.field = field;
 		this.isVariable = field != null && field.getAnnotation(Variable.class) != null;
 
@@ -40,12 +46,15 @@ public class PreField {
 		this.fieldCodeIndex = fieldCodeIndex;
 
 		this.constantTableIndex = constantTableIndex;
+
+		this.preFieldList = new PreFieldList(fieldCodeIndex, fieldCode, preFields);
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -54,6 +63,7 @@ public class PreField {
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -62,6 +72,7 @@ public class PreField {
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -70,6 +81,7 @@ public class PreField {
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -78,22 +90,33 @@ public class PreField {
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
-	public String getConstantTableIndex() {
+	public int getConstantTableIndex() {
 		return this.constantTableIndex;
 	}
 
 	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public List<PreField> getPreFieldList() {
+		return this.preFieldList;
+	}
+
+	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
 	public String getSubName() {
-		return "_" + this.constantTableIndex + "-" + this.field.getName();
+		return this.constantTableIndex + "-" + this.field.getName();
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -104,7 +127,7 @@ public class PreField {
 		PreField preField = (PreField) object;
 
 		return this.field.equals(preField.field)
-				&& this.constantTableIndex.equals(preField.constantTableIndex);
+				&& this.constantTableIndex == preField.constantTableIndex;
 	}
 
 	@Override

@@ -9,15 +9,6 @@ import java.util.List;
  * @author Max Nitze
  */
 public final class CompareUtils {
-	/** array of the two boolean classes */
-	public static final Class<?>[] booleanClasses = new Class<?>[] { boolean.class, Boolean.class };
-	/** array of the two double classes */
-	public static final Class<?>[] doubleClasses = new Class<?>[] { double.class, Double.class };
-	/** array of the two float classes */
-	public static final Class<?>[] floatClasses = new Class<?>[] { float.class, Float.class };
-	/** array of the two integer classes */
-	public static final Class<?>[] integerClasses = new Class<?>[] { int.class, Integer.class };
-
 	/**
 	 * Private Constructor to prevent this class from being instantiated.
 	 */
@@ -147,23 +138,5 @@ public final class CompareUtils {
 			return true;
 		else
 			return false;
-	}
-
-	/**
-	 * 
-	 * @param class1
-	 * @param class2
-	 * 
-	 * @return
-	 */
-	public static boolean classesEquals(Class<?> class1, Class<?> class2) {
-		if (equalsAny(class1, doubleClasses))
-			return equalsAny(class2, doubleClasses);
-		else if (equalsAny(class1, floatClasses))
-			return equalsAny(class2, floatClasses);
-		else if (equalsAny(class1, integerClasses))
-			return equalsAny(class2, integerClasses);
-		else
-			return class1.equals(class2);
 	}
 }

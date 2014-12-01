@@ -5,32 +5,40 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import de.agra.sat.koselleck.datatypes.PreField;
 
 /**
+ * COMMENT
  * 
  * @author Max Nitze
  */
 public class ComplexParameterObject extends ParameterObject {
-	/**  */
+	/** COMMENT */
 	private final List<Collection<?>> objectRange;
 
 	/**
+	 * COMMENT
 	 * 
-	 * @param object
+	 * @param startingObject
+	 * @param name
 	 * @param preField
 	 * @param index
+	 * @param dependentParameterObject
+	 * @parma objectRange
 	 */
-	public ComplexParameterObject(Object object, PreField preField, int index, List<Collection<?>> objectRange) {
-		super(object, preField, index);
+	public ComplexParameterObject(Object startingObject, String name, PreField preField, int index, ParameterObject dependentParameterObject, List<Collection<?>> objectRange) {
+		super(startingObject, name, preField, index, dependentParameterObject);
 
 		this.objectRange = objectRange;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -38,10 +46,11 @@ public class ComplexParameterObject extends ParameterObject {
 		return this.objectRange;
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
 	 * @param index
 	 * 
@@ -52,12 +61,12 @@ public class ComplexParameterObject extends ParameterObject {
 		for (Collection<?> objectRangeCollection : this.objectRange) {
 			if (index >= objectRangeCollection.size())
 				index -= objectRangeCollection.size();
-			else {
-				List<Object> objectRangeList = new ArrayList<Object>(objectRangeCollection);
-				return objectRangeList.get(index);
-			}
+			else
+				return (new ArrayList<Object>(objectRangeCollection)).get(index);
 		}
 
-		throw new IndexOutOfBoundsException("trying to access the element with index \"" + maxIndex + "\" but there are only \"" + (maxIndex - index) + "\" elements");
+		String message = "trying to access the element with index \"" + maxIndex + "\" but there are only \"" + (maxIndex - index) + "\" elements";
+		Logger.getLogger(ComplexParameterObject.class).fatal(message);
+		throw new IndexOutOfBoundsException(message);
 	}
 }

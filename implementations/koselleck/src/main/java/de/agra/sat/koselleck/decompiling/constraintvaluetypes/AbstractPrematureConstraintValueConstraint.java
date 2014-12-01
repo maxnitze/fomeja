@@ -1,16 +1,19 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 /** imports */
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 
 public class AbstractPrematureConstraintValueConstraint extends AbstractConstraintValue {
-	/**  */
+	/** COMMENT */
 	private AbstractConstraint constraint;
 
 	/**
+	 * COMMENT
 	 * 
 	 * @param constraint
 	 */
@@ -18,10 +21,11 @@ public class AbstractPrematureConstraintValueConstraint extends AbstractConstrai
 		this.constraint = constraint;
 	}
 
-	/** inherited methods
+	/** getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -29,7 +33,7 @@ public class AbstractPrematureConstraintValueConstraint extends AbstractConstrai
 		return this.constraint;
 	}
 
-	/** inherited methods
+	/** overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -57,6 +61,14 @@ public class AbstractPrematureConstraintValueConstraint extends AbstractConstrai
 	@Override
 	public boolean matches(String regex) {
 		return this.constraint.matches(regex);
+	}
+
+	@Override
+	public Set<AbstractConstraintLiteral<?>> getUnfinishedConstraintLiterals() {
+		Set<AbstractConstraintLiteral<?>> unfinishedConstraintLiterals = new HashSet<AbstractConstraintLiteral<?>>();
+		unfinishedConstraintLiterals.addAll(this.constraint.getUnfinishedConstraintLiterals());
+
+		return unfinishedConstraintLiterals;
 	}
 
 	@Override

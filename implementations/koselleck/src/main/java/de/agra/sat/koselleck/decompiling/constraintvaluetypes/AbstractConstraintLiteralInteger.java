@@ -1,54 +1,78 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
-import java.util.Map;
+/* imports */
+import java.lang.reflect.Field;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.exceptions.NoCalculatableNumberTypeException;
 import de.agra.sat.koselleck.exceptions.NoComparableNumberTypeException;
 import de.agra.sat.koselleck.exceptions.UnknownArithmeticOperatorException;
 import de.agra.sat.koselleck.types.ArithmeticOperator;
+import de.agra.sat.koselleck.types.Opcode;
 
 /**
+ * COMMENT
  * 
  * @author Max Nitze
  */
 public class AbstractConstraintLiteralInteger extends AbstractConstraintLiteral<Integer> {
 	/**
+	 * COMMENT
 	 * 
 	 * @param value
 	 */
 	public AbstractConstraintLiteralInteger(Integer value) {
-		super(value, null, false, true, true);
+		super(value, true, true);
 	}
 
 	/**
+	 * COMMENT
 	 * 
-	 * @param name
+	 * @param field
+	 * @param fieldCodeIndex
+	 * @param opcode
+	 * @param constantTableIndex
 	 */
-	public AbstractConstraintLiteralInteger(String name) {
-		super(null, name, true, true, true);
+	public AbstractConstraintLiteralInteger(Field field, int fieldCodeIndex, Opcode opcode, int constantTableIndex) {
+		super(field, fieldCodeIndex, opcode, constantTableIndex, true, false);
 	}
 
-	/** inherited methods
+	/**
+	 * COMMENT
+	 * 
+	 * @param field
+	 * @param fieldCodeIndex
+	 * @parma opcode
+	 * @param constantTableIndex
+	 * @param preFields
+	 */
+	public AbstractConstraintLiteralInteger(Field field, int fieldCodeIndex, Opcode opcode, int constantTableIndex, List<PreField> preFields) {
+		super(field, fieldCodeIndex, opcode, constantTableIndex, true, false, preFields);
+	}
+
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
-	public void replaceAll(String regex, String replacement) {}
+	public void replaceAll(String regex, String replacement) {
+		if (!this.isFinishedType() && this.getName().matches(regex)) {
+			if (replacement.matches("^\\d+(\\.\\d+)?d$"))
+				this.setValueAndFinish(((Double) Double.parseDouble(replacement)).intValue());
+			else if (replacement.matches("^\\d+(\\.\\d+)?f$"))
+				this.setValueAndFinish(((Float) Float.parseFloat(replacement)).intValue());
+			else if (replacement.matches("^\\d+$"))
+				this.setValueAndFinish(Integer.parseInt(replacement));
+			else 
+				this.setName(replacement);
+		}
+	}
 
 	@Override
 	public AbstractConstraintValue evaluate() {
 		return this;
-	}
-
-	@Override
-	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
-		return this;
-	}
-
-	@Override
-	public boolean matches(String regex) {
-		return false;
 	}
 
 	@Override
@@ -58,23 +82,31 @@ public class AbstractConstraintLiteralInteger extends AbstractConstraintLiteral<
 
 		AbstractConstraintLiteralInteger abstractConstraintLiteralInteger = (AbstractConstraintLiteralInteger)object;
 
-		return this.getValue().equals(abstractConstraintLiteralInteger.getValue()) &&
-				this.isVariable() == abstractConstraintLiteralInteger.isVariable();
+		if (this.isFinishedType())
+			return this.getValue().equals(abstractConstraintLiteralInteger.getValue());
+		else
+			return this.getField().equals(abstractConstraintLiteralInteger.getField())
+					&& this.getName().equals(abstractConstraintLiteralInteger.getName())
+					&& this.getFieldCodeIndex() == abstractConstraintLiteralInteger.getFieldCodeIndex()
+					&& this.getOpcode().equals(abstractConstraintLiteralInteger.getOpcode())
+					&& this.getConstantTableIndex() == abstractConstraintLiteralInteger.getConstantTableIndex();
 	}
 
 	@Override
 	public AbstractConstraintLiteralInteger clone() {
-		return new AbstractConstraintLiteralInteger(this.getValue());
-	}
-
-	@Override
-	public String toString() {
-		return this.getValue().toString();
+		if (this.isFinishedType())
+			return new AbstractConstraintLiteralInteger(this.getValue());
+		else
+			return new AbstractConstraintLiteralInteger(this.getField(), this.getFieldCodeIndex(), this.getOpcode(), this.getConstantTableIndex(), this.getPreFieldList());
 	}
 
 	@Override
 	public int compareTo(AbstractConstraintLiteral<?> constraintLiteral) {
-		if (constraintLiteral.getValue() instanceof Double)
+		if (!this.isFinishedType() || !constraintLiteral.isFinishedNumberType()) {
+			NoComparableNumberTypeException exception = new NoComparableNumberTypeException(this);
+			Logger.getLogger(AbstractConstraintLiteralClass.class).fatal(exception.getMessage());
+			throw exception;
+		} else if (constraintLiteral.getValue() instanceof Double)
 			return ((Double) this.getValue().doubleValue()).compareTo((Double) constraintLiteral.getValue());
 		else if (constraintLiteral.getValue() instanceof Float)
 			return ((Float) this.getValue().floatValue()).compareTo((Float) constraintLiteral.getValue());
@@ -88,8 +120,10 @@ public class AbstractConstraintLiteralInteger extends AbstractConstraintLiteral<
 	}
 
 	@Override
-	public AbstractConstraintLiteral<?> calc(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
-		if (constraintLiteral.getValue() instanceof Double) {
+	public AbstractConstraintValue calc(AbstractConstraintLiteral<?> constraintLiteral, ArithmeticOperator operator) {
+		if (!this.isFinishedType() || !constraintLiteral.isFinishedNumberType())
+			return new AbstractConstraintFormula(this, operator, constraintLiteral);
+		else if (constraintLiteral.getValue() instanceof Double) {
 			switch(operator) {
 			case ADD:
 				return new AbstractConstraintLiteralDouble(this.getValue().doubleValue() + ((Double) constraintLiteral.getValue()));
@@ -133,7 +167,7 @@ public class AbstractConstraintLiteralInteger extends AbstractConstraintLiteral<
 			}
 		} else {
 			NoCalculatableNumberTypeException exception = new NoCalculatableNumberTypeException(constraintLiteral);
-			Logger.getLogger(AbstractConstraintLiteralField.class).fatal(exception.getMessage());
+			Logger.getLogger(AbstractConstraintLiteralInteger.class).fatal(exception.getMessage());
 			throw exception;
 		}
 	}

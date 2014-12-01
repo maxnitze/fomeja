@@ -1,7 +1,10 @@
 package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
+import java.util.HashSet;
 import java.util.Map;
 
+
+import java.util.Set;
 
 /** imports */
 import de.agra.sat.koselleck.types.ArithmeticOperator;
@@ -60,7 +63,7 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 		return this.operator;
 	}
 
-	/** inherit methods
+	/** overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -97,6 +100,15 @@ public class AbstractConstraintFormula extends AbstractConstraintValue {
 	@Override
 	public boolean matches(String regex) {
 		return this.value1.matches(regex) || this.value2.matches(regex);
+	}
+
+	@Override
+	public Set<AbstractConstraintLiteral<?>> getUnfinishedConstraintLiterals() {
+		Set<AbstractConstraintLiteral<?>> unfinishedConstraintLiterals = new HashSet<AbstractConstraintLiteral<?>>();
+		unfinishedConstraintLiterals.addAll(this.value1.getUnfinishedConstraintLiterals());
+		unfinishedConstraintLiterals.addAll(this.value2.getUnfinishedConstraintLiterals());
+
+		return unfinishedConstraintLiterals;
 	}
 
 	@Override

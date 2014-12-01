@@ -1,6 +1,6 @@
 package de.agra.sat.koselleck.backends.datatypes;
 
-/** imports */
+/* imports */
 import de.agra.sat.koselleck.datatypes.PreField;
 
 /**
@@ -11,37 +11,59 @@ import de.agra.sat.koselleck.datatypes.PreField;
  */
 public abstract class ParameterObject {
 	/** the object */
-	private final Object object;
-	/** the prefixed field of the object */
+	private final Object startingObject;
+	/** COMMENT */
+	private String name;
+	/** COMMENT */
 	private final PreField preField;
 	/** the index of the parameter */
 	private final int index;
+	/** COMMENT */
+	private boolean isAssigned;
+	/** COMMENT */
+	private ParameterObject dependentParameterObject;
 
 	/**
-	 * Constructor for a new parameter object.
+	 * COMMENT
 	 * 
-	 * @param object the new object
-	 * @param prefixedField the new prefixed field of the object
-	 * @param index the index of the parameter
+	 * @param startingObject
+	 * @param name
+	 * @param preField 
+	 * @param index
+	 * @param dependentParameterObject
 	 */
-	public ParameterObject(Object object, PreField preField, int index) {
-		this.object = object;
+	public ParameterObject(Object startingObject, String name, PreField preField, int index, ParameterObject dependentParameterObject) {
+		this.startingObject = startingObject;
+		this.name = name + "_" + index;
 		this.preField = preField;
 		this.index = index;
+		this.isAssigned = false;
+		this.dependentParameterObject = dependentParameterObject;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
-	public Object getObject() {
-		return this.object;
+	public Object getStartingObject() {
+		return this.startingObject;
 	}
 
 	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -50,6 +72,7 @@ public abstract class ParameterObject {
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -57,24 +80,51 @@ public abstract class ParameterObject {
 		return this.index;
 	}
 
-	/** class methods
-	 * ----- ----- ----- ----- ----- */
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public boolean isAssigned() {
+		return this.isAssigned;
+	}
 
 	/**
-	 * equals compares this object with another given one. if the other is also
-	 *  a parameter object type the object and prefixed field are compared.
-	 * 
-	 * @param object the object to compare
-	 * 
-	 * @return {@code true} if the object is a parameter object type and the
-	 *  objects and prefixed fields are equal, {@code false} otherwise
+	 * COMMENT
 	 */
+	public void setAssigned() {
+		this.isAssigned = true;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public ParameterObject getDependentParameterObject() {
+		return this.dependentParameterObject;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public boolean hasDependentParameterObject() {
+		return this.dependentParameterObject != null;
+	}
+
+	/* overridden methods
+	 * ----- ----- ----- ----- ----- */
+
 	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof ParameterObject))
 			return false;
 
 		ParameterObject parameterObject = (ParameterObject) object;
-		return this.object.equals(parameterObject.object) && this.preField.equals(parameterObject.preField);
+		return this.startingObject.equals(parameterObject.startingObject)
+				&& this.preField.equals(parameterObject.preField)
+				&& this.index == parameterObject.index;
 	}
 }
