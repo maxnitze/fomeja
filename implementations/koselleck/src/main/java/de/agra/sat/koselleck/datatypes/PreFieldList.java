@@ -21,7 +21,7 @@ public class PreFieldList extends ArrayList<PreField> {
 	private Opcode opcode;
 
 	/** COMMENT */
-	private boolean isVariable;
+	private int variablePreFields;
 
 	/**
 	 * COMMENT
@@ -32,7 +32,7 @@ public class PreFieldList extends ArrayList<PreField> {
 	public PreFieldList(int fieldCodeIndex, Opcode opcode) {
 		this.fieldCodeIndex = fieldCodeIndex;
 		this.opcode = opcode;
-		this.isVariable = false;
+		this.variablePreFields = 0;
 	}
 
 	/**
@@ -46,9 +46,10 @@ public class PreFieldList extends ArrayList<PreField> {
 		super(preFields);
 		this.fieldCodeIndex = fieldCodeIndex;
 		this.opcode = opcode;
-		this.isVariable = false;
+		this.variablePreFields = 0;
 		for (PreField preField : preFields)
-			this.isVariable |= preField.isVariable();
+			if (preField.isVariable())
+				++this.variablePreFields;
 	}
 
 	/* class methods
@@ -94,7 +95,19 @@ public class PreFieldList extends ArrayList<PreField> {
 	 * @return
 	 */
 	public boolean isVariable() {
-		return this.isVariable;
+		return this.variablePreFields > 0;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * TODO remove when support for multiple variable fields is
+	 *  implemented
+	 * 
+	 * @return
+	 */
+	public boolean isSingleVariable() {
+		return this.variablePreFields == 1;
 	}
 
 	/* overridden methods
@@ -102,8 +115,16 @@ public class PreFieldList extends ArrayList<PreField> {
 
 	@Override
 	public boolean add(PreField preField) {
-		this.isVariable |= preField.isVariable();
+		if (preField.isVariable())
+			++this.variablePreFields;
 		return super.add(preField);
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		if (o instanceof PreField && ((PreField) o).isVariable())
+			--this.variablePreFields;
+		return this.remove(o);
 	}
 
 	@Override

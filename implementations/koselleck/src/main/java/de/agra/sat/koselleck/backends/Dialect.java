@@ -297,18 +297,8 @@ public abstract class Dialect<T, V> {
 						String replacement = this.getReplacement(unfinishedConstraintLiteral, currentConstraintParameter.getCurrentCollectionObject(), false);
 						clonedConstraint.replaceAll(unfinishedConstraintLiteral.getName(), replacement);
 					}
-					/* literal not variable, but at least one prefield is */
-					else if (!unfinishedConstraintLiteral.isVariable() && unfinishedConstraintLiteral.getPreFieldList().isVariable()) {
-						for (PreField preField : unfinishedConstraintLiteral.getPreFieldList()) {
-							// TODO
-						}
-					}
-					/* literal and at least one of its prefields is variable */
-					else if (unfinishedConstraintLiteral.isVariable() && unfinishedConstraintLiteral.getPreFieldList().isVariable()) {
-						// TODO make connection between the variable unfinishedConstraintLiteral and the variable prefield(s)
-					}
-					/* just the literal but no prefield is variable */
-					else {
+					/* the literal but no prefield is variable */
+					else if(unfinishedConstraintLiteral.isVariable() && !unfinishedConstraintLiteral.getPreFieldList().isVariable()) {
 						ParameterObject parameterObject = this.getParameterObject(
 								component, unfinishedConstraintLiteral.getName(), unfinishedConstraintLiteral.toPreField(),
 								null, currentConstraintParameter.getCurrentCollectionObject());
@@ -317,6 +307,17 @@ public abstract class Dialect<T, V> {
 						variablesMap.put(unfinishedConstraintLiteral.getName() + "_" + parameterObject.getIndex(), parameterObject);
 
 						clonedConstraint.replaceAll(unfinishedConstraintLiteral.getName(), unfinishedConstraintLiteral.getName() + "_" + parameterObject.getIndex());
+					}
+					/* literal not variable, but *exactly* one prefield is */
+					else if (!unfinishedConstraintLiteral.isVariable() && unfinishedConstraintLiteral.getPreFieldList().isSingleVariable()) {
+						for (PreField preField : unfinishedConstraintLiteral.getPreFieldList()) {
+							// TODO
+						}
+					}
+					/** throw exception for unimplemented cases */
+					else {
+						String message = "every variable literal must have just one variable 'point', no cascade...";
+						throw new RuntimeException(message);
 					}
 				}
 
@@ -349,7 +350,7 @@ public abstract class Dialect<T, V> {
 	 * @param literalName
 	 * @param literalPreField
 	 * @param dependentObject
-	 * @param currentConstraintParameterObject
+	 * @param currentConstraintObject
 	 * 
 	 * @return
 	 */
@@ -380,38 +381,56 @@ public abstract class Dialect<T, V> {
 		if (ClassUtils.isBasicClass(literalPreField.getField().getType()))
 			currentParameterObject = new SimpleParameterObject(currentConstraintObject, literalName, literalPreField, index, dependentParameterObject);
 		else {
-			List<Field> collectionFields = KoselleckUtils.getCollectionFields(component.getClass(), literalPreField.getField().getGenericType());
-			List<Collection<?>> componentCollections = new ArrayList<Collection<?>>();
-			int collectionElementsCount = 0;
-			for (Field collectionField : collectionFields) {
-				try {
-					Collection<?> componentCollection = (Collection<?>) collectionField.get(component);
-					collectionElementsCount += componentCollection.size();
-					componentCollections.add(componentCollection);
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					String message = "could not get field \"" + collectionField.getName() + "\" for component";
-					Logger.getLogger(Dialect.class).error(message);
-					throw new IllegalArgumentException(message);
-				}
-			}
-
-			AbstractConstraintLiteralInteger rangeLiteralInteger = new AbstractConstraintLiteralInteger(literalPreField.getField(), -1, null, -1, literalPreField.getPreFieldList());
-			rangeLiteralInteger.setName(literalName + "_" + index);
-			this.constraintSet.addRangeConstraint(new AbstractSubConstraint(
-					new AbstractSingleConstraint(
-							rangeLiteralInteger,
-							ConstraintOperator.GREATER_EQUAL,
-							new AbstractConstraintLiteralInteger(0)),
-					BooleanConnector.AND,
-					new AbstractSingleConstraint(
-							rangeLiteralInteger,
-							ConstraintOperator.LESS,
-							new AbstractConstraintLiteralInteger(collectionElementsCount))));
-
+			List<Collection<?>> componentCollections = this.getComponentCollection(component, literalName, literalPreField, index);
 			currentParameterObject = new ComplexParameterObject(currentConstraintObject, literalName, literalPreField, index, dependentParameterObject, componentCollections);
 		}
 
 		return currentParameterObject;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param component
+	 * @param literalName
+	 * @param literalPreField
+	 * @param index
+	 * 
+	 * @return
+	 */
+	private List<Collection<?>> getComponentCollection(Object component, String literalName, PreField literalPreField, int index) {
+		List<Collection<?>> componentCollections = new ArrayList<Collection<?>>();
+
+		/* get list of component-collections for type of field */
+		List<Field> collectionFields = KoselleckUtils.getCollectionFields(component.getClass(), literalPreField.getField().getGenericType());
+		int collectionElementsCount = 0;
+		for (Field collectionField : collectionFields) {
+			try {
+				Collection<?> componentCollection = (Collection<?>) collectionField.get(component);
+				collectionElementsCount += componentCollection.size();
+				componentCollections.add(componentCollection);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				String message = "could not get field \"" + collectionField.getName() + "\" for component";
+				Logger.getLogger(Dialect.class).error(message);
+				throw new IllegalArgumentException(message);
+			}
+		}
+
+		/* create new range constraint */
+		AbstractConstraintLiteralInteger rangeLiteralInteger = new AbstractConstraintLiteralInteger(literalPreField.getField(), -1, null, -1, literalPreField.getPreFieldList());
+		rangeLiteralInteger.setName(literalName + "_" + index);
+		this.constraintSet.addRangeConstraint(new AbstractSubConstraint(
+				new AbstractSingleConstraint(
+						rangeLiteralInteger,
+						ConstraintOperator.GREATER_EQUAL,
+						new AbstractConstraintLiteralInteger(0)),
+				BooleanConnector.AND,
+				new AbstractSingleConstraint(
+						rangeLiteralInteger,
+						ConstraintOperator.LESS,
+						new AbstractConstraintLiteralInteger(collectionElementsCount))));
+
+		return componentCollections;
 	}
 
 	/**
