@@ -8,11 +8,10 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
-import de.agra.sat.koselleck.backends.datatypes.ComplexParameterObject;
+import de.agra.sat.koselleck.backends.datatypes.BasicParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.ParameterObject;
-import de.agra.sat.koselleck.backends.datatypes.SimpleParameterObject;
+import de.agra.sat.koselleck.backends.datatypes.RangedParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
-import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
 
 /**
@@ -83,13 +82,11 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	private void assign(Map<String, Object> proverResults, ParameterObject parameterObject) {
 		Object proverResult = proverResults.get(parameterObject.getName());
 		if (proverResult != null) {
-			if (parameterObject.hasDependentParameterObject() && !parameterObject.getDependentParameterObject().isAssigned())
+			if (parameterObject.dependsOn() && !parameterObject.getDependentParameterObject().isAssigned())
 				this.assign(proverResults, parameterObject.getDependentParameterObject());
 
-			Object fieldObject = this.getFieldValue(parameterObject.getPreField().getField(),
-					this.getFieldValue(parameterObject.getPreField().getPreFieldList(), parameterObject.getStartingObject())).toString();
-
-			this.assignVariable(parameterObject, fieldObject, proverResult);
+			this.assignVariable(parameterObject,
+					this.getFieldValue(parameterObject.getPreField().getField(),parameterObject.getObject()), proverResult);
 		}
 	}
 
@@ -105,12 +102,12 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 		boolean accessibility = field.isAccessible(); 
 		field.setAccessible(true);
 		try {
-			if (parameterObject instanceof SimpleParameterObject)
+			if (parameterObject instanceof BasicParameterObject)
 				field.set(fieldObject, proverResult);
-			else if (parameterObject instanceof ComplexParameterObject) {
-				ComplexParameterObject complexParameterObject = (ComplexParameterObject) parameterObject;
-				Object objectRangeElement = complexParameterObject.getObjectRangeElement((Integer) proverResult);
-				complexParameterObject.getPreField().getField().set(fieldObject, objectRangeElement);
+			else if (parameterObject instanceof RangedParameterObject) {
+				RangedParameterObject rangedParameterObject = (RangedParameterObject) parameterObject;
+				Object objectRangeElement = rangedParameterObject.getObjectRangeElement((Integer) proverResult);
+				field.set(fieldObject, objectRangeElement);
 			}
 
 			parameterObject.setAssigned();
@@ -121,23 +118,6 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 		} finally {
 			field.setAccessible(accessibility);
 		}
-	}
-
-	/**
-	 * COMMENT
-	 * 
-	 * @param preFields
-	 * @param startingObject
-	 * 
-	 * @return
-	 */
-	private Object getFieldValue(List<PreField> preFields, Object startingObject) {
-		Object object = startingObject;
-
-		for (PreField preField : preFields)
-			object = this.getFieldValue(preField.getField(), object);
-
-		return object;
 	}
 
 	/**

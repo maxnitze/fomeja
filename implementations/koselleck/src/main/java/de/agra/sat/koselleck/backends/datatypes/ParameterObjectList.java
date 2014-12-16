@@ -1,16 +1,16 @@
 package de.agra.sat.koselleck.backends.datatypes;
 
 /** imports */
-import java.util.ArrayList;
+import java.util.LinkedList;
 
-import de.agra.sat.koselleck.datatypes.PreField;
+import de.agra.sat.koselleck.datatypes.PreFieldList;
 
 /**
  * COMMENT
  * 
  * @author Max Nitze
  */
-public class ParameterObjectList extends ArrayList<ParameterObject> {
+public class ParameterObjectList extends LinkedList<ParameterObject> {
 	/** COMMENT */
 	private static final long serialVersionUID = -2980968242073860387L;
 
@@ -22,10 +22,10 @@ public class ParameterObjectList extends ArrayList<ParameterObject> {
 	 * 
 	 * @return
 	 */
-	public boolean contains(Object object, PreField preField) {
+	public boolean contains(Object object, PreFieldList preFieldList) {
 		for (ParameterObject parameterObject : this)
-			if (parameterObject.getStartingObject().equals(object)
-					&& parameterObject.getPreField().equals(preField))
+			if (parameterObject.getObject() == object
+					&& parameterObject.getPreFieldList().equals(preFieldList))
 				return true;
 
 		return false;
@@ -39,28 +39,12 @@ public class ParameterObjectList extends ArrayList<ParameterObject> {
 	 * 
 	 * @return
 	 */
-	public ParameterObject get(Object object, PreField preField) {
+	public ParameterObject get(Object object, PreFieldList preFieldList) {
 		for (ParameterObject parameterObject : this)
-			if (parameterObject.getStartingObject().equals(object)
-					&& parameterObject.getPreField().equals(preField))
+			if (parameterObject.getObject() == object
+					&& parameterObject.getPreFieldList().equals(preFieldList))
 				return parameterObject;
 
 		return null;
-	}
-
-	/**
-	 * COMMENT
-	 * 
-	 * @param preField
-	 * 
-	 * @return
-	 */
-	public int getMaxIndex(PreField preField) {
-		int maxIndex = 0;
-		for (ParameterObject parameterObject : this)
-			if (parameterObject.getPreField().equals(preField))
-				maxIndex = parameterObject.getIndex() > maxIndex ? parameterObject.getIndex() : maxIndex;
-
-		return maxIndex;
 	}
 }

@@ -24,14 +24,21 @@ public class SchedulingProblem {
 //		employees.add(new Employee("Firstname5", "Lastname5", Skill.JAVA, new Skill[] { Skill.JAVA, Skill.CPP }));
 
 		List<Task> tasks = new ArrayList<Task>();
-		Task task1 = new Task("Task1", 2, Skill.JAVA, new Skill[] { Skill.JAVA }, new Task[] {});
+		Task task1 = new Task("Task1", 2, Skill.JAVA, new Skill[] { Skill.JAVA }, null, new Task[] {});
 		tasks.add(task1);
-		Task task2 = new Task("Task2", 1, Skill.C, new Skill[] { Skill.C }, new Task[] { task1 });
+		Task task2 = new Task("Task2", 1, Skill.C, new Skill[] { Skill.C }, null, new Task[] { task1 });
 		tasks.add(task2);
-		Task task3 = new Task("Task3", 4, Skill.CPP, new Skill[] { Skill.CPP }, new Task[] { task1 });
+		Task task3 = new Task("Task3", 4, Skill.CPP, new Skill[] { Skill.CPP }, null, new Task[] { task1 });
 		tasks.add(task3);
-		Task task4 = new Task("Task4", 6, Skill.MANAGEMENT, new Skill[] { Skill.MANAGEMENT }, new Task[] {});
+		Task task4 = new Task("Task4", 6, Skill.MANAGEMENT, new Skill[] { Skill.MANAGEMENT }, null, new Task[] {});
 		tasks.add(task4);
+		Task task5 = new Task("Task4", 6, Skill.MANAGEMENT, new Skill[] { Skill.MANAGEMENT }, null, new Task[] {});
+
+		System.out.println(task1.hashCode());
+		System.out.println(task2.hashCode());
+		System.out.println(task3.hashCode());
+		System.out.println(task4.hashCode());
+		System.out.println(task5.hashCode());
 
 		Schedule schedule = new Schedule(employees, tasks);
 

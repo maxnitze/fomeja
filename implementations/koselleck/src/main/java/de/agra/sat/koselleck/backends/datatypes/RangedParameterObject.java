@@ -3,33 +3,43 @@ package de.agra.sat.koselleck.backends.datatypes;
 /** imports */
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import de.agra.sat.koselleck.datatypes.PreField;
+import de.agra.sat.koselleck.datatypes.PreFieldList;
 
 /**
  * COMMENT
  * 
  * @author Max Nitze
  */
-public class ComplexParameterObject extends ParameterObject {
+public class RangedParameterObject extends ParameterObject {
 	/** COMMENT */
-	private final List<Collection<?>> objectRange;
+	private final ComponentCollectionList objectRange;
 
 	/**
 	 * COMMENT
 	 * 
-	 * @param startingObject
-	 * @param name
-	 * @param preField
-	 * @param index
-	 * @param dependentParameterObject
-	 * @parma objectRange
+	 * @param object
+	 * @param preFields
+	 * @param objectRange
 	 */
-	public ComplexParameterObject(Object startingObject, String name, PreField preField, int index, ParameterObject dependentParameterObject, List<Collection<?>> objectRange) {
-		super(startingObject, name, preField, index, dependentParameterObject);
+	public RangedParameterObject(Object object, PreFieldList preFields, ComponentCollectionList objectRange) {
+		super(object, preFields);
+
+		this.objectRange = objectRange;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param object
+	 * @param preFields
+	 * @param objectRange
+	 * @param dependentParameterObject
+	 */
+	public RangedParameterObject(Object object, PreFieldList preFields, ComponentCollectionList objectRange, RangedParameterObject dependentParameterObject) {
+		super(object, preFields, dependentParameterObject);
 
 		this.objectRange = objectRange;
 	}
@@ -42,8 +52,17 @@ public class ComplexParameterObject extends ParameterObject {
 	 * 
 	 * @return
 	 */
-	public List<Collection<?>> getObjectRange() {
+	public ComponentCollectionList getObjectRange() {
 		return this.objectRange;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public int getRangeSize() {
+		return this.objectRange.getComponentsSize();
 	}
 
 	/* class methods
@@ -66,7 +85,7 @@ public class ComplexParameterObject extends ParameterObject {
 		}
 
 		String message = "trying to access the element with index \"" + maxIndex + "\" but there are only \"" + (maxIndex - index) + "\" elements";
-		Logger.getLogger(ComplexParameterObject.class).fatal(message);
+		Logger.getLogger(RangedParameterObject.class).fatal(message);
 		throw new IndexOutOfBoundsException(message);
 	}
 }

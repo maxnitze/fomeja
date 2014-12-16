@@ -17,6 +17,8 @@ public class Task {
 	/**  */
 	public final Skill[] neededSkills;
 	/**  */
+	public final Task dependentTask;
+	/**  */
 	public final Task[] dependentTasks;
 
 	/**  */
@@ -33,13 +35,15 @@ public class Task {
 	 * @param duration
 	 * @param neededSkill
 	 * @param neededSkills
+	 * @param dependentTask
 	 * @param dependentTasks
 	 */
-	public Task(String name, int duration, Skill neededSkill, Skill[] neededSkills, Task[] dependentTasks) {
+	public Task(String name, int duration, Skill neededSkill, Skill[] neededSkills, Task dependentTask, Task[] dependentTasks) {
 		this.name = name;
 		this.duration = duration;
 		this.neededSkill = neededSkill;
 		this.neededSkills = neededSkills;
+		this.dependentTask = dependentTask;
 		this.dependentTasks = dependentTasks;
 	}
 

@@ -53,6 +53,15 @@ public class AbstractConstraintLiteralInteger extends AbstractConstraintLiteral<
 		super(field, fieldCodeIndex, opcode, constantTableIndex, true, false, preFields);
 	}
 
+	/**
+	 * COMMENT
+	 * 
+	 * @param name
+	 */
+	public AbstractConstraintLiteralInteger(String name) {
+		super(name, true, false);
+	}
+
 	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 

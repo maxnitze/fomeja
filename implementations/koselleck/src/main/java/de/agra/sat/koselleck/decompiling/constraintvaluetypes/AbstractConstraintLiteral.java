@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.annotations.Variable;
 import de.agra.sat.koselleck.datatypes.PreField;
+import de.agra.sat.koselleck.datatypes.PreFieldList;
 import de.agra.sat.koselleck.types.ArithmeticOperator;
 import de.agra.sat.koselleck.types.Opcode;
 
@@ -57,7 +58,7 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 
 		this.field = null;
 		this.constantTableIndex = -1;
-		this.name = value.getClass().getCanonicalName() + "_" + value.toString();
+		this.name = value.getClass().getSimpleName() + "_" + value.toString();
 	}
 
 	/**
@@ -98,7 +99,10 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 
 		this.field = field;
 		this.constantTableIndex = constantTableIndex;
-		this.name = "v" + fieldCodeIndex + "_" + this.constantTableIndex + "-" + this.field.getName();
+		if (this.field != null && this.constantTableIndex >= 0)
+			this.name = "v_" + this.constantTableIndex + "-" + this.field.getName();
+		else
+			this.name = "";
 
 		this.isVariable = (this.field != null && this.field.getAnnotation(Variable.class) != null);
 		this.isNumberType = isNumberType;
@@ -123,9 +127,33 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 		this.field = field;
 		this.constantTableIndex = constantTableIndex;
 
-		this.name = this.getPreFieldList().getName() +  "_" + this.constantTableIndex + "-" + this.field.getName();
+		if (this.field != null && this.constantTableIndex >= 0)
+			this.name = this.getPreFieldList().getName() +  "_" + this.constantTableIndex + "-" + this.field.getName();
+		else
+			this.name = "";
 
 		this.isVariable = (this.field != null && this.field.getAnnotation(Variable.class) != null);
+		this.isNumberType = isNumberType;
+		this.isFinishedType = isFinishedType;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param name
+	 * @param isNumberType
+	 * @param isFinishedType
+	 */
+	public AbstractConstraintLiteral(String name, boolean isNumberType, boolean isFinishedType) {
+		super(-1, null);
+		this.value = null;
+
+		this.field = null;
+		this.constantTableIndex = -1;
+
+		this.name = name;
+
+		this.isVariable = true;
 		this.isNumberType = isNumberType;
 		this.isFinishedType = isFinishedType;
 	}
@@ -377,6 +405,18 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	 * @return
 	 */
 	public PreField toPreField() {
-		return new PreField(this.field, this.constantTableIndex, this.getOpcode(), this.getPreFieldList().getFieldCodeIndex(), this.getPreFieldList());
+		return new PreField(this.field, this.constantTableIndex, this.getOpcode(), this.getPreFieldList().getFieldCodeIndex());
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public PreFieldList toPreFieldList() {
+		PreFieldList preFieldList = new PreFieldList(this.constantTableIndex, this.getOpcode());
+		preFieldList.addAll(this.getPreFieldList());
+		preFieldList.add(this.toPreField());
+		return preFieldList;
 	}
 }

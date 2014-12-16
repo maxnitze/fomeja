@@ -2,6 +2,7 @@ package de.agra.sat.koselleck.backends.datatypes;
 
 /* imports */
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,12 +58,34 @@ public class AbstractConstraintSet {
 	/**
 	 * COMMENT
 	 * 
+	 * @param basicConstraints
+	 * 
+	 * @return
+	 */
+	public boolean addAllBasicConstraints(Collection<? extends AbstractConstraint> basicConstraints) {
+		return this.basicConstraints.addAll(basicConstraints);
+	}
+
+	/**
+	 * COMMENT
+	 * 
 	 * @param connectionConstraint
 	 * 
 	 * @return
 	 */
 	public boolean addConnectionConstraint(AbstractConstraint connectionConstraint) {
-		return this.basicConstraints.add(connectionConstraint);
+		return this.connectionConstraints.add(connectionConstraint);
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param connectionConstraints
+	 * 
+	 * @return
+	 */
+	public boolean addAllConnectionConstraints(Collection<? extends AbstractConstraint> connectionConstraints) {
+		return this.connectionConstraints.addAll(connectionConstraints);
 	}
 
 	/**
@@ -73,7 +96,18 @@ public class AbstractConstraintSet {
 	 * @return
 	 */
 	public boolean addRangeConstraint(AbstractConstraint rangeConstraint) {
-		return this.basicConstraints.add(rangeConstraint);
+		return this.rangeConstraints.add(rangeConstraint);
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param rangeConstraints
+	 * 
+	 * @return
+	 */
+	public boolean addAllRangeConstraints(Collection<? extends AbstractConstraint> rangeConstraints) {
+		return this.rangeConstraints.addAll(rangeConstraints);
 	}
 
 	/**

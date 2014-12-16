@@ -1,7 +1,8 @@
 package de.agra.sat.koselleck.datatypes;
 
 /** imports */
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.agra.sat.koselleck.types.Opcode;
@@ -11,7 +12,7 @@ import de.agra.sat.koselleck.types.Opcode;
  * 
  * @author Max Nitze
  */
-public class PreFieldList extends ArrayList<PreField> {
+public class PreFieldList extends LinkedList<PreField> {
 	/** generated serialisation uid */
 	private static final long serialVersionUID = -4686167580108058185L;
 
@@ -110,21 +111,86 @@ public class PreFieldList extends ArrayList<PreField> {
 		return this.variablePreFields == 1;
 	}
 
+	/**
+	 * COMMENT
+	 * 
+	 * @param index
+	 * 
+	 * @return
+	 */
+	public PreFieldList head(int index) {
+		return new PreFieldList(this.fieldCodeIndex, this.opcode, this.subList(0, index));
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param index
+	 * 
+	 * @return
+	 */
+	public PreFieldList tail(int index) {
+		return new PreFieldList(this.fieldCodeIndex, this.opcode, this.subList(index, this.size()));
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param preFieldList
+	 * 
+	 * @return
+	 */
+	public boolean isListPrefix(PreFieldList preFieldList) {
+		if (this.size() < preFieldList.size())
+			return false;
+		for (int i=0; i<preFieldList.size() ; i++)
+			if (!this.get(i).equals(preFieldList.get(i)))
+				return false;
+		return true;
+	}
+
 	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public boolean add(PreField preField) {
-		if (preField.isVariable())
+		boolean result = super.add(preField);
+		if (result && preField.isVariable())
 			++this.variablePreFields;
-		return super.add(preField);
+		return result;
 	}
 
 	@Override
-	public boolean remove(Object o) {
-		if (o instanceof PreField && ((PreField) o).isVariable())
+	public boolean addAll(Collection<? extends PreField> preFields) {
+		boolean result = false;
+		for (PreField preField : preFields)
+			result |= this.add(preField);
+		return result;
+	}
+
+	@Override
+	public boolean remove(Object object) {
+		boolean result = this.remove(object);
+		if (result && object instanceof PreField && ((PreField) object).isVariable())
 			--this.variablePreFields;
-		return this.remove(o);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof PreFieldList))
+			return false;
+
+		PreFieldList preFieldList = (PreFieldList) object;
+
+		if (this.size() != preFieldList.size())
+			return false;
+		
+		for (PreField preField : this)
+			if (!preFieldList.contains(preField))
+				return false;
+
+		return true;
 	}
 
 	@Override
