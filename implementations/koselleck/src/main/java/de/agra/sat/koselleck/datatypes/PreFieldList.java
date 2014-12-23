@@ -119,7 +119,7 @@ public class PreFieldList extends LinkedList<PreField> {
 	 * @return
 	 */
 	public PreFieldList head(int index) {
-		return new PreFieldList(this.fieldCodeIndex, this.opcode, this.subList(0, index));
+		return new PreFieldList(this.fieldCodeIndex, this.opcode, this.subList(0, index >= 0 ? index : this.size()+index));
 	}
 
 	/**
@@ -130,7 +130,31 @@ public class PreFieldList extends LinkedList<PreField> {
 	 * @return
 	 */
 	public PreFieldList tail(int index) {
-		return new PreFieldList(this.fieldCodeIndex, this.opcode, this.subList(index, this.size()));
+		return new PreFieldList(this.fieldCodeIndex, this.opcode, this.subList(index >= 0 ? index : this.size()-1+index, this.size()));
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public PreField first() {
+		if (this.size() > 0)
+			return this.get(0);
+		else
+			return null;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public PreField last() {
+		if (this.size() > 0)
+			return this.get(this.size()-1);
+		else
+			return null;
 	}
 
 	/**

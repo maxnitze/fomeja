@@ -33,12 +33,7 @@ public class SchedulingProblem {
 		Task task4 = new Task("Task4", 6, Skill.MANAGEMENT, new Skill[] { Skill.MANAGEMENT }, null, new Task[] {});
 		tasks.add(task4);
 		Task task5 = new Task("Task4", 6, Skill.MANAGEMENT, new Skill[] { Skill.MANAGEMENT }, null, new Task[] {});
-
-		System.out.println(task1.hashCode());
-		System.out.println(task2.hashCode());
-		System.out.println(task3.hashCode());
-		System.out.println(task4.hashCode());
-		System.out.println(task5.hashCode());
+		tasks.add(task5);
 
 		Schedule schedule = new Schedule(employees, tasks);
 

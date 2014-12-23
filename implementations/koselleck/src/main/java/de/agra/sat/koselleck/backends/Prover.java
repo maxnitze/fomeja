@@ -12,6 +12,8 @@ import de.agra.sat.koselleck.backends.datatypes.BasicParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.ParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.RangedParameterObject;
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
+import de.agra.sat.koselleck.datatypes.PreField;
+import de.agra.sat.koselleck.datatypes.PreFieldList;
 import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
 
 /**
@@ -82,11 +84,11 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	private void assign(Map<String, Object> proverResults, ParameterObject parameterObject) {
 		Object proverResult = proverResults.get(parameterObject.getName());
 		if (proverResult != null) {
-			if (parameterObject.dependsOn() && !parameterObject.getDependentParameterObject().isAssigned())
+			if (parameterObject.isDependend() && !parameterObject.getDependentParameterObject().isAssigned())
 				this.assign(proverResults, parameterObject.getDependentParameterObject());
 
 			this.assignVariable(parameterObject,
-					this.getFieldValue(parameterObject.getPreField().getField(),parameterObject.getObject()), proverResult);
+					this.getFieldValue(parameterObject.getPreFieldList().head(-1), parameterObject.getObject()), proverResult);
 		}
 	}
 
@@ -98,16 +100,15 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	 * @param proverResult
 	 */
 	private void assignVariable(ParameterObject parameterObject, Object fieldObject, Object proverResult) {
-		Field field = parameterObject.getPreField().getField();
+		Field field = parameterObject.getPreFieldList().last().getField();
 		boolean accessibility = field.isAccessible(); 
 		field.setAccessible(true);
 		try {
 			if (parameterObject instanceof BasicParameterObject)
 				field.set(fieldObject, proverResult);
 			else if (parameterObject instanceof RangedParameterObject) {
-				RangedParameterObject rangedParameterObject = (RangedParameterObject) parameterObject;
-				Object objectRangeElement = rangedParameterObject.getObjectRangeElement((Integer) proverResult);
-				field.set(fieldObject, objectRangeElement);
+				field.set(fieldObject,
+						((RangedParameterObject) parameterObject).getObjectRangeElement((Integer) proverResult));
 			}
 
 			parameterObject.setAssigned();
@@ -118,6 +119,22 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 		} finally {
 			field.setAccessible(accessibility);
 		}
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param preFieldList
+	 * @param startingObject
+	 * 
+	 * @return
+	 */
+	private Object getFieldValue(PreFieldList preFieldList, Object startingObject) {
+		Object object = startingObject;
+		for (PreField preField : preFieldList)
+			object = this.getFieldValue(preField.getField(), object);
+
+		return object;
 	}
 
 	/**

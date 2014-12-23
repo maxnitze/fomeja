@@ -50,6 +50,15 @@ public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<D
 		super(field, fieldCodeIndex, opcode, constantTableIndex, true, false, preFields);
 	}
 
+	/**
+	 * COMMENT
+	 * 
+	 * @param name
+	 */
+	public AbstractConstraintLiteralDouble(String name) {
+		super(name, true, false);
+	}
+
 	/** overridden methods
 	 * ----- ----- ----- ----- ----- */
 

@@ -29,11 +29,15 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConst
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractNotConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraintSet;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralDouble;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralFloat;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralInteger;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
 import de.agra.sat.koselleck.exceptions.NotSatisfiableException;
+import de.agra.sat.koselleck.exceptions.ParameterObjectException;
 import de.agra.sat.koselleck.exceptions.UnsupportedConstraintException;
 import de.agra.sat.koselleck.exceptions.UnsupportedConstraintValueException;
 import de.agra.sat.koselleck.types.BooleanConnector;
@@ -148,6 +152,15 @@ public abstract class Dialect<T, V> {
 	public abstract T prepareAbstractSubConstraint(AbstractSubConstraint subConstraint);
 
 	/**
+	 * COMMENT
+	 * 
+	 * @param subConstraintSet
+	 * 
+	 * @return
+	 */
+	public abstract T prepareAbstractSubConstraintSet(AbstractSubConstraintSet subConstraintSet);
+
+	/**
 	 * prepareAbstractIfThenElseConstraint returns the string representation of
 	 *  a given abstract if-then-else constraint.
 	 * 
@@ -202,6 +215,8 @@ public abstract class Dialect<T, V> {
 			return prepareAbstractSingleConstraint((AbstractSingleConstraint) constraint);
 		else if (constraint instanceof AbstractSubConstraint)
 			return prepareAbstractSubConstraint((AbstractSubConstraint) constraint);
+		else if (constraint instanceof AbstractSubConstraintSet)
+			return prepareAbstractSubConstraintSet((AbstractSubConstraintSet) constraint);
 		else if (constraint instanceof AbstractIfThenElseConstraint)
 			return prepareAbstractIfThenElseConstraint((AbstractIfThenElseConstraint) constraint);
 		else {
@@ -246,7 +261,6 @@ public abstract class Dialect<T, V> {
 	 */
 	protected Theorem getConstraintForArguments(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfiableException {
 		AbstractConstraintSet constraintSet = new AbstractConstraintSet();
-		ParameterObjectList parameterObjectList = new ParameterObjectList();
 
 		Map<String, ParameterObject> variablesMap = new HashMap<String, ParameterObject>();
 
@@ -297,42 +311,43 @@ public abstract class Dialect<T, V> {
 					/** COMMENT */
 					else {
 						PreFieldList preFieldList = unfinishedConstraintLiteral.getPreFieldList();
+						ParameterObjectList parameterObjectList = new ParameterObjectList();
 
 						int index = 0;
 						boolean isFirstVariable = true;
-						Object object = null;
-						PreFieldList offsetPreFieldList = null;
-						int offsetIndex = -1;
+						Object object = currentConstraintParameter.getCurrentCollectionObject();
+						int offsetIndex = preFieldList.size();
 						RangedParameterObject prevParameterObject = null;
 						for (PreField preField : preFieldList) {
+							if (!preField.isVariable() && isFirstVariable)
+								object = this.getFieldValue(preField.getField(), object);
+
 							if (preField.isVariable()) {
 								if (isFirstVariable) {
-									object = this.getFieldValue(preFieldList.head(index), currentConstraintParameter.getCurrentCollectionObject());
-									offsetPreFieldList = preFieldList.tail(index);
 									offsetIndex = index;
 									isFirstVariable = false;
 								}
 
-								PreFieldList headPreFieldList = offsetPreFieldList.head(index-offsetIndex);
+								PreFieldList headPreFieldList = preFieldList.head(index+1);
 								ParameterObject parameterObject = parameterObjectList.get(object, headPreFieldList);
 								if (parameterObject == null) {
-									parameterObject = this.getNewParameterObject(object, preField.getField(), headPreFieldList, prevParameterObject, component);
+									parameterObject = this.getNewParameterObject(object, headPreFieldList, prevParameterObject, component);
 									parameterObjectList.add(parameterObject);
 									if (parameterObject instanceof RangedParameterObject)
 										constraintSet.addRangeConstraint(
 												this.getRangeConstraint(parameterObject.getName(),
 														((RangedParameterObject) parameterObject).getRangeSize()));
 									else {
-										String message = ""; // TODO add Exception "has to be ranged parameter object"
-										Logger.getLogger(Dialect.class).fatal(message);
-										throw new RuntimeException(message);
+										RuntimeException exception = new ParameterObjectException(parameterObject, "expected ranged parameter object");
+										Logger.getLogger(Dialect.class).fatal(exception.getMessage());
+										throw exception;
 									}
 								}
 
 								if (!(parameterObject instanceof RangedParameterObject)) {
-									String message = ""; // TODO must always be Ranged
-									Logger.getLogger(Dialect.class).fatal(message);
-									throw new RuntimeException(message);
+									RuntimeException exception = new ParameterObjectException(parameterObject, "expected ranged parameter object");
+									Logger.getLogger(Dialect.class).fatal(exception.getMessage());
+									throw exception;
 								}
 
 								prevParameterObject = (RangedParameterObject) parameterObject;
@@ -341,15 +356,22 @@ public abstract class Dialect<T, V> {
 							++index;
 						}
 
+						PreFieldList offsetPreFieldList = preFieldList.tail(offsetIndex);
+						offsetPreFieldList.add(unfinishedConstraintLiteral.toPreField());
+
 						ParameterObject parameterObject = parameterObjectList.get(object, offsetPreFieldList);
 						if (parameterObject == null) {
-							parameterObject = this.getNewParameterObject(object, unfinishedConstraintLiteral.getField(), offsetPreFieldList, prevParameterObject, component);
-							parameterObjectList.add(prevParameterObject);
+							parameterObject = this.getNewParameterObject(object, offsetPreFieldList, prevParameterObject, component);
+							parameterObjectList.add(parameterObject);
 							if (unfinishedConstraintLiteral.isVariable() && parameterObject instanceof RangedParameterObject)
 								constraintSet.addRangeConstraint(
 										this.getRangeConstraint(parameterObject.getName(),
 												((RangedParameterObject) parameterObject).getRangeSize()));
 						}
+
+						for (ParameterObject paramObject : parameterObjectList)
+							if (paramObject != null && !variablesMap.containsKey(paramObject.getName()))
+								variablesMap.put(paramObject.getName(), paramObject);
 
 						if (!unfinishedConstraintLiteral.isVariable())
 							constraintSet.addConnectionConstraint(this.getConnectionConstraint(parameterObject));
@@ -372,14 +394,14 @@ public abstract class Dialect<T, V> {
 	 * COMMENT
 	 * 
 	 * @param object
-	 * @param preField
 	 * @param preFields
 	 * @param dependentParameterObject
 	 * @param component
 	 * 
 	 * @return
 	 */
-	private ParameterObject getNewParameterObject(Object object, Field field, PreFieldList preFields, RangedParameterObject dependentParameterObject, Object component) {
+	private ParameterObject getNewParameterObject(Object object, PreFieldList preFields, RangedParameterObject dependentParameterObject, Object component) {
+		Field field = preFields.last().getField();
 		if (ClassUtils.isBasicClass(field.getType()))
 			return new BasicParameterObject(object, preFields, dependentParameterObject);
 		else
@@ -443,33 +465,52 @@ public abstract class Dialect<T, V> {
 	 */
 	private AbstractConstraint getConnectionConstraint(ParameterObject parameterObject) {
 		if (parameterObject.getObject() != parameterObject.getDependentParameterObject().getObject()) {
-			String message = ""; // TODO object must match
-			Logger.getLogger(Dialect.class).fatal(message);
-			throw new RuntimeException(message);
+			RuntimeException exception = new ParameterObjectException(parameterObject, "connection constraints need to made on matching objects");
+			Logger.getLogger(Dialect.class).fatal(exception.getMessage());
+			throw exception;
 		} else if (!parameterObject.getPreFieldList().isListPrefix(parameterObject.getDependentParameterObject().getPreFieldList())) {
-			String message = ""; // TODO list of prevObject must be prefix of other list
-			Logger.getLogger(Dialect.class).fatal(message);
-			throw new RuntimeException(message);
+			RuntimeException exception = new ParameterObjectException(parameterObject, "field list of dependent object needs to be prefix of field list of current object");
+			Logger.getLogger(Dialect.class).fatal(exception.getMessage());
+			throw exception;
 		}
 
 		RangedParameterObject prevParameterObject = parameterObject.getDependentParameterObject();
 
-		PreFieldList preFieldListSuffix = parameterObject.getPreFieldList().tail(prevParameterObject.getPreFieldList().size());
+		PreFieldList preFieldListSuffix = parameterObject.getPreFieldList().tail(prevParameterObject.getPreFieldList().size()+1);
 		List<AbstractConstraint> connections = new LinkedList<AbstractConstraint>();
 
 		AbstractConstraintLiteralInteger prevParameterObjectLiteralInteger = new AbstractConstraintLiteralInteger(prevParameterObject.getName());
-		AbstractConstraintLiteralInteger parameterObjectLiteralInteger = new AbstractConstraintLiteralInteger(parameterObject.getName());
+		Class<?> parameterObjectType = parameterObject.getPreFieldList().last().getField().getType();
+		AbstractConstraintLiteral<?> parameterObjectLiteral;
+		if (parameterObjectType.equals(Double.class))
+			parameterObjectLiteral = new AbstractConstraintLiteralDouble(parameterObject.getName());
+		else if (parameterObjectType.equals(Float.class))
+			parameterObjectLiteral = new AbstractConstraintLiteralFloat(parameterObject.getName());
+		else
+			parameterObjectLiteral = new AbstractConstraintLiteralInteger(parameterObject.getName());
 
 		for (int i=0; i<prevParameterObject.getRangeSize(); i++) {
+			Object connectionObject = this.getFieldValue(preFieldListSuffix, prevParameterObject.getObjectRangeElement(i));
+			AbstractConstraintLiteral<?> connectionLiteral;
+			if (parameterObjectType.equals(Double.class))
+				connectionLiteral = new AbstractConstraintLiteralDouble((Double) connectionObject);
+			else if (parameterObjectType.equals(Float.class))
+				connectionLiteral = new AbstractConstraintLiteralFloat((Float) connectionObject);
+			else if (parameterObjectType.equals(Integer.class))
+				connectionLiteral = new AbstractConstraintLiteralInteger((Integer) connectionObject);
+			else
+				connectionLiteral = new AbstractConstraintLiteralInteger(parameterObject.getMapping(connectionObject));
+			
+
 			connections.add(new AbstractSubConstraint(
 					new AbstractSingleConstraint(
 							prevParameterObjectLiteralInteger, ConstraintOperator.EQUAL, new AbstractConstraintLiteralInteger(i)),
 					BooleanConnector.AND,
 					new AbstractSingleConstraint(
-							parameterObjectLiteralInteger, ConstraintOperator.EQUAL, new AbstractConstraintLiteralInteger(null))));
+							parameterObjectLiteral, ConstraintOperator.EQUAL, connectionLiteral)));
 		}
 
-		return null;
+		return new AbstractSubConstraintSet(connections, BooleanConnector.OR);
 	}
 
 	/**

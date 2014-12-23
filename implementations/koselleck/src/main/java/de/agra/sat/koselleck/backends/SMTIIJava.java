@@ -18,10 +18,12 @@ import com.microsoft.z3.Z3Exception;
 
 import de.agra.sat.koselleck.backends.datatypes.Theorem;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractNotConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraintSet;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralDouble;
@@ -182,6 +184,30 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 			}
 		} catch (Z3Exception e) {
 			String message = "could not prepare single constraint \"" + subConstraint + "\" due to exception: " + e.getMessage();
+			Logger.getLogger(SMTIIJava.class).fatal(message);
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	@Override
+	public BoolExpr prepareAbstractSubConstraintSet(AbstractSubConstraintSet subConstraintSet) {
+		BoolExpr[] boolExprs = new BoolExpr[subConstraintSet.getConstraints().size()];
+		int i = 0;
+		for (AbstractConstraint constraint : subConstraintSet.getConstraints())
+			boolExprs[i++] = this.getBackendConstraint(constraint);
+		try {
+			switch (subConstraintSet.getConnector()) {
+			case AND:
+				return this.context.MkAnd(boolExprs);
+			case OR:
+				return this.context.MkOr(boolExprs);
+			default:
+				RuntimeException exception = new UnknownBooleanConnectorException(subConstraintSet.getConnector());
+				Logger.getLogger(SMTIIJava.class).fatal(exception.getMessage());
+				throw exception;
+			}
+		} catch (Z3Exception e) {
+			String message = "could not prepare single constraint \"" + subConstraintSet + "\" due to exception: " + e.getMessage();
 			Logger.getLogger(SMTIIJava.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}

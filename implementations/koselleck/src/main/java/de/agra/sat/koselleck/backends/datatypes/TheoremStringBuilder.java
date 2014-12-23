@@ -34,9 +34,8 @@ public class TheoremStringBuilder {
 	 * @param variableDeclaration
 	 */
 	public void appendVariableDeclaration(String name, String variableDeclaration) {
-		if (this.variableDeclarations.get(name) != null) {
+		if (this.variableDeclarations.get(name) == null) {
 			this.variableDeclarations.put(name, variableDeclaration);
-			this.constraints.append("\n");
 		} else
 			Logger.getLogger(TheoremStringBuilder.class).warn("tried to append variable declaration \"" + name + "\" that has already been added");
 	}
@@ -58,7 +57,10 @@ public class TheoremStringBuilder {
 	@Override
 	public String toString() {
 		StringBuilder theoremString = new StringBuilder();
-		theoremString.append(this.variableDeclarations.toString());
+		for (String variableDeclaration : this.variableDeclarations.values()) {
+			theoremString.append(variableDeclaration);
+			theoremString.append("\n");
+		}
 		theoremString.append("(assert (and ");
 		theoremString.append(this.constraints.toString());
 		theoremString.append("))\n(check-sat)\n(get-model)");

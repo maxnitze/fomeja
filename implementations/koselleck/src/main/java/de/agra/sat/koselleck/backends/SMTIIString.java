@@ -16,14 +16,18 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConst
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractNotConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraint;
+import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraintSet;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralDouble;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralFloat;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralInteger;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralObject;
 import de.agra.sat.koselleck.exceptions.UnknownBooleanConnectorException;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 import de.agra.sat.koselleck.exceptions.UnsupportedVariableTypeException;
 import de.agra.sat.koselleck.types.BooleanConnector;
 import de.agra.sat.koselleck.types.ConstraintOperator;
-import de.agra.sat.koselleck.utils.ClassUtils;
 
 /**
  * SMTII implements the smt2 pseudo boolean dialect.
@@ -135,6 +139,21 @@ public class SMTIIString extends Dialect<String, String> {
 	}
 
 	@Override
+	public String prepareAbstractSubConstraintSet(AbstractSubConstraintSet subConstraintSet) {
+		StringBuilder subConstraintString = new StringBuilder();
+
+		subConstraintString.append("(");
+		subConstraintString.append(this.getConnectorName(subConstraintSet.getConnector()));
+		for (AbstractConstraint constraint : subConstraintSet.getConstraints()) { // TODO don't know if this works
+			subConstraintString.append(" ");
+			subConstraintString.append(this.getBackendConstraint(constraint));
+		}
+		subConstraintString.append(")");
+
+		return subConstraintString.toString();
+	}
+
+	@Override
 	public String prepareAbstractIfThenElseConstraint(AbstractIfThenElseConstraint ifThenElseConstraint) {
 		StringBuilder ifThenElseConstraintString = new StringBuilder();
 
@@ -158,7 +177,7 @@ public class SMTIIString extends Dialect<String, String> {
 	public String prepareAbstractConstraintLiteral(AbstractConstraintLiteral<?> constraintLiteral) {
 		if (constraintLiteral.isVariable()) {
 			this.smt2theorem.appendVariableDeclaration(
-					constraintLiteral.getName(), this.getVariableDeclaration(constraintLiteral.getName(), constraintLiteral.getValue().getClass()));
+					constraintLiteral.getName(), this.getVariableDeclaration(constraintLiteral));
 			return constraintLiteral.getName();
 		} else
 			return constraintLiteral.getValue().toString();
@@ -258,27 +277,27 @@ public class SMTIIString extends Dialect<String, String> {
 	}
 
 	/**
-	 * getVariableDeclaration returns the smt2 representation of a variable
-	 *  declaration for the given variable field.
+	 * COMMENT
 	 * 
-	 * @param variableField the variable to get the declaration for
+	 * @param constraintLiteral
 	 * 
-	 * @return the smt2 representation of a variable declaration for the given
-	 *  variable field
+	 * @return
 	 */
-	private String getVariableDeclaration(String name, Class<?> type) {
+	private String getVariableDeclaration(AbstractConstraintLiteral<?> constraintLiteral) {
 		StringBuilder variableDeclaration = new StringBuilder();
 		variableDeclaration.append("(declare-const ");
-		variableDeclaration.append(name);
+		variableDeclaration.append(constraintLiteral.getName());
 
-		if (ClassUtils.isDoubleClass(type))
+		if (constraintLiteral instanceof AbstractConstraintLiteralDouble)
 			variableDeclaration.append(" Real)");
-		else if (ClassUtils.isFloatClass(type))
+		else if (constraintLiteral instanceof AbstractConstraintLiteralFloat)
 			variableDeclaration.append(" Real)");
-		else if (ClassUtils.isIntegerClass(type))
+		else if (constraintLiteral instanceof AbstractConstraintLiteralInteger)
+			variableDeclaration.append(" Int)");
+		else if (constraintLiteral instanceof AbstractConstraintLiteralObject)
 			variableDeclaration.append(" Int)");
 		else {
-			String message = "could not translate class \"" + type.getSimpleName() + "\" to Z3 syntax.";
+			String message = "could not translate literal of type \"" + constraintLiteral.getClass().getSimpleName() + "\" to Z3 syntax.";
 			Logger.getLogger(SMTIIString.class).fatal(message);
 			throw new IllegalArgumentException(message);
 		}

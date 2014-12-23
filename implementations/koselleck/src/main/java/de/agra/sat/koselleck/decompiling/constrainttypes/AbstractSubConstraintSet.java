@@ -21,7 +21,7 @@ import de.agra.sat.koselleck.types.BooleanConnector;
  */
 public class AbstractSubConstraintSet extends AbstractConstraint {
 	/** COMMENT */
-	private Set<AbstractConstraint> constraints;
+	private List<AbstractConstraint> constraints;
 	/** the boolean connector of both constraints */
 	private final BooleanConnector connector;
 
@@ -31,7 +31,7 @@ public class AbstractSubConstraintSet extends AbstractConstraint {
 	 * @param constraints
 	 * @param connector
 	 */
-	public AbstractSubConstraintSet(Set<AbstractConstraint> constraints, BooleanConnector connector) {
+	public AbstractSubConstraintSet(List<AbstractConstraint> constraints, BooleanConnector connector) {
 		this.constraints = constraints;
 		this.connector = connector;
 	}

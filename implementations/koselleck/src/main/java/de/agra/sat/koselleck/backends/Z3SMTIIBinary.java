@@ -37,7 +37,10 @@ public class Z3SMTIIBinary extends Prover<SMTIIString> {
 	public void solveAndAssign(Object component, List<AbstractSingleTheorem> singleTheorems) throws NotSatisfiableException {
 		Theorem theorem = this.getDialect().getConstraintForArguments(component, singleTheorems);
 
-		this.assign(theorem, this.getDialect().parseResult(this.solve(this.getDialect().format(theorem))));
+		String result = this.getDialect().format(theorem);
+		System.out.println(result);
+		
+		this.assign(theorem, this.getDialect().parseResult(this.solve(result)));
 	}
 
 	/** private methods

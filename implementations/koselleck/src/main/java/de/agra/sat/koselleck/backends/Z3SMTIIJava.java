@@ -37,7 +37,7 @@ public class Z3SMTIIJava extends Prover<SMTIIJava> {
 
 		Solver solver;
 		try {
-//			System.out.println(booleanExpression.SExpr()); // TODO delete method output
+			System.out.println("Expression:\n" + booleanExpression.SExpr()); // TODO delete method output
 
 			solver = this.context.MkSolver();
 			solver.Assert(booleanExpression);
@@ -47,7 +47,7 @@ public class Z3SMTIIJava extends Prover<SMTIIJava> {
 			if (status != Status.SATISFIABLE)
 				throw new NotSatisfiableException("one or more of the constraints are not satisfyable for the given instance");
 			else {
-				System.out.println(solver.Model()); // TODO delete model output
+				System.out.println("\nModel:\n" + solver.Model()); // TODO delete model output
 				this.assign(theorem, this.getDialect().parseResult(solver.Model()));
 			}
 		} catch (Z3Exception e) {

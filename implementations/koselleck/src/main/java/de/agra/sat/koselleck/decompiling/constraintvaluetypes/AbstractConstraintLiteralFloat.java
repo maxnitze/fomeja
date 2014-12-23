@@ -48,6 +48,15 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 		super(field, fieldCodeIndex, opcode, constantTableIndex, true, false, preFields);
 	}
 
+	/**
+	 * COMMENT
+	 * 
+	 * @param name
+	 */
+	public AbstractConstraintLiteralFloat(String name) {
+		super(name, true, false);
+	}
+
 	/** overridden methods
 	 * ----- ----- ----- ----- ----- */
 

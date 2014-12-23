@@ -39,7 +39,7 @@ public class Schedule {
 	 * 
 	 * @return
 	 */
-	@Constraint( fields = { @Constraint.Field("tasks") })
+	@Constraint(fields = { @Constraint.Field("tasks") })
 	public boolean startIsGETaskStart(Task task) {
 		return task.start >= this.taskStart;
 	}
@@ -62,7 +62,7 @@ public class Schedule {
 	 * 
 	 * @return
 	 */
-	@Constraint(fields = { @Constraint.Field("tasks") })
+//	@Constraint(fields = { @Constraint.Field("tasks") })
 	public boolean employeeHasNeededSkill(Task task) {
 		return task.neededSkill == task.doneBy.skill;
 	}
