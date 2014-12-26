@@ -58,7 +58,10 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 
 		this.field = null;
 		this.constantTableIndex = -1;
-		this.name = value.getClass().getSimpleName() + "_" + value.toString();
+		if (value != null)
+			this.name = value.getClass().getSimpleName() + "_" + value.toString();
+		else
+			this.name = "";
 	}
 
 	/**
@@ -80,7 +83,10 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 
 		this.field = null;
 		this.constantTableIndex = -1;
-		this.name = value.getClass().getSimpleName() + "_" + value.toString();
+		if (value != null)
+			this.name = value.getClass().getSimpleName() + "_" + value.toString();
+		else
+			this.name = "";
 	}
 
 	/**
@@ -240,6 +246,15 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	 */
 	public boolean isFinishedNumberType() {
 		return this.isNumberType && this.isFinishedType;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return
+	 */
+	public boolean isUnfinishedFieldType() {
+		return !this.isFinishedType && this.field != null;
 	}
 
 	/* class methods

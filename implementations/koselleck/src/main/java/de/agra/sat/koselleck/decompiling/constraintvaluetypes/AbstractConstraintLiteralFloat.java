@@ -108,7 +108,7 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 	public int compareTo(AbstractConstraintLiteral<?> constraintLiteral) {
 		if (this.isFinishedType() || !constraintLiteral.isFinishedNumberType()) {
 			NoComparableNumberTypeException exception = new NoComparableNumberTypeException(this);
-			Logger.getLogger(AbstractConstraintLiteralClass.class).fatal(exception.getMessage());
+			Logger.getLogger(AbstractConstraintClass.class).fatal(exception.getMessage());
 			throw exception;
 		} else if (constraintLiteral.getValue() instanceof Double)
 			return ((Double) this.getValue().doubleValue()).compareTo((Double) constraintLiteral.getValue());
@@ -118,7 +118,7 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 			return this.getValue().compareTo(((Integer) constraintLiteral.getValue()).floatValue());
 		else {
 			NoComparableNumberTypeException exception = new NoComparableNumberTypeException(this);
-			Logger.getLogger(AbstractConstraintLiteralClass.class).fatal(exception.getMessage());
+			Logger.getLogger(AbstractConstraintClass.class).fatal(exception.getMessage());
 			throw exception;
 		}
 	}

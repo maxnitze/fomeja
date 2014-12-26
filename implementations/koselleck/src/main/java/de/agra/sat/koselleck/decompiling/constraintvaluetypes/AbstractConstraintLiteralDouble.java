@@ -109,7 +109,7 @@ public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<D
 	public int compareTo(AbstractConstraintLiteral<?> constraintLiteral) {
 		if (this.isFinishedType() || !constraintLiteral.isFinishedNumberType()) {
 			NoComparableNumberTypeException exception = new NoComparableNumberTypeException(this);
-			Logger.getLogger(AbstractConstraintLiteralClass.class).fatal(exception.getMessage());
+			Logger.getLogger(AbstractConstraintClass.class).fatal(exception.getMessage());
 			throw exception;
 		} else if (constraintLiteral.getValue() instanceof Double)
 			return this.getValue().compareTo((Double) constraintLiteral.getValue());
@@ -119,7 +119,7 @@ public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<D
 			return this.getValue().compareTo(((Integer) constraintLiteral.getValue()).doubleValue());
 		else {
 			NoComparableNumberTypeException exception = new NoComparableNumberTypeException(this);
-			Logger.getLogger(AbstractConstraintLiteralClass.class).fatal(exception.getMessage());
+			Logger.getLogger(AbstractConstraintClass.class).fatal(exception.getMessage());
 			throw exception;
 		}
 	}

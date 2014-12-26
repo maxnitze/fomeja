@@ -17,6 +17,9 @@ import de.agra.sat.koselleck.types.Opcode;
  */
 public abstract class AbstractConstraintValue {
 	/** COMMENT */
+	public static final AbstractConstraintLiteralObject NULL_VALUE = new AbstractConstraintLiteralObject(null);
+
+	/** COMMENT */
 	private PreFieldList preFieldList;
 
 	/**

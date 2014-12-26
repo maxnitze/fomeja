@@ -295,7 +295,7 @@ public abstract class Dialect<T, V> {
 
 				/* substitute the parameters of the current constraint */
 				Map<Integer, Object> constraintParametersMap = new HashMap<Integer, Object>();
-				for (int i = 0; i < constraintParameters.length; i++)
+				for (int i=0; i<constraintParameters.length; i++)
 					constraintParametersMap.put(i+1, constraintParameters[i].getCurrentCollectionObject());
 				clonedConstraint.substitute(constraintParametersMap);
 

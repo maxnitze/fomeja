@@ -15,7 +15,7 @@ import de.agra.sat.koselleck.backends.Z3SMTIIJava;
 import de.agra.sat.koselleck.backends.datatypes.AbstractSingleTheorem;
 import de.agra.sat.koselleck.backends.datatypes.ConstraintParameter;
 import de.agra.sat.koselleck.decompiling.Decompiler;
-import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralClass;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintClass;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralObject;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
 import de.agra.sat.koselleck.disassembling.bytecodetypes.DisassembledMethod;
@@ -114,8 +114,8 @@ public abstract class DIAB {
 				DisassembledMethod disassembledMethod = disassembledMethods.get(methodSignature);
 
 				AbstractConstraintValue[] arguments = new AbstractConstraintValue[disassembledMethod.getMethod().getParameterTypes().length];
-				for (int i = 0; i < arguments.length; i++)
-					arguments[i] = new AbstractConstraintLiteralClass(
+				for (int i=0; i<arguments.length; i++)
+					arguments[i] = new AbstractConstraintClass(
 							disassembledMethod.getMethod().getParameterTypes()[i], Opcode.Xload, i+1);
 
 				if (disassembledMethod != null)
