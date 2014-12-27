@@ -62,7 +62,7 @@ public class Schedule {
 	 * 
 	 * @return
 	 */
-//	@Constraint(fields = { @Constraint.Field("tasks") })
+	@Constraint(fields = { @Constraint.Field("tasks") })
 	public boolean employeeHasNeededSkill(Task task) {
 		return task.neededSkill == task.doneBy.skill;
 	}

@@ -1,9 +1,7 @@
 package de.agra.sat.koselleck.backends.datatypes;
 
 /* imports */
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.agra.sat.koselleck.datatypes.PreField;
 import de.agra.sat.koselleck.datatypes.PreFieldList;
@@ -24,11 +22,7 @@ public abstract class ParameterObject {
 	/** COMMENT */
 	private boolean isAssigned;
 	/** COMMENT */
-	private RangedParameterObject dependentParameterObject;
-	/** COMMENT */
-	private Map<Object, Integer> objectMapping;
-	/** COMMENT */
-	private int maxObjectMapping;
+	private ObjectParameterObject dependentParameterObject;
 
 	/**
 	 * COMMENT
@@ -53,7 +47,7 @@ public abstract class ParameterObject {
 	 * @param preFields
 	 * @param dependentParameterObject
 	 */
-	public ParameterObject(Object object, PreFieldList preFields, RangedParameterObject dependentParameterObject) {
+	public ParameterObject(Object object, PreFieldList preFields, ObjectParameterObject dependentParameterObject) {
 		this.object = object;
 		this.preFields = preFields;
 		this.name = this.getName(object, preFields);
@@ -113,7 +107,7 @@ public abstract class ParameterObject {
 	 * 
 	 * @return
 	 */
-	public RangedParameterObject getDependentParameterObject() {
+	public ObjectParameterObject getDependentParameterObject() {
 		return this.dependentParameterObject;
 	}
 
@@ -124,31 +118,6 @@ public abstract class ParameterObject {
 	 */
 	public boolean isDependend() {
 		return this.dependentParameterObject != null;
-	}
-
-	/* class methods
-	 * ----- ----- ----- ----- ----- */
-
-	/**
-	 * COMMENT
-	 * 
-	 * @param object
-	 * 
-	 * @return
-	 */
-	public int getMapping(Object object) {
-		if (this.objectMapping == null) {
-			this.objectMapping = new HashMap<Object, Integer>();
-			this.maxObjectMapping = -1;
-		}
-
-		Integer mapping = this.objectMapping.get(object);
-		if (mapping == null) {
-			this.objectMapping.put(object, ++this.maxObjectMapping);
-			mapping = this.maxObjectMapping;
-		}
-
-		return mapping;
 	}
 
 	/* private methods

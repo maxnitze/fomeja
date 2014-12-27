@@ -19,9 +19,9 @@ public class SchedulingProblem {
 		List<Employee> employees = new ArrayList<Employee>();
 		employees.add(new Employee("Firstname1", "Lastname1", Skill.JAVA, new Skill[] { Skill.JAVA, Skill.MANAGEMENT }));
 		employees.add(new Employee("Firstname2", "Lastname2", Skill.CPP, new Skill[] { Skill.CPP, Skill.MANAGEMENT }));
-//		employees.add(new Employee("Firstname3", "Lastname3", SkILL.C, new Skill[] { Skill.C, Skill.JAVA }));
-//		employees.add(new Employee("Firstname4", "Lastname4", Skill.MANAGEMENT, new Skill[] { Skill.C, Skill.CPP, Skill.MANAGEMENT }));
-//		employees.add(new Employee("Firstname5", "Lastname5", Skill.JAVA, new Skill[] { Skill.JAVA, Skill.CPP }));
+		employees.add(new Employee("Firstname3", "Lastname3", Skill.C, new Skill[] { Skill.C, Skill.JAVA }));
+		employees.add(new Employee("Firstname4", "Lastname4", Skill.MANAGEMENT, new Skill[] { Skill.C, Skill.CPP, Skill.MANAGEMENT }));
+		employees.add(new Employee("Firstname5", "Lastname5", Skill.JAVA, new Skill[] { Skill.JAVA, Skill.CPP }));
 
 		List<Task> tasks = new ArrayList<Task>();
 		Task task1 = new Task("Task1", 2, Skill.JAVA, new Skill[] { Skill.JAVA }, null, new Task[] {});

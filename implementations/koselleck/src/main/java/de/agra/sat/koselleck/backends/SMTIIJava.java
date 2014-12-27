@@ -27,6 +27,7 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSubConstraintSe
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralDouble;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralEnum;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralFloat;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralInteger;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralObject;
@@ -236,24 +237,26 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	@Override
 	public ArithExpr prepareAbstractConstraintLiteral(AbstractConstraintLiteral<?> constraintLiteral) {
 		try {
-			if (!constraintLiteral.isVariable()) {
-				if (constraintLiteral instanceof AbstractConstraintLiteralDouble)
-					return this.context.MkReal(constraintLiteral.getValue().toString());
+			if (!constraintLiteral.isVariable() && !constraintLiteral.getPreFieldList().isVariable()) {
+				if (constraintLiteral instanceof AbstractConstraintLiteralInteger)
+					return this.context.MkInt(constraintLiteral.getValue().toString());
 				else if (constraintLiteral instanceof AbstractConstraintLiteralFloat)
 					return this.context.MkReal(constraintLiteral.getValue().toString());
-				else if (constraintLiteral instanceof AbstractConstraintLiteralInteger)
-					return this.context.MkInt(constraintLiteral.getValue().toString());
+				else if (constraintLiteral instanceof AbstractConstraintLiteralDouble)
+					return this.context.MkReal(constraintLiteral.getValue().toString());
 				else {
 					String message = "could not create arithmetic expression from non-variable literal \"" + constraintLiteral + "\"";
 					Logger.getLogger(SMTIIJava.class).fatal(message);
 					throw new IllegalArgumentException(message);
 				}
 			} else {
-				if (constraintLiteral instanceof AbstractConstraintLiteralDouble)
-					return this.context.MkRealConst(constraintLiteral.getName());
+				if (constraintLiteral instanceof AbstractConstraintLiteralInteger)
+					return this.context.MkIntConst(constraintLiteral.getName());
 				else if (constraintLiteral instanceof AbstractConstraintLiteralFloat)
 					return this.context.MkRealConst(constraintLiteral.getName());
-				else if (constraintLiteral instanceof AbstractConstraintLiteralInteger)
+				else if (constraintLiteral instanceof AbstractConstraintLiteralDouble)
+					return this.context.MkRealConst(constraintLiteral.getName());
+				else if (constraintLiteral instanceof AbstractConstraintLiteralEnum)
 					return this.context.MkIntConst(constraintLiteral.getName());
 				else if (constraintLiteral instanceof AbstractConstraintLiteralObject)
 					return this.context.MkIntConst(constraintLiteral.getName());

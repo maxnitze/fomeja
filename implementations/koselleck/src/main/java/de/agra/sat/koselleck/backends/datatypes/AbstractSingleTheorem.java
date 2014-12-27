@@ -32,6 +32,7 @@ public class AbstractSingleTheorem {
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -40,6 +41,7 @@ public class AbstractSingleTheorem {
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */

@@ -71,7 +71,7 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	 */
 	void assign(Theorem theorem, Map<String, Object> proverResults) {
 		for (ParameterObject parameterObject : theorem.getVariablesMap().values())
-			if (!parameterObject.isAssigned())
+			if (!parameterObject.isAssigned() && parameterObject.getPreFieldList().last().isVariable())
 				this.assign(proverResults, parameterObject);
 	}
 
@@ -108,7 +108,7 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 				field.set(fieldObject, proverResult);
 			else if (parameterObject instanceof RangedParameterObject) {
 				field.set(fieldObject,
-						((RangedParameterObject) parameterObject).getObjectRangeElement((Integer) proverResult));
+						((RangedParameterObject) parameterObject).getRangeElement((Integer) proverResult));
 			}
 
 			parameterObject.setAssigned();

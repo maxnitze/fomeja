@@ -25,6 +25,9 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	/** the value of the literal */
 	private T value;
 
+	/** COMMENT */
+	private String stringValue;
+
 	/** the name of the value */
 	private String name;
 
@@ -257,45 +260,33 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 		return !this.isFinishedType && this.field != null;
 	}
 
-	/* class methods
-	 * ----- ----- ----- ----- ----- */
-
-	/**
-	 * COMMENT
-	 * 
-	 * @param value
-	 */
-	void setValue(T value) {
-		this.value = value;
-	}
-
-	/**
-	 * COMMENT
-	 * 
-	 * @param value
-	 */
-	void setValueAndFinish(T value) {
-		this.value = value;
-
-		this.setFinished();
-	}
-
-	/**
-	 * COMMENT
-	 */
-	void setFinished() {
-		this.field = null;
-
-		this.isVariable = false;
-		this.isFinishedType = true;
-
-		this.field = null;
-		this.constantTableIndex = -1;
-		this.name = (this.value != null ? this.value.getClass().getCanonicalName() + "_" + this.value.toString() : "");
-	}
-
 	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
+
+	@Override
+	public void replaceAll(String regex, String replacement) {
+		if (!this.isFinishedType && this.name.matches(regex)) {
+			if (replacement.matches("^\\d+(\\.\\d+)?d$|^\\d+(\\.\\d+)?f$|^\\d+$"))
+				this.stringValue = replacement;
+			else
+				this.name = replacement;
+		}
+	}
+
+	@Override
+	public AbstractConstraintValue evaluate() {
+		if (!this.isFinishedType() && this.stringValue != null) {
+			if (this.stringValue.matches("^\\d+(\\.\\d+)?d$"))
+				return new AbstractConstraintLiteralDouble(Double.parseDouble(this.getName()));
+			else if (this.stringValue.matches("^\\d+(\\.\\d+)?f$"))
+				return new AbstractConstraintLiteralFloat(Float.parseFloat(this.getName()));
+			else if (this.stringValue.matches("^\\d+$"))
+				return new AbstractConstraintLiteralInteger(Integer.parseInt(this.getName()));
+			else
+				return this;
+		} else
+			return this;
+	}
 
 	@Override
 	public AbstractConstraintValue substitute(Map<Integer, Object> constraintArguments) {
@@ -336,6 +327,8 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 				return new AbstractConstraintLiteralFloat((Float) constraintArgument);
 			else if (constraintArgument instanceof Double)
 				return new AbstractConstraintLiteralDouble((Double) constraintArgument);
+			else if (constraintArgument instanceof Enum<?>)
+				return new AbstractConstraintLiteralInteger(((Enum<?>) constraintArgument).ordinal());
 			else
 				return new AbstractConstraintLiteralObject(constraintArgument);
 		} else
@@ -373,20 +366,13 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 					&& this.name.equals(abstractConstraintLiteral.name)
 					&& this.getFieldCodeIndex() == abstractConstraintLiteral.getFieldCodeIndex()
 					&& this.getOpcode().equals(abstractConstraintLiteral.getOpcode())
-					&& this.constantTableIndex == abstractConstraintLiteral.constantTableIndex;
+					&& this.constantTableIndex == abstractConstraintLiteral.constantTableIndex
+					&& this.getPreFieldList().equals(abstractConstraintLiteral.getPreFieldList());
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder stringRepresentation = new StringBuilder();
-		stringRepresentation.append(this.isFinishedType ? this.getValue().toString() : this.getName());
-		stringRepresentation.append("<--[");
-		stringRepresentation.append(this.isVariable ? "variable" : "not_variable");
-		stringRepresentation.append(";");
-		stringRepresentation.append(this.isNumberType ? "number_type" : "not_number_type");
-		stringRepresentation.append("]");
-
-		return stringRepresentation.toString();
+		return this.isFinishedType ? this.getValue().toString() : this.getName();
 	}
 
 	/* abstract methods

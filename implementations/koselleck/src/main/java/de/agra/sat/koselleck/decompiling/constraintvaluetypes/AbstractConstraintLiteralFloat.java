@@ -61,25 +61,6 @@ public class AbstractConstraintLiteralFloat extends AbstractConstraintLiteral<Fl
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
-	public void replaceAll(String regex, String replacement) {
-		if (!this.isFinishedType() && this.getName().matches(regex)) {
-			if (replacement.matches("^\\d+(\\.\\d+)?d$"))
-				this.setValueAndFinish(((Double) Double.parseDouble(replacement)).floatValue());
-			else if (replacement.matches("^\\d+(\\.\\d+)?f$"))
-				this.setValueAndFinish(Float.parseFloat(replacement));
-			else if (replacement.matches("^\\d+$"))
-				this.setValueAndFinish(((Integer) Integer.parseInt(replacement)).floatValue());
-			else 
-				this.setName(replacement);
-		}
-	}
-
-	@Override
-	public AbstractConstraintValue evaluate() {
-		return this;
-	}
-
-	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof AbstractConstraintLiteralFloat))
 			return false;

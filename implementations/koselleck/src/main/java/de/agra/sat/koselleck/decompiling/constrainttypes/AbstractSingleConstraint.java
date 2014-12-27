@@ -114,7 +114,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 			case GREATER_EQUAL:
 			case LESS:
 			case LESS_EQUAL:
-				Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not supported to check on a constraint, only equality checks are supported ([not] equal) are");
+				Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not supported to check on a constraint, only equality checks ([not] equal) are");
 				throw new UnknownConstraintOperatorException(operator);
 			default:
 				Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");

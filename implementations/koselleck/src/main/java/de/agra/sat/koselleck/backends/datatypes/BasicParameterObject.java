@@ -26,7 +26,7 @@ public class BasicParameterObject extends ParameterObject {
 	 * @param preFields
 	 * @param dependentParameterObject
 	 */
-	public BasicParameterObject(Object object, PreFieldList preFields, RangedParameterObject dependentParameterObject) {
+	public BasicParameterObject(Object object, PreFieldList preFields, ObjectParameterObject dependentParameterObject) {
 		super(object, preFields, dependentParameterObject);
 	}
 }

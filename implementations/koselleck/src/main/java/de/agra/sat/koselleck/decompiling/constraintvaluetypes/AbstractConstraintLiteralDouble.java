@@ -63,24 +63,6 @@ public class AbstractConstraintLiteralDouble extends AbstractConstraintLiteral<D
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
-	public void replaceAll(String regex, String replacement) {
-		if (!this.isFinishedType() && this.getName().matches(regex)) {
-			if (replacement.matches("^\\d+(\\.\\d+)?d$"))
-				this.setValueAndFinish(Double.parseDouble(replacement));
-			else if (replacement.matches("^\\d+(\\.\\d+)?f$"))
-				this.setValueAndFinish(((Float) Float.parseFloat(replacement)).doubleValue());
-			else if (replacement.matches("^\\d+$"))
-				this.setValueAndFinish(((Integer) Integer.parseInt(replacement)).doubleValue());
-			else 
-				this.setName(replacement);
-		}}
-
-	@Override
-	public AbstractConstraintValue evaluate() {
-		return this;
-	}
-
-	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof AbstractConstraintLiteralDouble))
 			return false;

@@ -5,13 +5,13 @@ import org.apache.log4j.Logger;
 
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
-import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralObject;
 import de.agra.sat.koselleck.exceptions.UnknownConstraintOperatorException;
 import de.agra.sat.koselleck.types.ConstraintOperator;
 
 /**
+ * COMMENT
  * 
  * @author Max Nitze
  * @version 1.0.0
@@ -23,6 +23,7 @@ public final class ConstraintUtils {
 	private ConstraintUtils() {}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @param constraintLiteral1
 	 * @param operator
@@ -32,30 +33,26 @@ public final class ConstraintUtils {
 	 * @return
 	 */
 	public static AbstractConstraint evaluate(AbstractConstraintLiteral<?> constraintLiteral1, ConstraintOperator operator, AbstractConstraintLiteral<?> constraintLiteral2, AbstractConstraint backupConstraint) {
-		if (constraintLiteral1.isNumberType() && constraintLiteral2.isNumberType()
-				&& constraintLiteral1.isFinishedType() && constraintLiteral2.isFinishedType())
+		if (constraintLiteral1.isFinishedNumberType() && constraintLiteral2.isFinishedNumberType())
 			return evaluateNumberTypes(constraintLiteral1, operator, constraintLiteral2);
 		else if (constraintLiteral1.isNumberType() && constraintLiteral2.isNumberType()
-				&& constraintLiteral1.getField() == constraintLiteral2.getField()) {
+				&& constraintLiteral1.equals(constraintLiteral2)) {
 			switch (operator) {
 			case EQUAL:
-				return new AbstractBooleanConstraint(true);
-			case GREATER:
-				return new AbstractBooleanConstraint(false);
 			case GREATER_EQUAL:
-				return new AbstractBooleanConstraint(true);
-			case LESS:
-				return new AbstractBooleanConstraint(false);
 			case LESS_EQUAL:
 				return new AbstractBooleanConstraint(true);
+			case GREATER:
+			case LESS:
 			case NOT_EQUAL:
 				return new AbstractBooleanConstraint(false);
 			default:
-				Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");
+				Logger.getLogger(ConstraintUtils.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");
 				throw new UnknownConstraintOperatorException(operator);
 			}
 		} else if (constraintLiteral1 instanceof AbstractConstraintLiteralObject
-				&& constraintLiteral2 instanceof AbstractConstraintLiteralObject) {
+				&& constraintLiteral2 instanceof AbstractConstraintLiteralObject
+				&& constraintLiteral1.isFinishedType() && constraintLiteral2.isFinishedType()) {
 			switch (operator) {
 			case EQUAL:
 			case GREATER_EQUAL:
@@ -74,8 +71,7 @@ public final class ConstraintUtils {
 	}
 
 	/**
-	 * evaluate evaluates the given constraintLiterals to its abstract
-	 *  boolean value considering the operator.
+	 * COMMENT
 	 * 
 	 * @param constraintLiteral1 the first constraint literal
 	 * @param operator the operator of the single constraint
@@ -99,7 +95,7 @@ public final class ConstraintUtils {
 		case NOT_EQUAL:
 			return new AbstractBooleanConstraint(constraintLiteral1.compareTo(constraintLiteral2) != 0);
 		default:
-			Logger.getLogger(AbstractSingleConstraint.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");
+			Logger.getLogger(ConstraintUtils.class).fatal("constraint operator " + (operator == null ? "null" : "\"" + operator.getAsciiName() + "\"") + " is not known");
 			throw new UnknownConstraintOperatorException(operator);
 		}
 	}

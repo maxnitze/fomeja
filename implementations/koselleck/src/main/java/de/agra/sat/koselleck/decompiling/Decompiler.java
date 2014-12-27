@@ -22,14 +22,15 @@ import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractBooleanConstrai
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractIfThenElseConstraint;
 import de.agra.sat.koselleck.decompiling.constrainttypes.AbstractSingleConstraint;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintClass;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintFormula;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteral;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralDouble;
+import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralEnum;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralFloat;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralInteger;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintLiteralObject;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintValue;
-import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractConstraintClass;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractPrematureConstraintValueAccessibleObject;
 import de.agra.sat.koselleck.decompiling.constraintvaluetypes.AbstractPrematureConstraintValueConstraint;
 import de.agra.sat.koselleck.disassembling.bytecodetypes.BytecodeLine;
@@ -169,35 +170,26 @@ public class Decompiler {
 			case Xconst_:
 			case bipush:
 				this.stack.push(
-						new AbstractConstraintLiteralInteger((Integer)((BytecodeLineValue) bytecodeLine).getValue()));
+						new AbstractConstraintLiteralInteger((Integer) ((BytecodeLineValue) bytecodeLine).getValue()));
 				break;
 
 			case getfield:
-				bytecodeLineConstantTableAccessibleObject = (BytecodeLineConstantTableAccessibleObject) bytecodeLine;
-
-				constraintValue = this.stack.pop();
-				if (!(constraintValue instanceof AbstractConstraintLiteral<?> || constraintValue instanceof AbstractConstraintClass)) {
-					String message = "could not get field \"" + bytecodeLineConstantTableAccessibleObject.getAccessibleObject() + "\" because constraint value is no literal type";
-					Logger.getLogger(Decompiler.class).fatal(message);
-					throw new MissformattedBytecodeLineException(message);
-				}
-
-				this.stack.push(
-						this.getFieldValue(bytecodeLineConstantTableAccessibleObject, constraintValue));
-
-				break;
 			case getstatic:
 				bytecodeLineConstantTableAccessibleObject = (BytecodeLineConstantTableAccessibleObject) bytecodeLine;
 
 				constraintValue = this.stack.pop();
 				if (!(constraintValue instanceof AbstractConstraintLiteral<?> || constraintValue instanceof AbstractConstraintClass)) {
-					String message = "could not get field";
+					String message = "could not get " + (bytecodeLine.getOpcode() == Opcode.getstatic ? "static " : "") + "field from constraint value \"" + constraintValue + "\" with accessible object \"" + bytecodeLineConstantTableAccessibleObject.getAccessibleObject() + "\"";
 					Logger.getLogger(Decompiler.class).fatal(message);
 					throw new MissformattedBytecodeLineException(message);
 				}
 
-				this.stack.push(
-						this.getStaticFieldValue(bytecodeLineConstantTableAccessibleObject, constraintValue));
+				if (bytecodeLine.getOpcode() == Opcode.getfield)
+					this.stack.push(
+							this.getFieldValue(bytecodeLineConstantTableAccessibleObject, constraintValue));
+				else
+					this.stack.push(
+							this.getStaticFieldValue(bytecodeLineConstantTableAccessibleObject, constraintValue));
 
 				break;
 
@@ -390,7 +382,7 @@ public class Decompiler {
 				break;
 
 			case _goto:
-				bytecodeLineOffset = (BytecodeLineOffset)bytecodeLine;
+				bytecodeLineOffset = (BytecodeLineOffset) bytecodeLine;
 
 				nextOffset = bytecodeLineOffset.getOffset();
 				break;
@@ -637,6 +629,8 @@ public class Decompiler {
 				return new AbstractConstraintLiteralFloat((Float) value);
 			else if (ClassUtils.isIntegerClass(bytecodeLineField.getType()))
 				return new AbstractConstraintLiteralInteger((Integer) value);
+			else if (bytecodeLineField.getType().isEnum())
+				return new AbstractConstraintLiteralInteger(((Enum<?>) value).ordinal());
 			else
 				return new AbstractConstraintLiteralObject(value);
 		} else if (constraintValue instanceof AbstractConstraintLiteral<?> || constraintValue instanceof AbstractConstraintClass) {
@@ -646,8 +640,8 @@ public class Decompiler {
 				preFields.add(((AbstractConstraintLiteral<?>) constraintValue).toPreField());
 			}
 
-			if (ClassUtils.isDoubleClass(bytecodeLineField.getType()))
-				return new AbstractConstraintLiteralDouble(bytecodeLineField,
+			if (ClassUtils.isIntegerClass(bytecodeLineField.getType()))
+				return new AbstractConstraintLiteralInteger(bytecodeLineField,
 						constraintValue.getFieldCodeIndex(),
 						constraintValue.getOpcode(),
 						bytecodeLineConstantTableAccessibleObject.getConstantTableIndex(),
@@ -658,8 +652,14 @@ public class Decompiler {
 						constraintValue.getOpcode(),
 						bytecodeLineConstantTableAccessibleObject.getConstantTableIndex(),
 						preFields);
-			else if (ClassUtils.isIntegerClass(bytecodeLineField.getType()))
-				return new AbstractConstraintLiteralInteger(bytecodeLineField,
+			else if (ClassUtils.isDoubleClass(bytecodeLineField.getType()))
+				return new AbstractConstraintLiteralDouble(bytecodeLineField,
+						constraintValue.getFieldCodeIndex(),
+						constraintValue.getOpcode(),
+						bytecodeLineConstantTableAccessibleObject.getConstantTableIndex(),
+						preFields);
+			else if (bytecodeLineField.getType().isEnum())
+				return new AbstractConstraintLiteralEnum(bytecodeLineField,
 						constraintValue.getFieldCodeIndex(),
 						constraintValue.getOpcode(),
 						bytecodeLineConstantTableAccessibleObject.getConstantTableIndex(),

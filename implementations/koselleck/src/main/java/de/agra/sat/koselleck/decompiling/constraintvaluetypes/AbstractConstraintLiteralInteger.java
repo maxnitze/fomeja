@@ -66,25 +66,6 @@ public class AbstractConstraintLiteralInteger extends AbstractConstraintLiteral<
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
-	public void replaceAll(String regex, String replacement) {
-		if (!this.isFinishedType() && this.getName().matches(regex)) {
-			if (replacement.matches("^\\d+(\\.\\d+)?d$"))
-				this.setValueAndFinish(((Double) Double.parseDouble(replacement)).intValue());
-			else if (replacement.matches("^\\d+(\\.\\d+)?f$"))
-				this.setValueAndFinish(((Float) Float.parseFloat(replacement)).intValue());
-			else if (replacement.matches("^\\d+$"))
-				this.setValueAndFinish(Integer.parseInt(replacement));
-			else 
-				this.setName(replacement);
-		}
-	}
-
-	@Override
-	public AbstractConstraintValue evaluate() {
-		return this;
-	}
-
-	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof AbstractConstraintLiteralInteger))
 			return false;
