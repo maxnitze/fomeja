@@ -478,7 +478,7 @@ public class Decompiler {
 
 				if (returnValue instanceof AbstractConstraintLiteral<?>) {
 					AbstractConstraintLiteral<?> returnLiteral = (AbstractConstraintLiteral<?>) returnValue;
-					if (returnLiteral.isNumberType())
+					if (returnLiteral.isFinishedNumberType())
 						return new AbstractBooleanConstraint(!returnLiteral.getValue().equals(0), returnValue);
 					else
 						return new AbstractBooleanConstraint(true, returnValue);
