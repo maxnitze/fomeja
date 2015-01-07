@@ -269,6 +269,8 @@ public abstract class Dialect<T, V> {
 		for (AbstractSingleTheorem singleTheorem : singleTheorems) {
 			AbstractConstraint constraint = singleTheorem.getConstraint();
 
+			System.out.println("Constraint:\n" + constraint); // TODO remove constraint Output
+
 			Set<AbstractConstraintLiteral<?>> unfinishedConstraintLiteralSet = new HashSet<AbstractConstraintLiteral<?>>();
 			for (AbstractConstraintLiteral<?> unfinishedConstraintLiteral : constraint.getUnfinishedConstraintLiterals()) {
 				if (!unfinishedConstraintLiteral.isVariable() && unfinishedConstraintLiteral.getOpcode() == Opcode.Xload && unfinishedConstraintLiteral.getFieldCodeIndex() == 0)
