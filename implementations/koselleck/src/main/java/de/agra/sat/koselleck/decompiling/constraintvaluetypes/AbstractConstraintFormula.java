@@ -2,9 +2,8 @@ package de.agra.sat.koselleck.decompiling.constraintvaluetypes;
 
 import java.util.HashSet;
 import java.util.Map;
-
-
 import java.util.Set;
+
 
 /** imports */
 import de.agra.sat.koselleck.types.ArithmeticOperator;

@@ -387,6 +387,29 @@ public class Decompiler {
 				nextOffset = bytecodeLineOffset.getOffset();
 				break;
 
+			case ifnull:
+				bytecodeLineOffset = (BytecodeLineOffset) bytecodeLine;
+
+				constraintValue = this.stack.pop();
+
+				if (constraintValue instanceof AbstractConstraintLiteral<?>
+						&& ((AbstractConstraintLiteral<?>) constraintValue).isFinishedType()) {
+					if (((AbstractConstraintLiteral<?>) constraintValue).getValue() == null)
+						nextOffset = bytecodeLineOffset.getOffset();
+					break;
+				} else {
+					/** skip null-checks for variable fields (might be null, will be set by solver-result) */
+					if (constraintValue instanceof AbstractConstraintLiteral<?>
+							&& ((AbstractConstraintLiteral<?>) constraintValue).isVariable())
+						break;
+					else
+						return new AbstractIfThenElseConstraint(
+								new AbstractSingleConstraint(
+										constraintValue, ConstraintOperator.EQUAL, new AbstractConstraintLiteralObject(null)),
+								this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.getOffset()),
+								this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.getFollowingLineNumber()));
+				}
+
 			case ifeq:
 			case iflt:
 			case ifle:
@@ -394,7 +417,7 @@ public class Decompiler {
 			case ifge:
 			case ifne:
 				bytecodeLineOffset = (BytecodeLineOffset) bytecodeLine;
-				constraintOperator = ConstraintOperator.fromOpcode(bytecodeLine.getOpcode().getName());
+				constraintOperator = ConstraintOperator.fromOpcode(bytecodeLineOffset.getOpcode().getName());
 
 				constraintValue = this.stack.pop();
 
@@ -416,14 +439,13 @@ public class Decompiler {
 						nextOffset = bytecodeLineOffset.getOffset();
 					else
 						nextOffset = bytecodeLineOffset.getFollowingLineNumber();
+					break;
 				} else
 					return new AbstractIfThenElseConstraint(
 							new AbstractSingleConstraint(
 									constraintValue, constraintOperator, new AbstractConstraintLiteralInteger(0)),
 							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.getOffset()),
 							this.parseMethodBytecode(bytecodeLines, bytecodeLineOffset.getFollowingLineNumber()));
-
-				break;
 
 			case if_Xcmpne:
 			case if_Xcmpge:

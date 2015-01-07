@@ -1,6 +1,6 @@
 package de.agra.sat.koselleck.decompiling.constrainttypes;
 
-/** imports */
+/* imports */
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +46,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -54,6 +55,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */
@@ -62,6 +64,7 @@ public class AbstractSingleConstraint extends AbstractConstraint {
 	}
 
 	/**
+	 * COMMENT
 	 * 
 	 * @return
 	 */

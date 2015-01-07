@@ -372,7 +372,7 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 
 	@Override
 	public String toString() {
-		return this.isFinishedType ? this.getValue().toString() : this.getName();
+		return this.isFinishedType ? this.value != null ? this.value.toString() : "null" : this.name;
 	}
 
 	/* abstract methods
@@ -406,7 +406,7 @@ public abstract class AbstractConstraintLiteral<T> extends AbstractConstraintVal
 	 * @return
 	 */
 	public PreField toPreField() {
-		return new PreField(this.field, this.constantTableIndex, this.getOpcode(), this.getPreFieldList().getFieldCodeIndex());
+		return new PreField(this.field, this.constantTableIndex, this.getOpcode(), this.getFieldCodeIndex());
 	}
 
 	/**

@@ -64,7 +64,7 @@ public class Schedule {
 	 */
 	@Constraint(fields = { @Constraint.Field("tasks") })
 	public boolean employeeHasNeededSkill(Task task) {
-		return task.neededSkill == task.doneBy.skill;
+		return task.doneBy != null && task.neededSkill == task.doneBy.skill;
 	}
 
 	/**

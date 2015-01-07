@@ -49,6 +49,8 @@ public enum Opcode {
 
 	_goto("goto", 1, OpcodeType.OFFSET, "goto"),
 
+	ifnull("ifnull", 3, OpcodeType.OFFSET, "ifnull"),
+
 	ifeq("ifeq", 3, OpcodeType.OFFSET, "ifeq"),							/** jump if zero */
 	ifge("ifge", 3, OpcodeType.OFFSET, "ifge"),							/** jump if greater-equal zero */
 	ifgt("ifgt", 3, OpcodeType.OFFSET, "ifgt"),							/** jump if greater than zero */
