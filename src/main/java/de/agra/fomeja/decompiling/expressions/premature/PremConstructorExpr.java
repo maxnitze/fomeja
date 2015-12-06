@@ -193,7 +193,7 @@ public class PremConstructorExpr extends PremAccessibleObjectExpr<Constructor<?>
 							((Short) this.accessibleObject.newInstance(arguments)).intValue());
 				else if (ClassUtils.isCharType(this.accessibleObject.getDeclaringClass()))
 					return new AtomCharacterExpr(
-							(char) this.accessibleObject.newInstance(arguments));
+							(Character) this.accessibleObject.newInstance(arguments));
 				else if (ClassUtils.isByteType(this.accessibleObject.getDeclaringClass()))
 					throw new RuntimeException("get expression from byte constructor not implemented yet"); // TODO implement
 				else
