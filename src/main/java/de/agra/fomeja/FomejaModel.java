@@ -4,11 +4,9 @@ package de.agra.fomeja;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -20,21 +18,15 @@ import de.agra.fomeja.backends.datatypes.ResultModel;
 import de.agra.fomeja.backends.parameterobjects.ParameterObject;
 import de.agra.fomeja.datatypes.PreField;
 import de.agra.fomeja.datatypes.PreFieldList;
-import de.agra.fomeja.decompiling.Decompiler;
-import de.agra.fomeja.decompiling.expressions.Expression;
-import de.agra.fomeja.decompiling.expressions.atomar.AtomClassExpr;
 import de.agra.fomeja.decompiling.expressions.bool.BoolExpression;
 import de.agra.fomeja.decompiling.expressions.bool.ConnectedBoolExpr;
-import de.agra.fomeja.decompiling.statements.StatementSeq;
-import de.agra.fomeja.disassembling.Disassembler;
-import de.agra.fomeja.disassembling.bytecodetypes.DisassembledMethod;
 import de.agra.fomeja.exceptions.ModelException;
 import de.agra.fomeja.exceptions.SatisfyException;
 import de.agra.fomeja.types.BooleanConnector;
 import de.agra.fomeja.types.CompareOperator;
 import de.agra.fomeja.utils.ClassUtils;
 import de.agra.fomeja.utils.ExpressionUtils;
-import de.agra.fomeja.utils.RefactoringUtils;
+import de.agra.fomeja.utils.FomejaUtils;
 
 /**
  * COMMENT
@@ -81,21 +73,31 @@ public class FomejaModel<T> {
 	 * @return
 	 */
 	public T getNext() {
-		this.modelC++;
-
+		T modelObj;
 		try {
-			T modelObj = this.cls.newInstance();
-			this.assignConcreteInstance(modelObj, this.prover.solveNext(this.getNextExprs()));
-			return modelObj;
+			modelObj = this.cls.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
 			String message = "test object class needs to have a constructor with no parameters: " + e.getMessage();
 			Logger.getLogger(FomejaModel.class).fatal(message);
 			throw new ModelException(message);
-		} catch (SatisfyException e) {
-			String message = "the theorem is not satisfiable: " + e.getMessage();
-			Logger.getLogger(FomejaModel.class).error(message);
-			throw new ModelException(message);
 		}
+
+		try {
+			this.assignConcreteInstance(modelObj, this.prover.solveNext(this.getNextExprs()));
+		} catch (SatisfyException e) {
+			if (this.modelC > 0) {
+				Logger.getLogger(FomejaModel.class).warn("could not generate next model object; stopped at model '" + (this.modelC+1) + "'");
+				return null;
+			} else {
+				String message = "the theorem is not satisfiable: " + e.getMessage();
+				Logger.getLogger(FomejaModel.class).error(message);
+				throw new ModelException(message);
+			}
+		}
+
+		++this.modelC;
+
+		return modelObj;
 	}
 
 	/** private methods
@@ -107,7 +109,7 @@ public class FomejaModel<T> {
 	 * @return
 	 */
 	private List<BoolExpression> getNextExprs() throws SatisfyException {
-		if (this.modelC == 1)
+		if (this.modelC == 0)
 			return this.constraint.getConstraintExprs();
 		else if (!this.prevResultExprs.isEmpty()) {
 			List<BoolExpression> lastPrevExprList = new ArrayList<BoolExpression>();
@@ -140,7 +142,7 @@ public class FomejaModel<T> {
 			}
 
 			Variable paramVar = paramObj.getPreFieldList().last().getField().getAnnotation(Variable.class);
-			if (paramVar != null && paramVar.alter() > 0 && this.modelC%paramVar.alter() == 0)
+			if (paramVar != null && paramVar.alter() > 0 && this.modelC+1%paramVar.alter() == 0)
 				this.prover.addExtraExpr(this.getNegExpr(paramObj.getName(), proverResult));
 
 			this.setFieldValue(this.getFieldValue(modelObj, paramObj.getPreFieldList().head(-1)),
@@ -304,44 +306,12 @@ public class FomejaModel<T> {
 	 * COMMENT
 	 */
 	private Constraint getConstraint() {
-		Constraint constraint = new Constraint();
-		List<Method> constraintMethods = RefactoringUtils.getConstraintMethods(this.cls);		
-		if (RefactoringUtils.hasVariableFields(this.cls)) {
-			Map<String, DisassembledMethod> disassembledMethods = Disassembler.disassemble(this.cls);
-
-			Decompiler decompiler = new Decompiler();
-			for (Method method : constraintMethods) {
-				List<Field>[] paramFields = RefactoringUtils.getCollectionFieldsForMethod(method);
-
-				String methodSignature = (method.toGenericString().replaceFirst("^(public|private) boolean .*\\(", "$1 boolean "+ method.getName() +"(") + ";").replaceAll(", ", ",");;
-				DisassembledMethod disassembledMethod = disassembledMethods.get(methodSignature);
-
-				Expression[] arguments = new Expression[disassembledMethod.getMethod().getParameterTypes().length];
-				for (int i=0; i<arguments.length; i++)
-					arguments[i] = new AtomClassExpr(disassembledMethod.getMethod().getParameterTypes()[i]);
-
-				if (disassembledMethod != null) {
-					StatementSeq resultStmtSeq = decompiler.decompile(
-							disassembledMethod.getBytecodeLines(), 0, new AtomClassExpr(this.cls), arguments);
-					if (resultStmtSeq.evalsToBoolExpr())
-						constraint.addSingleConstraint(resultStmtSeq, paramFields);
-					else {
-						String message = "constraint method needs to be of boolean type but is \"" + resultStmtSeq.getResultType().getSimpleName() + "\"";
-						Logger.getLogger(FomejaModel.class).fatal(message);
-						throw new ModelException(message);
-					}
-				}
-			}
-		}
-
 		try {
-			constraint.unfoldConstraints(this.cls.newInstance());
+			return FomejaUtils.getConstraintForComponent(this.cls.newInstance());
 		} catch (InstantiationException | IllegalAccessException e) {
 			String message = "could not instantiate new object of type \"" + this.cls.getSimpleName() + "\": " + e.getMessage();
 			Logger.getLogger(FomejaModel.class).fatal(message);
 			throw new ModelException(message);
 		}
-
-		return constraint;
 	}
 }

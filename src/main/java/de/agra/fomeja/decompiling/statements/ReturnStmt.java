@@ -3,22 +3,14 @@ package de.agra.fomeja.decompiling.statements;
 /* imports */
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.log4j.Logger;
-
 /* imports */
-
-
-
-
-
-import de.agra.fomeja.decompiling.expressions.Expression;
-import de.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
 import de.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
+import de.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
 import de.agra.fomeja.decompiling.expressions.atomar.AtomVoidExpr;
+import de.agra.fomeja.decompiling.expressions.Expression;
+
 import de.agra.fomeja.decompiling.misc.ComponentVariables;
 import de.agra.fomeja.decompiling.statements.misc.State;
-import de.agra.fomeja.exceptions.EvaluationException;
 
 /**
  * COMMENT
@@ -78,12 +70,6 @@ public class ReturnStmt extends FlowControlStmt {
 		this.returnExpr = this.returnExpr.substitude(outerState.getExprs()).evaluate(compVars);
 		if (this.returnExpr instanceof AtomVoidExpr)
 			((AtomVoidExpr) this.returnExpr).setState(outerState);
-
-		if (!(this.returnExpr instanceof AtomExpr<?>)) {
-			String message = "could not evaluate return expression \"" + this.returnExpr + "\"";
-			Logger.getLogger(ReturnStmt.class).fatal(message);
-			throw new EvaluationException(message);
-		}
 
 		return this;
 	}
