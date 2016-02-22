@@ -41,16 +41,16 @@ public abstract class Dialect<T, V> {
 
 	/** COMMENT*/
 	private static final Method[] preparableFloatValueMethods = new Method[] {
-		RefactoringUtils.getMethodForClass(Integer.class, "intValue"),
-		RefactoringUtils.getMethodForClass(Float.class, "intValue"),
-		RefactoringUtils.getMethodForClass(Double.class, "intValue")
+		RefactoringUtils.getMethodForClass(Integer.class, "floatValue"),
+		RefactoringUtils.getMethodForClass(Float.class, "floatValue"),
+		RefactoringUtils.getMethodForClass(Double.class, "floatValue")
 	};
 
 	/** COMMENT*/
 	private static final Method[] preparableDoubleValueMethods = new Method[] {
-		RefactoringUtils.getMethodForClass(Integer.class, "intValue"),
-		RefactoringUtils.getMethodForClass(Float.class, "intValue"),
-		RefactoringUtils.getMethodForClass(Double.class, "intValue")
+		RefactoringUtils.getMethodForClass(Integer.class, "doubleValue"),
+		RefactoringUtils.getMethodForClass(Float.class, "doubleValue"),
+		RefactoringUtils.getMethodForClass(Double.class, "doubleValue")
 	};
 
 	/** dialect types */
@@ -291,7 +291,7 @@ public abstract class Dialect<T, V> {
 		}
 	}
 
-	/** package methods
+	/* package methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -344,8 +344,6 @@ public abstract class Dialect<T, V> {
 	void addExtraExpr(BoolExpression boolExpr) {
 		this.extraExprs.add(boolExpr);
 	}
-
-
 
 	/**
 	 * COMMENT
