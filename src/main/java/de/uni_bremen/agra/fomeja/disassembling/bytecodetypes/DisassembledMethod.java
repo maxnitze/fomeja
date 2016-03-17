@@ -43,32 +43,36 @@ public class DisassembledMethod {
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Method getMethod() {
 		return this.method;
 	}
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getMethodSignature() {
 		return this.methodSignature;
 	}
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getDisassembledMethod() {
 		return this.disassembledMethod;
 	}
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Map<Integer, BytecodeLine> getBytecodeLines() {
 		return this.bytecodeLines;

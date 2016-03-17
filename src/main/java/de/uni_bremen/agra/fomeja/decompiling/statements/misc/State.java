@@ -29,7 +29,7 @@ public class State {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Map<String, Expression> getExprs() {
 		return this.exprs;
@@ -41,8 +41,8 @@ public class State {
 	/**
 	 * COMMENT
 	 * 
-	 * @param key
-	 * @param value
+	 * @param key COMMENT
+	 * @param value COMMENT
 	 */
 	public void put(String key, Expression value) {
 		this.exprs.put(key, value);
@@ -52,7 +52,7 @@ public class State {
 	/**
 	 * COMMENT
 	 * 
-	 * @param exprs
+	 * @param exprs COMMENT
 	 */
 	public void putAll(Map<String, Expression> exprs) {
 		this.exprs.putAll(exprs);
@@ -62,9 +62,9 @@ public class State {
 	/**
 	 * COMMENT
 	 * 
-	 * @param key
+	 * @param key COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression get(String key) {
 		return this.exprs.get(key);
@@ -73,9 +73,9 @@ public class State {
 	/**
 	 * COMMENT
 	 * 
-	 * @param key
+	 * @param key COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean contains(String key) {
 		return this.exprs.containsKey(key);
@@ -84,7 +84,7 @@ public class State {
 	/**
 	 * COMMENT
 	 * 
-	 * @param substExprs
+	 * @param substExprs COMMENT
 	 */
 	public void substitude(Map<String, Expression> substExprs) {
 		Map<String, Expression> exprs = new HashMap<String, Expression>();
@@ -96,7 +96,7 @@ public class State {
 	/**
 	 * COMMENT
 	 * 
-	 * @param state
+	 * @param state COMMENT
 	 */
 	public void merge(State state) {
 		for (Entry<String, Expression> entry : state.getExprs().entrySet())
@@ -107,7 +107,7 @@ public class State {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public State clone() {
 		State state = new State();

@@ -50,7 +50,7 @@ public class Constraint {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public List<BoolExpression> getConstraintExprs() {
 		return this.constraintExprs;
@@ -59,7 +59,7 @@ public class Constraint {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Set<ParameterObject> getParameterObjects() {
 		return this.parameterObjects;
@@ -68,7 +68,7 @@ public class Constraint {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int getConstraintSize() {
 		return this.constraintExprs.size();
@@ -80,10 +80,10 @@ public class Constraint {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stmtSeq
-	 * @param fields
+	 * @param stmtSeq COMMENT
+	 * @param fields COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean addSingleConstraint(StatementSeq stmtSeq, List<Field>[] fields) {
 		return this.singleConstraints.add(new SingleConstraint(stmtSeq, fields));
@@ -92,7 +92,7 @@ public class Constraint {
 	/**
 	 * COMMENT
 	 * 
-	 * @param component
+	 * @param component COMMENT
 	 */
 	public void unfoldConstraints(Object component) {
 		this.constraintExprs.clear();

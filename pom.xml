@@ -12,15 +12,24 @@
 	<url>https://github.com/razr69/fomeja</url>
 	<description>Formal Methods within Java</description>
 
+	<developers>
+		<developer>
+			<id>max.nitze</id>
+			<name>Max Nitze</name>
+			<email>maxnitze@cs.uni-bremen.de</email>
+			<organization>AGRA - University of Bremen</organization>
+			<organizationUrl>http://www.informatik.uni-bremen.de/agra/eng/index.php</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
 	<organization>
 		<name>Groups of Computer Architecture, Computer Engineering/IT-Security and Reliable Embedded Systems - University of Bremen</name>
 		<url>http://www.informatik.uni-bremen.de/agra/eng/index.php</url>
 	</organization>
-
-	<scm>
-		<url>https://github.com/razr69/fomeja.git</url>
-		<connection>ssh://git@github.com:razr69/fomeja.git</connection>
-	</scm>
 
 	<licenses>
 		<license>
@@ -29,6 +38,11 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+
+	<scm>
+		<url>https://github.com/razr69/fomeja.git</url>
+		<connection>ssh://git@github.com:razr69/fomeja.git</connection>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -46,14 +60,12 @@
 		<outputDirectory>target/classes/</outputDirectory>
 		<plugins>
 			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.3</version>
-				<extensions>true</extensions>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
 				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -97,31 +109,14 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.3</version>
+				<extensions>true</extensions>
 				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-				<executions>
-					<execution>
-						<id>package-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
 		</plugins>

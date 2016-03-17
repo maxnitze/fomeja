@@ -29,9 +29,9 @@ public class PremConstructorExpr extends PremAccessibleObjectExpr<Constructor<?>
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param constructor
-	 * @param argExprs
+	 * @param expr COMMENT
+	 * @param constructor COMMENT
+	 * @param argExprs COMMENT
 	 */
 	public PremConstructorExpr(Expression expr, Constructor<?> constructor, List<Expression> argExprs) {
 		super(expr, constructor, argExprs);
@@ -44,7 +44,7 @@ public class PremConstructorExpr extends PremAccessibleObjectExpr<Constructor<?>
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Constructor<?> getConstructor() {
 		return this.accessibleObject;
@@ -140,7 +140,7 @@ public class PremConstructorExpr extends PremAccessibleObjectExpr<Constructor<?>
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private String getParameterTypeString() {
 		StringBuilder parameterTypeString = new StringBuilder();
@@ -156,7 +156,7 @@ public class PremConstructorExpr extends PremAccessibleObjectExpr<Constructor<?>
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Expression handleAccessibleObject() {
 		if (this.expr instanceof AtomExpr<?>

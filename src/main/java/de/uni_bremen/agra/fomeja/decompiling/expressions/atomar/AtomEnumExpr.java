@@ -14,7 +14,7 @@ public class AtomEnumExpr extends AtomExpr<Enum<?>> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param value
+	 * @param value COMMENT
 	 */
 	public AtomEnumExpr(Enum<?> value) {
 		super(value);
@@ -23,8 +23,8 @@ public class AtomEnumExpr extends AtomExpr<Enum<?>> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param field
-	 * @param preFields
+	 * @param field COMMENT
+	 * @param preFields COMMENT
 	 */
 	public AtomEnumExpr(Field field, PreFieldList preFields) {
 		super(field, preFields);

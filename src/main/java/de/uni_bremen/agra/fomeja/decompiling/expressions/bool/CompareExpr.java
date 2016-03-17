@@ -56,7 +56,7 @@ public class CompareExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getExpr1() {
 		return this.expr1;
@@ -65,7 +65,7 @@ public class CompareExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getExpr2() {
 		return this.expr2;
@@ -74,7 +74,7 @@ public class CompareExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public CompareOperator getOperator() {
 		return this.operator;
@@ -263,7 +263,7 @@ public class CompareExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private BoolExpression handleCompareOperation() {
 		if (this.expr1 instanceof AtomExpr<?> && this.expr2 instanceof AtomExpr<?>)
@@ -290,11 +290,11 @@ public class CompareExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param atomIntegerExpr
-	 * @param operator
-	 * @param boolExpr
+	 * @param atomIntegerExpr COMMENT
+	 * @param operator COMMENT
+	 * @param boolExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private BoolExpression getMergedBoolExpr(AtomIntegerExpr atomIntegerExpr, CompareOperator operator, BoolExpression boolExpr) {
 		if (!atomIntegerExpr.isFinishedType()) {
@@ -309,11 +309,11 @@ public class CompareExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param atomBoolExpr
-	 * @param operator
-	 * @param boolExpr
+	 * @param atomBoolExpr COMMENT
+	 * @param operator COMMENT
+	 * @param boolExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private BoolExpression getMergedBoolExpr(AtomBoolExpr atomBoolExpr, CompareOperator operator, BoolExpression boolExpr) {
 		String message;

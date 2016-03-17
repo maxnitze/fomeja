@@ -34,9 +34,9 @@ public final class FomejaUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param component
+	 * @param component COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static Constraint getConstraintForComponent(Object component) {
 		Constraint constraint = new Constraint();

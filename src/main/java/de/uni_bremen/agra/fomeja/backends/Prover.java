@@ -34,7 +34,7 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public T getDialect() {
 		return this.dialect;
@@ -46,18 +46,18 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	/**
 	 * COMMENT
 	 * 
-	 * @throws SatisfyException
+	 * @throws SatisfyException COMMENT
 	 */
 	public abstract void resetSolver() throws SatisfyException;
 
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExprs
+	 * @param boolExprs COMMENT
 	 * 
-	 * @return
-	 * 
-	 * @throws SatisfyException
+	 * @return COMMENT
+* 
+	 * @throws SatisfyException COMMENT
 	 */
 	public abstract ResultModel solveNext(List<BoolExpression> boolExprs) throws SatisfyException;
 
@@ -81,8 +81,8 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param constraint
-	 * @param proverResults
+	 * @param constraint COMMENT
+	 * @param proverResults COMMENT
 	 */
 	public void assign(Constraint constraint, ResultModel proverResults) {
 		for (ParameterObject parameterObject : constraint.getParameterObjects())
@@ -100,7 +100,7 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExpr
+	 * @param boolExpr COMMENT
 	 */
 	public void addExtraExpr(BoolExpression boolExpr) {
 		this.getDialect().addExtraExpr(boolExpr);
@@ -110,6 +110,8 @@ public abstract class Prover<T extends Dialect<?, ?>> {
 
 	/**
 	 * COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	public List<BoolExpression> getExtraExprs() {
 		return this.getDialect().getExtraExprs();

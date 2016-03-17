@@ -26,8 +26,8 @@ public abstract class PrematureExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
-	 * @param preFields
+	 * @param object COMMENT
+	 * @param preFields COMMENT
 	 */
 	public PrematureExpr(Object object, List<PreField> preFields) {
 		super(object, preFields);

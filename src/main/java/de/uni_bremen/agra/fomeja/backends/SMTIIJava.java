@@ -111,7 +111,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Context getContext() {
 		return this.context;
@@ -523,7 +523,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
+	 * @param expr COMMENT
 	 */
 	private void addAtomBooleanExpr(String expr) {
 		if (!this.atomBooleanExprSet.contains(expr)) {
@@ -539,7 +539,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 	/**
 	 * COMMENT TODO probably no lower boundary?
 	 * 
-	 * @param expr
+	 * @param expr COMMENT
 	 */
 	private void addAtomCharacterExpr(String expr) {
 		if (!this.atomCharacterExprSet.contains(expr)) {

@@ -13,7 +13,7 @@ public class DisassemblerException extends RuntimeException {
 	/**
 	 * COMMENT
 	 * 
-	 * @param message
+	 * @param message COMMENT
 	 */
 	public DisassemblerException(String message) {
 		super(message);

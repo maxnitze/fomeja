@@ -24,6 +24,8 @@ public final class CompareUtils {
 	 * 
 	 * @return {@code true} if there is an element in the array, that is
 	 *  identical to the given element, {@code false} otherwise
+	 * 
+	 * @param <T> COMMENT
 	 */
 	public static <T> boolean identsAny(T element, T[] array){
 		for (T e : array)
@@ -42,6 +44,8 @@ public final class CompareUtils {
 	 * 
 	 * @return {@code true} if there is an element in the list, that is
 	 *  identical to the given element, {@code false} otherwise
+	 * 
+	 * @param <T> COMMENT
 	 */
 	public static <T> boolean identsAny(T element, List<T> list){
 		for (T e : list)
@@ -60,6 +64,8 @@ public final class CompareUtils {
 	 * 
 	 * @return {@code true} if there is an element in the array, that is
 	 *  equal to the given element, {@code false} otherwise
+	 * 
+	 * @param <T> COMMENT
 	 */
 	public static <T> boolean equalsAny(T element, T[] array) {
 		for (T e : array)
@@ -78,6 +84,8 @@ public final class CompareUtils {
 	 * 
 	 * @return {@code true} if there is an element in the list, that is
 	 *  equal to the given element, {@code false} otherwise
+	 * 
+	 * @param <T> COMMENT
 	 */
 	public static <T> boolean equalsAny(T element, List<T> list) {
 		for (T e : list)
@@ -131,6 +139,8 @@ public final class CompareUtils {
 	 * 
 	 * @return {@code true} if the given value is greater or equal to the given
 	 *  start and lower or equal to the given end, {@code false} else.
+	 * 
+	 * @param <T> COMMENT
 	 */
 	public static <T extends Comparable<T>> boolean isBetween(T value, T start, T end) {
 		/** compare the value to the borders of the area */

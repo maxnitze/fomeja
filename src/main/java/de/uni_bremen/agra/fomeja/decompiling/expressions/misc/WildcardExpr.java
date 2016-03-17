@@ -30,7 +30,7 @@ public class WildcardExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
+	 * @param name COMMENT
 	 */
 	public WildcardExpr(String name) {
 		this.name = name;
@@ -40,8 +40,8 @@ public class WildcardExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
-	 * @param resultType
+	 * @param name COMMENT
+	 * @param resultType COMMENT
 	 */
 	public WildcardExpr(String name, Class<?> resultType) {
 		this.name = name;
@@ -54,7 +54,7 @@ public class WildcardExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getName() {
 		return this.name;

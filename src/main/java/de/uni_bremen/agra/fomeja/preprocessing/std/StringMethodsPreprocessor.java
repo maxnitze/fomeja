@@ -131,11 +131,11 @@ public class StringMethodsPreprocessor extends MethodExprPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param premMethodExpr
-	 * @param upperBoundary
-	 * @param charSeqMap
+	 * @param premMethodExpr COMMENT
+	 * @param upperBoundary COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private BoolExpression prepareStringMethodAllChars(PremMethodExpr premMethodExpr, int upperBoundary, CharSeqMap charSeqMap) {
 		Expression argExpr = premMethodExpr.getArgumentExpressions().get(0);
@@ -165,11 +165,11 @@ public class StringMethodsPreprocessor extends MethodExprPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param premMethodExpr
-	 * @param upperBoundary
-	 * @param charSeqMap
+	 * @param premMethodExpr COMMENT
+	 * @param upperBoundary COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private BoolExpression prepareStringMethodAnyChar(PremMethodExpr premMethodExpr, int upperBoundary, CharSeqMap charSeqMap) {
 		Expression argExpr = premMethodExpr.getArgumentExpressions().get(0);
@@ -199,12 +199,12 @@ public class StringMethodsPreprocessor extends MethodExprPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stringExpr
-	 * @param charExpr
-	 * @param connector
-	 * @param charSeqMap
+	 * @param stringExpr COMMENT
+	 * @param charExpr COMMENT
+	 * @param connector COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private ConnectedBoolExpr prepareStringMethodHasChars(Expression stringExpr, Expression charExpr, BooleanConnector connector, CharSeqMap charSeqMap) {
 		String message;
@@ -222,12 +222,12 @@ public class StringMethodsPreprocessor extends MethodExprPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param charSeq
-	 * @param expr
-	 * @param connector
-	 * @param charSeqMap
+	 * @param charSeq COMMENT
+	 * @param expr COMMENT
+	 * @param connector COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private ConnectedBoolExpr prepareStringMethodHasChars(CharSeq charSeq, Expression expr, BooleanConnector connector, CharSeqMap charSeqMap) {
 		String message;
@@ -277,11 +277,11 @@ public class StringMethodsPreprocessor extends MethodExprPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param charSeq
-	 * @param atomExprs
-	 * @param outerConnector
+	 * @param charSeq COMMENT
+	 * @param atomExprs COMMENT
+	 * @param outerConnector COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private ConnectedBoolExpr prepareStringMethodHasChars(CharSeq charSeq, AtomExpr<?>[] atomExprs, BooleanConnector outerConnector) {
 		ConnectedBoolExpr outerChainedExpr = new ConnectedBoolExpr(outerConnector);

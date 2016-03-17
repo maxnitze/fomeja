@@ -41,7 +41,7 @@ public final class ExpressionUtils {
 	 * @param operator the compare operator
 	 * @param expr2 the second expression
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static BoolExpression compareExpressions(Expression expr1, CompareOperator operator, Expression expr2) {
 		if (expr1 instanceof AtomExpr<?>
@@ -100,9 +100,9 @@ public final class ExpressionUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
+	 * @param object COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static AtomExpr<?> getAtomExprFromObject(Object object) {
 		if (ClassUtils.isBooleanType(object.getClass()))
@@ -124,11 +124,11 @@ public final class ExpressionUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
-	 * @param compareOperator
-	 * @param value
+	 * @param name COMMENT
+	 * @param compareOperator COMMENT
+	 * @param value COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static CompareExpr getCompareExpr(String name, CompareOperator compareOperator, Object value) {
 		if (value instanceof Integer)
@@ -149,10 +149,10 @@ public final class ExpressionUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param atomExpr1
-	 * @param atomExpr2
+	 * @param atomExpr1 COMMENT
+	 * @param atomExpr2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static int compareFinishedAtomExprs(AtomExpr<?> atomExpr1, AtomExpr<?> atomExpr2) {
 		if (!atomExpr1.isFinishedNumberType() || !atomExpr2.isFinishedNumberType()) {
@@ -178,10 +178,10 @@ public final class ExpressionUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param atomExpr1
-	 * @param atomExpr2
+	 * @param atomExpr1 COMMENT
+	 * @param atomExpr2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static int compareFinishedAtomExprs(AtomCharacterExpr atomExpr1, AtomExpr<?> atomExpr2) {
 		if (!atomExpr1.isFinishedNumberType() || !atomExpr2.isFinishedNumberType()) {
@@ -207,10 +207,10 @@ public final class ExpressionUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param atomExpr1
-	 * @param atomExpr2
+	 * @param atomExpr1 COMMENT
+	 * @param atomExpr2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static int compareFinishedAtomExprs(AtomDoubleExpr atomExpr1, AtomExpr<?> atomExpr2) {
 		if (!atomExpr1.isFinishedNumberType() || !atomExpr2.isFinishedNumberType()) {
@@ -236,10 +236,10 @@ public final class ExpressionUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param atomExpr1
-	 * @param atomExpr2
+	 * @param atomExpr1 COMMENT
+	 * @param atomExpr2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static int compareFinishedAtomExprs(AtomFloatExpr atomExpr1, AtomExpr<?> atomExpr2) {
 		if (!atomExpr1.isFinishedNumberType() || !atomExpr2.isFinishedNumberType()) {
@@ -265,10 +265,10 @@ public final class ExpressionUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param atomExpr1
-	 * @param atomExpr2
+	 * @param atomExpr1 COMMENT
+	 * @param atomExpr2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static int compareFinishedAtomExprs(AtomIntegerExpr atomExpr1, AtomExpr<?> atomExpr2) {
 		if (!atomExpr1.isFinishedNumberType() || !atomExpr2.isFinishedNumberType()) {
@@ -294,9 +294,9 @@ public final class ExpressionUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExpr
+	 * @param boolExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static IfThenElseExpr boolExprToExpr(BoolExpression boolExpr) {
 		return new IfThenElseExpr(boolExpr, new AtomIntegerExpr(1), new AtomIntegerExpr(0));
@@ -305,9 +305,9 @@ public final class ExpressionUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
+	 * @param expr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static CompareExpr exprToBoolExpr(Expression expr) {
 		return new CompareExpr(expr, CompareOperator.EQUAL, new AtomIntegerExpr(1));
@@ -318,10 +318,10 @@ public final class ExpressionUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param atomExprClass
+	 * @param expr COMMENT
+	 * @param atomExprClass COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isFinishedAtomExpr(Expression expr, Class<? extends AtomExpr<?>> atomExprClass) {
 		return atomExprClass.isInstance(expr) && ((AtomExpr<?>) expr).isFinishedType();

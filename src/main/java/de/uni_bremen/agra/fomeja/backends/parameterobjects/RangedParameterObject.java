@@ -12,7 +12,7 @@ public abstract class RangedParameterObject extends ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFields
+	 * @param preFields COMMENT
 	 */
 	public RangedParameterObject(PreFieldList preFields) {
 		super(preFields);
@@ -21,8 +21,8 @@ public abstract class RangedParameterObject extends ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFields
-	 * @param dependentParameterObject
+	 * @param preFields COMMENT
+	 * @param dependentParameterObject COMMENT
 	 */
 	public RangedParameterObject(PreFieldList preFields, ObjectParameterObject dependentParameterObject) {
 		super(preFields, dependentParameterObject);
@@ -34,25 +34,25 @@ public abstract class RangedParameterObject extends ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract int getRangeSize();
 
 	/**
 	 * COMMENT
 	 * 
-	 * @param index
+	 * @param index COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Object getRangeElement(int index);
 
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
+	 * @param object COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Integer getObjectMapping(Object object);
 

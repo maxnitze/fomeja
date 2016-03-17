@@ -18,7 +18,7 @@ public class AtomBooleanExpr extends AtomExpr<Boolean> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param value
+	 * @param value COMMENT
 	 */
 	public AtomBooleanExpr(Boolean value) {
 		super(value);
@@ -27,8 +27,8 @@ public class AtomBooleanExpr extends AtomExpr<Boolean> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param field
-	 * @param preFields
+	 * @param field COMMENT
+	 * @param preFields COMMENT
 	 */
 	public AtomBooleanExpr(Field field, PreFieldList preFields) {
 		super(field, preFields);
@@ -37,7 +37,7 @@ public class AtomBooleanExpr extends AtomExpr<Boolean> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
+	 * @param name COMMENT
 	 */
 	public AtomBooleanExpr(String name) {
 		super(name, false);

@@ -23,7 +23,7 @@ public class AtomStringExpr extends AtomExpr<String> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param value
+	 * @param value COMMENT
 	 */
 	public AtomStringExpr(String value) {
 		super(value);
@@ -39,8 +39,8 @@ public class AtomStringExpr extends AtomExpr<String> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param field
-	 * @param preFields
+	 * @param field COMMENT
+	 * @param preFields COMMENT
 	 */
 	public AtomStringExpr(Field field, PreFieldList preFields) {
 		super(field, preFields);
@@ -52,8 +52,8 @@ public class AtomStringExpr extends AtomExpr<String> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param value
-	 * @param nullObject
+	 * @param value COMMENT
+	 * @param nullObject COMMENT
 	 */
 	public AtomStringExpr(String value, Object nullObject) {
 		super(value, false);
@@ -68,7 +68,7 @@ public class AtomStringExpr extends AtomExpr<String> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getLengthExpr() {
 		return this.lengthExpr;
@@ -77,9 +77,9 @@ public class AtomStringExpr extends AtomExpr<String> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param index
+	 * @param index COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public AtomCharacterExpr getCharacterExpr(int index) {
 		if (this.isVariable())

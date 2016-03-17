@@ -26,9 +26,9 @@ public class ResultModel {
 	/**
 	 * COMMENT
 	 * 
-	 * @param key
+	 * @param key COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Object get(String key) {
 		return this.results.get(key);
@@ -37,10 +37,10 @@ public class ResultModel {
 	/**
 	 * COMMENT
 	 * 
-	 * @param key
-	 * @param type
+	 * @param key COMMENT
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Object getOrDefault(String key, Class<?> type) {
 		Object result = this.results.get(key);
@@ -52,10 +52,10 @@ public class ResultModel {
 	/**
 	 * COMMENT
 	 * 
-	 * @param key
-	 * @param value
+	 * @param key COMMENT
+	 * @param value COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Object put(String key, Object value) {
 		return this.results.put(key, value);
@@ -64,7 +64,7 @@ public class ResultModel {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Set<Map.Entry<String, Object>> entrySet() {
 		return this.results.entrySet();

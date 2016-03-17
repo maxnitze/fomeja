@@ -24,7 +24,7 @@ public class AtomBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param value
+	 * @param value COMMENT
 	 */
 	public AtomBoolExpr(boolean value) {
 		this.value = value;
@@ -36,7 +36,7 @@ public class AtomBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean getValue() {
 		return this.value;

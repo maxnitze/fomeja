@@ -19,7 +19,7 @@ public class PreField {
 	/**
 	 * COMMENT
 	 * 
-	 * @param field
+	 * @param field COMMENT
 	 */
 	public PreField(Field field) {
 		this.field = field;
@@ -32,7 +32,7 @@ public class PreField {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Field getField() {
 		return this.field;
@@ -41,7 +41,7 @@ public class PreField {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isVariable() {
 		return this.isVariable;

@@ -33,8 +33,8 @@ public class PremClasscastExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param keyword
+	 * @param expr COMMENT
+	 * @param keyword COMMENT
 	 */
 	public PremClasscastExpr(Expression expr, Keyword keyword) {
 		this.expr = expr;
@@ -49,7 +49,7 @@ public class PremClasscastExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Keyword getKeyword() {
 		return this.keyword;
@@ -58,7 +58,7 @@ public class PremClasscastExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getExpr() {
 		return this.expr;
@@ -201,7 +201,7 @@ public class PremClasscastExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Expression handleCastings() {
 		switch (this.keyword) {

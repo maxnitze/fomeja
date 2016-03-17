@@ -30,9 +30,9 @@ public class PremMethodExpr extends PremAccessibleObjectExpr<Method> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param method
-	 * @param argExprs
+	 * @param expr COMMENT
+	 * @param method COMMENT
+	 * @param argExprs COMMENT
 	 */
 	public PremMethodExpr(Expression expr, Method method, List<Expression> argExprs) {
 		super(expr, method, argExprs);
@@ -45,7 +45,7 @@ public class PremMethodExpr extends PremAccessibleObjectExpr<Method> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Method getMethod() {
 		return this.accessibleObject;
@@ -144,7 +144,7 @@ public class PremMethodExpr extends PremAccessibleObjectExpr<Method> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private String getParameterTypeString() {
 		StringBuilder parameterTypeString = new StringBuilder();
@@ -160,7 +160,7 @@ public class PremMethodExpr extends PremAccessibleObjectExpr<Method> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Expression handleAccessibleObject() {
 		if (this.expr instanceof AtomExpr<?>

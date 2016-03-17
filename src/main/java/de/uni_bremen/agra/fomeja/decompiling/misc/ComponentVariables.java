@@ -47,7 +47,7 @@ public class ComponentVariables {
 	/**
 	 * COMMENT
 	 * 
-	 * @param component
+	 * @param component COMMENT
 	 */
 	public ComponentVariables(Object component) {
 		this.component = component;
@@ -57,8 +57,8 @@ public class ComponentVariables {
 	/**
 	 * COMMENT
 	 * 
-	 * @param component
-	 * @param variables
+	 * @param component COMMENT
+	 * @param variables COMMENT
 	 */
 	private ComponentVariables(Object component, Map<String, ParameterObject> variables) {
 		this.component = component;
@@ -71,9 +71,9 @@ public class ComponentVariables {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFieldList
+	 * @param preFieldList COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public ParameterObject add(PreFieldList preFieldList) {
 		if (this.variables.containsKey(preFieldList.getName()))
@@ -85,9 +85,9 @@ public class ComponentVariables {
 	/**
 	 * OMMENT
 	 * 
-	 * @param key
+	 * @param key COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public ParameterObject get(String key) {
 		return this.variables.get(key);
@@ -96,7 +96,7 @@ public class ComponentVariables {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Set<ParameterObject> getParameterObjects() {
 		return new HashSet<ParameterObject>(this.variables.values());
@@ -105,7 +105,7 @@ public class ComponentVariables {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public List<BoolExpression> getRangeExprs() {
 		List<BoolExpression> rangeExprs = new ArrayList<BoolExpression>();
@@ -121,7 +121,7 @@ public class ComponentVariables {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public List<BoolExpression> getConnectionExprs() {
 		List<BoolExpression> connectionExprs = new ArrayList<BoolExpression>();
@@ -175,9 +175,9 @@ public class ComponentVariables {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFieldList
+	 * @param preFieldList COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private ParameterObject getNewParameterObject(PreFieldList preFieldList) {
 		Field field = preFieldList.last().getField();
@@ -194,9 +194,9 @@ public class ComponentVariables {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFieldList
+	 * @param preFieldList COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private ObjectParameterObject getDependentParameterObject(PreFieldList preFieldList) {
 		PreFieldList varHead = preFieldList.variableHead();
@@ -219,9 +219,9 @@ public class ComponentVariables {
 	/**
 	 * COMMENT
 	 * 
-	 * @param literalPreField
+	 * @param literalPreField COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private ComponentCollectionList getComponentCollection(Field field) {
 		ComponentCollectionList componentCollections = new ComponentCollectionList();

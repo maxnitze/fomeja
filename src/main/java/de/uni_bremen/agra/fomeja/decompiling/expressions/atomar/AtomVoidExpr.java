@@ -32,7 +32,7 @@ public class AtomVoidExpr extends AtomExpr<Void> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param state
+	 * @param state COMMENT
 	 */
 	private AtomVoidExpr(State state, String name) {
 		super((Void) null);
@@ -46,7 +46,7 @@ public class AtomVoidExpr extends AtomExpr<Void> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public State getState() {
 		return this.state;
@@ -55,7 +55,7 @@ public class AtomVoidExpr extends AtomExpr<Void> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param state
+	 * @param state COMMENT
 	 */
 	public void setState(State state) {
 		this.state = state;

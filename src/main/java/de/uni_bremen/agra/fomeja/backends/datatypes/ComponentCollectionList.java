@@ -26,7 +26,7 @@ public class ComponentCollectionList extends LinkedList<Collection<?>> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param collections
+	 * @param collections COMMENT
 	 */
 	public ComponentCollectionList(Collection<? extends Collection<?>> collections) {
 		super(collections);
@@ -41,7 +41,7 @@ public class ComponentCollectionList extends LinkedList<Collection<?>> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int getComponentsSize() {
 		return this.componentsSize;

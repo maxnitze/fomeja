@@ -28,7 +28,7 @@ public class PremArraylengthExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param arrayExpr
+	 * @param arrayExpr COMMENT
 	 */
 	public PremArraylengthExpr(Expression arrayExpr) {
 		this.arrayExpr = arrayExpr;
@@ -46,7 +46,7 @@ public class PremArraylengthExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getArrayExpr() {
 		return this.arrayExpr;
@@ -145,7 +145,7 @@ public class PremArraylengthExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Expression handleArrayLength() {
 		if (this.arrayExpr instanceof AtomObjectExpr

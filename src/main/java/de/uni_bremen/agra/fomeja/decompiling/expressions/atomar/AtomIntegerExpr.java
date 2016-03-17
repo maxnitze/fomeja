@@ -19,7 +19,7 @@ public class AtomIntegerExpr extends AtomExpr<Integer> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param value
+	 * @param value COMMENT
 	 */
 	public AtomIntegerExpr(Integer value) {
 		super(value);
@@ -28,11 +28,8 @@ public class AtomIntegerExpr extends AtomExpr<Integer> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param field
-	 * @param fieldCodeIndex
-	 * @parma opcode
-	 * @param constantTableIndex
-	 * @param preFields
+	 * @param field COMMENT
+	 * @param preFields COMMENT
 	 */
 	public AtomIntegerExpr(Field field, PreFieldList preFields) {
 		super(field, preFields);
@@ -41,7 +38,7 @@ public class AtomIntegerExpr extends AtomExpr<Integer> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
+	 * @param name COMMENT
 	 */
 	public AtomIntegerExpr(String name) {
 		super(name, true);

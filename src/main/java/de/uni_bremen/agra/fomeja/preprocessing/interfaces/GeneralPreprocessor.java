@@ -45,19 +45,19 @@ public abstract class GeneralPreprocessor<T extends Expression> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
+	 * @param expr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract boolean matches(T expr);
 
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param charSeqMap
+	 * @param expr COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Expression prepare(T expr, CharSeqMap charSeqMap);
 
@@ -67,10 +67,10 @@ public abstract class GeneralPreprocessor<T extends Expression> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param charSeqMap
+	 * @param expr COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	protected AtomStringExpr getStringExprForExpr(Expression expr, CharSeqMap charSeqMap) {
 		if (expr instanceof AtomStringExpr) {
@@ -99,10 +99,10 @@ public abstract class GeneralPreprocessor<T extends Expression> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param charSeqMap
+	 * @param expr COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	protected Expression getCharExprForExpr(Expression expr, CharSeqMap charSeqMap) {
 		if (expr instanceof AtomCharacterExpr)
@@ -130,11 +130,11 @@ public abstract class GeneralPreprocessor<T extends Expression> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param beginIdxExpr
-	 * @param charSeqMap
+	 * @param expr COMMENT
+	 * @param beginIdxExpr COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private AtomStringExpr getStringExprFromSubstring(Expression expr, Expression beginIdxExpr, CharSeqMap charSeqMap) {
 		return this.getStringExprFromSubstring(expr, beginIdxExpr, null, charSeqMap);
@@ -143,12 +143,12 @@ public abstract class GeneralPreprocessor<T extends Expression> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param beginIdxExpr
-	 * @param endIdxExpr
-	 * @param charSeqMap
+	 * @param expr COMMENT
+	 * @param beginIdxExpr COMMENT
+	 * @param endIdxExpr COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private AtomStringExpr getStringExprFromSubstring(Expression expr, Expression beginIdxExpr, Expression endIdxExpr, CharSeqMap charSeqMap) {
 		CharSeq exprCharSeq = charSeqMap.getOrCreate(this.getStringExprForExpr(expr, charSeqMap));
@@ -188,11 +188,11 @@ public abstract class GeneralPreprocessor<T extends Expression> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param indexExpr
-	 * @param charSeqMap
+	 * @param expr COMMENT
+	 * @param indexExpr COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Expression getCharExprFromCharAt(Expression expr, Expression indexExpr, CharSeqMap charSeqMap) {
 		CharSeq exprCharSeq = charSeqMap.getOrCreate(this.getStringExprForExpr(expr, charSeqMap));

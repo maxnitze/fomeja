@@ -12,7 +12,7 @@ public class PreparationException extends RuntimeException {
 	/**
 	 * COMMENT
 	 * 
-	 * @param message
+	 * @param message COMMENT
 	 */
 	public PreparationException(String message) {
 		super(message);

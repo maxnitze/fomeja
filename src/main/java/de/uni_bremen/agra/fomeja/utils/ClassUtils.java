@@ -31,9 +31,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static Class<?> mapToNonPrimitive(Class<?> type) {
 		if (type.equals(boolean.class))
@@ -59,10 +59,10 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type1
-	 * @param type2
+	 * @param type1 COMMENT
+	 * @param type2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean classesEquals(Class<?> type1, Class<?> type2) {
 		if (type1.equals(type2))
@@ -90,10 +90,10 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type1
-	 * @param type2
+	 * @param type1 COMMENT
+	 * @param type2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isAssignable(Class<?> type1, Class<?> type2) {
 		return mapToNonPrimitive(type1).isAssignableFrom(mapToNonPrimitive(type2));
@@ -102,10 +102,10 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type1
-	 * @param type2
+	 * @param type1 COMMENT
+	 * @param type2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isCastable(Class<?> type1, Class<?> type2) {
 		if (isCharType(type1))
@@ -132,10 +132,10 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type1
-	 * @param type2
+	 * @param type1 COMMENT
+	 * @param type2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isCastOrAssignable(Class<?> type1, Class<?> type2) {
 		return isCastable(type1, type2) || mapToNonPrimitive(type1).isAssignableFrom(mapToNonPrimitive(type2));
@@ -144,9 +144,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isPrimitiveType(Class<?> type) {
 		return isBooleanType(type)
@@ -162,9 +162,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isBasicType(Class<?> type) {
 		return isBooleanType(type)
@@ -181,9 +181,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isBasicNumberType(Class<?> type) {
 		return isDoubleType(type)
@@ -197,9 +197,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isDoubleType(Class<?> type) {
 		return CompareUtils.equalsAny(type, doubleTypes);
@@ -208,9 +208,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isFloatType(Class<?> type) {
 		return CompareUtils.equalsAny(type, floatTypes);
@@ -219,9 +219,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isIntegerType(Class<?> type) {
 		return CompareUtils.equalsAny(type, integerTypes);
@@ -230,9 +230,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isLongType(Class<?> type) {
 		return CompareUtils.equalsAny(type, longTypes);
@@ -241,9 +241,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isShortType(Class<?> type) {
 		return CompareUtils.equalsAny(type, shortTypes);
@@ -252,9 +252,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isBooleanType(Class<?> type) {
 		return CompareUtils.equalsAny(type, booleanTypes);
@@ -263,9 +263,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isCharType(Class<?> type) {
 		return CompareUtils.equalsAny(type, charTypes);
@@ -274,9 +274,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isByteType(Class<?> type) {
 		return CompareUtils.equalsAny(type, byteTypes);
@@ -285,9 +285,9 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean isStringType(Class<?> type) {
 		return type.equals(String.class);
@@ -296,10 +296,10 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type1
-	 * @param type2
+	 * @param type1 COMMENT
+	 * @param type2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static Class<?> getMostCommonType(Class<?> type1, Class<?> type2) {
 		if (type1.equals(Object.class) || type2.equals(Object.class))
@@ -329,10 +329,10 @@ public class ClassUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type1
-	 * @param class2
+	 * @param type1 COMMENT
+	 * @param type2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static Class<?> getMostCommonTypeVoidExcluded(Class<?> type1, Class<?> type2) {
 		if (type1.equals(Void.class))

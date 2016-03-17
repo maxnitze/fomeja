@@ -12,7 +12,7 @@ public class BasicParameterObject extends ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFields
+	 * @param preFields COMMENT
 	 */
 	public BasicParameterObject(PreFieldList preFields) {
 		super(preFields);
@@ -21,8 +21,8 @@ public class BasicParameterObject extends ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFields
-	 * @param dependentParameterObject
+	 * @param preFields COMMENT
+	 * @param dependentParameterObject COMMENT
 	 */
 	public BasicParameterObject(PreFieldList preFields, ObjectParameterObject dependentParameterObject) {
 		super(preFields, dependentParameterObject);

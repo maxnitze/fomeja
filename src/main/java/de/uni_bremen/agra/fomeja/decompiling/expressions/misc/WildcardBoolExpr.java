@@ -24,7 +24,7 @@ public class WildcardBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
+	 * @param name COMMENT
 	 */
 	public WildcardBoolExpr(String name) {
 		this.name = name;
@@ -36,7 +36,7 @@ public class WildcardBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getName() {
 		return this.name;

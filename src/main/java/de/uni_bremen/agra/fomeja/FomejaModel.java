@@ -33,7 +33,7 @@ import de.uni_bremen.agra.fomeja.utils.FomejaUtils;
  * 
  * @author Max Nitze
  *
- * @param <T>
+ * @param <T> COMMENT
  */
 public class FomejaModel<T> {
 	/** COMMENT */
@@ -54,7 +54,7 @@ public class FomejaModel<T> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param cls
+	 * @param cls COMMENT
 	 */
 	public FomejaModel(Class<T> cls) {
 		this.cls = cls;
@@ -70,7 +70,7 @@ public class FomejaModel<T> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public T getNext() {
 		T modelObj;
@@ -106,7 +106,7 @@ public class FomejaModel<T> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private List<BoolExpression> getNextExprs() throws SatisfyException {
 		if (this.modelC == 0)
@@ -125,8 +125,8 @@ public class FomejaModel<T> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param modelObj
-	 * @param resultModel
+	 * @param modelObj COMMENT
+	 * @param resultModel COMMENT
 	 */
 	private void assignConcreteInstance(T modelObj, ResultModel resultModel) {
 		ConnectedBoolExpr boolExpr = new ConnectedBoolExpr(BooleanConnector.OR);
@@ -158,10 +158,10 @@ public class FomejaModel<T> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
-	 * @param resultObj
+	 * @param name COMMENT
+	 * @param resultObj COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private BoolExpression getNegExpr(String name, Object resultObj) {
 		if (resultObj instanceof String) {
@@ -178,10 +178,10 @@ public class FomejaModel<T> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param modelObj
-	 * @param preFieldList
+	 * @param modelObj COMMENT
+	 * @param preFieldList COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Object getFieldValue(T modelObj, PreFieldList preFieldList) {
 		Object object = modelObj;
@@ -197,11 +197,11 @@ public class FomejaModel<T> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
-	 * @param field
-	 * @param isVariable
+	 * @param object COMMENT
+	 * @param field COMMENT
+	 * @param isVariable COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Object getFieldValue(Object object, Field field, boolean isVariable) {
 		boolean accessibility = field.isAccessible();
@@ -232,10 +232,10 @@ public class FomejaModel<T> {
 	 * 
 	 * TODO handle interfaces
 	 * 
-	 * @param type
-	 * @param visitedTypes
+	 * @param type COMMENT
+	 * @param visitedTypes COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 * 
 	 * @throws InstantiationException 
 	 * @throws InvocationTargetException 
@@ -279,11 +279,11 @@ public class FomejaModel<T> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
-	 * @param field
-	 * @param value
+	 * @param object COMMENT
+	 * @param field COMMENT
+	 * @param value COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private void setFieldValue(Object object, Field field, Object value) {
 		boolean accessibility = field.isAccessible();
@@ -304,6 +304,8 @@ public class FomejaModel<T> {
 
 	/**
 	 * COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	private Constraint getConstraint() {
 		try {

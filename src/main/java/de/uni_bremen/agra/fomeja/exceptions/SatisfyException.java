@@ -13,7 +13,7 @@ public class SatisfyException extends Exception {
 	/**
 	 * COMMENT
 	 * 
-	 * @param message
+	 * @param message COMMENT
 	 */
 	public SatisfyException(String message) {
 		super(message);

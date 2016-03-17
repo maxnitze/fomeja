@@ -4,7 +4,7 @@ package de.uni_bremen.agra.fomeja.types;
 import org.apache.log4j.Logger;
 
 /**
- * An enumeration of the two boolean connectors && and ||.
+ * An enumeration of the two boolean connectors AND and OR.
  * 
  * @version 1.0.0
  * @author Max Nitze
@@ -30,7 +30,7 @@ public enum BooleanConnector {
 
 	/**
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getCode() {
 		return this.code;
@@ -41,7 +41,7 @@ public enum BooleanConnector {
 
 	/**
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public BooleanConnector getOppositeConnector() {
 		switch(this) {

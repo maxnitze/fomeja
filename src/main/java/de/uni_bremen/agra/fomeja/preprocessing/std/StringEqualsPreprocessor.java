@@ -45,11 +45,11 @@ public class StringEqualsPreprocessor extends MethodExprPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stringExpr
-	 * @param argStringExpr
-	 * @param charSeqMap
+	 * @param stringExpr COMMENT
+	 * @param argStringExpr COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private IfThenElseExpr prepareStringEqualsExpr(AtomStringExpr stringExpr, AtomStringExpr argStringExpr, CharSeqMap charSeqMap) {
 		CharSeq stringCharSeq = charSeqMap.getOrCreate(stringExpr);

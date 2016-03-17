@@ -13,7 +13,7 @@ public class NotConvertibleException extends RuntimeException {
 	/**
 	 * COMMENT
 	 * 
-	 * @param message
+	 * @param message COMMENT
 	 */
 	public NotConvertibleException(String message) {
 		super(message);

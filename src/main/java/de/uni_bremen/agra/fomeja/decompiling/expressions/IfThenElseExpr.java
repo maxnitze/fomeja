@@ -30,7 +30,7 @@ public class IfThenElseExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param elseCaseExpr
+	 * @param elseCaseExpr COMMENT
 	 */
 	public IfThenElseExpr(Expression elseCaseExpr) {
 		this.condExprPairs = new ArrayList<CondExprPair>();
@@ -40,9 +40,9 @@ public class IfThenElseExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param condExpr
-	 * @param thenCaseExpr
-	 * @param elseCaseExpr
+	 * @param condExpr COMMENT
+	 * @param thenCaseExpr COMMENT
+	 * @param elseCaseExpr COMMENT
 	 */
 	public IfThenElseExpr(BoolExpression condExpr, Expression thenCaseExpr, Expression elseCaseExpr) {
 		this.condExprPairs = new ArrayList<CondExprPair>();
@@ -56,7 +56,7 @@ public class IfThenElseExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public List<CondExprPair> getCondExprPairs() {
 		return this.condExprPairs;
@@ -65,10 +65,10 @@ public class IfThenElseExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param condition
-	 * @param expr
+	 * @param condition COMMENT
+	 * @param expr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean add(BoolExpression condition, Expression expr) {
 		return this.condExprPairs.add(new CondExprPair(condition, expr));
@@ -77,7 +77,7 @@ public class IfThenElseExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getElseCaseExpr() {
 		return this.elseCaseExpr;
@@ -323,8 +323,8 @@ public class IfThenElseExpr extends Expression {
 		/**
 		 * COMMENT
 		 * 
-		 * @param condition
-		 * @param expr
+		 * @param condition COMMENT
+		 * @param expr COMMENT
 		 */
 		public CondExprPair(BoolExpression condition, Expression expr) {
 			this.condition = condition;
@@ -337,8 +337,8 @@ public class IfThenElseExpr extends Expression {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public BoolExpression getCondition() {
 			return this.condition;
 		}
@@ -346,8 +346,8 @@ public class IfThenElseExpr extends Expression {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public Expression getExpr() {
 			return this.expr;
 		}

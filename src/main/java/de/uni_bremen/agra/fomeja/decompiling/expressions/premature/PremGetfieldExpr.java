@@ -41,9 +41,8 @@ public class PremGetfieldExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param field
-	 * @param constantTableIndex
+	 * @param expr COMMENT
+	 * @param field COMMENT
 	 */
 	public PremGetfieldExpr(Expression expr, Field field) {
 		this.expr = expr;
@@ -57,7 +56,7 @@ public class PremGetfieldExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getExpr() {
 		return this.expr;
@@ -66,7 +65,7 @@ public class PremGetfieldExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Field getField() {
 		return this.field;
@@ -75,7 +74,7 @@ public class PremGetfieldExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isVariable() {
 		return this.isVariable;
@@ -213,7 +212,7 @@ public class PremGetfieldExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private AtomExpr<?> getFieldValue() {
 		if (this.expr instanceof AtomExpr<?> && ((AtomExpr<?>) this.expr).isFinishedType() && !this.isVariable) {
@@ -254,9 +253,9 @@ public class PremGetfieldExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param compVars
-	 * @param preFieldList
-	 * @param exprResultType
+	 * @param compVars COMMENT
+	 * @param preFieldList COMMENT
+	 * @param exprResultType COMMENT
 	 */
 	private void addParameterObjects(ComponentVariables compVars, PreFieldList preFieldList, Class<?> exprResultType) {
 		for (Field field : exprResultType.getDeclaredFields())
@@ -270,10 +269,10 @@ public class PremGetfieldExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFieldList
-	 * @param field
+	 * @param preFieldList COMMENT
+	 * @param field COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private PreFieldList getThisPrefieldList(PreFieldList preFieldList, Field field) {
 		PreFieldList thisPreFieldList = preFieldList.clone();

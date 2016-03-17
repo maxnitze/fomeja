@@ -28,8 +28,8 @@ public class ObjectParameterObject extends RangedParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFields
-	 * @param objectRange
+	 * @param preFields COMMENT
+	 * @param objectRange COMMENT
 	 */
 	public ObjectParameterObject(PreFieldList preFields, ComponentCollectionList objectRange) {
 		super(preFields);
@@ -41,9 +41,9 @@ public class ObjectParameterObject extends RangedParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFields
-	 * @param objectRange
-	 * @param dependentParameterObject
+	 * @param preFields COMMENT
+	 * @param objectRange COMMENT
+	 * @param dependentParameterObject COMMENT
 	 */
 	public ObjectParameterObject(PreFieldList preFields, ComponentCollectionList objectRange, ObjectParameterObject dependentParameterObject) {
 		super(preFields, dependentParameterObject);
@@ -58,7 +58,7 @@ public class ObjectParameterObject extends RangedParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public ComponentCollectionList getObjectRange() {
 		return this.objectRange;

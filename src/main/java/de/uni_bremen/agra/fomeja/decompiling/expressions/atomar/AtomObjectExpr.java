@@ -14,7 +14,7 @@ public class AtomObjectExpr extends AtomExpr<Object> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param value
+	 * @param value COMMENT
 	 */
 	public AtomObjectExpr(Object value) {
 		super(value);
@@ -23,8 +23,8 @@ public class AtomObjectExpr extends AtomExpr<Object> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param field
-	 * @param preFields
+	 * @param field COMMENT
+	 * @param preFields COMMENT
 	 */
 	public AtomObjectExpr(Field field, PreFieldList preFields) {
 		super(field, preFields);

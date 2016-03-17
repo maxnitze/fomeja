@@ -33,7 +33,7 @@ public abstract class Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
+	 * @param object COMMENT
 	 */
 	public Expression(Object object) {
 		this.preFields = new PreFieldList(object);
@@ -42,8 +42,8 @@ public abstract class Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
-	 * @param preFields
+	 * @param object COMMENT
+	 * @param preFields COMMENT
 	 */
 	public Expression(Object object, List<PreField> preFields) {
 		this.preFields = new PreFieldList(object, preFields);
@@ -55,7 +55,7 @@ public abstract class Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public PreFieldList getPreFieldList() {
 		return this.preFields;
@@ -67,7 +67,7 @@ public abstract class Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Class<?> getResultType();
 
@@ -94,16 +94,16 @@ public abstract class Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param exprs
+	 * @param exprs COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Expression substitude(Map<String, Expression> exprs);
 
 	/**
 	 * evaluate evaluates the abstract constraint value.
 	 * 
-	 * @param varExprs
+	 * @param compVars COMMENT
 	 * 
 	 * @return the evaluated expression
 	 */
@@ -112,28 +112,28 @@ public abstract class Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Expression simplify();
 
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract boolean isBoolExpr();
 
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract BoolExpression toBoolExpr();
 
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract boolean isUnfinished();
 
@@ -143,45 +143,45 @@ public abstract class Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param isRequired
-	 * @param compVars
+	 * @param isRequired COMMENT
+	 * @param compVars COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Set<AtomExpr<?>> getRequiredAtomExprs(boolean isRequired, ComponentVariables compVars);
 
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract boolean hasAtomVoidExprs();
 
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Set<AtomVoidExpr> getAtomVoidExprs();
 
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract boolean hasAtomStringExprs();
 
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract boolean hasStraightPreparableAtomStringExprs();
 
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Set<AtomStringExpr> getAtomStringExprs();
 

@@ -22,43 +22,41 @@ public abstract class Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Class<?> getResultType();
 
 	/**
 	 * COMMENT
 	 * 
-	 * @param regex
+	 * @param regex COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract boolean matches(String regex);
 
 	/**
 	 * COMMENT
 	 * 
-	 * @param regex
-	 * @param replacement
+	 * @param regex COMMENT
+	 * @param replacement COMMENT
 	 */
 	public abstract void replaceAll(String regex, Object replacement);
 
 	/**
 	 * COMMENT
 	 * 
-	 * @param exprs
-	 * 
-	 * @return
+	 * @param exprs COMMENT
 	 */
 	public abstract void substitude(Map<String, Expression> exprs);
 
 	/**
 	 * COMMENT
 	 * 
-	 * @param outerState
-	 * @param varExprs
+	 * @param outerState COMMENT
+	 * @param compVars COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Statement evaluate(State outerState, ComponentVariables compVars);
 
@@ -70,7 +68,7 @@ public abstract class Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract boolean isUnfinished();
 
@@ -80,25 +78,25 @@ public abstract class Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @param isRequired
-	 * @param compVars
-	 * @param state
+	 * @param isRequired COMMENT
+	 * @param compVars COMMENT
+	 * @param state COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Set<AtomExpr<?>> getRequiredAtomExprs(boolean isRequired, ComponentVariables compVars, State state);
 
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract boolean hasAtomStringExprs();
 
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract Set<AtomStringExpr> getAtomStringExprs();
 
@@ -108,9 +106,9 @@ public abstract class Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
+	 * @param object COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	@Override
 	public abstract boolean equals(Object object);
@@ -118,7 +116,7 @@ public abstract class Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	@Override
 	public abstract Statement clone();
@@ -126,7 +124,7 @@ public abstract class Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	@Override
 	public abstract String toString();

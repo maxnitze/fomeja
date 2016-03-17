@@ -29,8 +29,8 @@ public class PremFieldExpr extends PremAccessibleObjectExpr<Field> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param field
+	 * @param expr COMMENT
+	 * @param field COMMENT
 	 */
 	public PremFieldExpr(Expression expr, Field field) {
 		super(expr, field, new ArrayList<Expression>());
@@ -43,7 +43,7 @@ public class PremFieldExpr extends PremAccessibleObjectExpr<Field> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Field getField() {
 		return this.accessibleObject;
@@ -119,7 +119,7 @@ public class PremFieldExpr extends PremAccessibleObjectExpr<Field> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Expression handleAccessibleObject() {
 		if (this.expr instanceof AtomExpr<?>

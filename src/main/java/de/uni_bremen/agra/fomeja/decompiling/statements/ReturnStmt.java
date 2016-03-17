@@ -27,7 +27,7 @@ public class ReturnStmt extends FlowControlStmt {
 	/**
 	 * COMMENT
 	 * 
-	 * @param returnExpr
+	 * @param returnExpr COMMENT
 	 */
 	public ReturnStmt(Expression returnExpr) {
 		this.returnExpr = returnExpr;
@@ -39,7 +39,7 @@ public class ReturnStmt extends FlowControlStmt {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getReturnExpr() {
 		return this.returnExpr;

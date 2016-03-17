@@ -12,7 +12,7 @@ public class DialectException extends RuntimeException {
 	/**
 	 * COMMENT
 	 * 
-	 * @param message
+	 * @param message COMMENT
 	 */
 	public DialectException(String message) {
 		super(message);

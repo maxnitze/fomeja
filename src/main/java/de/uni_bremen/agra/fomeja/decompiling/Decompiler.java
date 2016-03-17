@@ -144,7 +144,7 @@ public class Decompiler {
 	 * @param offset the offset of the byte code line to start from
 	 * @param recList COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private StatementSeq parseBytecode(Map<Integer, BytecodeLine> bytecodeLines, int offset, RecursionList recList) {
 		BytecodeLine bytecodeLine;
@@ -347,8 +347,8 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param bytecodeLine
-	 * @param recList
+	 * @param bytecodeLine COMMENT
+	 * @param recList COMMENT
 	 */
 	private void parseBytecodeGetfield(BytecodeLineConstantTableAccessibleObject bytecodeLine, RecursionList recList) {
 		Expression expr = this.stack.pop();
@@ -365,7 +365,7 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param bytecodeLine
+	 * @param bytecodeLine COMMENT
 	 */
 	private void parseOpcodeCheckcast(BytecodeLineConstantTableClass bytecodeLine) {
 		Expression expr = this.stack.pop();
@@ -379,7 +379,7 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param opcode
+	 * @param opcode COMMENT
 	 */
 	private void parseOpcodeX2X(Opcode opcode) {
 		Expression expr = this.stack.pop();
@@ -414,7 +414,7 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param opcode
+	 * @param opcode COMMENT
 	 */
 	private void parseOpcodeXrem(Opcode opcode) {
 		Expression expr2 = this.stack.pop();
@@ -479,7 +479,7 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param bytecodeLine
+	 * @param bytecodeLine COMMENT
 	 */
 	private void parseOpcodeLdcX(BytecodeLineSimpleValue bytecodeLine) {
 		if (ClassUtils.isDoubleType(bytecodeLine.getValue().getClass()))
@@ -497,7 +497,7 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param bytecodeLine
+	 * @param bytecodeLine COMMENT
 	 */
 	private void parseOpcodeXArithmetic(BytecodeLineSimple bytecodeLine) {
 		Expression expr2 = this.stack.pop();
@@ -508,11 +508,11 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param bytecodeLineTableswitch
-	 * @param bytecodeLines
-	 * @param recList
+	 * @param bytecodeLineTableswitch COMMENT
+	 * @param bytecodeLines COMMENT
+	 * @param recList COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private StatementSeq parseOpcodeTableSwitch(BytecodeLineTableswitch bytecodeLineTableswitch, Map<Integer, BytecodeLine> bytecodeLines, RecursionList recList) {
 		Expression expr = this.stack.pop();
@@ -534,7 +534,7 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param bytecodeLine
+	 * @param bytecodeLine COMMENT
 	 */
 	private void parseOpcodeInvokeX(BytecodeLineConstantTableAccessibleObject bytecodeLine) {
 		/* get arguments for method or constructor */
@@ -594,7 +594,7 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 *  @param bytecodeLine
+	 *  @param bytecodeLine COMMENT
 	 */
 	private void parseOpcodeXNewarray(Class<?> type) {
 		Expression arrayLengthExpr = this.stack.pop();
@@ -692,11 +692,11 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param bytecodeLine
-	 * @param bytecodeLines
-	 * @param recList
+	 * @param bytecodeLine COMMENT
+	 * @param bytecodeLines COMMENT
+	 * @param recList COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private StatementSeq parseOpcodeIfXX(BytecodeLineOffset bytecodeLine, Map<Integer,BytecodeLine> bytecodeLines, RecursionList recList) {
 		Expression expr = this.stack.pop();
@@ -732,11 +732,11 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param bytecodeLine
-	 * @param bytecodeLines
-	 * @param recList
+	 * @param bytecodeLine COMMENT
+	 * @param bytecodeLines COMMENT
+	 * @param recList COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private StatementSeq parseOpcodeIf_XcmpXX(BytecodeLineOffset bytecodeLine, Map<Integer,BytecodeLine> bytecodeLines, RecursionList recList) {
 		Expression expr2 = this.stack.pop();
@@ -772,11 +772,11 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param bytecodeLine
-	 * @param bytecodeLines
-	 * @param recList
+	 * @param bytecodeLine COMMENT
+	 * @param bytecodeLines COMMENT
+	 * @param recList COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private StatementSeq parseOpcodeIfnull(BytecodeLineOffset bytecodeLine, Map<Integer, BytecodeLine> bytecodeLines, RecursionList recList) {
 		Expression expr = this.stack.pop();
@@ -864,7 +864,7 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private ReturnStmt parseOpcodeReturn() {
 		return new ReturnStmt(this.stack.pop());
@@ -876,15 +876,15 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param offsetsMap
-	 * @param offsetsMapKeyIterator
-	 * @param defaultOffset
-	 * @param bytecodeLines
-	 * @param prefixedFields
-	 * @param recList
+	 * @param expr COMMENT
+	 * @param offsetsMap COMMENT
+	 * @param offsetsMapKeyIterator COMMENT
+	 * @param defaultOffset COMMENT
+	 * @param bytecodeLines COMMENT
+	 * @param prefixedFields COMMENT
+	 * @param recList COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private StatementSeq getTableswitchConstraint(Expression expr, Map<String, Integer> offsetsMap, Iterator<String> offsetsMapKeyIterator, Integer defaultOffset, Map<Integer, BytecodeLine> bytecodeLines, RecursionList recList) {
 		if (offsetsMapKeyIterator.hasNext()) {
@@ -940,9 +940,9 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
+	 * @param object COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private AtomExpr<?> getAtomExprFromValue(Object object) {
 		if (ClassUtils.isIntegerType(object.getClass()))
@@ -963,11 +963,11 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param bytecodeLine
-	 * @param expr
-	 * @param arguments
+	 * @param bytecodeLine COMMENT
+	 * @param expr COMMENT
+	 * @param arguments COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private AtomExpr<?> invokeAccessibleObject(BytecodeLineConstantTableAccessibleObject bytecodeLine, Expression expr, Object[] arguments) {
 		AccessibleObject accessibleObject = bytecodeLine.getAccessibleObject();
@@ -1059,11 +1059,11 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param bytecodeLine
-	 * @param expr
-	 * @param recList
+	 * @param bytecodeLine COMMENT
+	 * @param expr COMMENT
+	 * @param recList COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Expression getFieldValue(BytecodeLineConstantTableAccessibleObject bytecodeLine, Expression expr, RecursionList recList) {
 		return new PremGetfieldExpr(expr, (Field) bytecodeLine.getAccessibleObject());
@@ -1072,9 +1072,9 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param bytecodeLine
+	 * @param bytecodeLine COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Expression getStaticFieldValue(BytecodeLineConstantTableAccessibleObject bytecodeLine, RecursionList recList) {
 		Field bytecodeLineField = (Field) bytecodeLine.getAccessibleObject();
@@ -1111,9 +1111,9 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param method
+	 * @param method COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private boolean isDecompilable(Method method) {
 		return method.getDeclaringClass().getClassLoader() != null;
@@ -1122,9 +1122,9 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param method
+	 * @param method COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private boolean isPreparedByDialect(Method method) {
 		return method.getAnnotation(PreparableMethod.class) != null;
@@ -1136,9 +1136,9 @@ public class Decompiler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param accessibleObject
+	 * @param accessibleObject COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private ArgumentList getArgumentList(AccessibleObject accessibleObject) {
 		/** get count of parameters */
@@ -1190,8 +1190,8 @@ public class Decompiler {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public boolean hasPrematureArgument() {
 			return this.hasPrematureArgument;
 		}
@@ -1199,7 +1199,7 @@ public class Decompiler {
 		/**
 		 * COMMENT
 		 * 
-		 * @param hasPrematureArgument
+		 * @param hasPrematureArgument COMMENT
 		 */
 		public void setHasPrematureArgument(boolean hasPrematureArgument) {
 			this.hasPrematureArgument = hasPrematureArgument;
@@ -1225,7 +1225,7 @@ public class Decompiler {
 		/**
 		 * COMMENT
 		 * 
-		 * @param bytecodeLine
+		 * @param bytecodeLine COMMENT
 		 */
 		public void add(BytecodeLineOffset bytecodeLine) {
 			this.last = new RecursionElement(bytecodeLine.getOffset(), bytecodeLine.getLineNumber(), this.last);
@@ -1234,8 +1234,8 @@ public class Decompiler {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public boolean remove() {
 			if (this.isEmpty())
 				return false;
@@ -1248,8 +1248,8 @@ public class Decompiler {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public boolean isEmpty() {
 			return this.last == null;
 		}
@@ -1257,10 +1257,10 @@ public class Decompiler {
 		/**
 		 * COMMENT
 		 * 
-		 * @param bytecodeLine
+		 * @param bytecodeLine COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public boolean isCurrentRecursion(BytecodeLineOffset bytecodeLine) {
 			return this.last != null
 					&& this.last.start == bytecodeLine.getOffset()
@@ -1270,10 +1270,10 @@ public class Decompiler {
 		/**
 		 * COMMENT
 		 * 
-		 * @param index
+		 * @param index COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public boolean skipsCurrentRecursion(int index) {
 			return this.last != null && this.last.end < index;
 		}
@@ -1281,8 +1281,8 @@ public class Decompiler {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public RecursionList clone() {
 			RecursionList recursionList = new RecursionList();
 			if (this.last != null)
@@ -1293,8 +1293,8 @@ public class Decompiler {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public String toString() {
 			StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.append("[");
@@ -1326,8 +1326,8 @@ public class Decompiler {
 			/**
 			 * COMMENT
 			 * 
-			 * @param start
-			 * @param end
+			 * @param start COMMENT
+			 * @param end COMMENT
 			 */
 			public RecursionElement(int start, int end, RecursionElement prev) {
 				this.start = start;
@@ -1338,8 +1338,8 @@ public class Decompiler {
 			/**
 			 * COMMENT
 			 * 
-			 * @return
-			 */
+			 * @return COMMENT
+	 */
 			public RecursionElement clone() {
 				return new RecursionElement(this.start, this.end, this.prev == null ? null : this.prev.clone());
 			}
@@ -1347,8 +1347,8 @@ public class Decompiler {
 			/**
 			 * COMMENT
 			 * 
-			 * @return
-			 */
+			 * @return COMMENT
+	 */
 			public String toString() {
 				return "(" + this.start + "-->" + this.end + ")";
 			}

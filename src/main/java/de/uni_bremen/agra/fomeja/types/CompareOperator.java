@@ -1,7 +1,8 @@
 package de.uni_bremen.agra.fomeja.types;
 
 /**
- * An enumeration of the six constraint operators ==, >=, >, <=, < and !=.
+ * An enumeration of the six constraint operators EQUAL, GREATER EQUAL, GREATER
+ * LESS EQUAL, LESS, and NOT EQUAL.
  * 
  * @version 1.0.0
  * @author Max Nitze
@@ -46,40 +47,45 @@ public enum CompareOperator {
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getAsciiName() {
 		return this.asciiName;
 	}
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getOppositeAsciiName() {
 		return this.oppositeAsciiName;
 	}
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getSwappedAsciiName() {
 		return this.swappedAsciiName;
 	}
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getOpcode() {
 		return this.opcode;
 	}
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getOppositeOpcode() {
 		return this.oppositeOpcode;
@@ -89,8 +95,9 @@ public enum CompareOperator {
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public CompareOperator getOpposite() {
 		for (CompareOperator co : values())
@@ -100,8 +107,9 @@ public enum CompareOperator {
 	}
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public CompareOperator getSwapped() {
 		for (CompareOperator co : values())
@@ -172,7 +180,7 @@ public enum CompareOperator {
 	 * fromOpcode returns the constraint operator with the given opposite
 	 *  opcode.
 	 * 
-	 * @param opcode the opposite opcode to look for
+	 * @param oppositeOpcode the opposite opcode to look for
 	 * 
 	 * @return the constraint operator with the given opposite opcode
 	 */
@@ -192,6 +200,8 @@ public enum CompareOperator {
 	 * @return {@code true} if the comparison of the two given numbers
 	 *  evaluates to {@code true} applying this constraint operator, {@code
 	 *  false} otherwise
+	 * 
+	 * @param <T> COMMENT
 	 */
 	public <T extends Comparable<T>> boolean compare(T number1, T number2) {
 		switch(this) {

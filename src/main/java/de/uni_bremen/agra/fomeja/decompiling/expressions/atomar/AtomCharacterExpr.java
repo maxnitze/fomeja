@@ -14,7 +14,7 @@ public class AtomCharacterExpr extends AtomExpr<Character> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param value
+	 * @param value COMMENT
 	 */
 	public AtomCharacterExpr(Character value) {
 		super(value);
@@ -23,8 +23,8 @@ public class AtomCharacterExpr extends AtomExpr<Character> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param field
-	 * @param preFields
+	 * @param field COMMENT
+	 * @param preFields COMMENT
 	 */
 	public AtomCharacterExpr(Field field, PreFieldList preFields) {
 		super(field, preFields);
@@ -33,7 +33,7 @@ public class AtomCharacterExpr extends AtomExpr<Character> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
+	 * @param name COMMENT
 	 */
 	public AtomCharacterExpr(String name) {
 		super(name, false);

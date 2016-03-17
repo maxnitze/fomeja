@@ -35,8 +35,8 @@ public class ConnectedBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param connector
-	 * @param boolExprs
+	 * @param connector COMMENT
+	 * @param boolExprs COMMENT
 	 */
 	public ConnectedBoolExpr(BooleanConnector connector, List<BoolExpression> boolExprs) {
 		this.connector = connector;
@@ -46,8 +46,8 @@ public class ConnectedBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param connector
-	 * @param boolExprs
+	 * @param connector COMMENT
+	 * @param boolExprs COMMENT
 	 */
 	public ConnectedBoolExpr(BooleanConnector connector, BoolExpression... boolExprs) {
 		this.connector = connector;
@@ -60,7 +60,7 @@ public class ConnectedBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public List<BoolExpression> getBoolExprs() {
 		return this.boolExprs;
@@ -69,7 +69,7 @@ public class ConnectedBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public BooleanConnector getConnector() {
 		return this.connector;
@@ -78,7 +78,7 @@ public class ConnectedBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int size() {
 		return this.boolExprs.size();
@@ -87,7 +87,7 @@ public class ConnectedBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isEmpty() {
 		return this.boolExprs.isEmpty();
@@ -99,9 +99,9 @@ public class ConnectedBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExpr
+	 * @param boolExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean add(BoolExpression boolExpr) {
 		return this.boolExprs.add(boolExpr);
@@ -110,9 +110,9 @@ public class ConnectedBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExpr
+	 * @param boolExprs COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean addAll(Collection<BoolExpression> boolExprs) {
 		return this.boolExprs.addAll(boolExprs);
@@ -295,7 +295,7 @@ public class ConnectedBoolExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private BoolExpression handleConnectedExprSet() {
 		List<BoolExpression> newBoolExprs = new ArrayList<BoolExpression>();

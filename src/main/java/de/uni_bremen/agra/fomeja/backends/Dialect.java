@@ -82,8 +82,9 @@ public abstract class Dialect<T, V> {
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Dialect.Type getDialectType() {
 		return this.dialectType;
@@ -95,11 +96,11 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExprs
+	 * @param boolExprs COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 * 
-	 * @throws SatisfyException
+	 * @throws SatisfyException COMMENT
 	 */
 	public abstract List<T> format(List<BoolExpression> boolExprs) throws SatisfyException;
 
@@ -109,9 +110,9 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param resultObject
+	 * @param resultObject COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract ResultModel parseResult(Object resultObject);
 
@@ -178,9 +179,9 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
+	 * @param boolExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract V prepareBoolExprAsExpr(BoolExpression boolExpr);
 
@@ -207,9 +208,9 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
+	 * @param expr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract V prepareIfThenElseExpr(IfThenElseExpr expr);
 
@@ -219,18 +220,18 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
+	 * @param expr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract V preparePremAccessibleObjectExpr(PremAccessibleObjectExpr<?> expr);
 
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
+	 * @param expr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public abstract V preparePremClasscastExpr(PremClasscastExpr expr);
 
@@ -240,7 +241,7 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExpr
+	 * @param boolExpr COMMENT
 	 * 
 	 * @return the string representation of the abstract constraint
 	 */
@@ -265,9 +266,9 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
+	 * @param expr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	protected V getBackendExpression(Expression expr) {
 		if (expr instanceof AtomExpr)
@@ -297,9 +298,9 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param method
+	 * @param method COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	boolean isIntegerValueMethod(Method method) {
 		return CompareUtils.equalsAny(method, preparableIntegerValueMethods);
@@ -308,9 +309,9 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param method
+	 * @param method COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	boolean isFloatValueMethod(Method method) {
 		return CompareUtils.equalsAny(method, preparableFloatValueMethods);
@@ -319,9 +320,9 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param method
+	 * @param method COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	boolean isDoubleValueMethod(Method method) {
 		return CompareUtils.equalsAny(method, preparableDoubleValueMethods);
@@ -330,7 +331,7 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
+	 * @param expr COMMENT
 	 */
 	void clearExtraExprs() {
 		this.extraExprs.clear();
@@ -339,7 +340,7 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExpr
+	 * @param boolExpr COMMENT
 	 */
 	void addExtraExpr(BoolExpression boolExpr) {
 		this.extraExprs.add(boolExpr);
@@ -348,7 +349,7 @@ public abstract class Dialect<T, V> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
+	 * @param expr COMMENT
 	 */
 	List<BoolExpression> getExtraExprs() {
 		return this.extraExprs;

@@ -1,9 +1,10 @@
 package de.uni_bremen.agra.fomeja.disassembling.bytecodetypes;
 
+/* imports */
 import de.uni_bremen.agra.fomeja.types.Opcode;
 
 /**
- * 
+ * COMMENT
  * 
  * @author Max Nitze
  * @version 1.0.0
@@ -13,11 +14,12 @@ public class BytecodeLineOffset extends BytecodeLine {
 	private final int offset;
 
 	/**
+	 * COMMENT
 	 * 
-	 * @param line
-	 * @param lineNumber
-	 * @param opcode
-	 * @param offset
+	 * @param line COMMENT
+	 * @param lineNumber COMMENT
+	 * @param opcode COMMENT
+	 * @param offset COMMENT
 	 */
 	public BytecodeLineOffset(String line, int lineNumber, Opcode opcode, int offset) {
 		super(line, lineNumber, opcode);
@@ -29,8 +31,9 @@ public class BytecodeLineOffset extends BytecodeLine {
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int getOffset() {
 		return this.offset;

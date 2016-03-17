@@ -29,8 +29,8 @@ public class StoreExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
-	 * @param resultType
+	 * @param name COMMENT
+	 * @param resultType COMMENT
 	 */
 	public StoreExpr(String name, Class<?> resultType) {
 		this.name = name;
@@ -43,7 +43,7 @@ public class StoreExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getName() {
 		return this.name;

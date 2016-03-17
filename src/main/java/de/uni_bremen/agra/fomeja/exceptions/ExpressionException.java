@@ -12,7 +12,7 @@ public class ExpressionException extends RuntimeException {
 	/**
 	 * COMMENT
 	 * 
-	 * @param message
+	 * @param message COMMENT
 	 */
 	public ExpressionException(String message) {
 		super(message);

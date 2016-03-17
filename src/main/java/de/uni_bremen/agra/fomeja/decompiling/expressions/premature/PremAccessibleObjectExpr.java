@@ -30,9 +30,9 @@ public abstract class PremAccessibleObjectExpr<T extends AccessibleObject> exten
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param accessibleObject
-	 * @param argExprs
+	 * @param expr COMMENT
+	 * @param accessibleObject COMMENT
+	 * @param argExprs COMMENT
 	 */
 	public PremAccessibleObjectExpr(Expression expr, T accessibleObject, List<Expression> argExprs) {
 		this.expr = expr;
@@ -46,7 +46,7 @@ public abstract class PremAccessibleObjectExpr<T extends AccessibleObject> exten
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getExpr() {
 		return this.expr;
@@ -55,7 +55,7 @@ public abstract class PremAccessibleObjectExpr<T extends AccessibleObject> exten
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public T getAccessibleObject() {
 		return this.accessibleObject;
@@ -64,7 +64,7 @@ public abstract class PremAccessibleObjectExpr<T extends AccessibleObject> exten
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public List<Expression> getArgumentExpressions() {
 		return this.argExprs;
@@ -163,7 +163,7 @@ public abstract class PremAccessibleObjectExpr<T extends AccessibleObject> exten
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	String getArgumentString() {
 		StringBuilder argumentString = new StringBuilder();
@@ -179,7 +179,7 @@ public abstract class PremAccessibleObjectExpr<T extends AccessibleObject> exten
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	String getArgumentTypeString() {
 		StringBuilder argumentTypeString = new StringBuilder();

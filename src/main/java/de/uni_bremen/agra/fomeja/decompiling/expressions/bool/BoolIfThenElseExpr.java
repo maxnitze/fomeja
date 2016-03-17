@@ -38,7 +38,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param elseCaseExpr
+	 * @param elseCaseExpr COMMENT
 	 */
 	public BoolIfThenElseExpr(BoolExpression elseCaseExpr) {
 		this.condBoolExprPairs = new ArrayList<CondBoolExprPair>();
@@ -48,9 +48,9 @@ public class BoolIfThenElseExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param condExpr
-	 * @param thenCaseExpr
-	 * @param elseCaseExpr
+	 * @param condExpr COMMENT
+	 * @param thenCaseExpr COMMENT
+	 * @param elseCaseExpr COMMENT
 	 */
 	public BoolIfThenElseExpr(BoolExpression condExpr, BoolExpression thenCaseExpr, BoolExpression elseCaseExpr) {
 		this.condBoolExprPairs = new ArrayList<CondBoolExprPair>();
@@ -64,7 +64,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public List<CondBoolExprPair> getCondBoolExprPairs() {
 		return this.condBoolExprPairs;
@@ -73,10 +73,10 @@ public class BoolIfThenElseExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param condition
-	 * @param boolExpr
+	 * @param condition COMMENT
+	 * @param boolExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean add(BoolExpression condition, BoolExpression boolExpr) {
 		return this.condBoolExprPairs.add(new CondBoolExprPair(condition, boolExpr));
@@ -85,7 +85,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public BoolExpression getElseCaseExpr() {
 		return this.elseCaseExpr;
@@ -270,8 +270,8 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		/**
 		 * COMMENT
 		 * 
-		 * @param condition
-		 * @param boolExpr
+		 * @param condition COMMENT
+		 * @param boolExpr COMMENT
 		 */
 		public CondBoolExprPair(BoolExpression condition, BoolExpression boolExpr) {
 			this.condition = condition;
@@ -284,8 +284,8 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public BoolExpression getCondition() {
 			return this.condition;
 		}
@@ -293,8 +293,8 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public BoolExpression getBoolExpr() {
 			return this.boolExpr;
 		}
@@ -320,10 +320,10 @@ public class BoolIfThenElseExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
-	 * @param compVars
+	 * @param type COMMENT
+	 * @param compVars COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private BoolExpression handleByAnalyseType(AnalyzeType type, ComponentVariables compVars) {
 		boolean allAtomar = true;
@@ -380,11 +380,11 @@ public class BoolIfThenElseExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
-	 * @param boolExpr
-	 * @param compVars
+	 * @param type COMMENT
+	 * @param boolExpr COMMENT
+	 * @param compVars COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private BoolExpression handleByAnalyseType(AnalyzeType type, BoolExpression boolExpr, ComponentVariables compVars) {
 		switch (type) {
@@ -428,7 +428,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		/**
 		 * COMMENT
 		 * 
-		 * @param boolExpr
+		 * @param boolExpr COMMENT
 		 */
 		public void addAndExpr(BoolExpression boolExpr) {
 			if (this.andExpr == null)
@@ -447,7 +447,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		/**
 		 * COMMENT
 		 * 
-		 * @param boolExpr
+		 * @param boolExpr COMMENT
 		 */
 		public void addOrExpr(BoolExpression boolExpr) {
 			if (this.orExpr == null)

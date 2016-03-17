@@ -115,9 +115,9 @@ public final class RefactoringUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param clazz
+	 * @param clazz COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean hasVariableFields(Class<?> clazz) {
 		/** already visited classes */
@@ -300,11 +300,11 @@ public final class RefactoringUtils {
 	/**
 	 * COMMENT
 	 * 
-	 * @param cls
-	 * @param methodName
-	 * @param parameterTypes
+	 * @param cls COMMENT
+	 * @param methodName COMMENT
+	 * @param parameterTypes COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static Method getMethodForClass(Class<?> cls, String methodName, Class<?>... parameterTypes) {
 		try {

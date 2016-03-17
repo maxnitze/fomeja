@@ -1,6 +1,6 @@
 package de.uni_bremen.agra.fomeja.disassembling.bytecodetypes;
 
-/** imports */
+/* imports */
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,11 +17,11 @@ public class BytecodeLineTableswitch extends BytecodeLine {
 	private final Map<String, Integer> offsetsMap;
 
 	/**
+	 * COMMENT
 	 * 
-	 * 
-	 * @param line
-	 * @param lineNumber
-	 * @param opcode
+	 * @param line COMMENT
+	 * @param lineNumber COMMENT
+	 * @param opcode COMMENT
 	 */
 	public BytecodeLineTableswitch(String line, int lineNumber, Opcode opcode) {
 		super(line, lineNumber, opcode);
@@ -33,8 +33,9 @@ public class BytecodeLineTableswitch extends BytecodeLine {
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Map<String, Integer> getOffsetsMap() {
 		return this.offsetsMap;

@@ -63,7 +63,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static FomejaDefaults getSingleton() {
 		if (singleton == null)
@@ -77,7 +77,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static boolean getDefaultBooleanValue() {
 		return getSingleton().defaultBooleanValue;
@@ -86,7 +86,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @param defaultBooleanValue
+	 * @param defaultBooleanValue COMMENT
 	 */
 	public static void setDefaultBooleanValue(boolean defaultBooleanValue) {
 		getSingleton().defaultBooleanValue = defaultBooleanValue;
@@ -95,7 +95,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static byte getDefaultByteValue() {
 		return getSingleton().defaultByteValue;
@@ -104,7 +104,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @param defaultByteValue
+	 * @param defaultByteValue COMMENT
 	 */
 	public static void setDefaultByteValue(byte defaultByteValue) {
 		getSingleton().defaultByteValue = defaultByteValue;
@@ -113,7 +113,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static char getDefaultCharValue() {
 		return getSingleton().defaultCharValue;
@@ -122,7 +122,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @param defaultCharValue
+	 * @param defaultCharValue COMMENT
 	 */
 	public static void setDefaultCharValue(char defaultCharValue) {
 		getSingleton().defaultCharValue = defaultCharValue;
@@ -131,7 +131,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static double getDefaultDoubleValue() {
 		return getSingleton().defaultDoubleValue;
@@ -140,7 +140,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @param defaultDoubleValue
+	 * @param defaultDoubleValue COMMENT
 	 */
 	public static void setDefaultDoubleValue(double defaultDoubleValue) {
 		getSingleton().defaultDoubleValue = defaultDoubleValue;
@@ -149,7 +149,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static float getDefaultFloatValue() {
 		return getSingleton().defaultFloatValue;
@@ -158,7 +158,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @param defaultFloatValue
+	 * @param defaultFloatValue COMMENT
 	 */
 	public static void setDefaultFloatValue(float defaultFloatValue) {
 		getSingleton().defaultFloatValue = defaultFloatValue;
@@ -167,7 +167,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static int getDefaultIntegerValue() {
 		return getSingleton().defaultIntegerValue;
@@ -176,7 +176,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @param defaultIntegerValue
+	 * @param defaultIntegerValue COMMENT
 	 */
 	public static void setDefaultIntegerValue(int defaultIntegerValue) {
 		getSingleton().defaultIntegerValue = defaultIntegerValue;
@@ -185,7 +185,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static long getDefaultLongValue() {
 		return getSingleton().defaultLongValue;
@@ -194,7 +194,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @param defaultLongValue
+	 * @param defaultLongValue COMMENT
 	 */
 	public static void setDefaultLongValue(long defaultLongValue) {
 		getSingleton().defaultLongValue = defaultLongValue;
@@ -203,7 +203,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static short getDefaultShortValue() {
 		return getSingleton().defaultShortValue;
@@ -212,7 +212,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @param defaultShortValue
+	 * @param defaultShortValue COMMENT
 	 */
 	public static void setDefaultShortValue(short defaultShortValue) {
 		getSingleton().defaultShortValue = defaultShortValue;
@@ -221,7 +221,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static int getDefaultEnumOrdinal() {
 		return getSingleton().defaultEnumOrdinal;
@@ -230,7 +230,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @param defaultEnumOrdinal
+	 * @param defaultEnumOrdinal COMMENT
 	 */
 	public static void setDefaultEnumOrdinal(int defaultEnumOrdinal) {
 		getSingleton().defaultEnumOrdinal = defaultEnumOrdinal;
@@ -239,7 +239,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static int getDefaultStringLength() {
 		return getSingleton().defaultStringLength;
@@ -248,7 +248,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @param defaultStringLength
+	 * @param defaultStringLength COMMENT
 	 */
 	public static void setDefaultStringLength(int defaultStringLength) {
 		getSingleton().defaultStringLength = defaultStringLength;
@@ -257,7 +257,7 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static Prover<?> getDefaultProver() {
 		return getSingleton().defaultProver;
@@ -266,21 +266,21 @@ public class FomejaDefaults {
 	/**
 	 * COMMENT
 	 * 
-	 * @param defaultProver
+	 * @param defaultProver COMMENT
 	 */
 	public static void setDefaultProver(Prover<?> defaultProver) {
 		getSingleton().defaultProver = defaultProver;
 	}
 
-	/** public methods
+	/* public methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
+	 * @param type COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static Object getDefaultForPrimitiveType(Class<?> type) {
 		if (ClassUtils.isBooleanType(type))

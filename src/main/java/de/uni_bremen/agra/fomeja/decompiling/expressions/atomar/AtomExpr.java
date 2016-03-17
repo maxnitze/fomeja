@@ -101,8 +101,8 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
-	 * @param isNumberType
+	 * @param name COMMENT
+	 * @param isNumberType COMMENT
 	 */
 	public AtomExpr(String name, boolean isNumberType) {
 		super(-1, new ArrayList<PreField>());
@@ -123,7 +123,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public T getValue() {
 		return this.value;
@@ -132,7 +132,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	Object getReplacedValue() {
 		return this.replacedValue;
@@ -141,7 +141,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @param replacedValue
+	 * @param replacedValue COMMENT
 	 */
 	void setReplacedValue(Object replacedValue) {
 		this.replacedValue = replacedValue;
@@ -150,7 +150,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getName() {
 		return this.name;
@@ -159,7 +159,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
+	 * @param name COMMENT
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -168,7 +168,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Field getField() {
 		return this.field;
@@ -177,7 +177,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isVariable() {
 		return this.isVariable;
@@ -186,7 +186,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isNumberType() {
 		return this.isNumberType;
@@ -195,7 +195,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isFinishedType() {
 		return this.isFinishedType;
@@ -204,7 +204,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isFinishedNumberType() {
 		return this.isNumberType && this.isFinishedType;
@@ -213,7 +213,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isUnfinishedFieldType() {
 		return !this.isFinishedType && this.field != null;
@@ -366,9 +366,9 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @param value
+	 * @param value COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private String printObjectValue(Object value) {
 		return value.getClass().isArray() ? Arrays.toString((Object[]) value) : (ClassUtils.isBasicType(value.getClass()) ? value.toString() : (value.getClass().getSimpleName() + "@" + Integer.toHexString(value.hashCode())));
@@ -386,10 +386,10 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @param atomExpr
-	 * @param operator
+	 * @param atomExpr COMMENT
+	 * @param operator COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression calc(AtomExpr<?> atomExpr, ArithmeticOperator operator) {
 		if (!this.isFinishedNumberType() || !atomExpr.isFinishedNumberType())
@@ -431,7 +431,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public PreField toPreField() {
 		if (!this.isFinishedType)
@@ -446,7 +446,7 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public PreFieldList toPreFieldList() {
 		PreFieldList preFieldList = this.getPreFieldList().clone();

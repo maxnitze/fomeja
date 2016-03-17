@@ -38,7 +38,7 @@ public class IfThenElseStmt extends Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @param elseStmt
+	 * @param elseStmtSeq COMMENT
 	 */
 	public IfThenElseStmt(StatementSeq elseStmtSeq) {
 		this.condStmtSeqPairs = new ArrayList<CondStmtSeqPair>();
@@ -48,9 +48,9 @@ public class IfThenElseStmt extends Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @param condition
-	 * @param thenStmt
-	 * @param elseStmt
+	 * @param condition COMMENT
+	 * @param thenStmtSeq COMMENT
+	 * @param elseStmtSeq COMMENT
 	 */
 	public IfThenElseStmt(BoolExpression condition, StatementSeq thenStmtSeq, StatementSeq elseStmtSeq) {
 		this.condStmtSeqPairs = new ArrayList<CondStmtSeqPair>();
@@ -64,7 +64,7 @@ public class IfThenElseStmt extends Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public List<CondStmtSeqPair> getCondStmtSeqPairs() {
 		return this.condStmtSeqPairs;
@@ -73,10 +73,10 @@ public class IfThenElseStmt extends Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @param condition
-	 * @param stmtSeq
+	 * @param condition COMMENT
+	 * @param stmtSeq COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean add(BoolExpression condition, StatementSeq stmtSeq) {
 		return this.condStmtSeqPairs.add(new CondStmtSeqPair(condition, stmtSeq));
@@ -85,7 +85,7 @@ public class IfThenElseStmt extends Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public StatementSeq getElseStmt() {
 		return this.elseStmtSeq;
@@ -326,8 +326,8 @@ public class IfThenElseStmt extends Statement {
 		/**
 		 * COMMENT
 		 * 
-		 * @param condition
-		 * @param stmtSeq
+		 * @param condition COMMENT
+		 * @param stmtSeq COMMENT
 		 */
 		public CondStmtSeqPair(BoolExpression condition, StatementSeq stmtSeq) {
 			this.condition = condition;
@@ -337,8 +337,8 @@ public class IfThenElseStmt extends Statement {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public void simplify() {
 			this.condition = this.condition.simplify();
 			this.stmtSeq.simplify();
@@ -347,8 +347,8 @@ public class IfThenElseStmt extends Statement {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public boolean hasAtomStringExprs() {
 			return this.condition.hasAtomStringExprs() || this.stmtSeq.hasAtomStringExprs();
 		}
@@ -379,8 +379,8 @@ public class IfThenElseStmt extends Statement {
 		/**
 		 * COMMENT
 		 * 
-		 * @param condition
-		 * @param returnStmt
+		 * @param condition COMMENT
+		 * @param returnStmt COMMENT
 		 */
 		public CondReturnStmtPair(BoolExpression condition, ReturnStmt returnStmt) {
 			this.condition = condition;

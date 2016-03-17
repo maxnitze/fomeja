@@ -16,10 +16,10 @@ public class BytecodeLineSimpleValue extends BytecodeLine {
 	/**
 	 * COMMENT
 	 * 
-	 * @param line
-	 * @param lineNumber
-	 * @param opcode
-	 * @param value
+	 * @param line COMMENT
+	 * @param lineNumber COMMENT
+	 * @param opcode COMMENT
+	 * @param value COMMENT
 	 */
 	public BytecodeLineSimpleValue(String line, int lineNumber, Opcode opcode, Object value) {
 		super(line, lineNumber, opcode);
@@ -33,7 +33,7 @@ public class BytecodeLineSimpleValue extends BytecodeLine {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Object getValue() {
 		return this.value;

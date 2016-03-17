@@ -145,7 +145,7 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param line
+	 * @param line COMMENT
 	 */
 	private void parseSimpleType(String line) {
 		Matcher matcher = simpleTypePattern.matcher(line);
@@ -160,7 +160,7 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param line
+	 * @param line COMMENT
 	 */
 	private void parseSimpleValueType(String line) {
 		Matcher matcher = simpleValueTypePattern.matcher(line);
@@ -204,7 +204,7 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param line
+	 * @param line COMMENT
 	 */
 	private void parseMultipleValueType(String line) {
 		Matcher matcher = multipleValueTypePattern.matcher(line);
@@ -236,7 +236,7 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param line
+	 * @param line COMMENT
 	 */
 	private void parseConstantTableValueType(String line) {
 		Matcher matcher = constantTableValueTypePattern.matcher(line);
@@ -265,7 +265,7 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param line
+	 * @param line COMMENT
 	 */
 	private void parseOffsetType(String line) {
 		Matcher matcher = offsetTypePattern.matcher(line);
@@ -281,7 +281,7 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param line
+	 * @param line COMMENT
 	 */
 	private void parseConstantTableClassType(String line) {
 		Matcher matcher = constantTableClassTypePattern.matcher(line);
@@ -307,7 +307,7 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param line
+	 * @param line COMMENT
 	 */
 	private void parseConstantTableAccessibleObjectType(String line) {
 		Matcher matcher = constantTableAccessibleObjectTypePattern.matcher(line);
@@ -328,9 +328,9 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param line
-	 * @param matcher
-	 * @param lineNumber
+	 * @param line COMMENT
+	 * @param matcher COMMENT
+	 * @param lineNumber COMMENT
 	 */
 	private void parseConstantTableAccessibleObjectTypeField(String line, Matcher matcher, int lineNumber) {
 		String fieldString = matcher.group("accessibleobject");
@@ -369,9 +369,9 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param line
-	 * @param matcher
-	 * @param lineNumber
+	 * @param line COMMENT
+	 * @param matcher COMMENT
+	 * @param lineNumber COMMENT
 	 */
 	private void parseConstantTableAccessibleObjectTypeMethod(String line, Matcher matcher, int lineNumber) {
 		String methodString = matcher.group("accessibleobject");
@@ -431,11 +431,11 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param line
-	 * @param lines
-	 * @param index
+	 * @param line COMMENT
+	 * @param lines COMMENT
+	 * @param index COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private int parseTableswitch(String line, String[] lines, int index) {
 		Matcher matcher = tableswitchPattern.matcher(line);
@@ -464,9 +464,9 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param typeString
+	 * @param typeString COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private List<Class<?>> getParameterTypes(String typeString) {
 		List<Class<?>> parameters = new LinkedList<Class<?>>();
@@ -514,9 +514,9 @@ public class Disassembler {
 	 * S short
 	 * Z boolean
 	 * 
-	 * @param c
+	 * @param c COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private boolean isPrimitivTypeCharacter(char c) {
 		return c == 'B' || c == 'C' || c == 'D' || c == 'F' || c == 'I' || c == 'J' || c == 'S' || c == 'Z';
@@ -525,9 +525,9 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param className
+	 * @param className COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Class<?> getClassForName(String className) {
 		if (className.equals("B"))
@@ -578,9 +578,9 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 * 
-	 * @param method
+	 * @param method COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static DisassembledMethod disassemble(Method method) {
 		/** disassemble class */
@@ -644,9 +644,9 @@ public class Disassembler {
 	/**
 	 * COMMENT
 	 *  
-	 * @param componentClass
+	 * @param componentClass COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public static Map<String, DisassembledMethod> disassemble(Class<?> componentClass) {
 		String disassembledClass = getBytecode(componentClass);

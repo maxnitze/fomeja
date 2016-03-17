@@ -64,8 +64,8 @@ public final class IOUtils {
 	 * @param uri the {@code URI} to the file to write to
 	 * @param text the text to write to the file at the given {@code URI}
 	 * 
-	 * @throws IOException if the file at the given {@code URI} does not exist
-	 *  (and can not be created)
+	 * @throws FileNotFoundException if the file at the given {@code URI} does
+	 *  not exist (and can not be created)
 	 */
 	public static void writeToFile(String uri, String text) throws FileNotFoundException {
 		PrintWriter printWriter = new PrintWriter(uri);

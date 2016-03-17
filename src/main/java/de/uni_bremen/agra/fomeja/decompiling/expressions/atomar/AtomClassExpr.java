@@ -10,8 +10,7 @@ public class AtomClassExpr extends AtomExpr<Class<?>> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param value
-	 * @param object
+	 * @param value COMMENT
 	 */
 	public AtomClassExpr(Class<?> value) {
 		super(value);

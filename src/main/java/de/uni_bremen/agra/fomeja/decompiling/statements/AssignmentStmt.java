@@ -33,8 +33,8 @@ public class AssignmentStmt extends Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
-	 * @param value
+	 * @param name COMMENT
+	 * @param value COMMENT
 	 */
 	public AssignmentStmt(String name, Expression value) {
 		this.name = name;
@@ -47,7 +47,7 @@ public class AssignmentStmt extends Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getName() {
 		return this.name;
@@ -56,7 +56,7 @@ public class AssignmentStmt extends Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getValue() {
 		return this.value;

@@ -21,7 +21,9 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param character
+	 * @param character COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean isASCII(char character) {
@@ -31,7 +33,9 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
+	 * @param string COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean allCharsASCII(String string) {
@@ -44,7 +48,9 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
+	 * @param string COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean anyCharASCII(String string) {
@@ -57,7 +63,9 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param character
+	 * @param character COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean isUTF8(char character) {
@@ -67,7 +75,9 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
+	 * @param string COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean allCharsUTF8(String string) {
@@ -80,7 +90,9 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
+	 * @param string COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean anyCharUTF8(String string) {
@@ -93,7 +105,9 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param character
+	 * @param character COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean isUTF16(char character) {
@@ -103,7 +117,9 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
+	 * @param string COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean allCharsUTF16(String string) {
@@ -116,7 +132,9 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
+	 * @param string COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean anyCharUTF16(String string) {
@@ -132,8 +150,10 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
-	 * @param character
+	 * @param string COMMENT
+	 * @param character COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean hasChar(String string, int character) {
@@ -146,8 +166,10 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
-	 * @param character
+	 * @param string COMMENT
+	 * @param character COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean hasChar(String string, char character) {
@@ -157,8 +179,10 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
-	 * @param characters
+	 * @param string COMMENT
+	 * @param characters COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean hasAllChars(String string, int[] characters) {
@@ -171,8 +195,10 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
-	 * @param characters
+	 * @param string COMMENT
+	 * @param characters COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean hasAllChars(String string, char[] characters) {
@@ -185,8 +211,10 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
-	 * @param characters
+	 * @param string COMMENT
+	 * @param characters COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean hasAllChars(String string, String characters) {
@@ -196,8 +224,10 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
-	 * @param characters
+	 * @param string COMMENT
+	 * @param characters COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean hasAnyChar(String string, int[] characters) {
@@ -210,8 +240,10 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
-	 * @param characters
+	 * @param string COMMENT
+	 * @param characters COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean hasAnyChar(String string, char[] characters) {
@@ -224,8 +256,10 @@ public class StringMethods {
 	/**
 	 * COMMENT
 	 * 
-	 * @param string
-	 * @param characters
+	 * @param string COMMENT
+	 * @param characters COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	@PreparableMethod
 	public static boolean hasAnyChar(String string, String characters) {

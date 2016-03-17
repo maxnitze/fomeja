@@ -68,7 +68,9 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExprs
+	 * @param boolExprs COMMENT
+	 * 
+	 * @return COMMENT
 	 */
 	public CharSeqMap prepare(List<BoolExpression> boolExprs) {
 		boolean isNegated = false;
@@ -84,10 +86,10 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExpr
-	 * @param isNegated
+	 * @param boolExpr COMMENT
+	 * @param isNegated COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private LengthPairMap getLengthPairMap(BoolExpression boolExpr, boolean isNegated) {
 		if (boolExpr.hasAtomStringExprs()) {
@@ -135,10 +137,10 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param isNegated
+	 * @param expr COMMENT
+	 * @param isNegated COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private LengthPairMap getLengthPairMap(Expression expr, boolean isNegated) {
 		if (expr.hasAtomStringExprs()) {
@@ -173,10 +175,10 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param premExpr
-	 * @param isNegated
+	 * @param premExpr COMMENT
+	 * @param isNegated COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private LengthPairMap getLengthPairMap(PrematureExpr premExpr, boolean isNegated) {
 		if (premExpr instanceof PremAccessibleObjectExpr<?>) {
@@ -213,10 +215,10 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param compareExpr
-	 * @param isNegated
+	 * @param compareExpr COMMENT
+	 * @param isNegated COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private LengthPairMap getLengthPairMap(CompareExpr compareExpr, boolean isNegated) {
 		if (compareExpr.hasAtomStringExprs()) {
@@ -265,12 +267,12 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stringExpr1
-	 * @param operator
-	 * @param stringExpr2
-	 * @param isNegated
+	 * @param stringExpr1 COMMENT
+	 * @param operator COMMENT
+	 * @param stringExpr2 COMMENT
+	 * @param isNegated COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private LengthPairMap getLengthPairMapFromEquals(Expression stringExpr1, CompareOperator operator, Expression stringExpr2, boolean isNegated) {
 		LengthPairMap lengthPairMap = new LengthPairMap();
@@ -302,12 +304,12 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stringExpr
-	 * @param operator
-	 * @param lengthExpr
-	 * @param isNegated
+	 * @param stringExpr COMMENT
+	 * @param operator COMMENT
+	 * @param lengthExpr COMMENT
+	 * @param isNegated COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private LengthPairMap getLengthPairMapFromLength(Expression stringExpr, CompareOperator operator, Expression lengthExpr, boolean isNegated) {
 		NamedLengthPair namedLengthPair = this.getNamedLengthPair(stringExpr);
@@ -359,11 +361,11 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stringExpr
-	 * @param indexExpr
-	 * @param isNegated
+	 * @param stringExpr COMMENT
+	 * @param indexExpr COMMENT
+	 * @param isNegated COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private LengthPairMap getLengthPairMapFromCharAt(Expression stringExpr, Expression indexExpr, boolean isNegated) {
 		LengthPairMap lengthPairMap = new LengthPairMap();
@@ -380,9 +382,9 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stringExpr
+	 * @param stringExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private NamedLengthPair getNamedLengthPair(Expression stringExpr) {
 		if (stringExpr instanceof AtomStringExpr) {
@@ -430,11 +432,11 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param connector
-	 * @param isNegated
-	 * @param lengthPairMaps
+	 * @param connector COMMENT
+	 * @param isNegated COMMENT
+	 * @param lengthPairMaps COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private LengthPairMap boolMergeLengthPairMaps(BooleanConnector connector, boolean isNegated, LengthPairMap... lengthPairMaps) {
 		return this.mergeLengthPairMaps(connector, isNegated, true, lengthPairMaps);
@@ -443,11 +445,11 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param connector
-	 * @param isNegated
-	 * @param lengthPairMaps
+	 * @param connector COMMENT
+	 * @param isNegated COMMENT
+	 * @param lengthPairMaps COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private LengthPairMap mergeLengthPairMaps(BooleanConnector connector, boolean isNegated, LengthPairMap... lengthPairMaps) {
 		return this.mergeLengthPairMaps(connector, isNegated, false, lengthPairMaps);
@@ -456,12 +458,12 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param connector
-	 * @param isNegated
-	 * @param isBoolMerge
-	 * @param lengthPairMaps
+	 * @param connector COMMENT
+	 * @param isNegated COMMENT
+	 * @param isBoolMerge COMMENT
+	 * @param lengthPairMaps COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private LengthPairMap mergeLengthPairMaps(BooleanConnector connector, boolean isNegated, boolean isBoolMerge, LengthPairMap... lengthPairMaps) {
 		Set<String> stringExprNames = new HashSet<String>();
@@ -501,9 +503,9 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param lengthPairMap
+	 * @param lengthPairMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private CharSeqMap getCharSeqMapFromLengthPairMap(LengthPairMap lengthPairMap) {
 		CharSeqMap charSeqMap = new CharSeqMap();
@@ -518,11 +520,11 @@ public class CharSeqMapPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param isNegated
-	 * @param operator
-	 * @param integerExpr
+	 * @param isNegated COMMENT
+	 * @param operator COMMENT
+	 * @param integerExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private boolean adjustNegatedByExpression(boolean isNegated, CompareOperator operator, AtomIntegerExpr integerExpr) {
 		if (operator == CompareOperator.NOT_EQUAL)
@@ -570,10 +572,10 @@ public class CharSeqMapPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @param name
+		 * @param name COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public LengthPair get(String name) {
 			return this.map.get(name);
 		}
@@ -581,9 +583,9 @@ public class CharSeqMapPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @param name
-		 * @param minLength
-		 * @param maxLength
+		 * @param name COMMENT
+		 * @param minLength COMMENT
+		 * @param maxLength COMMENT
 		 */
 		public void add(String name, int minLength, int maxLength) {
 			LengthPair lengthPair = this.get(name);
@@ -597,7 +599,7 @@ public class CharSeqMapPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @param namedLengthPair
+		 * @param namedLengthPair COMMENT
 		 */
 		public void add(NamedLengthPair namedLengthPair) {
 			this.add(namedLengthPair.stringExpr, namedLengthPair.getMin(), namedLengthPair.getMax());
@@ -606,9 +608,9 @@ public class CharSeqMapPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @param stringExpr
-		 * @param minLength
-		 * @param maxLength
+		 * @param stringExpr COMMENT
+		 * @param minLength COMMENT
+		 * @param maxLength COMMENT
 		 */
 		public void add(AtomStringExpr stringExpr, int minLength, int maxLength) {
 			LengthPair lengthPair = this.get(stringExpr.getName());
@@ -654,9 +656,9 @@ public class CharSeqMapPreprocessor {
 			/**
 			 * COMMENT
 			 * 
-			 * @param stringExpr
-			 * @param min
-			 * @param max
+			 * @param stringExpr COMMENT
+			 * @param min COMMENT
+			 * @param max COMMENT
 			 */
 			public LengthPair(AtomStringExpr stringExpr, int min, int max) {
 				this.stringExpr = stringExpr;
@@ -670,8 +672,8 @@ public class CharSeqMapPreprocessor {
 			/**
 			 * COMMENT
 			 * 
-			 * @return
-			 */
+			 * @return COMMENT
+	 */
 			public AtomStringExpr getStringExpr() {
 				return this.stringExpr;
 			}
@@ -679,8 +681,8 @@ public class CharSeqMapPreprocessor {
 			/**
 			 * COMMENT
 			 * 
-			 * @return
-			 */
+			 * @return COMMENT
+	 */
 			public int getMin() {
 				return this.min;
 			}
@@ -688,8 +690,8 @@ public class CharSeqMapPreprocessor {
 			/**
 			 * COMMENT
 			 * 
-			 * @return
-			 */
+			 * @return COMMENT
+	 */
 			public int getMax() {
 				return max < Integer.MAX_VALUE ? max : FomejaDefaults.getDefaultStringLength();
 			}
@@ -722,10 +724,10 @@ public class CharSeqMapPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @param stringExpr
-		 * @param min
-		 * @param max
-		 * @param isFinished
+		 * @param stringExpr COMMENT
+		 * @param min COMMENT
+		 * @param max COMMENT
+		 * @param isFinished COMMENT
 		 */
 		public NamedLengthPair(AtomStringExpr stringExpr, int min, int max, boolean isFinished) {
 			this.stringExpr = stringExpr;
@@ -738,8 +740,8 @@ public class CharSeqMapPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public int getMin() {
 			return this.substMin < this.min ? this.min : this.substMin;
 		}
@@ -747,8 +749,8 @@ public class CharSeqMapPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public int getMax() {
 			return this.max;
 		}
@@ -756,7 +758,7 @@ public class CharSeqMapPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @param value
+		 * @param value COMMENT
 		 */
 		public void addSubstValue(int value) {
 			this.substMin += value;
@@ -765,8 +767,8 @@ public class CharSeqMapPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public boolean isFinished() {
 			return this.isFinished;
 		}

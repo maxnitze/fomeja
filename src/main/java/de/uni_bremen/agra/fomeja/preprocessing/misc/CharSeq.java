@@ -40,7 +40,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
+	 * @param expr COMMENT
 	 */
 	public CharSeq(AtomStringExpr expr) {
 		this.expr = expr;
@@ -74,7 +74,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public AtomStringExpr getExpr() {
 		return this.expr;
@@ -83,7 +83,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getName() {
 		return this.expr.getName();
@@ -92,9 +92,9 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @param index
+	 * @param index COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public AtomCharacterExpr get(int index) {
 		return this.charSeq[index];
@@ -103,7 +103,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isVariable() {
 		return this.isVariable;
@@ -115,7 +115,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int minLength() {
 		this.updateCharArray();
@@ -125,7 +125,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int maxLength() {
 		this.updateCharArray();
@@ -135,7 +135,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int curLength() {
 		this.updateCharArray();
@@ -145,9 +145,9 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @param length
+	 * @param length COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int setCurLength(int length) {
 		this.curLength = length;
@@ -158,8 +158,8 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @param operator
-	 * @param value
+	 * @param operator COMMENT
+	 * @param value COMMENT
 	 */
 	public void addLengthValue(CompareOperator operator, int value) {
 		if (value >= 0 && value < Integer.MAX_VALUE) {
@@ -190,7 +190,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @param charSeq
+	 * @param charSeq COMMENT
 	 */
 	public void addLengthValues(CharSeq charSeq) {
 		this.addLengthValue(CompareOperator.GREATER_EQUAL, charSeq.minLength());
@@ -203,7 +203,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public BoolExpression getLengthExpr() {
 		if (this.minLength > this.maxLength)
@@ -234,7 +234,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public ConnectedBoolExpr getCharBoundaryExpr() {
 		ConnectedBoolExpr charBoundaryExpr = new ConnectedBoolExpr(BooleanConnector.AND);
@@ -250,7 +250,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	@Override
 	public CharSeq clone() {
@@ -266,7 +266,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	@Override
 	public String toString() {
@@ -296,9 +296,9 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @param i
+	 * @param i COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private BoolExpression getCharBoundaries(int i) {
 		return new CompareExpr(this.charSeq[i], CompareOperator.LESS, new AtomIntegerExpr(this.getUpperBoundary()));
@@ -307,7 +307,7 @@ public class CharSeq {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private int getUpperBoundary() {
 		return 1 << 16;

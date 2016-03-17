@@ -33,8 +33,8 @@ public class LoopStmt extends Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @param condition
-	 * @param body
+	 * @param condition COMMENT
+	 * @param body COMMENT
 	 */
 	public LoopStmt(BoolExpression condition, StatementSeq body) {
 		this.condition = condition;
@@ -44,7 +44,7 @@ public class LoopStmt extends Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public BoolExpression getCondition() {
 		return this.condition;
@@ -53,7 +53,7 @@ public class LoopStmt extends Statement {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public StatementSeq getBody() {
 		return this.body;

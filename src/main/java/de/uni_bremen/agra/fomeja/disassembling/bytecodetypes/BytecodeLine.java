@@ -1,6 +1,6 @@
 package de.uni_bremen.agra.fomeja.disassembling.bytecodetypes;
 
-/** imports */
+/* imports */
 import de.uni_bremen.agra.fomeja.types.Opcode;
 
 /**
@@ -23,9 +23,9 @@ public abstract class BytecodeLine {
 	/**
 	 * Constructor for a new byte code line.
 	 * 
-	 * @param line
-	 * @param lineNumber
-	 * @param opcode
+	 * @param line COMMENT
+	 * @param lineNumber COMMENT
+	 * @param opcode COMMENT
 	 */
 	public BytecodeLine(String line, int lineNumber, Opcode opcode) {
 		this.line = line;
@@ -38,32 +38,36 @@ public abstract class BytecodeLine {
 	 * ----- ----- ----- ----- ----- */
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getLine() {
 		return this.line;
 	}
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int getLineNumber() {
 		return this.lineNumber;
 	}
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Opcode getOpcode() {
 		return this.opcode;
 	}
 
 	/**
+	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int getFollowingLineNumber() {
 		return this.followingLineNumber;

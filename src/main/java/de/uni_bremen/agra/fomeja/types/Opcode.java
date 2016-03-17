@@ -135,7 +135,7 @@ public enum Opcode {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getName() {
 		return this.name;
@@ -144,7 +144,7 @@ public enum Opcode {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int getFollowingLineOffset() {
 		return this.followingLineOffset;

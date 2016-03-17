@@ -12,7 +12,7 @@ public class FomejaModelCollectionException extends RuntimeException {
 	/**
 	 * COMMENT
 	 * 
-	 * @param message
+	 * @param message COMMENT
 	 */
 	public FomejaModelCollectionException(String message) {
 		super(message);

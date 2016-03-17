@@ -14,7 +14,7 @@ public class AtomFloatExpr extends AtomExpr<Float> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param value
+	 * @param value COMMENT
 	 */
 	public AtomFloatExpr(Float value) {
 		super(value);
@@ -23,8 +23,8 @@ public class AtomFloatExpr extends AtomExpr<Float> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param field
-	 * @param preFields
+	 * @param field COMMENT
+	 * @param preFields COMMENT
 	 */
 	public AtomFloatExpr(Field field, PreFieldList preFields) {
 		super(field, preFields);
@@ -33,7 +33,7 @@ public class AtomFloatExpr extends AtomExpr<Float> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
+	 * @param name COMMENT
 	 */
 	public AtomFloatExpr(String name) {
 		super(name, true);

@@ -22,7 +22,7 @@ public class ConstraintParameterList {
 	/**
 	 * COMMENT
 	 * 
-	 * @param size
+	 * @param size COMMENT
 	 */
 	public ConstraintParameterList(int size) {
 		this.params = new ConstraintParameter[size];
@@ -35,9 +35,9 @@ public class ConstraintParameterList {
 	/**
 	 * COMMENT
 	 * 
-	 * @param index
+	 * @param index COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public ConstraintParameter get(int index) {
 		return this.params[index];
@@ -46,7 +46,7 @@ public class ConstraintParameterList {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int size() {
 		return this.size;
@@ -58,9 +58,9 @@ public class ConstraintParameterList {
 	/**
 	 * COMMENT
 	 * 
-	 * @param index
-	 * @param component
-	 * @param fields
+	 * @param index COMMENT
+	 * @param component COMMENT
+	 * @param fields COMMENT
 	 */
 	public void add(int index, Object component, List<Field> fields) {
 		this.params[index] = new ConstraintParameter(component, fields);
@@ -69,7 +69,7 @@ public class ConstraintParameterList {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isIncrementable() {
 		for (int i=this.size-1; i>=0; i--)
@@ -81,7 +81,7 @@ public class ConstraintParameterList {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean increment() {
 		for (int i=this.size-1; i>=0; i--) {
@@ -226,7 +226,7 @@ public class ConstraintParameterList {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
+		 * @return COMMENT
 		 */
 		@Override
 		public String toString() {

@@ -22,7 +22,7 @@ import de.uni_bremen.agra.fomeja.exceptions.FomejaModelCollectionException;
  * 
  * @author Max Nitze
  *
- * @param <E>
+ * @param <E> COMMENT
  */
 public class FomejaModelCollection<E> implements List<Object[]> {
 	/** COMMENT */
@@ -39,7 +39,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param cls
+	 * @param cls COMMENT
 	 */
 	public FomejaModelCollection(Class<E> cls) {
 		this(cls, 0);
@@ -48,8 +48,8 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param cls
-	 * @param limit
+	 * @param cls COMMENT
+	 * @param limit COMMENT
 	 */
 	public FomejaModelCollection(Class<E> cls, int limit) {
 		this.modelGenerator = new FomejaModel<E>(cls);
@@ -68,7 +68,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private void getNextModelElement() {
 		if (0 >= this.limit || this.size < this.limit) {
@@ -220,7 +220,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 	 * 
 	 * @author Max Nitze
 	 *
-	 * @param <T>
+	 * @param <T> COMMENT
 	 */
 	private class ModelElement<T> {
 		/** COMMENT */
@@ -236,9 +236,9 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		/**
 		 * COMMENT
 		 * 
-		 * @param value
-		 * @param prev
-		 * @param next
+		 * @param value COMMENT
+		 * @param prev COMMENT
+		 * @param next COMMENT
 		 */
 		private ModelElement(T value, ModelElement<T> prev, ModelElement<T> next) {
 			this.setValue(value);
@@ -252,8 +252,8 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public T getValue() {
 			return this.value;
 		}
@@ -261,7 +261,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		/**
 		 * COMMENT
 		 * 
-		 * @param value
+		 * @param value COMMENT
 		 */
 		public void setValue(T value) {
 			this.value = value;
@@ -270,8 +270,8 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public ModelElement<T> getPrev() {
 			return this.prev;
 		}
@@ -279,7 +279,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		/**
 		 * COMMENT
 		 * 
-		 * @param next
+		 * @param next COMMENT
 		 */
 		public void setPrev(ModelElement<T> prev) {
 			this.prev = prev;
@@ -288,8 +288,8 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public ModelElement<T> getNext() {
 			return this.next;
 		}
@@ -297,8 +297,8 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public ModelElement<T> getNextWithGeneration() {
 			if (this.next == null)
 				getNextModelElement();
@@ -308,7 +308,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		/**
 		 * COMMENT
 		 * 
-		 * @param next
+		 * @param next COMMENT
 		 */
 		public void setNext(ModelElement<T> next) {
 			this.next = next;
@@ -317,8 +317,8 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
-		 */
+		 * @return COMMENT
+	 */
 		public Object[] getOrderedValues() {
 			if (this.orderedValues == null)
 				this.orderedValues = this.getVarFieldValuesInOrder(this.value);
@@ -328,10 +328,10 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		/**
 		 * COMMENT
 		 * 
-		 * @param element
+		 * @param element COMMENT
 		 * 
-		 * @return
-		 * @throws IllegalAccessException 
+		 * @return COMMENT
+* @throws IllegalAccessException 
 		 * @throws IllegalArgumentException 
 		 */
 		private Object[] getVarFieldValuesInOrder(T element) {
@@ -388,7 +388,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		/**
 		 * COMMENT
 		 * 
-		 * @param startIndex
+		 * @param startIndex COMMENT
 		 */
 		public FomejaListIterator(int startIndex) {
 			this.current = first;

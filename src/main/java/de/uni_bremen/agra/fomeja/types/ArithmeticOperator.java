@@ -33,7 +33,7 @@ public enum ArithmeticOperator {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getAsciiName() {
 		return this.asciiName;
@@ -42,10 +42,10 @@ public enum ArithmeticOperator {
 	/**
 	 * COMMENT
 	 * 
-	 * @param d1
-	 * @param d2
+	 * @param d1 COMMENT
+	 * @param d2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Double calc(Double d1, Double d2) {
 		switch (this) {
@@ -67,10 +67,10 @@ public enum ArithmeticOperator {
 	/**
 	 * COMMENT
 	 * 
-	 * @param f1
-	 * @param f2
+	 * @param f1 COMMENT
+	 * @param f2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Float calc(Float f1, Float f2) {
 		switch (this) {
@@ -92,10 +92,10 @@ public enum ArithmeticOperator {
 	/**
 	 * COMMENT
 	 * 
-	 * @param i1
-	 * @param i2
+	 * @param i1 COMMENT
+	 * @param i2 COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Integer calc(Integer i1, Integer i2) {
 		switch (this) {

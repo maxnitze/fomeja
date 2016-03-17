@@ -22,7 +22,7 @@ public class NotExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExpr
+	 * @param boolExpr COMMENT
 	 */
 	public NotExpr(BoolExpression boolExpr) {
 		this.boolExpr = boolExpr;
@@ -34,7 +34,7 @@ public class NotExpr extends BoolExpression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public BoolExpression getBoolExpr() {
 		return this.boolExpr;

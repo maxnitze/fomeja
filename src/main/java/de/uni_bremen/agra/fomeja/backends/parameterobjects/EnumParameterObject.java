@@ -17,8 +17,8 @@ public class EnumParameterObject extends RangedParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFields
-	 * @param enumClass
+	 * @param preFields COMMENT
+	 * @param enumClass COMMENT
 	 */
 	public EnumParameterObject(PreFieldList preFields, Class<Enum<?>> enumClass) {
 		super(preFields);
@@ -28,9 +28,9 @@ public class EnumParameterObject extends RangedParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFields
-	 * @param enumClass
-	 * @param dependentParameterObject
+	 * @param preFields COMMENT
+	 * @param enumClass COMMENT
+	 * @param dependentParameterObject COMMENT
 	 */
 	public EnumParameterObject(PreFieldList preFields, Class<Enum<?>> enumClass, ObjectParameterObject dependentParameterObject) {
 		super(preFields, dependentParameterObject);
@@ -43,7 +43,7 @@ public class EnumParameterObject extends RangedParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Class<Enum<?>> getEnumClass() {
 		return this.enumClass;

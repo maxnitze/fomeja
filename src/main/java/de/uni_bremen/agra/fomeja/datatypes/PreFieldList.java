@@ -26,7 +26,7 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
+	 * @param object COMMENT
 	 */
 	public PreFieldList(Object object) {
 		this.object = object;
@@ -36,8 +36,8 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
-	 * @param preFields
+	 * @param object COMMENT
+	 * @param preFields COMMENT
 	 */
 	public PreFieldList(Object object, List<PreField> preFields) {
 		super(preFields);
@@ -51,8 +51,8 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
-	 * @param preFields
+	 * @param object COMMENT
+	 * @param preFields COMMENT
 	 */
 	public PreFieldList(Object object, PreField... preFields) {
 		super(Arrays.asList(preFields));
@@ -69,7 +69,7 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Object getObject() {
 		return this.object;
@@ -78,7 +78,7 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getName() {
 		StringBuilder name = new StringBuilder();
@@ -101,7 +101,7 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isVariable() {
 		return this.variablePreFields > 0;
@@ -113,9 +113,9 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param index
+	 * @param index COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public PreFieldList head(int index) {
 		return new PreFieldList(this.object, this.subList(0, index >= 0 ? index : this.size()+index));
@@ -124,9 +124,9 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param index
+	 * @param index COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public PreFieldList tail(int index) {
 		return new PreFieldList(this.object, this.subList(index >= 0 ? index : this.size()-1+index, this.size()));
@@ -135,7 +135,7 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public PreFieldList variableHead() {
 		int i;
@@ -148,7 +148,7 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public PreField first() {
 		if (this.size() > 0)
@@ -160,7 +160,7 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public PreField last() {
 		if (this.size() > 0)
@@ -172,9 +172,9 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFieldList
+	 * @param preFieldList COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isListPrefix(PreFieldList preFieldList) {
 		if (this.size() < preFieldList.size())
@@ -188,10 +188,10 @@ public class PreFieldList extends ArrayList<PreField> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param index
-	 * @param startingObject
+	 * @param index COMMENT
+	 * @param startingObject COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Object getFieldValue(int index, Object startingObject) {
 		Object object = startingObject;

@@ -13,7 +13,7 @@ public class EvaluationException extends RuntimeException {
 	/**
 	 * COMMENT
 	 * 
-	 * @param message
+	 * @param message COMMENT
 	 */
 	public EvaluationException(String message) {
 		super(message);

@@ -37,7 +37,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param storeIndex
+	 * @param storeIndex COMMENT
 	 */
 	public StatementSeq(int storeIndex) {
 		this.paramStmts = new ArrayList<AssignmentStmt>();
@@ -49,8 +49,8 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param storeIndex
-	 * @param stmts
+	 * @param storeIndex COMMENT
+	 * @param stmts COMMENT
 	 */
 	public StatementSeq(int storeIndex, Statement... stmts) {
 		this.paramStmts = new ArrayList<AssignmentStmt>();
@@ -67,7 +67,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public ReturnStmt getReturnStmt() {
 		return this.returnStmt;
@@ -76,7 +76,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param returnStmt
+	 * @param returnStmt COMMENT
 	 */
 	public void setReturnStmt(ReturnStmt returnStmt) {
 		this.returnStmt = returnStmt;
@@ -85,7 +85,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int getStoreIndex() {
 		return this.storeIndex;
@@ -97,9 +97,9 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stmt
+	 * @param stmt COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean add(Statement stmt) {
 		return this.stmts.add(stmt);
@@ -108,9 +108,9 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stmt
+	 * @param stmt COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean addParam(AssignmentStmt stmt) {
 		return this.paramStmts.add(stmt);
@@ -119,9 +119,9 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stmtSeq
+	 * @param stmtSeq COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean add(StatementSeq stmtSeq) {
 		this.returnStmt = stmtSeq.returnStmt;
@@ -133,7 +133,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int length() {
 		return this.stmts.size() + (this.returnStmt != null ? 1 : 0);
@@ -142,7 +142,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isEmpty() {
 		return this.length() == 0;
@@ -161,7 +161,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Class<?> getResultType() {
 		Class<?> resultType = this.returnStmt.getReturnExpr().getResultType();
@@ -177,8 +177,8 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param regex
-	 * @param replacement
+	 * @param regex COMMENT
+	 * @param replacement COMMENT
 	 */
 	public void replaceAll(String regex, Object replacement) {
 		for (AssignmentStmt stmt : this.paramStmts)
@@ -191,9 +191,9 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param regex
+	 * @param regex COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean matches(String regex) {
 		for (AssignmentStmt stmt : this.paramStmts)
@@ -208,9 +208,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param exprs
-	 * 
-	 * @return
+	 * @param exprs COMMENT
 	 */
 	public void substitude(Map<String, Expression> exprs) {
 		this.substitudeParams(exprs);
@@ -222,9 +220,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param exprs
-	 * 
-	 * @return
+	 * @param exprs COMMENT
 	 */
 	public void substitudeParams(Map<String, Expression> exprs) {
 		for (AssignmentStmt stmt : this.paramStmts)
@@ -234,10 +230,10 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param outerState
-	 * @param varExprs
+	 * @param outerState COMMENT
+	 * @param compVars COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public FlowControlStmt evaluate(State outerState, ComponentVariables compVars) {
 		State state = outerState.clone();
@@ -256,11 +252,11 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param state
-	 * @param compVars
-	 * @param index
+	 * @param state COMMENT
+	 * @param compVars COMMENT
+	 * @param index COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private FlowControlStmt evaluateSeq(State state, ComponentVariables compVars, int index) {
 		for (int i=index; i<this.stmts.size(); i++) {
@@ -299,9 +295,9 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param returnStmt
-	 * @param compVars
-	 * @param index
+	 * @param returnStmt COMMENT
+	 * @param compVars COMMENT
+	 * @param index COMMENT
 	 */
 	private void evaluateVoidExprs(ReturnStmt returnStmt, ComponentVariables compVars, int index) {
 		Set<AtomVoidExpr> lastAtomVoidExprs, curAtomVoidExprs = returnStmt.getReturnExpr().getAtomVoidExprs();
@@ -324,7 +320,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean evalsToBoolExpr() {
 		return ClassUtils.isBooleanType(this.getResultType()) || ClassUtils.isIntegerType(this.getResultType());
@@ -344,7 +340,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isUnfinished() {
 		for (AssignmentStmt stmt : this.paramStmts)
@@ -364,11 +360,11 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param isRequired
-	 * @param compVars
-	 * @param state
+	 * @param isRequired COMMENT
+	 * @param compVars COMMENT
+	 * @param state COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Set<AtomExpr<?>> getRequiredAtomExprs(boolean isRequired, ComponentVariables compVars, State state) {
 		Set<AtomExpr<?>> requiredAtomExprs = new HashSet<AtomExpr<?>>();
@@ -383,7 +379,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean hasAtomStringExprs() {
 		for (AssignmentStmt stmt : this.paramStmts)
@@ -400,7 +396,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Set<AtomStringExpr> getAtomStringExprs() {
 		Set<AtomStringExpr> atomStringExprs = new HashSet<AtomStringExpr>();
@@ -418,9 +414,9 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
+	 * @param object COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	@Override
 	public boolean equals(Object object) {
@@ -449,7 +445,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	@Override
 	public StatementSeq clone() {
@@ -465,7 +461,7 @@ public class StatementSeq implements Cloneable {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	@Override
 	public String toString() {

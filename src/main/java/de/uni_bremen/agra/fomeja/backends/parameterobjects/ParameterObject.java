@@ -27,7 +27,7 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFieldList
+	 * @param preFieldList COMMENT
 	 */
 	public ParameterObject(PreFieldList preFieldList) {
 		this.preFieldList = preFieldList;
@@ -39,8 +39,8 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param preFieldList
-	 * @param dependentParameterObject
+	 * @param preFieldList COMMENT
+	 * @param dependentParameterObject COMMENT
 	 */
 	public ParameterObject(PreFieldList preFieldList, ObjectParameterObject dependentParameterObject) {
 		this.preFieldList = preFieldList;
@@ -55,7 +55,7 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Object getObject() {
 		return this.preFieldList.getObject();
@@ -64,7 +64,7 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getName() {
 		return this.preFieldList.getName();
@@ -73,7 +73,7 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public PreFieldList getPreFieldList() {
 		return this.preFieldList;
@@ -82,7 +82,7 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isAssigned() {
 		return this.isAssigned;
@@ -98,7 +98,7 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public ObjectParameterObject getDependentParameterObject() {
 		return this.dependentParameterObject;
@@ -107,7 +107,7 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param dependentParameterObject
+	 * @param dependentParameterObject COMMENT
 	 */
 	public void setDependentParameterObject(ObjectParameterObject dependentParameterObject) {
 		this.dependentParameterObject = dependentParameterObject;
@@ -116,7 +116,7 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean isDependend() {
 		return this.dependentParameterObject != null;
@@ -128,9 +128,9 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param proverResult
+	 * @param proverResult COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	protected abstract Object getFieldObject(Object proverResult);
 
@@ -140,7 +140,7 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param proverResults
+	 * @param resultModel COMMENT
 	 */
 	public void assign(ResultModel resultModel) {
 		Object proverResult = resultModel.getOrDefault(this.getName(), this.preFieldList.last().getField().getType());
@@ -173,7 +173,7 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Object getFieldValue() {
 		Object object = this.preFieldList.getObject();
@@ -186,10 +186,10 @@ public abstract class ParameterObject {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
-	 * @param field
+	 * @param object COMMENT
+	 * @param field COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Object getFieldValue(Object object, Field field) {
 		boolean accessibility = field.isAccessible();

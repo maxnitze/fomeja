@@ -45,11 +45,11 @@ public class StringStartsWithPreprocessor extends MethodExprPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stringExpr
-	 * @param argStringExpr
-	 * @param charSeqMap
+	 * @param stringExpr COMMENT
+	 * @param argStringExpr COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private IfThenElseExpr prepareStringStartsWithExpr(AtomStringExpr stringExpr, AtomStringExpr argStringExpr, CharSeqMap charSeqMap) {
 		CharSeq stringCharSeq = charSeqMap.getOrCreate(stringExpr);

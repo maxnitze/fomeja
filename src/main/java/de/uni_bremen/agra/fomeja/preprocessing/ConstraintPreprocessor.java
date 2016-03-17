@@ -76,9 +76,9 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
+	 * @param name COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int getMaxLength(String name) {
 		return this.charSeqMap.get(name).maxLength();
@@ -89,9 +89,9 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param constraint
+	 * @param constraint COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public BoolExpression prepare(Constraint constraint) {
 		return this.prepare(constraint.getConstraintExprs());
@@ -100,9 +100,9 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExprs
+	 * @param boolExprs COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public BoolExpression prepare(List<BoolExpression> boolExprs) {
 		CharSeqMap charSeqMap = this.getCurrentCharSeqMap(boolExprs);
@@ -119,9 +119,7 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param compareExprPreprocessor
-	 * 
-	 * @return
+	 * @param compareExprPreprocessor COMMENT
 	 */
 	public void register(CompareExprPreprocessor compareExprPreprocessor) {
 		this.compareExprPreprocessors.addFirst(compareExprPreprocessor);
@@ -130,9 +128,7 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param methodExprPreprocessor
-	 * 
-	 * @return
+	 * @param methodExprPreprocessor COMMENT
 	 */
 	public void register(MethodExprPreprocessor methodExprPreprocessor) {
 		this.methodExprPreprocessors.addFirst(methodExprPreprocessor);
@@ -144,9 +140,9 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExpr
+	 * @param boolExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private boolean matches(BoolExpression boolExpr) {
 		if (boolExpr instanceof AtomBoolExpr)
@@ -180,9 +176,9 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
+	 * @param expr COMMENT
 	 *
-	 * @return
+	 * @return COMMENT
 	 */
 	private boolean matches(Expression expr) {
 		if (expr instanceof BoolExpression)
@@ -209,9 +205,9 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param premExpr
+	 * @param premExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private boolean matches(PrematureExpr premExpr) {
 		if (premExpr instanceof PremMethodExpr) {
@@ -255,10 +251,10 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExpr
-	 * @param charSeqMap
+	 * @param boolExpr COMMENT
+	 * @param charSeqMap COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private BoolExpression prepare(BoolExpression boolExpr, CharSeqMap charSeqMap) {
 		if (this.matches(boolExpr)) {
@@ -312,10 +308,10 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param expr
-	 * @param charSeqMap
+	 * @param expr COMMENT
+	 * @param charSeqMap COMMENT
 	 *
-	 * @return
+	 * @return COMMENT
 	 */
 	private Expression prepare(Expression expr, CharSeqMap charSeqMap) {
 		if (this.matches(expr)) {
@@ -349,10 +345,10 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param premExpr
-	 * @param charSeqMap
+	 * @param premExpr COMMENT
+	 * @param charSeqMap COMMENT
 	 *
-	 * @return
+	 * @return COMMENT
 	 */
 	private Expression prepare(PrematureExpr premExpr, CharSeqMap charSeqMap) {
 		if (premExpr instanceof PremMethodExpr) {
@@ -417,9 +413,9 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param boolExprs
+	 * @param boolExprs COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private CharSeqMap getCurrentCharSeqMap(List<BoolExpression> boolExprs) {
 		return this.charSeqMapPreprocessor.prepare(boolExprs);
@@ -428,10 +424,10 @@ public class ConstraintPreprocessor {
 	/**
 	 * COMMENT
 	 * 
-	 * @param charSeqMap
-	 * @param boolExpr
+	 * @param charSeqMap COMMENT
+	 * @param boolExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private BoolExpression connectCharSeqMap(CharSeqMap charSeqMap, BoolExpression boolExpr) {
 		ConnectedBoolExpr charSeqMapLengthExpr = charSeqMap.getCharSeqExprs();
@@ -455,8 +451,8 @@ public class ConstraintPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @param atomStringExprs
-		 * @param charSeqMap
+		 * @param atomStringExprs COMMENT
+		 * @param charSeqMap COMMENT
 		 */
 		public CharSeqSet(Set<AtomStringExpr> atomStringExprs, CharSeqMap charSeqMap) {
 			this.size = atomStringExprs.size();
@@ -470,7 +466,7 @@ public class ConstraintPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
+		 * @return COMMENT
 		 */
 		public boolean increment() {
 			if (!this.isInitialized) {
@@ -485,7 +481,7 @@ public class ConstraintPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
+		 * @return COMMENT
 		 */
 		public ConnectedBoolExpr getLenghtExpr() {
 			ConnectedBoolExpr lengthExpr = new ConnectedBoolExpr(BooleanConnector.AND);
@@ -519,9 +515,9 @@ public class ConstraintPreprocessor {
 		/**
 		 * COMMENT
 		 * 
-		 * @param i
+		 * @param i COMMENT
 		 * 
-		 * @return
+		 * @return COMMENT
 		 */
 		private boolean increment(int i) {
 			if (i < this.size) {

@@ -35,7 +35,7 @@ public class FomejaSolver {
 	/**
 	 * COMMENT
 	 * 
-	 * @param prover
+	 * @param prover COMMENT
 	 */
 	public FomejaSolver(Prover<?> prover) {
 		this.prover = prover;

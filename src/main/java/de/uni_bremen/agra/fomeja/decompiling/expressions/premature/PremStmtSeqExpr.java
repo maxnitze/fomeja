@@ -34,7 +34,7 @@ public class PremStmtSeqExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stmtSeq
+	 * @param stmtSeq COMMENT
 	 */
 	public PremStmtSeqExpr(StatementSeq stmtSeq) {
 		this.stmtSeq = stmtSeq;
@@ -44,8 +44,8 @@ public class PremStmtSeqExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stmtSeq
-	 * @param substState
+	 * @param stmtSeq COMMENT
+	 * @param substState COMMENT
 	 */
 	private PremStmtSeqExpr(StatementSeq stmtSeq, State substState) {
 		this.stmtSeq = stmtSeq;

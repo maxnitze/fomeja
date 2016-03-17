@@ -34,8 +34,8 @@ public class PremArrayelementExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param arrayExpr
-	 * @param indexExpr
+	 * @param arrayExpr COMMENT
+	 * @param indexExpr COMMENT
 	 */
 	public PremArrayelementExpr(Expression arrayExpr, Expression indexExpr) {
 		this.arrayExpr = arrayExpr;
@@ -58,7 +58,7 @@ public class PremArrayelementExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getArrayExpr() {
 		return this.arrayExpr;
@@ -67,7 +67,7 @@ public class PremArrayelementExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getIndexExpr() {
 		return this.indexExpr;
@@ -180,7 +180,7 @@ public class PremArrayelementExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Expression handleArrayelement() {
 		if (this.arrayExpr instanceof AtomObjectExpr
@@ -202,9 +202,9 @@ public class PremArrayelementExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param object
+	 * @param object COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private AtomExpr<?> getAtomExprFromValue(Object object) {
 		if (ClassUtils.isBooleanType(object.getClass()))

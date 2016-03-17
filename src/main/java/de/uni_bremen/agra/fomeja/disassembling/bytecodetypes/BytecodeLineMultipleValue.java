@@ -16,10 +16,10 @@ public class BytecodeLineMultipleValue extends BytecodeLine {
 	/**
 	 * COMMENT
 	 * 
-	 * @param line
-	 * @param lineNumber
-	 * @param opcode
-	 * @param values
+	 * @param line COMMENT
+	 * @param lineNumber COMMENT
+	 * @param opcode COMMENT
+	 * @param values COMMENT
 	 */
 	public BytecodeLineMultipleValue(String line, int lineNumber, Opcode opcode, Object[] values) {
 		super(line, lineNumber, opcode);
@@ -33,7 +33,7 @@ public class BytecodeLineMultipleValue extends BytecodeLine {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Object[] getValues() {
 		return this.values;

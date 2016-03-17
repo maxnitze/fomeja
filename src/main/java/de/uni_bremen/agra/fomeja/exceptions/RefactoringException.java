@@ -13,7 +13,7 @@ public class RefactoringException extends RuntimeException {
 	/**
 	 * COMMENT
 	 * 
-	 * @param message
+	 * @param message COMMENT
 	 */
 	public RefactoringException(String message) {
 		super(message);

@@ -53,7 +53,7 @@ public class ArithmeticExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getExpr1() {
 		return this.expr1;
@@ -62,7 +62,7 @@ public class ArithmeticExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getExpr2() {
 		return this.expr2;
@@ -71,7 +71,7 @@ public class ArithmeticExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public ArithmeticOperator getOperator() {
 		return this.operator;
@@ -233,7 +233,7 @@ public class ArithmeticExpr extends Expression {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Expression handleArithmetic() {
 		if (this.expr1 instanceof AtomExpr<?> && this.expr2 instanceof AtomExpr<?>

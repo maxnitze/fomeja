@@ -14,7 +14,7 @@ import de.uni_bremen.agra.fomeja.decompiling.misc.ComponentVariables;
  * 
  * @author Max Nitze
  *
- * @param <T>
+ * @param <T> COMMENT
  */
 public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 	/** COMMENT */
@@ -23,8 +23,8 @@ public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param type
-	 * @param size
+	 * @param type COMMENT
+	 * @param size COMMENT
 	 */
 	public AtomArrayExpr(Class<T> type, int size) {
 		super(new Expression[size]);
@@ -39,7 +39,7 @@ public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public int length() {
 		return this.getValue().length;
@@ -48,9 +48,9 @@ public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param index
+	 * @param index COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression get(int index) {
 		return this.getValue()[index];
@@ -59,8 +59,8 @@ public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 	/**
 	 * COMMENT
 	 * 
-	 * @param index
-	 * @param expr
+	 * @param index COMMENT
+	 * @param expr COMMENT
 	 */
 	public void set(int index, Expression expr) {
 		this.getValue()[index] = expr;
@@ -69,7 +69,7 @@ public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Class<?> getType() {
 		return this.type;

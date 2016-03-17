@@ -40,7 +40,7 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param underlyingMap
+	 * @param underlyingMap COMMENT
 	 */
 	public CharSeqMap(CharSeqMap underlyingMap) {
 		this.charSeqMap = new HashMap<String, CharSeq>();
@@ -55,7 +55,7 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public String getName() {
 		return "string-CharSeqMap@" + Integer.toHexString(this.hashCode());
@@ -67,9 +67,9 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
+	 * @param name COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public CharSeq get(String name) {
 		return this.charSeqMap.get(name) == null && this.underlyingMap != null ? this.underlyingMap.get(name) : this.charSeqMap.get(name);
@@ -78,9 +78,9 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param atomStringExpr
+	 * @param atomStringExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public CharSeq getOrCreate(AtomStringExpr atomStringExpr) {
 		CharSeq charSeq = this.get(atomStringExpr.getName());
@@ -98,11 +98,11 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param origCharSeq
-	 * @param substCharSeq
-	 * @param beginIdx
+	 * @param origCharSeq COMMENT
+	 * @param substCharSeq COMMENT
+	 * @param beginIdx COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean addSubstringExpr(CharSeq origCharSeq, CharSeq substCharSeq, int beginIdx) {
 		return this.substringExprs.add(new SubstringExpr(origCharSeq, substCharSeq, beginIdx, -1));
@@ -111,12 +111,12 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param origCharSeq
-	 * @param substCharSeq
-	 * @param beginIdx
-	 * @param endIdx
+	 * @param origCharSeq COMMENT
+	 * @param substCharSeq COMMENT
+	 * @param beginIdx COMMENT
+	 * @param endIdx COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public boolean addSubstringExpr(CharSeq origCharSeq, CharSeq substCharSeq, int beginIdx, int endIdx) {
 		return this.substringExprs.add(new SubstringExpr(origCharSeq, substCharSeq, beginIdx, endIdx));
@@ -128,9 +128,9 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stringExpr
-	 * @param operator
-	 * @param lengthValue
+	 * @param stringExpr COMMENT
+	 * @param operator COMMENT
+	 * @param lengthValue COMMENT
 	 */
 	public void addSubsequentLengthValue(AtomStringExpr stringExpr, CompareOperator operator, Expression lengthValue) {
 		this.subsequentExprs.add(new CompareExpr(stringExpr.getLengthExpr(), operator, lengthValue));
@@ -139,7 +139,7 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param charSeqMap
+	 * @param charSeqMap COMMENT
 	 */
 	public void addAllSubsequentCharSeqs(CharSeqMap charSeqMap) {
 		for (BoolExpression subsequentExpr : charSeqMap.subsequentExprs)
@@ -152,9 +152,9 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param charSeqName
-	 * @param operator
-	 * @param value
+	 * @param charSeqName COMMENT
+	 * @param operator COMMENT
+	 * @param value COMMENT
 	 */
 	public void addLengthValue(String charSeqName, CompareOperator operator, int value) {
 		if (this.wouldChangeLengthExpr(charSeqName, operator, value) && this.cloningGet(charSeqName) != null)
@@ -164,9 +164,9 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param stringExpr
-	 * @param operator
-	 * @param value
+	 * @param stringExpr COMMENT
+	 * @param operator COMMENT
+	 * @param value COMMENT
 	 */
 	public void addLengthValue(AtomStringExpr stringExpr, CompareOperator operator, int value) {
 		if (this.wouldChangeLengthExpr(stringExpr.getName(), operator, value))
@@ -176,7 +176,7 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param charSeqMap
+	 * @param charSeqMap COMMENT
 	 */
 	public void merge(CharSeqMap charSeqMap) {
 		for (Map.Entry<String, CharSeq> charSeqMapEntry : charSeqMap.charSeqMap.entrySet()) {
@@ -192,7 +192,7 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public ConnectedBoolExpr getCharSeqExprs() {
 		return new ConnectedBoolExpr(BooleanConnector.AND, this.getLengthExpr(), this.getSubstringExpr(), this.getSubsequentExpr());
@@ -201,7 +201,7 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public ConnectedBoolExpr getLengthExpr() {
 		ConnectedBoolExpr lengthExpr = new ConnectedBoolExpr(BooleanConnector.AND);
@@ -214,7 +214,7 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public ConnectedBoolExpr getSubstringExpr() {
 		ConnectedBoolExpr connectedBoolExpr = new ConnectedBoolExpr(BooleanConnector.AND);
@@ -227,7 +227,7 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public ConnectedBoolExpr getSubsequentExpr() {
 		return new ConnectedBoolExpr(BooleanConnector.AND, this.subsequentExprs);
@@ -239,10 +239,10 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
-	 * @param charSeq
+	 * @param name COMMENT
+	 * @param charSeq COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private CharSeq put(String name, CharSeq charSeq) {
 		return this.charSeqMap.put(name, charSeq);
@@ -251,9 +251,9 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
+	 * @param name COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private CharSeq cloningGet(String name) {
 		CharSeq charSeq = this.charSeqMap.get(name);
@@ -272,9 +272,9 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param atomStringExpr
+	 * @param atomStringExpr COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public CharSeq cloningGetOrCreate(AtomStringExpr atomStringExpr) {
 		CharSeq charSeq = this.cloningGet(atomStringExpr.getName());
@@ -289,11 +289,11 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @param name
-	 * @param operator
-	 * @param value
+	 * @param name COMMENT
+	 * @param operator COMMENT
+	 * @param value COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private boolean wouldChangeLengthExpr(String name, CompareOperator operator, int value) {
 		CharSeq charSeq = this.get(name);
@@ -322,7 +322,7 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	@Override
 	public CharSeqMap clone() {
@@ -342,7 +342,7 @@ public class CharSeqMap {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	@Override
 	public String toString() {
@@ -377,10 +377,10 @@ public class CharSeqMap {
 		/**
 		 * COMMENT
 		 * 
-		 * @param origcharSeq
-		 * @param substCharSeq
-		 * @param beginIdx
-		 * @param endIdx
+		 * @param origcharSeq COMMENT
+		 * @param substCharSeq COMMENT
+		 * @param beginIdx COMMENT
+		 * @param endIdx COMMENT
 		 */
 		public SubstringExpr(CharSeq origCharSeq, CharSeq substCharSeq, int beginIdx, int endIdx) {
 			this.origCharSeq = origCharSeq;
@@ -395,7 +395,7 @@ public class CharSeqMap {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
+		 * @return COMMENT
 		 */
 		public CharSeq getOrigCharSeq() {
 			return this.origCharSeq;
@@ -404,7 +404,7 @@ public class CharSeqMap {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
+		 * @return COMMENT
 		 */
 		public CharSeq getSubstCharSeq() {
 			return this.substCharSeq;
@@ -413,7 +413,7 @@ public class CharSeqMap {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
+		 * @return COMMENT
 		 */
 		public int getBeginIdx() {
 			return this.beginIdx;
@@ -422,7 +422,7 @@ public class CharSeqMap {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
+		 * @return COMMENT
 		 */
 		public int getEndIdx() {
 			return this.endIdx < 0 || this.endIdx >= this.origCharSeq.maxLength() ? this.origCharSeq.maxLength() : this.endIdx-1;
@@ -434,7 +434,7 @@ public class CharSeqMap {
 		/**
 		 * COMMENT
 		 * 
-		 * @return
+		 * @return COMMENT
 		 */
 		public ConnectedBoolExpr getExpr() {
 			ConnectedBoolExpr connectedBoolExpr = new ConnectedBoolExpr(BooleanConnector.AND);

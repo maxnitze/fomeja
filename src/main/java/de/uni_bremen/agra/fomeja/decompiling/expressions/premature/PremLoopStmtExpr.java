@@ -39,9 +39,9 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param loopStmt
-	 * @param stateExprs
-	 * @param compVars
+	 * @param loopStmt COMMENT
+	 * @param state COMMENT
+	 * @param compVars COMMENT
 	 */
 	public PremLoopStmtExpr(LoopStmt loopStmt, State state, ComponentVariables compVars) {
 		this.condition = loopStmt.getCondition();
@@ -54,11 +54,11 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param condition
-	 * @param body
-	 * @param subsequentExpr
-	 * @param stateExprs
-	 * @param compVars
+	 * @param condition COMMENT
+	 * @param body COMMENT
+	 * @param subsequentExpr COMMENT
+	 * @param stateExprs COMMENT
+	 * @param compVars COMMENT
 	 */
 	public PremLoopStmtExpr(BoolExpression condition, StatementSeq body, Expression subsequentExpr, Map<String, Expression> stateExprs, ComponentVariables compVars) {
 		this.condition = condition;
@@ -74,7 +74,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public BoolExpression getCondition() {
 		return this.condition;
@@ -83,7 +83,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public StatementSeq getBody() {
 		return this.body;
@@ -92,7 +92,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression getSubsequentExpr() {
 		return this.subsequentExpr;
@@ -101,7 +101,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Map<String, Expression> getStateExprs() {
 		return this.stateExprs;
@@ -113,7 +113,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public BoolExpression getSubstitutedCondition() {
 		return this.condition.clone().substitude(this.stateExprs);
@@ -122,7 +122,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression evaluate() {
 		return this.evaluate(this.compVars);
@@ -131,10 +131,10 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param key
-	 * @param value
+	 * @param key COMMENT
+	 * @param value COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	public Expression putStateExpr(String key, Expression value) {
 		return this.stateExprs.put(key, value);
@@ -260,7 +260,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private State getState() {
 		State state = new State();
@@ -271,7 +271,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @return
+	 * @return COMMENT
 	 */
 	private Map<String, Expression> getCloneStateExprs() {
 		Map<String, Expression> clonedStateExprs = new HashMap<String, Expression>();
@@ -283,8 +283,8 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	/**
 	 * COMMENT
 	 * 
-	 * @param returnStmt
-	 * @param compVars
+	 * @param returnStmt COMMENT
+	 * @param compVars COMMENT
 	 */
 	private void evaluateVoidExprs(ReturnStmt returnStmt, ComponentVariables compVars) {
 		Expression evaluatedSubsequentExpr = this.subsequentExpr.evaluate(compVars);
