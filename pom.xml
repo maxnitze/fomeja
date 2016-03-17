@@ -2,12 +2,25 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.agra.fomeja</groupId>
+	<name>FoMeJa</name>
+
+	<groupId>de.uni_bremen.agra.fomeja</groupId>
 	<artifactId>fomeja</artifactId>
-	<version>0.5.0</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>Fomeja</name>
+	<url>https://github.com/razr69/fomeja</url>
+	<description>Formal Methods within Java</description>
+
+	<organization>
+		<name>Groups of Computer Architecture, Computer Engineering/IT-Security and Reliable Embedded Systems - University of Bremen</name>
+		<url>http://www.informatik.uni-bremen.de/agra/eng/index.php</url>
+	</organization>
+
+	<scm>
+		<url>https://github.com/razr69/fomeja.git</url>
+		<connection>ssh://git@github.com:razr69/fomeja.git</connection>
+	</scm>
 
 	<licenses>
 		<license>
@@ -21,10 +34,28 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<build>
 		<directory>target</directory>
 		<outputDirectory>target/classes/</outputDirectory>
 		<plugins>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.3</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -34,6 +65,33 @@
 						<id>attach-sources</id>
 						<goals>
 							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
 						</goals>
 					</execution>
 				</executions>
