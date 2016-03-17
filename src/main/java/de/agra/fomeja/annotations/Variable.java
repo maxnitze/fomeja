@@ -17,4 +17,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Variable {
 	int alter() default 0;
+	int order() default 0;
 }

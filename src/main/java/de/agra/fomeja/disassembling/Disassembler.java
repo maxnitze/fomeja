@@ -98,7 +98,7 @@ public class Disassembler {
 	 * @return a disassembled method with a map of the single byte code lines
 	 */
 	private DisassembledMethod disassemble() {
-		System.out.println(this.disassembledMethodString); // TODO delete output disassembledMethodString
+//		System.out.println(this.disassembledMethodString); // TODO delete output disassembledMethodString
 
 		/** bytecode lines to return */
 		this.bytecodeLines = new HashMap<Integer, BytecodeLine>();

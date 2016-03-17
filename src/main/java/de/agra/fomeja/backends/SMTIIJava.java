@@ -199,20 +199,20 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 			}
 
 			// TODO remove output
-			System.out.println("\nSMTIIJava#parseResult: resultMap =");
-			for (Map.Entry<String, Object> result : resultModel.entrySet()) {
-				if (result.getValue() instanceof String) {
-					System.out.print(result.getKey() + " = ");
-					for (char c : ((String) result.getValue()).toCharArray()) {
-						if (c != 0)
-							System.out.print(c);
-						else
-							System.out.print("\\0");
-					}
-					System.out.println(" with length " + ((String) result.getValue()).length());
-				} else
-					System.out.println(result.getKey() + " = " + result.getValue());
-			}
+//			System.out.println("\nSMTIIJava#parseResult: resultMap =");
+//			for (Map.Entry<String, Object> result : resultModel.entrySet()) {
+//				if (result.getValue() instanceof String) {
+//					System.out.print(result.getKey() + " = ");
+//					for (char c : ((String) result.getValue()).toCharArray()) {
+//						if (c != 0)
+//							System.out.print(c);
+//						else
+//							System.out.print("\\0");
+//					}
+//					System.out.println(" with length " + ((String) result.getValue()).length());
+//				} else
+//					System.out.println(result.getKey() + " = " + result.getValue());
+//			}
 
 			return resultModel;
 		} else {

@@ -142,7 +142,7 @@ public class FomejaModel<T> {
 			}
 
 			Variable paramVar = paramObj.getPreFieldList().last().getField().getAnnotation(Variable.class);
-			if (paramVar != null && paramVar.alter() > 0 && this.modelC+1%paramVar.alter() == 0)
+			if (paramVar != null && paramVar.alter() > 0 && (this.modelC+1)%paramVar.alter() == 0)
 				this.prover.addExtraExpr(this.getNegExpr(paramObj.getName(), proverResult));
 
 			this.setFieldValue(this.getFieldValue(modelObj, paramObj.getPreFieldList().head(-1)),
