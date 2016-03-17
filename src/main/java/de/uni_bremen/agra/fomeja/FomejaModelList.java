@@ -24,7 +24,7 @@ import de.uni_bremen.agra.fomeja.exceptions.FomejaModelCollectionException;
  *
  * @param <E> COMMENT
  */
-public class FomejaModelCollection<E> implements List<Object[]> {
+public class FomejaModelList<E> implements List<Object[]> {
 	/** COMMENT */
 	private FomejaModel<E> modelGenerator;
 	/** COMMENT */
@@ -41,7 +41,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 	 * 
 	 * @param cls COMMENT
 	 */
-	public FomejaModelCollection(Class<E> cls) {
+	public FomejaModelList(Class<E> cls) {
 		this(cls, 0);
 	}
 
@@ -51,12 +51,11 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 	 * @param cls COMMENT
 	 * @param limit COMMENT
 	 */
-	public FomejaModelCollection(Class<E> cls, int limit) {
+	public FomejaModelList(Class<E> cls, int limit) {
 		this.modelGenerator = new FomejaModel<E>(cls);
 		this.first = null;
 		this.last = null;
 		this.size = 0;
-		this.limit = -1;
 		this.limit = limit;
 
 		this.getNextModelElement();
@@ -101,7 +100,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		}
 
 		String message = "index \"" + index + "\" is out of range";
-		Logger.getLogger(FomejaModelCollection.class).error(message);
+		Logger.getLogger(FomejaModelList.class).error(message);
 		throw new IndexOutOfBoundsException(message);
 	}
 
@@ -253,7 +252,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public T getValue() {
 			return this.value;
 		}
@@ -271,7 +270,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public ModelElement<T> getPrev() {
 			return this.prev;
 		}
@@ -289,7 +288,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public ModelElement<T> getNext() {
 			return this.next;
 		}
@@ -298,7 +297,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public ModelElement<T> getNextWithGeneration() {
 			if (this.next == null)
 				getNextModelElement();
@@ -318,7 +317,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public Object[] getOrderedValues() {
 			if (this.orderedValues == null)
 				this.orderedValues = this.getVarFieldValuesInOrder(this.value);
@@ -331,7 +330,8 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		 * @param element COMMENT
 		 * 
 		 * @return COMMENT
-* @throws IllegalAccessException 
+		 * 
+		 * @throws IllegalAccessException 
 		 * @throws IllegalArgumentException 
 		 */
 		private Object[] getVarFieldValuesInOrder(T element) {
@@ -352,7 +352,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 						orderObjects.add(field.get(element));
 					} catch (IllegalArgumentException | IllegalAccessException e) {
 						String message = "could not get field \"" + field.getName() + "\" from element \"" + element + "\": " + e.getMessage();
-						Logger.getLogger(FomejaModelCollection.class).error(message);;
+						Logger.getLogger(FomejaModelList.class).error(message);;
 						throw new FomejaModelCollectionException(message);
 					} finally {
 						field.setAccessible(accessibility);
@@ -400,7 +400,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 					this.current = next;
 				} else {
 					String message = "index \"" + startIndex + "\" is out of range";
-					Logger.getLogger(FomejaModelCollection.class).error(message);
+					Logger.getLogger(FomejaModelList.class).error(message);
 					throw new IndexOutOfBoundsException(message);
 				}
 			}
@@ -428,7 +428,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 				return next.getOrderedValues();
 			} else {
 				String message = "could not get next element at index " + this.index;
-				Logger.getLogger(FomejaModelCollection.class).error(message);;
+				Logger.getLogger(FomejaModelList.class).error(message);;
 				throw new NoSuchElementException(message);
 			}
 		}
@@ -436,14 +436,14 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		@Override
 		public Object[] previous() {
 			if (this.prev != null) {
-				ModelElement<E> prev = this.prev.getPrev();
+				ModelElement<E> prev = this.prev;
 				this.current = this.prev;
 				this.prev = this.prev.getPrev();
 				--this.index;
 				return prev.getOrderedValues();
 			} else {
 				String message = "could not get previous element at index " + this.index;
-				Logger.getLogger(FomejaModelCollection.class).error(message);;
+				Logger.getLogger(FomejaModelList.class).error(message);;
 				throw new NoSuchElementException(message);
 			}
 		}
@@ -464,21 +464,21 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 		@Override
 		public void add(Object[] e) {
 			String message = "can not manually manipulate fomeja model list";
-			Logger.getLogger(FomejaModelCollection.class).error(message);
+			Logger.getLogger(FomejaModelList.class).error(message);
 			throw new FomejaModelCollectionException(message);
 		}
 
 		@Override
 		public void remove() {
 			String message = "can not manually manipulate fomeja model list";
-			Logger.getLogger(FomejaModelCollection.class).error(message);
+			Logger.getLogger(FomejaModelList.class).error(message);
 			throw new FomejaModelCollectionException(message);
 		}
 
 		@Override
 		public void set(Object[] e) {
 			String message = "can not manually manipulate fomeja model list";
-			Logger.getLogger(FomejaModelCollection.class).error(message);
+			Logger.getLogger(FomejaModelList.class).error(message);
 			throw new FomejaModelCollectionException(message);
 		}
 	}
@@ -555,7 +555,7 @@ public class FomejaModelCollection<E> implements List<Object[]> {
 	 */
 	private void unavailableLogWithException() {
 		String message = "can not manually manipulate fomeja model list";
-		Logger.getLogger(FomejaModelCollection.class).error(message);
+		Logger.getLogger(FomejaModelList.class).error(message);
 		throw new FomejaModelCollectionException(message);
 	}
 }
