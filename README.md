@@ -11,6 +11,40 @@ Java.
 
 ...
 
+Installation and Running
+------------------------
+
+To run the framework, we need to build z3-java first. This manual is derived
+from the manual of Leonardo de Moura on <https://leodemoura.github.io>
+(https://leodemoura.github.io/blog/2012/12/10/z3-for-java.html).
+
+1. Clone the unstable branch of z3-java at codeplex.org
+
+```bash
+git clone https://git01.codeplex.com/z3 -b unstable
+```
+
+2. Checkout the `z3-java` tag
+
+```bash
+cd z3
+git checkout z3-java
+```
+
+3. Generate the `Makefile` for java
+
+```bash
+python scripts/mk_make.py --java
+```
+
+This needs to be done with Python 2.
+
+4. Build `Z3`
+
+```bash
+make z3
+```
+
 Supported Bytecode-Opcodes
 --------------------------
 
