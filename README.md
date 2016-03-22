@@ -14,35 +14,21 @@ Java.
 Installation and Running
 ------------------------
 
-To run the framework, we need to build z3-java first. This manual is derived
-from the manual of Leonardo de Moura on <https://leodemoura.github.io>
-(https://leodemoura.github.io/blog/2012/12/10/z3-for-java.html).
+To run this framework we need some object files from the `Z3` installation,
+namely `libz3.so` and `libz3java.so`.
 
-1. Clone the unstable branch of z3-java at codeplex.org
 
+If you have `Z3` installed, we just need the path to your `bin` directory
+within the installation.
+
+Otherwise just clone the `Z3` repository on github
+(https://github.com/Z3Prover/z3) and build it as described in the README.
+
+When running a program using this framework we need to add the directory
+containing the two `.so` files to the `LD_LIBRARY_PATH` environment variable.
+For example:
 ```bash
-git clone https://git01.codeplex.com/z3 -b unstable
-```
-
-2. Checkout the `z3-java` tag
-
-```bash
-cd z3
-git checkout z3-java
-```
-
-3. Generate the `Makefile` for java
-
-```bash
-python scripts/mk_make.py --java
-```
-
-This needs to be done with Python 2.
-
-4. Build `Z3`
-
-```bash
-make z3
+LD_LIBRARY_PATH=/opt/z3/bin java -jar ...
 ```
 
 Supported Bytecode-Opcodes
