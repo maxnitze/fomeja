@@ -371,7 +371,27 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 	 * @return COMMENT
 	 */
 	private String printObjectValue(Object value) {
-		return value.getClass().isArray() ? Arrays.toString((Object[]) value) : (ClassUtils.isBasicType(value.getClass()) ? value.toString() : (value.getClass().getSimpleName() + "@" + Integer.toHexString(value.hashCode())));
+		if (value.getClass().isArray()) {
+			if (value instanceof boolean[])
+				return Arrays.toString((boolean[]) value);
+			else if (value instanceof byte[])
+				return Arrays.toString((byte[]) value);
+			else if (value instanceof char[])
+				return Arrays.toString((char[]) value);
+			else if (value instanceof double[])
+				return Arrays.toString((double[]) value);
+			else if (value instanceof float[])
+				return Arrays.toString((float[]) value);
+			else if (value instanceof int[])
+				return Arrays.toString((int[]) value);
+			else if (value instanceof long[])
+				return Arrays.toString((long[]) value);
+			else if (value instanceof short[])
+				return Arrays.toString((short[]) value);
+			else
+				return Arrays.toString((Object[]) value);
+		} else
+			return ClassUtils.isBasicType(value.getClass()) ? value.toString() : (value.getClass().getSimpleName() + "@" + Integer.toHexString(value.hashCode()));
 	}
 
 	/* abstract methods

@@ -12,6 +12,8 @@ import de.uni_bremen.agra.fomeja.annotations.Variable;
 import de.uni_bremen.agra.fomeja.datatypes.PreField;
 import de.uni_bremen.agra.fomeja.datatypes.PreFieldList;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
+import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomArrayExpr;
+import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomCharacterExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomClassExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomDoubleExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomEnumExpr;
@@ -21,6 +23,7 @@ import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomIntegerExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomObjectExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomVoidExpr;
+import de.uni_bremen.agra.fomeja.decompiling.expressions.bool.AtomBoolExpr;
 import de.uni_bremen.agra.fomeja.decompiling.misc.ComponentVariables;
 import de.uni_bremen.agra.fomeja.exceptions.EvaluationException;
 import de.uni_bremen.agra.fomeja.utils.ClassUtils;
@@ -240,6 +243,8 @@ public class PremGetfieldExpr extends PrematureExpr {
 				return new AtomStringExpr((String) value);
 			else if (this.field.getType().isEnum())
 				return new AtomIntegerExpr(((Enum<?>) value).ordinal());
+			else if (this.field.getType().isArray())
+				return this.getArrayFieldValue(value);
 			else
 				return new AtomObjectExpr(value);
 		} else {
@@ -247,6 +252,78 @@ public class PremGetfieldExpr extends PrematureExpr {
 			Logger.getLogger(PremGetfieldExpr.class).fatal(message);
 			throw new EvaluationException(message);
 			
+		}
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * TODO implement support for byte (and maybe long and short apart from
+	 *  int?)
+	 * 
+	 * @param valueArray COMMENT
+	 * 
+	 * @return COMMENT
+	 */
+	private AtomArrayExpr<?> getArrayFieldValue(Object valueArray) {
+		if (this.field.getType().isArray()) {
+			if (valueArray instanceof boolean[]) {
+				boolean[] boolValueArray = (boolean[]) valueArray;
+				AtomArrayExpr<Boolean> atomArrayExpr = new AtomArrayExpr<Boolean>(Boolean.class, boolValueArray.length);
+				for (int i=0; i<boolValueArray.length; i++)
+					atomArrayExpr.set(i, new AtomBoolExpr(boolValueArray[i]));
+				return atomArrayExpr;
+			} else if (valueArray instanceof byte[]) {
+				String message = "can not get elements from array field of type \"byte[]\" (not implemented yet)";
+				Logger.getLogger(PremGetfieldExpr.class).fatal(message);
+				throw new EvaluationException(message);
+			} else if (valueArray instanceof char[]) {
+				char[] charValueArray = (char[]) valueArray;
+				AtomArrayExpr<Character> atomArrayExpr = new AtomArrayExpr<Character>(Character.class, charValueArray.length);
+				for (int i=0; i<charValueArray.length; i++)
+					atomArrayExpr.set(i, new AtomCharacterExpr(charValueArray[i]));
+				return atomArrayExpr;
+			} else if (valueArray instanceof double[]) {
+				double[] doubleValueArray = (double[]) valueArray;
+				AtomArrayExpr<Double> atomArrayExpr = new AtomArrayExpr<Double>(Double.class, doubleValueArray.length);
+				for (int i=0; i<doubleValueArray.length; i++)
+					atomArrayExpr.set(i, new AtomDoubleExpr(doubleValueArray[i]));
+				return atomArrayExpr;
+			} else if (valueArray instanceof float[]) {
+				float[] floatValueArray = (float[]) valueArray;
+				AtomArrayExpr<Float> atomArrayExpr = new AtomArrayExpr<Float>(Float.class, floatValueArray.length);
+				for (int i=0; i<floatValueArray.length; i++)
+					atomArrayExpr.set(i, new AtomFloatExpr(floatValueArray[i]));
+				return atomArrayExpr;
+			} else if (valueArray instanceof int[]) {
+				int[] intValueArray = (int[]) valueArray;
+				AtomArrayExpr<Integer> atomArrayExpr = new AtomArrayExpr<Integer>(Integer.class, intValueArray.length);
+				for (int i=0; i<intValueArray.length; i++)
+					atomArrayExpr.set(i, new AtomIntegerExpr(intValueArray[i]));
+				return atomArrayExpr;
+			} else if (valueArray instanceof long[]) {
+				long[] longValueArray = (long[]) valueArray;
+				AtomArrayExpr<Integer> atomArrayExpr = new AtomArrayExpr<Integer>(Integer.class, longValueArray.length);
+				for (int i=0; i<longValueArray.length; i++)
+					atomArrayExpr.set(i, new AtomIntegerExpr((int) longValueArray[i]));
+				return atomArrayExpr;
+			} else if (valueArray instanceof short[]) {
+				short[] shortValueArray = (short[]) valueArray;
+				AtomArrayExpr<Integer> atomArrayExpr = new AtomArrayExpr<Integer>(Integer.class, shortValueArray.length);
+				for (int i=0; i<shortValueArray.length; i++)
+					atomArrayExpr.set(i, new AtomIntegerExpr((int) shortValueArray[i]));
+				return atomArrayExpr;
+			} else {
+				Object[] objectValueArray = (Object[]) valueArray;
+				AtomArrayExpr<Object> atomArrayExpr = new AtomArrayExpr<Object>(Object.class, objectValueArray.length);
+				for (int i=0; i<objectValueArray.length; i++)
+					atomArrayExpr.set(i, new AtomObjectExpr(objectValueArray[i]));
+				return atomArrayExpr;
+			}
+		} else {
+			String message = "can not get array value for field \"" + this.field.getName() + "\" from expression \"" + this.expr + "\"";
+			Logger.getLogger(PremGetfieldExpr.class).fatal(message);
+			throw new EvaluationException(message);
 		}
 	}
 

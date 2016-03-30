@@ -1080,26 +1080,8 @@ public class Decompiler {
 		Field bytecodeLineField = (Field) bytecodeLine.getAccessibleObject();
 
 		/** non-variable static field */
-		if (bytecodeLineField.getAnnotation(Variable.class) == null) {
-			boolean accessibility = bytecodeLineField.isAccessible();
-			bytecodeLineField.setAccessible(true);
-			try {
-				if (ClassUtils.isDoubleType(bytecodeLineField.getType()))
-					return new AtomDoubleExpr((Double) bytecodeLineField.get(null));
-				else if (ClassUtils.isFloatType(bytecodeLineField.getType()))
-					return new AtomFloatExpr((Float) bytecodeLineField.get(null));
-				else if (ClassUtils.isIntegerType(bytecodeLineField.getType()))
-					return new AtomIntegerExpr((Integer) bytecodeLineField.get(null));
-				else
-					return new AtomObjectExpr(bytecodeLineField.get(null));
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				String message = "could not access static field \"" + bytecodeLineField.getName() +"\"";
-				Logger.getLogger(Decompiler.class).fatal(message);
-				throw new DecompilerException(message);
-			} finally {
-				bytecodeLineField.setAccessible(accessibility);
-			}
-		}
+		if (bytecodeLineField.getAnnotation(Variable.class) == null)
+			return new PremGetfieldExpr(new AtomObjectExpr(null), bytecodeLineField);
 		/** variable static field */
 		else {
 			String message = "cannot handle variable static field \"" + bytecodeLineField.getName() + "\"";

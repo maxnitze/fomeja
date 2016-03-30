@@ -236,7 +236,9 @@ public class StringMethodsPreprocessor extends MethodExprPreprocessor {
 		else if (expr instanceof AtomArrayExpr<?>) {
 			AtomArrayExpr<?> arrayExpr = (AtomArrayExpr<?>) expr;
 			if (ClassUtils.isAssignable(Integer.class, arrayExpr.getType())
-					|| ClassUtils.isAssignable(Character.class, arrayExpr.getType())) {
+					|| ClassUtils.isAssignable(int.class, arrayExpr.getType())
+					|| ClassUtils.isAssignable(Character.class, arrayExpr.getType())
+					|| ClassUtils.isAssignable(char.class, arrayExpr.getType())) {
 				boolean allAtomar = true;
 				AtomExpr<?>[] atomExprs = new AtomExpr<?>[arrayExpr.length()];
 				for (int i=0; i<arrayExpr.length(); i++) {
