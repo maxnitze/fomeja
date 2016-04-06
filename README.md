@@ -15,6 +15,12 @@ Java.
 
 ...
 
+License
+-------
+
+This tool is available under GPL3 (GNU GENERAL PUBLIC LICENSE, Version 3). For
+more Information read the [License](LICENSE) file.
+
 Installation and Running
 ------------------------
 
@@ -41,3 +47,5 @@ Miscellaneous
 To recognize generics from the bytecode (important for all kinds of
 collections), this tool needs Java 7 as a runtime environment (especially the
 javap binary from that package).
+
+For a list of supported Bytecode Opcodes see [OPCODES.md](OPCODES.md).
