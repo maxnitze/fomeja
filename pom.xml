@@ -124,6 +124,14 @@
 		</plugins>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>razr69-repo</id>
+			<name>github maven repository by razr69</name>
+			<url>https://raw.github.com/razr69/maven-repo/master/repo/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
