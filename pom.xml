@@ -6,7 +6,7 @@
 
 	<groupId>de.uni_bremen.agra.fomeja</groupId>
 	<artifactId>fomeja</artifactId>
-	<version>${fomeja.version}</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<url>https://github.com/razr69/fomeja</url>
