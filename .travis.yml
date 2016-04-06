@@ -9,6 +9,12 @@ env:
 language:
   java
 
+# branches to build (whitelist)
+branches:
+  only:
+    - master
+    - testing
+
 # java versions
 jdk:
   - oraclejdk7
