@@ -1,4 +1,4 @@
-Fomeja -- Formal Methods within Java
+Fomeja - Formal Methods in Java
 ====================================
 
 [![Build Status](https://travis-ci.org/razr69/fomeja.svg?branch=master)](https://travis-ci.org/razr69/fomeja)
@@ -38,6 +38,6 @@ LD_LIBRARY_PATH=/opt/z3/bin java -jar ...
 Miscellaneous
 -----------------
 
-- To recognize generics from the bytecode (important for all kinds of
+To recognize generics from the bytecode (important for all kinds of
 collections), this tool needs Java 7 as a runtime environment (especially the
 javap binary from that package).
