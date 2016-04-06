@@ -35,8 +35,8 @@ For example:
 LD_LIBRARY_PATH=/opt/z3/bin java -jar ...
 ```
 
-Other Informations
-------------------
+Miscellaneous
+-----------------
 
 - To recognize generics from the bytecode (important for all kinds of
 collections), this tool needs Java 7 as a runtime environment (especially the
