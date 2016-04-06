@@ -1,7 +1,18 @@
 language:
   java
+
 jdk:
+  - oraclejdk7
+  - oraclejdk8
   - openjdk7
+
 install:
   mvn install -DskipTests -Dgpg.skip 
+
+notifications:
+  email:
+    recipients:
+      - maxnitze@cs.uni-bremen.de
+    on_success: change
+    on_failure: always
 

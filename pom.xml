@@ -44,6 +44,12 @@
 		<connection>ssh://git@github.com:razr69/fomeja.git</connection>
 	</scm>
 
+	<ciManagement>
+		<system>Travis</system>
+		<url>https://travis-ci.org/razr69/fomeja</url>
+		<notifiers />
+	</ciManagement>
+
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
