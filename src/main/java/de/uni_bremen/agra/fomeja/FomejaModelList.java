@@ -339,7 +339,7 @@ public class FomejaModelList<E> implements List<Object[]> {
 			int count = 0;
 			for (Field field : element.getClass().getDeclaredFields()) {
 				Variable fieldVariable = field.getAnnotation(Variable.class);
-				if (fieldVariable != null) {
+				if (fieldVariable != null && fieldVariable.order() >= 0) {
 					List<Object> orderObjects = ordersMap.get(fieldVariable.order());
 					if (orderObjects == null) {
 						orderObjects = new ArrayList<Object>();
