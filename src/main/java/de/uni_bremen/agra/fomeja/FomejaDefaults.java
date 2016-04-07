@@ -40,6 +40,9 @@ public class FomejaDefaults {
 	/** COMMENT */
 	private Prover<?> defaultProver;
 
+	/** COMMENT */
+	private boolean validateModelObjectsByDefault;
+
 	/**
 	 * Private constructor to prevent this class from being instantiated
 	 */
@@ -58,6 +61,8 @@ public class FomejaDefaults {
 		this.defaultStringLength = 256;
 
 		this.defaultProver = new Z3SMTIIJava();
+
+		this.validateModelObjectsByDefault = true;
 	}
 
 	/**
@@ -270,6 +275,24 @@ public class FomejaDefaults {
 	 */
 	public static void setDefaultProver(Prover<?> defaultProver) {
 		getSingleton().defaultProver = defaultProver;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return COMMENT
+	 */
+	public static boolean validateModelObjectsByDefault() {
+		return getSingleton().validateModelObjectsByDefault;
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param validateModelObjectsByDefault COMMENT
+	 */
+	public static void validateModelObjectsByDefault(boolean validateModelObjectsByDefault) {
+		getSingleton().validateModelObjectsByDefault = validateModelObjectsByDefault;
 	}
 
 	/* public methods

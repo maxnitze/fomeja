@@ -1,16 +1,9 @@
 package de.uni_bremen.agra.fomeja;
 
 /* imports */
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.backends.Prover;
-import de.uni_bremen.agra.fomeja.backends.datatypes.ConstraintParameterList;
 import de.uni_bremen.agra.fomeja.exceptions.SatisfyException;
 import de.uni_bremen.agra.fomeja.utils.FomejaUtils;
 import de.uni_bremen.agra.fomeja.utils.RefactoringUtils;
@@ -51,40 +44,7 @@ public class FomejaSolver {
 	 *  of the components class, {@code false} otherwise
 	 */
 	public boolean validate(Object component) {
-		List<Method> constraintMethods = RefactoringUtils.getConstraintMethods(component.getClass());
-
-		for (Method method : constraintMethods) {
-			int parameterCount = method.getGenericParameterTypes().length;
-
-			ConstraintParameterList constraintParameterList = new ConstraintParameterList(parameterCount);
-			List<Field>[] parameterFields = RefactoringUtils.getCollectionFieldsForMethod(method);
-			for (int i=0; i<parameterCount; i++)
-				constraintParameterList.add(i, component, parameterFields[i]);
-
-			if (!constraintParameterList.isIncrementable())
-				continue;
-
-			Object[] methodParams = new Object[parameterCount];
-			do {
-				for (int i=0; i<parameterCount; i++)
-					methodParams[i] = constraintParameterList.get(i).getCurrentCollectionObject();
-
-				boolean accessibility = method.isAccessible();
-				method.setAccessible(true);
-				try {
-					if (!(Boolean) method.invoke(component, methodParams))
-						return false;
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					String message = "could not invoke method \"" + method.getName() + "(" + Arrays.toString(methodParams) + ")\": " + e.getMessage();
-					Logger.getLogger(FomejaSolver.class).fatal(message);
-					throw new IllegalArgumentException(message);
-				} finally {
-					method.setAccessible(accessibility);
-				}
-			} while (constraintParameterList.increment());
-		}
-
-		return true;
+		return FomejaUtils.validate(component);
 	}
 
 	/**

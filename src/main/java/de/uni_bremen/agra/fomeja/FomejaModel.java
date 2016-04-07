@@ -51,12 +51,25 @@ public class FomejaModel<T> {
 	/** COMMENT */
 	private int modelC;
 
+	/** COMMENT */
+	private boolean validate;
+
 	/**
 	 * COMMENT
 	 * 
 	 * @param cls COMMENT
 	 */
 	public FomejaModel(Class<T> cls) {
+		this(cls, FomejaDefaults.validateModelObjectsByDefault());
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param cls COMMENT
+	 * @param validate COMMENT
+	 */
+	public FomejaModel(Class<T> cls, boolean validate) {
 		this.cls = cls;
 
 		this.prover = FomejaDefaults.getDefaultProver();
@@ -65,6 +78,8 @@ public class FomejaModel<T> {
 		this.prevResultExprs = new ArrayList<BoolExpression>();
 
 		this.modelC = 0;
+
+		this.validate = validate;
 	}
 
 	/**
@@ -93,6 +108,12 @@ public class FomejaModel<T> {
 				Logger.getLogger(FomejaModel.class).error(message);
 				throw new ModelException(message);
 			}
+		}
+
+		if (this.validate && !FomejaUtils.validate(modelObj)) {
+			String message = "could not validate model \"" + modelObj + "\" against its constraints!";
+			Logger.getLogger(FomejaModel.class).error(message);
+			throw new ModelException(message);
 		}
 
 		++this.modelC;

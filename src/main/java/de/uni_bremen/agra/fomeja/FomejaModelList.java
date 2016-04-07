@@ -42,7 +42,7 @@ public class FomejaModelList<E> implements List<Object[]> {
 	 * @param cls COMMENT
 	 */
 	public FomejaModelList(Class<E> cls) {
-		this(cls, 0);
+		this(cls, FomejaDefaults.validateModelObjectsByDefault(), 0);
 	}
 
 	/**
@@ -52,7 +52,18 @@ public class FomejaModelList<E> implements List<Object[]> {
 	 * @param limit COMMENT
 	 */
 	public FomejaModelList(Class<E> cls, int limit) {
-		this.modelGenerator = new FomejaModel<E>(cls);
+		this(cls, FomejaDefaults.validateModelObjectsByDefault(), limit);
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param cls COMMENT
+	 * @param validate COMMENT
+	 * @param limit COMMENT
+	 */
+	public FomejaModelList(Class<E> cls, boolean validate, int limit) {
+		this.modelGenerator = new FomejaModel<E>(cls, validate);
 		this.first = null;
 		this.last = null;
 		this.size = 0;
