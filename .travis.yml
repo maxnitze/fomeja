@@ -44,3 +44,5 @@ addons:
     build_command: "mvn -DskipTests=true compile"
     branch_pattern: testing
 
+after_success:
+  - mvn clean test jacoco:report coveralls:report
