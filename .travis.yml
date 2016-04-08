@@ -1,9 +1,13 @@
 # environment settings
 env:
   global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "YunnlwezzBoTR1G9Y3EHg8QUpLZN9ucxwyzXeI9tOloCnZOGBXJ+OSwvfHdqijXT9ZuE8AarBlwbHuvbRLWJ41NjRGI4TH+VF2LQI78RnGdqcRocnFc9IVBMZU5oyBVpv7HPujhSvZqQ8Vg0B9tJEUop5GlhVGGExt++kDmGYZm04JMHxzbJrIyn2b5lfZbXRrvythUBJxXqff7jXM5h4msafiSUYY6+GktxfQsM2aAnalrtgUgoy3xa/+qX34BWcyEeqzLQgLGHWddPFXUae1z7EUiJ/q9ZKaOn2UMdDyXM3eLh5Ls6uQkPzK+KhAMKOATMPxHKQob45GiGhnuiNi7xPLrLn77XI7+OCxbeolbKdRUac98NyIQC5iVx45b8LXCSJm710rzDNs6Ks8Dmdo+dq0HCUd/aAuPxg51jIrRslOjARl4hrtarDbmrqn2i7S3W7/YeGM/PEWxFa8LM6Rig7bjPNhb3ZlAg9DiBUdd0nOw777UCe+wdTUl29kabdy4cLXyKKDTGN1iA0+3o0CY937KqEz5Q9qljYAlhZ8nJoigz48eRVjgrvMpj3HiUw6qm4Jpi7XQ56KA1/6q39HTwRspYdWhgoCMG9HQo4lGO3YsQj2G8VQZt7zMBKdJRYc474AZmtCRZr1hEHlH+bfVppxbh882Ty4mOkAGb1mc="
+    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+    #   via the "travis encrypt" command using the project repo's public key
+    - secure: "YunnlwezzBoTR1G9Y3EHg8QUpLZN9ucxwyzXeI9tOloCnZOGBXJ+OSwvfHdqijXT9ZuE8AarBlwbHuvbRLWJ41NjRGI4TH+VF2LQI78RnGdqcRocnFc9IVBMZU5oyBVpv7HPujhSvZqQ8Vg0B9tJEUop5GlhVGGExt++kDmGYZm04JMHxzbJrIyn2b5lfZbXRrvythUBJxXqff7jXM5h4msafiSUYY6+GktxfQsM2aAnalrtgUgoy3xa/+qX34BWcyEeqzLQgLGHWddPFXUae1z7EUiJ/q9ZKaOn2UMdDyXM3eLh5Ls6uQkPzK+KhAMKOATMPxHKQob45GiGhnuiNi7xPLrLn77XI7+OCxbeolbKdRUac98NyIQC5iVx45b8LXCSJm710rzDNs6Ks8Dmdo+dq0HCUd/aAuPxg51jIrRslOjARl4hrtarDbmrqn2i7S3W7/YeGM/PEWxFa8LM6Rig7bjPNhb3ZlAg9DiBUdd0nOw777UCe+wdTUl29kabdy4cLXyKKDTGN1iA0+3o0CY937KqEz5Q9qljYAlhZ8nJoigz48eRVjgrvMpj3HiUw6qm4Jpi7XQ56KA1/6q39HTwRspYdWhgoCMG9HQo4lGO3YsQj2G8VQZt7zMBKdJRYc474AZmtCRZr1hEHlH+bfVppxbh882Ty4mOkAGb1mc="
+
+    # Coverity run condition (avoid matrix multiple runs), need customized
+    # build script. Need an update if new matrix cases.
+    - coverity_scan_run_condition='"$JDK" = openjdk7'
 
 # project language
 language:
@@ -38,7 +42,6 @@ addons:
   coverity_scan:
     project:
       name: "razr69/fomeja"
-      description: "Build submitted via Travis CI"
     notification_email: maxnitze@cs.uni-bremen.de
     build_command_prepend: "mvn clean"
     build_command: "mvn -DskipTests=true compile"
