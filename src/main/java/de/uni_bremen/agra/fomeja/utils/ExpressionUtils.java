@@ -192,11 +192,11 @@ public final class ExpressionUtils {
 		else if (atomExpr2 instanceof AtomCharacterExpr)
 			return atomExpr1.getValue().compareTo(((AtomCharacterExpr) atomExpr2).getValue());
 		else if (atomExpr2 instanceof AtomDoubleExpr)
-			return -((AtomDoubleExpr) atomExpr2).getValue().compareTo(new Double(atomExpr1.getValue()));
+			return new Double(atomExpr1.getValue()).compareTo(((AtomDoubleExpr) atomExpr2).getValue());
 		else if (atomExpr2 instanceof AtomFloatExpr)
-			return -((AtomFloatExpr) atomExpr2).getValue().compareTo(new Float(atomExpr1.getValue()));
+			return new Float(atomExpr1.getValue()).compareTo(((AtomFloatExpr) atomExpr2).getValue());
 		else if (atomExpr2 instanceof AtomIntegerExpr)
-			return -((AtomIntegerExpr) atomExpr2).getValue().compareTo(new Integer(atomExpr1.getValue()));
+			return new Integer(atomExpr1.getValue()).compareTo(((AtomIntegerExpr) atomExpr2).getValue());
 		else {
 			String message = "expressions \"" + atomExpr1 + "\" and \"" + atomExpr2 + "\" are not comparable";
 			Logger.getLogger(ExpressionUtils.class).fatal(message);
@@ -250,7 +250,7 @@ public final class ExpressionUtils {
 		else if (atomExpr2 instanceof AtomCharacterExpr)
 			return atomExpr1.getValue().compareTo(new Float(((AtomCharacterExpr) atomExpr2).getValue()));
 		else if (atomExpr2 instanceof AtomDoubleExpr)
-			return -((AtomDoubleExpr) atomExpr2).getValue().compareTo(atomExpr1.getValue().doubleValue());
+			return new Double(atomExpr1.getValue()).compareTo(((AtomDoubleExpr) atomExpr2).getValue());
 		else if (atomExpr2 instanceof AtomFloatExpr)
 			return atomExpr1.getValue().compareTo(((AtomFloatExpr) atomExpr2).getValue());
 		else if (atomExpr2 instanceof AtomIntegerExpr)
@@ -279,9 +279,9 @@ public final class ExpressionUtils {
 		else if (atomExpr2 instanceof AtomCharacterExpr)
 			return atomExpr1.getValue().compareTo(new Integer(((AtomCharacterExpr) atomExpr2).getValue()));
 		else if (atomExpr2 instanceof AtomDoubleExpr)
-			return -((AtomDoubleExpr) atomExpr2).getValue().compareTo(atomExpr1.getValue().doubleValue());
+			return new Double(atomExpr1.getValue()).compareTo(((AtomDoubleExpr) atomExpr2).getValue());
 		else if (atomExpr2 instanceof AtomFloatExpr)
-			return -((AtomFloatExpr) atomExpr2).getValue().compareTo(atomExpr1.getValue().floatValue());
+			return new Float(atomExpr1.getValue()).compareTo(((AtomFloatExpr) atomExpr2).getValue());
 		else if (atomExpr2 instanceof AtomIntegerExpr)
 			return atomExpr1.getValue().compareTo(((AtomIntegerExpr) atomExpr2).getValue());
 		else {
