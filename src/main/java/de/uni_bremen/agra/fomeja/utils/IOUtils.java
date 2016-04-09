@@ -33,7 +33,11 @@ public final class IOUtils {
 	 */
 	public static String readFromFile(String uri) throws IOException {
 		InputStream resourceStream = IOUtils.class.getResourceAsStream(uri);
-		return readFromStream(resourceStream);
+		try {
+			return readFromStream(resourceStream);
+		} finally {
+			resourceStream.close();
+		}
 	}
 
 	/**
