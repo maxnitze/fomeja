@@ -355,7 +355,7 @@ public class IfThenElseExpr extends Expression implements Cloneable {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public BoolExpression getCondition() {
 			return this.condition;
 		}
@@ -364,7 +364,7 @@ public class IfThenElseExpr extends Expression implements Cloneable {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public Expression getExpr() {
 			return this.expr;
 		}
@@ -381,6 +381,14 @@ public class IfThenElseExpr extends Expression implements Cloneable {
 
 			return this.condition.equals(condBoolExprPair.condition)
 					&& this.expr.equals(condBoolExprPair.expr);
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder(127, 11)
+					.append(this.condition)
+					.append(this.expr)
+					.toHashCode();
 		}
 	}
 }

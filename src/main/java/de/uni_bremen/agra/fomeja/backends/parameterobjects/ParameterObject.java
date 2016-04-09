@@ -3,6 +3,7 @@ package de.uni_bremen.agra.fomeja.backends.parameterobjects;
 /* imports */
 import java.lang.reflect.Field;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.backends.Dialect;
@@ -205,7 +206,7 @@ public abstract class ParameterObject {
 		}
 	}
 
-	/* overridden methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -214,8 +215,14 @@ public abstract class ParameterObject {
 			return false;
 
 		ParameterObject parameterObject = (ParameterObject) object;
-		return this.getObject().equals(parameterObject.getObject())
-				&& this.preFieldList.equals(parameterObject.preFieldList);
+		return this.preFieldList.equals(parameterObject.preFieldList);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(7, 43)
+				.append(this.preFieldList)
+				.toHashCode();
 	}
 
 	@Override

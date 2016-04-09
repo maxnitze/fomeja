@@ -294,7 +294,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public BoolExpression getCondition() {
 			return this.condition;
 		}
@@ -303,7 +303,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public BoolExpression getBoolExpr() {
 			return this.boolExpr;
 		}
@@ -320,6 +320,14 @@ public class BoolIfThenElseExpr extends BoolExpression {
 
 			return this.condition.equals(condBoolExprPair.condition)
 					&& this.boolExpr.equals(condBoolExprPair.boolExpr);
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder(19, 149)
+					.append(this.condition)
+					.append(this.boolExpr)
+					.toHashCode();
 		}
 	}
 

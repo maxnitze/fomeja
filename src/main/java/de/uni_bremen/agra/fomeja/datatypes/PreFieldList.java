@@ -243,11 +243,11 @@ public class PreFieldList extends ArrayList<PreField> implements Cloneable {
 
 		PreFieldList preFieldList = (PreFieldList) object;
 
-		if ((this.object == null || preFieldList.object == null)
-				&& this.object != preFieldList.object)
+		if ((this.object == null && preFieldList.object != null)
+				|| (this.object != null && preFieldList.object == null))
 			return false;
 
-		if (!this.object.equals(preFieldList.object)
+		if (this.object != null && !this.object.equals(preFieldList.object)
 				|| this.variablePreFields != preFieldList.variablePreFields)
 			return false;
 
