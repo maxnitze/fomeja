@@ -1,6 +1,6 @@
 package de.uni_bremen.agra.fomeja.utils;
 
-/** imports */
+/* imports */
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;

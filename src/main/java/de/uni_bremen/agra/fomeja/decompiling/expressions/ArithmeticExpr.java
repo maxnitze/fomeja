@@ -8,17 +8,15 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
-import de.uni_bremen.agra.fomeja.types.ArithmeticOperator;
-import de.uni_bremen.agra.fomeja.utils.ClassUtils;
-/** imports */
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomVoidExpr;
-
 import de.uni_bremen.agra.fomeja.decompiling.expressions.bool.BoolExpression;
 import de.uni_bremen.agra.fomeja.decompiling.misc.ComponentVariables;
 import de.uni_bremen.agra.fomeja.exceptions.ExpressionException;
 import de.uni_bremen.agra.fomeja.exceptions.NotConvertibleException;
+import de.uni_bremen.agra.fomeja.types.ArithmeticOperator;
+import de.uni_bremen.agra.fomeja.utils.ClassUtils;
 
 /**
  * COMMENT

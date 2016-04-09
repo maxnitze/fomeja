@@ -1,6 +1,6 @@
 package de.uni_bremen.agra.fomeja.disassembling.bytecodetypes;
 
-/** imports */
+/* imports */
 import java.lang.reflect.Method;
 import java.util.Map;
 

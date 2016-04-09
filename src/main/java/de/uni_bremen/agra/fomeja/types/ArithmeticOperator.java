@@ -1,7 +1,7 @@
 package de.uni_bremen.agra.fomeja.types;
 
+/* imports */
 import org.apache.log4j.Logger;
-/** imports */
 
 /**
  * An enumeration of the four arithmetic operators +, -, * and /.

@@ -9,12 +9,11 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
-/** imports */
+
+import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
+import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomVoidExpr;
-import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
-import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
-
 import de.uni_bremen.agra.fomeja.decompiling.misc.ComponentVariables;
 import de.uni_bremen.agra.fomeja.exceptions.EvaluationException;
 import de.uni_bremen.agra.fomeja.types.BooleanConnector;
