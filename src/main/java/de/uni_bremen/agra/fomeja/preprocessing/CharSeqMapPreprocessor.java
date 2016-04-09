@@ -647,7 +647,7 @@ public class CharSeqMapPreprocessor {
 		 * 
 		 * @author Max Nitze
 		 */
-		public class LengthPair {
+		public static class LengthPair {
 			/** COMMENT */
 			private AtomStringExpr stringExpr;
 			/** COMMENT */
@@ -711,7 +711,7 @@ public class CharSeqMapPreprocessor {
 	 * 
 	 * @author Max Nitze
 	 */
-	private class NamedLengthPair {
+	private static class NamedLengthPair {
 		/** COMMENT */
 		private AtomStringExpr stringExpr;
 		/** COMMENT */
