@@ -101,7 +101,7 @@ public class ConstraintParameterList {
 	 * @version 1.0.0
 	 * @author Max Nitze
 	 */
-	public class ConstraintParameter {
+	public static class ConstraintParameter {
 		/** count of the collections to iterate over */
 		private int size;
 		/** the collections to iterate over */

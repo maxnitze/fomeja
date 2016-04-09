@@ -261,7 +261,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 	 * 
 	 * @author Max Nitze
 	 */
-	public class CondBoolExprPair {
+	public static class CondBoolExprPair {
 		/** COMMENT */
 		private BoolExpression condition;
 		/** COMMENT */
@@ -407,7 +407,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 	 * 
 	 * @author Max Nitze
 	 */
-	private class PrefixExpr {
+	private static class PrefixExpr {
 		/** COMMENT */
 		ConnectedBoolExpr topExpr;
 		/** COMMENT */

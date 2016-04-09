@@ -1155,7 +1155,7 @@ public class Decompiler {
 	 * 
 	 * @author Max Nitze
 	 */
-	private class ArgumentList extends ArrayList<Expression> {
+	private static class ArgumentList extends ArrayList<Expression> {
 		/** COMMENT */
 		private static final long serialVersionUID = 4116003574027287498L;
 
@@ -1193,7 +1193,7 @@ public class Decompiler {
 	 * 
 	 * @author Max Nitze
 	 */
-	private class RecursionList {
+	private static class RecursionList {
 		/** COMMENT */
 		private RecursionElement last;
 
@@ -1296,7 +1296,7 @@ public class Decompiler {
 		 * 
 		 * @author Max Nitze
 		 */
-		private class RecursionElement {
+		private static class RecursionElement {
 			/** COMMENT */
 			private int start;
 			/** COMMENT */

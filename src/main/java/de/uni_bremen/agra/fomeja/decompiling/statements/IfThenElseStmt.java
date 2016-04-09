@@ -317,7 +317,7 @@ public class IfThenElseStmt extends Statement {
 	 * 
 	 * @author Max Nitze
 	 */
-	private class CondStmtSeqPair {
+	private static class CondStmtSeqPair {
 		/** COMMENT */
 		private BoolExpression condition;
 		/** COMMENT */
@@ -370,7 +370,7 @@ public class IfThenElseStmt extends Statement {
 	 * 
 	 * @author Max Nitze
 	 */
-	private class CondReturnStmtPair {
+	private static class CondReturnStmtPair {
 		/** COMMENT */
 		private BoolExpression condition;
 		/** COMMENT */

@@ -142,7 +142,7 @@ public class Constraint {
 	 * @version 1.0.0
 	 * @author Max Nitze
 	 */
-	private class SingleConstraint {
+	private static class SingleConstraint {
 		/** the boolean expression of the theorem */
 		private final StatementSeq stmtSeq;
 		/** array of lists where each list describes the collections to iterate

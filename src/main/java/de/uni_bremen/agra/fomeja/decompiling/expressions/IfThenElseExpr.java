@@ -314,7 +314,7 @@ public class IfThenElseExpr extends Expression {
 	 * 
 	 * @author Max Nitze
 	 */
-	public class CondExprPair {
+	public static class CondExprPair {
 		/** COMMENT */
 		private BoolExpression condition;
 		/** COMMENT */

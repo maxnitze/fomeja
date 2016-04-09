@@ -440,7 +440,7 @@ public class ConstraintPreprocessor {
 	/** inner classes
 	 * ----- ----- ----- ----- ----- */
 
-	private class CharSeqSet {
+	private static class CharSeqSet {
 		/** COMMENT */
 		private int size;
 		/** COMMENT */

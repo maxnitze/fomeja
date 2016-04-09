@@ -555,7 +555,7 @@ public class CharSeqMapPreprocessor {
 	 * 
 	 * @author Max Nitze
 	 */
-	private class LengthPairMap {
+	private static class LengthPairMap {
 		/** COMMENT */
 		private Map<String, LengthPair> map;
 
