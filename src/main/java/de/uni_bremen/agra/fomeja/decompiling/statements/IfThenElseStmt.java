@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -286,6 +287,15 @@ public class IfThenElseStmt extends Statement {
 	}
 
 	@Override
+	public int hashCode() {
+		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder(97, 5)
+				.append(this.elseStmtSeq);
+		for (CondStmtSeqPair condStmtSeqPair : this.condStmtSeqPairs)
+			hashCodeBuilder.append(condStmtSeqPair);
+		return hashCodeBuilder.toHashCode();
+	}
+
+	@Override
 	public IfThenElseStmt clone() {
 		IfThenElseStmt ifThenElseStmt = new IfThenElseStmt(this.elseStmtSeq.clone());
 		for (CondStmtSeqPair condStmtSeqPair : this.condStmtSeqPairs)
@@ -338,7 +348,7 @@ public class IfThenElseStmt extends Statement {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public void simplify() {
 			this.condition = this.condition.simplify();
 			this.stmtSeq.simplify();
@@ -348,7 +358,7 @@ public class IfThenElseStmt extends Statement {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public boolean hasAtomStringExprs() {
 			return this.condition.hasAtomStringExprs() || this.stmtSeq.hasAtomStringExprs();
 		}
@@ -362,6 +372,14 @@ public class IfThenElseStmt extends Statement {
 
 			return this.condition.equals(condStmtSeqPair.condition)
 					&& this.stmtSeq.equals(condStmtSeqPair.stmtSeq);
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder(13, 31)
+					.append(this.condition)
+					.append(this.stmtSeq)
+					.toHashCode();
 		}
 	}
 
@@ -396,6 +414,14 @@ public class IfThenElseStmt extends Statement {
 
 			return this.condition.equals(condReturnStmtPair.condition)
 					&& this.returnStmt.equals(condReturnStmtPair.returnStmt);
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder(79, 47)
+					.append(this.condition)
+					.append(this.returnStmt)
+					.toHashCode();
 		}
 	}
 }

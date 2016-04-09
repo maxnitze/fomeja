@@ -12,7 +12,7 @@ import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
  * 
  * @author Max Nitze
  */
-public class State {
+public class State implements Cloneable {
 	/** COMMENT */
 	private Map<String, Expression> exprs;
 
@@ -104,19 +104,15 @@ public class State {
 				this.put(entry.getKey(), entry.getValue());
 	}
 
-	/**
-	 * COMMENT
-	 * 
-	 * @return COMMENT
-	 */
+	/* overridden methods
+	 * ----- ----- ----- ----- ----- */
+
+	@Override
 	public State clone() {
 		State state = new State();
 		state.exprs.putAll(this.exprs);
 		return state;
 	}
-
-	/* overridden methods
-	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public String toString() {

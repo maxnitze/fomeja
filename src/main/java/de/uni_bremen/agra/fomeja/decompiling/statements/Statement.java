@@ -119,6 +119,14 @@ public abstract class Statement {
 	 * @return COMMENT
 	 */
 	@Override
+	public abstract int hashCode();
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return COMMENT
+	 */
+	@Override
 	public abstract Statement clone();
 
 	/**

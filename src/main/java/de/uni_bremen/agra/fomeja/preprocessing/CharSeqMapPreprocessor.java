@@ -575,7 +575,7 @@ public class CharSeqMapPreprocessor {
 		 * @param name COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public LengthPair get(String name) {
 			return this.map.get(name);
 		}
@@ -673,7 +673,7 @@ public class CharSeqMapPreprocessor {
 			 * COMMENT
 			 * 
 			 * @return COMMENT
-	 */
+			 */
 			public AtomStringExpr getStringExpr() {
 				return this.stringExpr;
 			}
@@ -682,7 +682,7 @@ public class CharSeqMapPreprocessor {
 			 * COMMENT
 			 * 
 			 * @return COMMENT
-	 */
+			 */
 			public int getMin() {
 				return this.min;
 			}
@@ -691,7 +691,7 @@ public class CharSeqMapPreprocessor {
 			 * COMMENT
 			 * 
 			 * @return COMMENT
-	 */
+			 */
 			public int getMax() {
 				return max < Integer.MAX_VALUE ? max : FomejaDefaults.getDefaultStringLength();
 			}
@@ -741,7 +741,7 @@ public class CharSeqMapPreprocessor {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public int getMin() {
 			return this.substMin < this.min ? this.min : this.substMin;
 		}
@@ -750,7 +750,7 @@ public class CharSeqMapPreprocessor {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public int getMax() {
 			return this.max;
 		}
@@ -768,7 +768,7 @@ public class CharSeqMapPreprocessor {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public boolean isFinished() {
 			return this.isFinished;
 		}

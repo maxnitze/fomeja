@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -165,6 +166,14 @@ public class LoopStmt extends Statement {
 
 		return this.condition.equals(loopStmt.condition)
 				&& this.body.equals(loopStmt.body);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(31, 157)
+				.append(this.condition)
+				.append(this.body)
+				.toHashCode();
 	}
 
 	@Override

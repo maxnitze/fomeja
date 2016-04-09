@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
@@ -17,6 +19,10 @@ import de.uni_bremen.agra.fomeja.decompiling.statements.misc.State;
  * @author Max Nitze
  */
 public class BreakStmt extends FlowControlStmt {
+
+	/* overridden statement methods
+	 * ----- ----- ----- ----- ----- */
+
 	@Override
 	public Class<Void> getResultType() {
 		return Void.class;
@@ -69,10 +75,12 @@ public class BreakStmt extends FlowControlStmt {
 
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof BreakStmt)
-			return true;
-		else
-			return false;
+		return object instanceof BreakStmt;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(149, 61).toHashCode();
 	}
 
 	@Override

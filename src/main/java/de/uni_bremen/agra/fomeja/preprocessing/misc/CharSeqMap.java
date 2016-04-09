@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.bool.BoolExpression;
@@ -19,7 +21,7 @@ import de.uni_bremen.agra.fomeja.types.CompareOperator;
  * 
  * @author Max Nitze
  */
-public class CharSeqMap {
+public class CharSeqMap implements Cloneable {
 	/** COMMENT */
 	private Map<String, CharSeq> charSeqMap;
 	/** COMMENT */
@@ -364,7 +366,7 @@ public class CharSeqMap {
 	 * 
 	 * @author Max Nitze
 	 */
-	private class SubstringExpr {
+	private static class SubstringExpr implements Cloneable {
 		/** COMMENT */
 		private CharSeq origCharSeq;
 		/** COMMENT */
@@ -455,6 +457,14 @@ public class CharSeqMap {
 
 			return this.origCharSeq == substringConnection.origCharSeq
 					&& this.substCharSeq == substringConnection.substCharSeq;
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder(101, 73)
+					.append(this.origCharSeq)
+					.append(this.substCharSeq)
+					.toHashCode();
 		}
 
 		@Override

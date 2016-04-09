@@ -4,14 +4,7 @@ package de.uni_bremen.agra.fomeja.decompiling.statements;
 import java.util.Map;
 import java.util.Set;
 
-/* imports */
-
-
-
-
-
-
-
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
@@ -135,7 +128,16 @@ public class AssignmentStmt extends Statement {
 
 		AssignmentStmt assignmentStmt = (AssignmentStmt) object;
 
-		return this.name.equals(assignmentStmt.name) && this.value.equals(assignmentStmt.value);
+		return this.name.equals(assignmentStmt.name)
+				&& this.value.equals(assignmentStmt.value);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 151)
+				.append(this.name)
+				.append(this.value)
+				.toHashCode();
 	}
 
 	@Override

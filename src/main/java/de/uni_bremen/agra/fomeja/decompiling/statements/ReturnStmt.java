@@ -4,9 +4,7 @@ package de.uni_bremen.agra.fomeja.decompiling.statements;
 import java.util.Map;
 import java.util.Set;
 
-/* imports */
-
-
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
@@ -114,6 +112,13 @@ public class ReturnStmt extends FlowControlStmt {
 			return false;
 
 		return this.returnExpr.equals(((ReturnStmt) object).returnExpr);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(139, 197)
+				.append(this.returnExpr)
+				.toHashCode();
 	}
 
 	@Override

@@ -20,7 +20,7 @@ import de.uni_bremen.agra.fomeja.types.CompareOperator;
  * 
  * @author Max Nitze
  */
-public class CharSeq {
+public class CharSeq implements Cloneable {
 	/** COMMENT */
 	private AtomStringExpr expr;
 	/** COMMENT */
