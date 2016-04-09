@@ -14,7 +14,7 @@ import de.uni_bremen.agra.fomeja.decompiling.statements.misc.State;
  * 
  * @author Max Nitze
  */
-public abstract class Statement {
+public abstract class Statement implements Cloneable {
 	/* abstract methods
 	 * ----- ----- ----- ----- ----- */
 

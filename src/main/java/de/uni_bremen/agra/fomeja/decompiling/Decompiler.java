@@ -1078,10 +1078,10 @@ public class Decompiler {
 	private Expression getStaticFieldValue(BytecodeLineConstantTableAccessibleObject bytecodeLine, RecursionList recList) {
 		Field bytecodeLineField = (Field) bytecodeLine.getAccessibleObject();
 
-		/** non-variable static field */
+		/* non-variable static field */
 		if (bytecodeLineField.getAnnotation(Variable.class) == null)
 			return new PremGetfieldExpr(new AtomObjectExpr(null), bytecodeLineField);
-		/** variable static field */
+		/* variable static field */
 		else {
 			String message = "cannot handle variable static field \"" + bytecodeLineField.getName() + "\"";
 			Logger.getLogger(Decompiler.class).fatal(message);
@@ -1172,7 +1172,7 @@ public class Decompiler {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public boolean hasPrematureArgument() {
 			return this.hasPrematureArgument;
 		}
@@ -1192,7 +1192,7 @@ public class Decompiler {
 	 * 
 	 * @author Max Nitze
 	 */
-	private static class RecursionList {
+	private static class RecursionList implements Cloneable {
 		/** COMMENT */
 		private RecursionElement last;
 
@@ -1216,7 +1216,7 @@ public class Decompiler {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public boolean remove() {
 			if (this.isEmpty())
 				return false;
@@ -1230,7 +1230,7 @@ public class Decompiler {
 		 * COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public boolean isEmpty() {
 			return this.last == null;
 		}
@@ -1241,7 +1241,7 @@ public class Decompiler {
 		 * @param bytecodeLine COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public boolean isCurrentRecursion(BytecodeLineOffset bytecodeLine) {
 			return this.last != null
 					&& this.last.start == bytecodeLine.getOffset()
@@ -1254,16 +1254,15 @@ public class Decompiler {
 		 * @param index COMMENT
 		 * 
 		 * @return COMMENT
-	 */
+		 */
 		public boolean skipsCurrentRecursion(int index) {
 			return this.last != null && this.last.end < index;
 		}
 
-		/**
-		 * COMMENT
-		 * 
-		 * @return COMMENT
-	 */
+		/* overridden object methods
+		 * ----- ----- ----- ----- ----- */
+
+		@Override
 		public RecursionList clone() {
 			RecursionList recursionList = new RecursionList();
 			if (this.last != null)
@@ -1271,11 +1270,7 @@ public class Decompiler {
 			return recursionList;
 		}
 
-		/**
-		 * COMMENT
-		 * 
-		 * @return COMMENT
-	 */
+		@Override
 		public String toString() {
 			StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.append("[");
@@ -1295,7 +1290,7 @@ public class Decompiler {
 		 * 
 		 * @author Max Nitze
 		 */
-		private static class RecursionElement {
+		private static class RecursionElement implements Cloneable {
 			/** COMMENT */
 			private int start;
 			/** COMMENT */
@@ -1316,20 +1311,15 @@ public class Decompiler {
 				this.prev = prev;
 			}
 
-			/**
-			 * COMMENT
-			 * 
-			 * @return COMMENT
-	 */
+			/* overridden object methods
+			 * ----- ----- ----- ----- ----- */
+
+			@Override
 			public RecursionElement clone() {
 				return new RecursionElement(this.start, this.end, this.prev == null ? null : this.prev.clone());
 			}
 
-			/**
-			 * COMMENT
-			 * 
-			 * @return COMMENT
-	 */
+			@Override
 			public String toString() {
 				return "(" + this.start + "-->" + this.end + ")";
 			}
