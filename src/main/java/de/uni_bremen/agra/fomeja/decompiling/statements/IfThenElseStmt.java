@@ -58,7 +58,7 @@ public class IfThenElseStmt extends Statement {
 		this.elseStmtSeq = elseStmtSeq;
 	}
 
-	/** getter methods
+	/* getter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -91,7 +91,7 @@ public class IfThenElseStmt extends Statement {
 		return this.elseStmtSeq;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -212,7 +212,7 @@ public class IfThenElseStmt extends Statement {
 		return this.elseStmtSeq.isUnfinished();
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -265,7 +265,7 @@ public class IfThenElseStmt extends Statement {
 		return atomStringExprs;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

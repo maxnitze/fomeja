@@ -121,7 +121,7 @@ public class FomejaModel<T> {
 		return modelObj;
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

@@ -27,7 +27,7 @@ public abstract class BytecodeLineConstantTable extends BytecodeLine {
 		this.constantTableIndex = constantTableIndex;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

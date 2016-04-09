@@ -40,7 +40,7 @@ public class PremMethodExpr extends PremAccessibleObjectExpr<Method> {
 		this.integrityCheck();
 	}
 
-	/** getter methods
+	/* getter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -52,7 +52,7 @@ public class PremMethodExpr extends PremAccessibleObjectExpr<Method> {
 		return this.accessibleObject;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -131,7 +131,7 @@ public class PremMethodExpr extends PremAccessibleObjectExpr<Method> {
 			return this.expr.toString() + "." + this.accessibleObject.getName() + "(" + this.getArgumentString() + ")";
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

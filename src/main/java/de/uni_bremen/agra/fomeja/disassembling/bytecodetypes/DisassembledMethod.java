@@ -39,7 +39,7 @@ public class DisassembledMethod {
 		this.bytecodeLines = bytecodeLines;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -78,7 +78,7 @@ public class DisassembledMethod {
 		return this.bytecodeLines;
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

@@ -32,7 +32,7 @@ public class AtomBoolExpr extends BoolExpression {
 		this.value = value;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -44,7 +44,7 @@ public class AtomBoolExpr extends BoolExpression {
 		return this.value;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -75,7 +75,7 @@ public class AtomBoolExpr extends BoolExpression {
 		return false;
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -103,7 +103,7 @@ public class AtomBoolExpr extends BoolExpression {
 		return new HashSet<AtomStringExpr>();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

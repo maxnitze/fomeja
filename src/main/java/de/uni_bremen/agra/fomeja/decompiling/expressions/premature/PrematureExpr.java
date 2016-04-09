@@ -33,7 +33,7 @@ public abstract class PrematureExpr extends Expression {
 		super(object, preFields);
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -53,7 +53,7 @@ public abstract class PrematureExpr extends Expression {
 		return true;
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

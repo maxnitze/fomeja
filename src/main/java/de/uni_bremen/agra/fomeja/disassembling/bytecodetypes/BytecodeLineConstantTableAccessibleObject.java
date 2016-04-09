@@ -30,7 +30,7 @@ public class BytecodeLineConstantTableAccessibleObject extends BytecodeLineConst
 		this.accessibleObject = accessibleObject;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

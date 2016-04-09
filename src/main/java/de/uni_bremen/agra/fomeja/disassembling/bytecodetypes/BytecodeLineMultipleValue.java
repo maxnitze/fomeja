@@ -27,7 +27,7 @@ public class BytecodeLineMultipleValue extends BytecodeLine {
 		this.values = values;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

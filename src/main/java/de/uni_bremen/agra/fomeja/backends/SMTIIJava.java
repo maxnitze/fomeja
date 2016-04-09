@@ -105,7 +105,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 		this.atomCharacterExprSet = new HashSet<String>();
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -117,7 +117,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 		return this.context;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -345,7 +345,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 		}
 	}
 
-	/** overridden expression methods
+	/* overridden expression methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -530,7 +530,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 		}
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

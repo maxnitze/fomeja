@@ -40,7 +40,7 @@ public abstract class PremAccessibleObjectExpr<T extends AccessibleObject> exten
 		this.argExprs = argExprs;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -70,7 +70,7 @@ public abstract class PremAccessibleObjectExpr<T extends AccessibleObject> exten
 		return this.argExprs;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -101,7 +101,7 @@ public abstract class PremAccessibleObjectExpr<T extends AccessibleObject> exten
 		return this;
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -157,7 +157,7 @@ public abstract class PremAccessibleObjectExpr<T extends AccessibleObject> exten
 		return atomStringExprs;
 	}
 
-	/** package private methods
+	/* package private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

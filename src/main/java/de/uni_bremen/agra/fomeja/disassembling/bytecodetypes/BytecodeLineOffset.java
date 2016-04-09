@@ -27,7 +27,7 @@ public class BytecodeLineOffset extends BytecodeLine {
 		this.offset = offset;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

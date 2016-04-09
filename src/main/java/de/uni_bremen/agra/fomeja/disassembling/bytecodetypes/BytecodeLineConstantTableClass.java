@@ -28,7 +28,7 @@ public class BytecodeLineConstantTableClass extends BytecodeLineConstantTable {
 		this.type = type;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

@@ -685,7 +685,7 @@ public class Disassembler {
 		return disassembledMethods;
 	}
 
-	/** private static methods
+	/* private static methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

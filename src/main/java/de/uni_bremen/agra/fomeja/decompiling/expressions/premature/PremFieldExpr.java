@@ -38,7 +38,7 @@ public class PremFieldExpr extends PremAccessibleObjectExpr<Field> {
 		this.integrityCheck();
 	}
 
-	/** getter methods
+	/* getter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -50,7 +50,7 @@ public class PremFieldExpr extends PremAccessibleObjectExpr<Field> {
 		return this.accessibleObject;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -116,7 +116,7 @@ public class PremFieldExpr extends PremAccessibleObjectExpr<Field> {
 		return this.expr.toString() + "." + this.accessibleObject.getName();
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

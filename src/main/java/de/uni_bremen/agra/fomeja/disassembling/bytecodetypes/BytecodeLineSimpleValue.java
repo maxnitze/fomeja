@@ -27,7 +27,7 @@ public class BytecodeLineSimpleValue extends BytecodeLine {
 		this.value = value;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

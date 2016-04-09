@@ -55,7 +55,7 @@ public class ConnectedBoolExpr extends BoolExpression {
 		this.boolExprs = new ArrayList<BoolExpression>(Arrays.asList(boolExprs));
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -94,7 +94,7 @@ public class ConnectedBoolExpr extends BoolExpression {
 		return this.boolExprs.isEmpty();
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -119,7 +119,7 @@ public class ConnectedBoolExpr extends BoolExpression {
 		return this.boolExprs.addAll(boolExprs);
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -187,7 +187,7 @@ public class ConnectedBoolExpr extends BoolExpression {
 		return false;
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -230,7 +230,7 @@ public class ConnectedBoolExpr extends BoolExpression {
 		return atomStringExprs;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -300,7 +300,7 @@ public class ConnectedBoolExpr extends BoolExpression {
 			return "TRUE";
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

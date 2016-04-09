@@ -30,7 +30,7 @@ public class NotExpr extends BoolExpression {
 		this.boolExpr = boolExpr;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -42,7 +42,7 @@ public class NotExpr extends BoolExpression {
 		return this.boolExpr;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -89,7 +89,7 @@ public class NotExpr extends BoolExpression {
 		return this.boolExpr.isUnfinished();
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -117,7 +117,7 @@ public class NotExpr extends BoolExpression {
 		return this.boolExpr.getAtomStringExprs();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

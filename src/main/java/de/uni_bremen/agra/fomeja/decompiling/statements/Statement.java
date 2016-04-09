@@ -16,7 +16,7 @@ import de.uni_bremen.agra.fomeja.decompiling.statements.misc.State;
  * @author Max Nitze
  */
 public abstract class Statement {
-	/** abstract methods
+	/* abstract methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -72,7 +72,7 @@ public abstract class Statement {
 	 */
 	public abstract boolean isUnfinished();
 
-	/** abstract atomar expr methods
+	/* abstract atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -100,7 +100,7 @@ public abstract class Statement {
 	 */
 	public abstract Set<AtomStringExpr> getAtomStringExprs();
 
-	/** overridden abstract methods
+	/* overridden abstract methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

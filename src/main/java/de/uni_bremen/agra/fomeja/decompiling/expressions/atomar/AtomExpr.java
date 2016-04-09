@@ -220,7 +220,7 @@ public abstract class AtomExpr<T> extends Expression implements Cloneable, Compa
 		return !this.isFinishedType && this.field != null;
 	}
 
-	/** package methods
+	/* package methods
 	 * ----- ----- ----- ----- ----- */
 
 	void setUnfinished() {
@@ -295,7 +295,7 @@ public abstract class AtomExpr<T> extends Expression implements Cloneable, Compa
 		return !this.isFinishedType();
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -331,7 +331,7 @@ public abstract class AtomExpr<T> extends Expression implements Cloneable, Compa
 		return new HashSet<AtomStringExpr>();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

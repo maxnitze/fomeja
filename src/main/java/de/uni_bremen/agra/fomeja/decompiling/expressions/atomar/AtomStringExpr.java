@@ -65,7 +65,7 @@ public class AtomStringExpr extends AtomExpr<String> {
 		this.charExprs = new AtomCharacterExpr[0];
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -92,7 +92,7 @@ public class AtomStringExpr extends AtomExpr<String> {
 		}
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -100,7 +100,7 @@ public class AtomStringExpr extends AtomExpr<String> {
 		return String.class;
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override // TODO probably remove this here and add if (!(expr instanceof AtomStringExpr)) to LoopStmt#eval
@@ -125,7 +125,7 @@ public class AtomStringExpr extends AtomExpr<String> {
 		return atomStringExprs;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

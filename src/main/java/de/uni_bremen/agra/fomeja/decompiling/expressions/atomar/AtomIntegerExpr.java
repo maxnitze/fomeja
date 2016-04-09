@@ -68,7 +68,7 @@ public class AtomIntegerExpr extends AtomExpr<Integer> {
 		}
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

@@ -44,7 +44,7 @@ public class AtomObjectExpr extends AtomExpr<Object> {
 			return this.getField().getType();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

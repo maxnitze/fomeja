@@ -33,7 +33,7 @@ public class ReturnStmt extends FlowControlStmt {
 		this.returnExpr = returnExpr;
 	}
 
-	/** getter methods
+	/* getter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -45,7 +45,7 @@ public class ReturnStmt extends FlowControlStmt {
 		return this.returnExpr;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -87,7 +87,7 @@ public class ReturnStmt extends FlowControlStmt {
 		return this.returnExpr.isUnfinished();
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -105,7 +105,7 @@ public class ReturnStmt extends FlowControlStmt {
 		return this.returnExpr.getAtomStringExprs();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

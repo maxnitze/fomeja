@@ -29,7 +29,7 @@ public class ConstraintParameterList {
 		this.size = size;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -52,7 +52,7 @@ public class ConstraintParameterList {
 		return this.size;
 	}
 
-	/** increment methods
+	/* increment methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -147,7 +147,7 @@ public class ConstraintParameterList {
 			this.currentCollectionIndex = 0;
 		}
 
-		/** getter/setter methods
+		/* getter/setter methods
 		 * ----- ----- ----- ----- ----- */
 
 		/**
@@ -177,7 +177,7 @@ public class ConstraintParameterList {
 			return this.collections.get(this.currentCollectionIndex).toArray()[this.indices[this.currentCollectionIndex]];
 		}
 
-		/** increment methods
+		/* increment methods
 		 * ----- ----- ----- ----- ----- */
 
 		/**
@@ -220,7 +220,7 @@ public class ConstraintParameterList {
 			this.currentCollectionIndex = 0;
 		}
 
-		/** misc methods
+		/* misc methods
 		 * ----- ----- ----- ----- ----- */
 
 		/**

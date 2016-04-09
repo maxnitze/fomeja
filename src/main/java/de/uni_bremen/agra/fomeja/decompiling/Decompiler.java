@@ -132,7 +132,7 @@ public class Decompiler {
 		return stmtSeq;
 	}
 
-	/** parsing
+	/* parsing
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -341,7 +341,7 @@ public class Decompiler {
 		throw new DecompilerException(message);
 	}
 
-	/** opcode parsing methods
+	/* opcode parsing methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -870,7 +870,7 @@ public class Decompiler {
 		return new ReturnStmt(this.stack.pop());
 	}
 
-	/** tableswitch
+	/* tableswitch
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -910,7 +910,7 @@ public class Decompiler {
 		}
 	}
 
-	/** expressions getters
+	/* expressions getters
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -957,7 +957,7 @@ public class Decompiler {
 			return new AtomObjectExpr(object);
 	}
 
-	/** invocation
+	/* invocation
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -1053,7 +1053,7 @@ public class Decompiler {
 		}
 	}
 
-	/** field value getters
+	/* field value getters
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -1112,7 +1112,7 @@ public class Decompiler {
 		return method.getAnnotation(PreparableMethod.class) != null;
 	}
 
-	/** argument list
+	/* argument list
 	 * ----- ----- ----- ----- ----- */
 
 	/**

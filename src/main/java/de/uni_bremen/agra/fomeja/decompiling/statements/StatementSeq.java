@@ -62,7 +62,7 @@ public class StatementSeq implements Cloneable {
 		this.storeIndex = storeIndex;
 	}
 
-	/** getter methods
+	/* getter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -92,7 +92,7 @@ public class StatementSeq implements Cloneable {
 		return this.storeIndex;
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -156,7 +156,7 @@ public class StatementSeq implements Cloneable {
 		this.stmts.clear();
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -354,7 +354,7 @@ public class StatementSeq implements Cloneable {
 		return this.returnStmt.isUnfinished();
 	}
 
-	/** class atomar expr methods
+	/* class atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -408,7 +408,7 @@ public class StatementSeq implements Cloneable {
 		return atomStringExprs;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

@@ -46,7 +46,7 @@ public class BreakStmt extends FlowControlStmt {
 		return false;
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -64,7 +64,7 @@ public class BreakStmt extends FlowControlStmt {
 		return new HashSet<AtomStringExpr>();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

@@ -39,7 +39,7 @@ public class PremConstructorExpr extends PremAccessibleObjectExpr<Constructor<?>
 		this.integrityCheck();
 	}
 
-	/** getter methods
+	/* getter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -51,7 +51,7 @@ public class PremConstructorExpr extends PremAccessibleObjectExpr<Constructor<?>
 		return this.accessibleObject;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -127,7 +127,7 @@ public class PremConstructorExpr extends PremAccessibleObjectExpr<Constructor<?>
 		return "new " + ((Class<?>) ((AtomExpr<?>) this.expr).getValue()).getName() + "(" + this.getArgumentString() + ")";
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

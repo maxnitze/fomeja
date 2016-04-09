@@ -52,7 +52,7 @@ public class IfThenElseExpr extends Expression implements Cloneable {
 		this.elseCaseExpr = elseCaseExpr;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -85,7 +85,7 @@ public class IfThenElseExpr extends Expression implements Cloneable {
 		return this.elseCaseExpr;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -201,7 +201,7 @@ public class IfThenElseExpr extends Expression implements Cloneable {
 		return this.elseCaseExpr.isUnfinished();
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -261,7 +261,7 @@ public class IfThenElseExpr extends Expression implements Cloneable {
 		return atomStringExprs;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -320,7 +320,7 @@ public class IfThenElseExpr extends Expression implements Cloneable {
 		return stringRepresentation.toString();
 	}
 
-	/** inner classes
+	/* inner classes
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -345,7 +345,7 @@ public class IfThenElseExpr extends Expression implements Cloneable {
 			this.expr = expr;
 		}
 
-		/** getter/setter methods
+		/* getter/setter methods
 		 * ----- ----- ----- ----- ----- */
 
 		/**
@@ -366,7 +366,7 @@ public class IfThenElseExpr extends Expression implements Cloneable {
 			return this.expr;
 		}
 
-		/** overridden methods
+		/* overridden methods
 		 * ----- ----- ----- ----- ----- */
 
 		@Override

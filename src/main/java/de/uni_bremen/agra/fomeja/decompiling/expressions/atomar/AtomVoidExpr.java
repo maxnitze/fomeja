@@ -42,7 +42,7 @@ public class AtomVoidExpr extends AtomExpr<Void> implements Cloneable {
 		this.setName(name);
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -63,7 +63,7 @@ public class AtomVoidExpr extends AtomExpr<Void> implements Cloneable {
 		this.state = state;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -79,7 +79,7 @@ public class AtomVoidExpr extends AtomExpr<Void> implements Cloneable {
 			return this;
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -94,7 +94,7 @@ public class AtomVoidExpr extends AtomExpr<Void> implements Cloneable {
 		return atomVoidExprs;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

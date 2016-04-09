@@ -62,7 +62,7 @@ public class CharSeqMapPreprocessor {
 	 */
 	public CharSeqMapPreprocessor() { }
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -80,7 +80,7 @@ public class CharSeqMapPreprocessor {
 		return this.getCharSeqMapFromLengthPairMap(this.boolMergeLengthPairMaps(BooleanConnector.AND, isNegated, lengthPairMaps));
 	}
 
-	/** private prepare methods
+	/* private prepare methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -209,7 +209,7 @@ public class CharSeqMapPreprocessor {
 		}
 	}
 
-	/** private inner prepare methods
+	/* private inner prepare methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -426,7 +426,7 @@ public class CharSeqMapPreprocessor {
 		}
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -547,7 +547,7 @@ public class CharSeqMapPreprocessor {
 		return isNegated;
 	}
 
-	/** inner classes
+	/* inner classes
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -566,7 +566,7 @@ public class CharSeqMapPreprocessor {
 			this.map = new HashMap<String, LengthPair>();
 		}
 
-		/** class methods
+		/* class methods
 		 * ----- ----- ----- ----- ----- */
 
 		/**
@@ -621,7 +621,7 @@ public class CharSeqMapPreprocessor {
 				this.map.put(stringExpr.getName(), new LengthPair(stringExpr, minLength, maxLength));
 		}
 
-		/** overridden methods
+		/* overridden methods
 		 * ----- ----- ----- ----- ----- */
 
 		@Override
@@ -639,7 +639,7 @@ public class CharSeqMapPreprocessor {
 			return stringRepresentation.toString();
 		}
 
-		/** inner classes
+		/* inner classes
 		 * ----- ----- ----- ----- ----- */
 
 		/**
@@ -666,7 +666,7 @@ public class CharSeqMapPreprocessor {
 				this.max = max;
 			}
 
-			/** getter/setter methods
+			/* getter/setter methods
 			 * ----- ----- ----- ----- ----- */
 
 			/**
@@ -696,7 +696,7 @@ public class CharSeqMapPreprocessor {
 				return max < Integer.MAX_VALUE ? max : FomejaDefaults.getDefaultStringLength();
 			}
 
-			/** overridden methods
+			/* overridden methods
 			 * ----- ----- ----- ----- ----- */
 
 			@Override

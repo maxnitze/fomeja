@@ -25,7 +25,7 @@ public enum BooleanConnector {
 		this.code = code;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -36,7 +36,7 @@ public enum BooleanConnector {
 		return this.code;
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

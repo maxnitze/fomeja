@@ -49,7 +49,7 @@ public class CharSeqMap {
 		this.underlyingMap = underlyingMap;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -61,7 +61,7 @@ public class CharSeqMap {
 		return "string-CharSeqMap@" + Integer.toHexString(this.hashCode());
 	}
 
-	/** map methods
+	/* map methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -92,7 +92,7 @@ public class CharSeqMap {
 		return charSeq;
 	}
 
-	/** substring connection methods
+	/* substring connection methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -122,7 +122,7 @@ public class CharSeqMap {
 		return this.substringExprs.add(new SubstringExpr(origCharSeq, substCharSeq, beginIdx, endIdx));
 	}
 
-	/** subsequent CharSeq methods
+	/* subsequent CharSeq methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -146,7 +146,7 @@ public class CharSeqMap {
 			this.subsequentExprs.add(subsequentExpr.clone());
 	}
 
-	/** CharSeq methods
+	/* CharSeq methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -233,7 +233,7 @@ public class CharSeqMap {
 		return new ConnectedBoolExpr(BooleanConnector.AND, this.subsequentExprs);
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -316,7 +316,7 @@ public class CharSeqMap {
 		}
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -356,7 +356,7 @@ public class CharSeqMap {
 		return stringBuilder.toString();
 	}
 
-	/** inner classes
+	/* inner classes
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -389,7 +389,7 @@ public class CharSeqMap {
 			this.endIdx = endIdx;
 		}
 
-		/** getter/setter methods
+		/* getter/setter methods
 		 * ----- ----- ----- ----- ----- */
 
 		/**
@@ -428,7 +428,7 @@ public class CharSeqMap {
 			return this.endIdx < 0 || this.endIdx >= this.origCharSeq.maxLength() ? this.origCharSeq.maxLength() : this.endIdx-1;
 		}
 
-		/** class methods
+		/* class methods
 		 * ----- ----- ----- ----- ----- */
 
 		/**
@@ -443,7 +443,7 @@ public class CharSeqMap {
 			return connectedBoolExpr;
 		}
 
-		/** overridden methods
+		/* overridden methods
 		 * ----- ----- ----- ----- ----- */
 
 		@Override

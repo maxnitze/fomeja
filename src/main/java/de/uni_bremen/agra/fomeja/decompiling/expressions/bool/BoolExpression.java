@@ -13,7 +13,7 @@ import de.uni_bremen.agra.fomeja.decompiling.misc.ComponentVariables;
  * @author Max Nitze
  */
 public abstract class BoolExpression extends Expression {
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -36,7 +36,7 @@ public abstract class BoolExpression extends Expression {
 		return false;
 	}
 
-	/** abstract methods
+	/* abstract methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -48,7 +48,7 @@ public abstract class BoolExpression extends Expression {
 	@Override
 	public abstract BoolExpression simplify();
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

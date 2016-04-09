@@ -39,7 +39,7 @@ public class AtomFloatExpr extends AtomExpr<Float> {
 		super(name, true);
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -47,7 +47,7 @@ public class AtomFloatExpr extends AtomExpr<Float> {
 		return Float.class;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

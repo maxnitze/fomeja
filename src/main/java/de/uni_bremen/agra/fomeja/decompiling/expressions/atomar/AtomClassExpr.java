@@ -17,7 +17,7 @@ public class AtomClassExpr extends AtomExpr<Class<?>> {
 		this.setUnfinished();
 	}
 
-	/** inherited methods
+	/* inherited methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -25,7 +25,7 @@ public class AtomClassExpr extends AtomExpr<Class<?>> {
 		return this.getValue();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

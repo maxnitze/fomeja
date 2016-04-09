@@ -44,7 +44,7 @@ public class Constraint {
 		this.parameterObjects = new HashSet<ParameterObject>();
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -74,7 +74,7 @@ public class Constraint {
 		return this.constraintExprs.size();
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -133,7 +133,7 @@ public class Constraint {
 		this.constraintExprs.addAll(constraintExprs);
 	}
 
-	/** private classes
+	/* private classes
 	 * ----- ----- ----- ----- ----- */
 
 	/**

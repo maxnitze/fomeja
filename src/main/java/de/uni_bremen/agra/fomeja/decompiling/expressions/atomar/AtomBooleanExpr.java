@@ -64,7 +64,7 @@ public class AtomBooleanExpr extends AtomExpr<Boolean> {
 			return new CompareExpr(this, CompareOperator.EQUAL, new AtomBoolExpr(true));
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

@@ -59,7 +59,7 @@ public class LoopStmt extends Statement {
 		return this.body;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -126,7 +126,7 @@ public class LoopStmt extends Statement {
 		return this.condition.isUnfinished() || this.body.isUnfinished();
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -153,7 +153,7 @@ public class LoopStmt extends Statement {
 		return atomStringExprs;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

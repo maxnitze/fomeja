@@ -51,7 +51,7 @@ public class CompareExpr extends BoolExpression {
 		this.expr2 = expr2;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -88,7 +88,7 @@ public class CompareExpr extends BoolExpression {
 		this.operator = this.operator.getOpposite();
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -184,7 +184,7 @@ public class CompareExpr extends BoolExpression {
 		return this.expr1.isUnfinished() || this.expr2.isUnfinished();
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -223,7 +223,7 @@ public class CompareExpr extends BoolExpression {
 		return atomStringExprs;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -269,7 +269,7 @@ public class CompareExpr extends BoolExpression {
 		return stringRepresentation.toString();
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

@@ -81,7 +81,7 @@ public class StringMethodsPreprocessor extends MethodExprPreprocessor {
 		hasAnyCharIntsStringMethod, hasAnyCharCharsStringMethod, hasAnyCharStringStringMethod
 	};
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -125,7 +125,7 @@ public class StringMethodsPreprocessor extends MethodExprPreprocessor {
 		}
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

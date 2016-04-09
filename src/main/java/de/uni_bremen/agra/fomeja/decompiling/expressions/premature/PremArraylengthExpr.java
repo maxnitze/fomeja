@@ -41,7 +41,7 @@ public class PremArraylengthExpr extends PrematureExpr {
 		}
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -53,7 +53,7 @@ public class PremArraylengthExpr extends PrematureExpr {
 		return this.arrayExpr;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -89,7 +89,7 @@ public class PremArraylengthExpr extends PrematureExpr {
 		return this.handleArrayLength();
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -117,7 +117,7 @@ public class PremArraylengthExpr extends PrematureExpr {
 		return this.arrayExpr.getAtomStringExprs();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -149,7 +149,7 @@ public class PremArraylengthExpr extends PrematureExpr {
 		return "\"" + this.arrayExpr.toString() + "\".length";
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

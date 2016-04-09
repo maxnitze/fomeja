@@ -53,7 +53,7 @@ public class PremStmtSeqExpr extends PrematureExpr {
 		this.substState = substState;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -99,7 +99,7 @@ public class PremStmtSeqExpr extends PrematureExpr {
 		return this;
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -131,7 +131,7 @@ public class PremStmtSeqExpr extends PrematureExpr {
 		return this.stmtSeq.getAtomStringExprs();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

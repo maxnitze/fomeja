@@ -43,7 +43,7 @@ public enum CompareOperator {
 		this.oppositeOpcode = oppositeOpcode;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -91,7 +91,7 @@ public enum CompareOperator {
 		return this.oppositeOpcode;
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

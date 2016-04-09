@@ -129,7 +129,7 @@ public enum Opcode {
 		this.opcodeRegex = opcodeRegex;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -150,7 +150,7 @@ public enum Opcode {
 		return this.followingLineOffset;
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

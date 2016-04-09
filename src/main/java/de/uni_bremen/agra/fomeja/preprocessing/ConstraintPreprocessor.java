@@ -70,7 +70,7 @@ public class ConstraintPreprocessor {
 		this.charSeqMap = new CharSeqMap();
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -84,7 +84,7 @@ public class ConstraintPreprocessor {
 		return this.charSeqMap.get(name).maxLength();
 	}
 
-	/** public class methods
+	/* public class methods
 	 * ----- ----- ----- ----- ----- */
 	/**
 	 * COMMENT
@@ -134,7 +134,7 @@ public class ConstraintPreprocessor {
 		this.methodExprPreprocessors.addFirst(methodExprPreprocessor);
 	}
 
-	/** private matches methods
+	/* private matches methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -245,7 +245,7 @@ public class ConstraintPreprocessor {
 		}
 	}
 
-	/** private prepare methods
+	/* private prepare methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -407,7 +407,7 @@ public class ConstraintPreprocessor {
 		}
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -437,7 +437,7 @@ public class ConstraintPreprocessor {
 			return new ConnectedBoolExpr(BooleanConnector.AND, charSeqMapLengthExpr, boolExpr);
 	}
 
-	/** inner classes
+	/* inner classes
 	 * ----- ----- ----- ----- ----- */
 
 	private static class CharSeqSet {
@@ -490,7 +490,7 @@ public class ConstraintPreprocessor {
 			return lengthExpr;
 		}
 
-		/** overridden object methods
+		/* overridden object methods
 		 * ----- ----- ----- ----- ----- */
 
 		@Override
@@ -509,7 +509,7 @@ public class ConstraintPreprocessor {
 			return stringBuilder.toString();
 		}
 
-		/** private methods
+		/* private methods
 		 * ----- ----- ----- ----- ----- */
 
 		/**

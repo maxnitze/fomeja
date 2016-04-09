@@ -34,7 +34,7 @@ public abstract class BytecodeLine {
 		this.followingLineNumber = lineNumber + opcode.getFollowingLineOffset();
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -73,7 +73,7 @@ public abstract class BytecodeLine {
 		return this.followingLineNumber;
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

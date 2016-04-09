@@ -65,7 +65,7 @@ public class PremClasscastExpr extends PrematureExpr {
 		return this.expr;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -111,7 +111,7 @@ public class PremClasscastExpr extends PrematureExpr {
 		return this.handleCastings();
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -173,7 +173,7 @@ public class PremClasscastExpr extends PrematureExpr {
 		return this.expr + "\" as \"" + (this.keyword == Keyword.i2f ? "float" : "double");
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

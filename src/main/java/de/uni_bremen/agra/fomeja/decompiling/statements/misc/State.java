@@ -23,7 +23,7 @@ public class State {
 		this.exprs = new HashMap<String, Expression>();
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -35,7 +35,7 @@ public class State {
 		return this.exprs;
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -115,7 +115,7 @@ public class State {
 		return state;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

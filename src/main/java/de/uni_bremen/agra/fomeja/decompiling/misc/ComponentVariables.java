@@ -65,7 +65,7 @@ public class ComponentVariables implements Cloneable {
 		this.variables = variables;
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -169,7 +169,7 @@ public class ComponentVariables implements Cloneable {
 		return connectionExprs;
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -245,7 +245,7 @@ public class ComponentVariables implements Cloneable {
 		return componentCollections;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

@@ -39,7 +39,7 @@ public class AtomDoubleExpr extends AtomExpr<Double> {
 		super(name, true);
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -47,7 +47,7 @@ public class AtomDoubleExpr extends AtomExpr<Double> {
 		return Double.class;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

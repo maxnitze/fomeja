@@ -29,7 +29,7 @@ public class BytecodeLineTableswitch extends BytecodeLine {
 		this.offsetsMap = new HashMap<String, Integer>();
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

@@ -42,7 +42,7 @@ public class Z3SMTIIJava extends Prover<SMTIIJava> {
 		this.hasOneTimeExprs = false;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

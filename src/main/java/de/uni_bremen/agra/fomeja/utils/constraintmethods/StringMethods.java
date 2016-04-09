@@ -15,7 +15,7 @@ public class StringMethods {
 	 */
 	private StringMethods() {}
 
-	/** encoding methods
+	/* encoding methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -144,7 +144,7 @@ public class StringMethods {
 		return false;
 	}
 
-	/** hasChar methods
+	/* hasChar methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

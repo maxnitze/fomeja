@@ -27,7 +27,7 @@ public enum ArithmeticOperator {
 		this.asciiName = asciiName;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -114,7 +114,7 @@ public enum ArithmeticOperator {
 		}
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

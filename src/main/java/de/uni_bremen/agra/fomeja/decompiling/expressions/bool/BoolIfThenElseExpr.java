@@ -56,7 +56,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		this.elseCaseExpr = elseCaseExpr;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -89,7 +89,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		return this.elseCaseExpr;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -137,7 +137,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		return this.elseCaseExpr.isUnfinished();
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -189,7 +189,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		return atomStringExprs;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -263,7 +263,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		return stringRepresentation.toString();
 	}
 
-	/** inner classes
+	/* inner classes
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -288,7 +288,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 			this.boolExpr = boolExpr;
 		}
 
-		/** getter/setter methods
+		/* getter/setter methods
 		 * ----- ----- ----- ----- ----- */
 
 		/**
@@ -309,7 +309,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 			return this.boolExpr;
 		}
 
-		/** overridden methods
+		/* overridden methods
 		 * ----- ----- ----- ----- ----- */
 
 		@Override
@@ -324,7 +324,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		}
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -409,7 +409,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 		}
 	}
 
-	/** inner classes
+	/* inner classes
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -432,7 +432,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 			this.clear();
 		}
 
-		/** class methods
+		/* class methods
 		 * ----- ----- ----- ----- ----- */
 
 		/**

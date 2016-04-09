@@ -68,7 +68,7 @@ public class CharSeq {
 		this.maxLengthChanged = false;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -109,7 +109,7 @@ public class CharSeq {
 		return this.isVariable;
 	}
 
-	/** length methods
+	/* length methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -197,7 +197,7 @@ public class CharSeq {
 		this.addLengthValue(CompareOperator.LESS_EQUAL, charSeq.maxLength());
 	}
 
-	/** expression methods
+	/* expression methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -244,7 +244,7 @@ public class CharSeq {
 		return charBoundaryExpr;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -290,7 +290,7 @@ public class CharSeq {
 		return stringBuilder.toString();
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

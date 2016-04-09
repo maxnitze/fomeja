@@ -316,7 +316,7 @@ public final class RefactoringUtils {
 		}
 	}
 
-	/** inherited classes
+	/* inherited classes
 	 * ----- ----- ----- ----- ----- */
 
 	/**

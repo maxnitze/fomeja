@@ -30,7 +30,7 @@ public class AtomEnumExpr extends AtomExpr<Enum<?>> {
 		super(field, preFields);
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -41,7 +41,7 @@ public class AtomEnumExpr extends AtomExpr<Enum<?>> {
 			return this.getField().getClass();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

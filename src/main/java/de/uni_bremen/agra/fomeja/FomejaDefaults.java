@@ -76,7 +76,7 @@ public class FomejaDefaults {
 		return singleton;
 	}
 
-	/** static getter/setter methods
+	/* static getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

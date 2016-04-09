@@ -51,7 +51,7 @@ public abstract class Expression implements Cloneable {
 		this.preFields = new PreFieldList(object, preFields);
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -63,7 +63,7 @@ public abstract class Expression implements Cloneable {
 		return this.preFields;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -96,7 +96,7 @@ public abstract class Expression implements Cloneable {
 				.toHashCode();
 	}
 
-	/** abstract methods
+	/* abstract methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -172,7 +172,7 @@ public abstract class Expression implements Cloneable {
 	 */
 	public abstract boolean isUnfinished();
 
-	/** abstract atomar expr methods
+	/* abstract atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -220,7 +220,7 @@ public abstract class Expression implements Cloneable {
 	 */
 	public abstract Set<AtomStringExpr> getAtomStringExprs();
 
-	/** overridden abstract methods
+	/* overridden abstract methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

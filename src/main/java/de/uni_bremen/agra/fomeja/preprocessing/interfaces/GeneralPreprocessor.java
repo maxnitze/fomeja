@@ -39,7 +39,7 @@ public abstract class GeneralPreprocessor<T extends Expression> {
 	 */
 	public GeneralPreprocessor() { }
 	
-	/** abstract methods
+	/* abstract methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -61,7 +61,7 @@ public abstract class GeneralPreprocessor<T extends Expression> {
 	 */
 	public abstract Expression prepare(T expr, CharSeqMap charSeqMap);
 
-	/** protected expr methods
+	/* protected expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -124,7 +124,7 @@ public abstract class GeneralPreprocessor<T extends Expression> {
 		}
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

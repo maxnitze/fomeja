@@ -35,7 +35,7 @@ public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 			this.getValue()[i] = new AtomObjectExpr(null);
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -77,7 +77,7 @@ public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 		return this.type;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -128,7 +128,7 @@ public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 		return false;
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -179,7 +179,7 @@ public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 		return atomStringExpr;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

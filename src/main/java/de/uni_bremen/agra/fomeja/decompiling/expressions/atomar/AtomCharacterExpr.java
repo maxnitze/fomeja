@@ -39,7 +39,7 @@ public class AtomCharacterExpr extends AtomExpr<Character> {
 		super(name, false);
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -47,7 +47,7 @@ public class AtomCharacterExpr extends AtomExpr<Character> {
 		return Character.class;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

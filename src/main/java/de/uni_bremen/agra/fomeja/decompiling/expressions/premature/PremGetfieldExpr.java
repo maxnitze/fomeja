@@ -54,7 +54,7 @@ public class PremGetfieldExpr extends PrematureExpr {
 		this.isVariable = field.getAnnotation(Variable.class) != null;
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -84,7 +84,7 @@ public class PremGetfieldExpr extends PrematureExpr {
 		return this.isVariable;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -151,7 +151,7 @@ public class PremGetfieldExpr extends PrematureExpr {
 			return this;
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -186,7 +186,7 @@ public class PremGetfieldExpr extends PrematureExpr {
 		return this.expr.getAtomStringExprs();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -220,7 +220,7 @@ public class PremGetfieldExpr extends PrematureExpr {
 		return "\"" + this.expr.toString() + "\"." + field.getName();
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**

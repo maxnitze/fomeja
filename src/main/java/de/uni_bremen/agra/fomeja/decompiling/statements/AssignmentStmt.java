@@ -41,7 +41,7 @@ public class AssignmentStmt extends Statement {
 		this.value = value;
 	}
 
-	/** getter methods
+	/* getter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -62,7 +62,7 @@ public class AssignmentStmt extends Statement {
 		return this.value;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -105,7 +105,7 @@ public class AssignmentStmt extends Statement {
 		return this.value.isUnfinished();
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -125,7 +125,7 @@ public class AssignmentStmt extends Statement {
 		return this.value.getAtomStringExprs();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override

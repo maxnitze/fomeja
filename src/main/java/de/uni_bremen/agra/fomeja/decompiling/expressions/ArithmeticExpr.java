@@ -47,7 +47,7 @@ public class ArithmeticExpr extends Expression implements Cloneable {
 		this.expr2 = expr2;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -77,7 +77,7 @@ public class ArithmeticExpr extends Expression implements Cloneable {
 		return this.operator;
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -153,7 +153,7 @@ public class ArithmeticExpr extends Expression implements Cloneable {
 		return this.expr1.isUnfinished() || this.expr2.isUnfinished();
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -195,7 +195,7 @@ public class ArithmeticExpr extends Expression implements Cloneable {
 		return atomStringExprs;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -237,7 +237,7 @@ public class ArithmeticExpr extends Expression implements Cloneable {
 		return stringRepresentation.toString();
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
