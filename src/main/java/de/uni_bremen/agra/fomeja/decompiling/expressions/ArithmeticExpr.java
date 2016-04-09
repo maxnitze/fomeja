@@ -201,11 +201,12 @@ public class ArithmeticExpr extends Expression implements Cloneable {
 		if (!(object instanceof ArithmeticExpr))
 			return false;
 
-		ArithmeticExpr aritExpr = (ArithmeticExpr) object;
+		ArithmeticExpr arithExpr = (ArithmeticExpr) object;
 
-		return this.expr1.equals(aritExpr.expr1) 
-				&& this.operator == aritExpr.operator
-				&& this.expr2.equals(aritExpr.expr2);
+		return super.equals(arithExpr)
+				&& this.expr1.equals(arithExpr.expr1) 
+				&& this.operator == arithExpr.operator
+				&& this.expr2.equals(arithExpr.expr2);
 	}
 
 	@Override

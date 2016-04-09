@@ -240,11 +240,15 @@ public class ConnectedBoolExpr extends BoolExpression {
 
 		ConnectedBoolExpr connectedBoolExpr = (ConnectedBoolExpr) object;
 
+		if (!super.equals(connectedBoolExpr))
+			return false;
+
 		boolean boolExprListsAreEqual = this.boolExprs.size() == connectedBoolExpr.boolExprs.size();
 		for (BoolExpression boolExpr : this.boolExprs)
 			boolExprListsAreEqual &= connectedBoolExpr.boolExprs.contains(boolExpr);
 
-		return boolExprListsAreEqual && this.connector == connectedBoolExpr.connector;
+		return boolExprListsAreEqual
+				&& this.connector == connectedBoolExpr.connector;
 	}
 
 	@Override

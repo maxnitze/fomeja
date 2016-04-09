@@ -271,6 +271,9 @@ public class IfThenElseExpr extends Expression implements Cloneable {
 
 		IfThenElseExpr ifThenElseExpr = (IfThenElseExpr) object;
 
+		if (!super.equals(ifThenElseExpr))
+			return false;
+
 		if (this.condExprPairs.size() != ifThenElseExpr.condExprPairs.size())
 			return false;
 
