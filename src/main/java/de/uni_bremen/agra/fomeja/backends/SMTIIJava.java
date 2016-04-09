@@ -508,6 +508,7 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 					return this.getBackendExpression(expr);
 				else
 					message = "can not cast non-float type \"" + expr.getExpr() + "\" to real";
+				break;
 			case i2f:
 			case i2d:
 				if (expr.getExpr() instanceof AtomIntegerExpr)
