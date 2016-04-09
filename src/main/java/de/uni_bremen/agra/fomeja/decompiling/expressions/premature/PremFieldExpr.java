@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.decompiling.expressions.premature;
 
-/* imports */
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;

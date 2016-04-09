@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.decompiling.expressions.atomar;
 
-/* imports */
 import java.lang.reflect.Field;
 
 import org.apache.log4j.Logger;

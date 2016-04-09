@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.preprocessing;
 
-/* imports */
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;

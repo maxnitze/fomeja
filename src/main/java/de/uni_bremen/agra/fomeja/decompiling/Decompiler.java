@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.decompiling;
 
-/* imports */
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;

@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.decompiling.expressions;
 
-/* import */
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;

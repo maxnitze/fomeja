@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja;
 
-/* imports */
 import de.uni_bremen.agra.fomeja.backends.Prover;
 import de.uni_bremen.agra.fomeja.backends.Z3SMTIIJava;
 import de.uni_bremen.agra.fomeja.utils.ClassUtils;

@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.decompiling.statements.misc;
 
-/* imports */
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;

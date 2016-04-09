@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.decompiling.statements;
 
-/* imports */
 import de.uni_bremen.agra.fomeja.decompiling.misc.ComponentVariables;
 import de.uni_bremen.agra.fomeja.decompiling.statements.misc.State;
 

@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.decompiling.expressions.bool;
 
-/* imports */
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

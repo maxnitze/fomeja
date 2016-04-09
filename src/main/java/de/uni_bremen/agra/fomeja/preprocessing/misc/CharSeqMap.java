@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.preprocessing.misc;
 
-/* imports */
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

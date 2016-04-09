@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.preprocessing.std;
 
-/* imports */
 import java.lang.reflect.Method;
 
 import org.apache.log4j.Logger;

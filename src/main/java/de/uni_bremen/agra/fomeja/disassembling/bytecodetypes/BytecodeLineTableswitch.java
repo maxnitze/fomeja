@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.disassembling.bytecodetypes;
 
-/* imports */
 import java.util.HashMap;
 import java.util.Map;
 

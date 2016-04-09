@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.backends.parameterobjects;
 
-/* imports */
 import java.lang.reflect.Field;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;

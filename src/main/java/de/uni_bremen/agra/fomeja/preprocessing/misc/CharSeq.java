@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.preprocessing.misc;
 
-/* imports */
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.FomejaDefaults;

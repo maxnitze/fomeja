@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.utils.constraintmethods;
 
-/* imports */
 import de.uni_bremen.agra.fomeja.annotations.PreparableMethod;
 import de.uni_bremen.agra.fomeja.utils.StringUtils;
 

@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.disassembling.bytecodetypes;
 
-/* imports */
 import java.lang.reflect.AccessibleObject;
 
 import de.uni_bremen.agra.fomeja.types.Opcode;

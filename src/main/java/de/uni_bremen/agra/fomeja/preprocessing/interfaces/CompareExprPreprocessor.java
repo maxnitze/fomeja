@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.preprocessing.interfaces;
 
-/* imports */
 import de.uni_bremen.agra.fomeja.decompiling.expressions.bool.BoolExpression;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.bool.CompareExpr;
 import de.uni_bremen.agra.fomeja.preprocessing.misc.CharSeqMap;

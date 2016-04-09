@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.decompiling.expressions.premature;
 
-/* imports */
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

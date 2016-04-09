@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.preprocessing.interfaces;
 
-/* imports */
 import de.uni_bremen.agra.fomeja.decompiling.expressions.premature.PremMethodExpr;
 
 /**

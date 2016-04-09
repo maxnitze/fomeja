@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.decompiling.misc;
 
-/* imports */
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;

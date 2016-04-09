@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.backends.parameterobjects;
 
-/* imports */
 import de.uni_bremen.agra.fomeja.datatypes.PreFieldList;
 
 /**

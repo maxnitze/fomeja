@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.types;
 
-/* imports */
 import org.apache.log4j.Logger;
 
 /**

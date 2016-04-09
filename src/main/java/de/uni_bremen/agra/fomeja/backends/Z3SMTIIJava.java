@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.backends;
 
-/* imports */
 import java.util.List;
 
 import org.apache.log4j.Logger;

@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.disassembling;
 
-/* imports */
 import java.io.IOException;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;

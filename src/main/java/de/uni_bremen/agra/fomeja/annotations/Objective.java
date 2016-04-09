@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.annotations;
 
-/* imports */
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

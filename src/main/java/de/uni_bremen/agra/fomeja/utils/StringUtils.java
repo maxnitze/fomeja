@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.utils;
 
-/* imports */
 import java.util.List;
 
 /**

@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.backends;
 
-/* imports */
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.backends;
 
-/* imports */
 import java.util.List;
 
 import de.uni_bremen.agra.fomeja.backends.datatypes.Constraint;

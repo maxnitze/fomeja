@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.decompiling.expressions.premature;
 
-/* imports */
 import java.lang.reflect.AccessibleObject;
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja;
 
-/* imports */
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

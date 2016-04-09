@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.decompiling.expressions.premature;
 
-/* imports */
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

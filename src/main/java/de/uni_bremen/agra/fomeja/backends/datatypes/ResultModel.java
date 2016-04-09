@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.backends.datatypes;
 
-/* imports */
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

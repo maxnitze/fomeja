@@ -1,6 +1,5 @@
 package de.uni_bremen.agra.fomeja.backends.parameterobjects;
 
-/* imports */
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
