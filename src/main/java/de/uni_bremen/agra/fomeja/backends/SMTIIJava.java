@@ -151,28 +151,40 @@ public class SMTIIJava extends Dialect<BoolExpr, ArithExpr> {
 
 			try {
 				for (FuncDecl constDecl : model.getConstDecls()) {
-					Expr resultExpression = model.getConstInterp(constDecl);
-					if (resultExpression.isReal()) {
-						RatNum rationalNumber = (RatNum) resultExpression;
-						resultModel.put(constDecl.getName().toString(), new Double(rationalNumber.getBigIntNumerator().doubleValue() / rationalNumber.getBigIntDenominator().doubleValue()));
-					} else if (resultExpression.isInt()) {
-						Matcher stringResultMatcher = stringResultPattern.matcher(constDecl.getName().toString());
-						if (stringResultMatcher.matches()) {
-							String stringName = stringResultMatcher.group("name");
-							int maxStringLength = this.constraintPreprocessor.getMaxLength(stringName);
-							int charPosition = Integer.parseInt(stringResultMatcher.group("char"));
-
-							if (charPosition < maxStringLength) {
-								if (stringResults.get(stringName) == null)
-									stringResults.put(stringName, new int[maxStringLength]);
-								int charValue = ((IntNum) resultExpression).getInt();
-								stringResults.get(stringName)[charPosition] = charValue;
+					if (constDecl != null) {
+						Expr resultExpression = model.getConstInterp(constDecl);
+						if (resultExpression != null) {
+							if (resultExpression.isReal()) {
+								RatNum rationalNumber = (RatNum) resultExpression;
+								resultModel.put(constDecl.getName().toString(), new Double(rationalNumber.getBigIntNumerator().doubleValue() / rationalNumber.getBigIntDenominator().doubleValue()));
+							} else if (resultExpression.isInt()) {
+								Matcher stringResultMatcher = stringResultPattern.matcher(constDecl.getName().toString());
+								if (stringResultMatcher.matches()) {
+									String stringName = stringResultMatcher.group("name");
+									int maxStringLength = this.constraintPreprocessor.getMaxLength(stringName);
+									int charPosition = Integer.parseInt(stringResultMatcher.group("char"));
+		
+									if (charPosition < maxStringLength) {
+										if (stringResults.get(stringName) == null)
+											stringResults.put(stringName, new int[maxStringLength]);
+										int charValue = ((IntNum) resultExpression).getInt();
+										stringResults.get(stringName)[charPosition] = charValue;
+									}
+								} else
+									resultModel.put(constDecl.getName().toString(), ((IntNum) resultExpression).getInt());
+							} else {
+								String message = "result expression of unsupported type \"" + resultExpression.toString() + "\"";
+								Logger.getLogger(SMTIIJava.class).error(message);
+								System.err.println(message);
 							}
-						} else
-							resultModel.put(constDecl.getName().toString(), ((IntNum) resultExpression).getInt());
+						} else {
+							String message = "can not handle \"null\" result expression from constant declaration \"" + constDecl + "\"";
+							Logger.getLogger(SMTIIJava.class).error(message);
+							System.err.println(message);
+						}
 					} else {
-						String message = "result expression of unsupported type \"" + resultExpression.toString() + "\"";
-						Logger.getLogger(SMTIIJava.class).error(message);
+						String message = "can not handle \"null\" constant declaration";
+						Logger.getLogger(SMTIIJava.class).warn(message);
 						System.err.println(message);
 					}
 				}

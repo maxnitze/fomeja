@@ -276,7 +276,7 @@ public class FomejaModel<T> {
 		if (ClassUtils.isPrimitiveType(type))
 			return FomejaDefaults.getDefaultForPrimitiveType(type);
 		else if (type.isEnum())
-			return type.getEnumConstants()[(int) FomejaDefaults.getDefaultForPrimitiveType(type)];
+			return type.getEnumConstants()[FomejaDefaults.getDefaultForPrimitiveType(type) != null ? (Integer) FomejaDefaults.getDefaultForPrimitiveType(type) : 0];
 
 		Constructor<?> constructor = null;
 		/* get constructor with minimum parameters */
