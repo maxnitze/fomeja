@@ -35,6 +35,9 @@ import de.uni_bremen.agra.fomeja.utils.RefactoringUtils;
  */
 public class Disassembler {
 	/** COMMENT */
+	private static final String DEFAULT_ENCODING = "UTF-8";
+
+	/** COMMENT */
 	private static final String startingPattern = "^(?<number>\\d+): (?<opcode>";
 	/** COMMENT */
 	private static final Pattern simpleTypePattern =
@@ -708,7 +711,7 @@ public class Disassembler {
 		Process p = null;
 		try {
 			p = Runtime.getRuntime().exec(command.toString());
-			return IOUtils.readFromStream(p.getInputStream());
+			return IOUtils.readFromStream(p.getInputStream(), DEFAULT_ENCODING);
 		} catch (IOException e) {
 			String message = "could not read class file for class \"" + componentClass.getSimpleName() + "\"";
 			Logger.getLogger(RefactoringUtils.class).fatal(message);
