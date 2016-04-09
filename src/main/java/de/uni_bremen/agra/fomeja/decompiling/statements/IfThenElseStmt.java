@@ -389,7 +389,7 @@ public class IfThenElseStmt extends Statement {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (!(obj instanceof CondStmtSeqPair))
+			if (!(obj instanceof CondReturnStmtPair))
 				return false;
 
 			CondReturnStmtPair condReturnStmtPair = (CondReturnStmtPair) obj;
