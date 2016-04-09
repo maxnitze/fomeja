@@ -96,12 +96,11 @@ public final class FomejaUtils {
 
 				String methodSignature = (method.toGenericString().replaceFirst("^(public|private) boolean .*\\(", "$1 boolean "+ method.getName() +"(") + ";").replaceAll(", ", ",");;
 				DisassembledMethod disassembledMethod = disassembledMethods.get(methodSignature);
-
-				Expression[] arguments = new Expression[disassembledMethod.getMethod().getParameterTypes().length];
-				for (int i=0; i<arguments.length; i++)
-					arguments[i] = new AtomClassExpr(disassembledMethod.getMethod().getParameterTypes()[i]);
-
 				if (disassembledMethod != null) {
+					Expression[] arguments = new Expression[disassembledMethod.getMethod().getParameterTypes().length];
+					for (int i=0; i<arguments.length; i++)
+						arguments[i] = new AtomClassExpr(disassembledMethod.getMethod().getParameterTypes()[i]);
+
 					StatementSeq resultStmtSeq = decompiler.decompile(
 							disassembledMethod.getBytecodeLines(), 0, new AtomClassExpr(component.getClass()), arguments);
 					if (resultStmtSeq.evalsToBoolExpr())
