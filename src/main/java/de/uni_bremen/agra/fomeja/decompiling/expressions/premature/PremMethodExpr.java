@@ -203,7 +203,7 @@ public class PremMethodExpr extends PremAccessibleObjectExpr<Method> {
 							((Short) this.accessibleObject.invoke(invokationObject, arguments)).intValue());
 				else if (ClassUtils.isCharType(this.accessibleObject.getReturnType()))
 					return new AtomCharacterExpr(
-							(char) this.accessibleObject.invoke(invokationObject, arguments));
+							(Character) this.accessibleObject.invoke(invokationObject, arguments));
 				else if (ClassUtils.isByteType(this.accessibleObject.getReturnType()))
 					throw new RuntimeException("get expression from byte method not implemented yet"); // TODO implement
 				else

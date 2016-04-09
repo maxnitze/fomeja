@@ -146,7 +146,7 @@ public class PremFieldExpr extends PremAccessibleObjectExpr<Field> {
 				else if (ClassUtils.isShortType(this.accessibleObject.getType()))
 					return new AtomIntegerExpr(((Short) this.accessibleObject.get(invokationObject)).intValue());
 				else if (ClassUtils.isCharType(this.accessibleObject.getType()))
-					return new AtomCharacterExpr((char) this.accessibleObject.get(invokationObject));
+					return new AtomCharacterExpr((Character) this.accessibleObject.get(invokationObject));
 				else if (ClassUtils.isByteType(this.accessibleObject.getType()))
 					throw new RuntimeException("get expression from byte field not implemented yet"); // TODO implement
 				else

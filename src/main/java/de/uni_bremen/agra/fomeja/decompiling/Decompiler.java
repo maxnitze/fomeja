@@ -195,7 +195,7 @@ public class Decompiler {
 				storeExpr = this.store.get(index);
 				Expression calculatedValue = this.getCalculatedValue(
 						storeExpr, ArithmeticOperator.ADD,
-						new AtomIntegerExpr((int) ((BytecodeLineMultipleValue) bytecodeLine).getValues()[1]));
+						new AtomIntegerExpr((Integer) ((BytecodeLineMultipleValue) bytecodeLine).getValues()[1]));
 
 				stmtSeq.add(new AssignmentStmt(storeExpr.getName(), calculatedValue));
 
@@ -439,7 +439,7 @@ public class Decompiler {
 			if (expr1 instanceof AtomFloatExpr && expr2 instanceof AtomFloatExpr) {
 				float value1 = ((AtomFloatExpr) expr1).getValue();
 				float value2 = ((AtomFloatExpr) expr2).getValue();
-				this.stack.push(new AtomFloatExpr(value1 - (value2 * new Float(value1 / value2).intValue())));
+				this.stack.push(new AtomFloatExpr(value1 - (value2 * (value1 / value2))));
 			} else
 				this.stack.push(new ArithmeticExpr(
 						expr1, ArithmeticOperator.SUB,
