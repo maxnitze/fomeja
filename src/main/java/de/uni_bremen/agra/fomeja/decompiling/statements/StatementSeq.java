@@ -277,7 +277,7 @@ public class StatementSeq implements Cloneable {
 				}
 			} else if (stmt instanceof LoopStmt) {
 				FlowControlStmt evalStmt = ((LoopStmt) stmt).evaluate(state, compVars);
-				if (!(evalStmt instanceof ReturnStmt && ((ReturnStmt) evalStmt).getResultType().equals(Void.class))) {
+				if (!(evalStmt instanceof ReturnStmt) || !((ReturnStmt) evalStmt).getResultType().equals(Void.class)) {
 					if (evalStmt instanceof ReturnStmt)
 						this.evaluateVoidExprs((ReturnStmt) evalStmt, compVars, i);
 					return evalStmt;
