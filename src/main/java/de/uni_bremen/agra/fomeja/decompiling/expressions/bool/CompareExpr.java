@@ -364,7 +364,7 @@ public class CompareExpr extends BoolExpression {
 	 * @return COMMENT
 	 */
 	private boolean exprEquals(Expression expr1, Expression expr2) {
-		return ((expr1 == null || expr2 == null) && expr1 == expr2)
-				|| expr1.equals(expr2);
+		return (expr1 == null && expr2 == null)
+				|| (expr1 != null && expr2 != null && expr1.equals(expr2));
 	}
 }
