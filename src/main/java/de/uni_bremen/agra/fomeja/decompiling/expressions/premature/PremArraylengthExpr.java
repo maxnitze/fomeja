@@ -5,6 +5,7 @@ import java.lang.reflect.Array;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -124,9 +125,18 @@ public class PremArraylengthExpr extends PrematureExpr {
 		if (!(object instanceof PremArraylengthExpr))
 			return false;
 
-		PremArraylengthExpr premExpr = (PremArraylengthExpr) object;
+		PremArraylengthExpr premArrayLengthExpr = (PremArraylengthExpr) object;
 
-		return this.arrayExpr.equals(premExpr.arrayExpr);
+		return super.equals(premArrayLengthExpr)
+				&& this.arrayExpr.equals(premArrayLengthExpr.arrayExpr);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(191, 149)
+				.appendSuper(super.hashCode())
+				.append(this.arrayExpr)
+				.toHashCode();
 	}
 
 	@Override

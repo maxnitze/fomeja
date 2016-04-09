@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -158,10 +159,20 @@ public class PremArrayelementExpr extends PrematureExpr {
 		if (!(object instanceof PremArrayelementExpr))
 			return false;
 
-		PremArrayelementExpr premExpr = (PremArrayelementExpr) object;
+		PremArrayelementExpr premArrayelementExpr = (PremArrayelementExpr) object;
 
-		return this.arrayExpr.equals(premExpr.arrayExpr)
-				&& this.indexExpr.equals(premExpr.indexExpr);
+		return super.equals(premArrayelementExpr)
+				&& this.arrayExpr.equals(premArrayelementExpr.arrayExpr)
+				&& this.indexExpr.equals(premArrayelementExpr.indexExpr);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(191, 101)
+				.appendSuper(super.hashCode())
+				.append(this.arrayExpr)
+				.append(this.indexExpr)
+				.toHashCode();
 	}
 
 	@Override

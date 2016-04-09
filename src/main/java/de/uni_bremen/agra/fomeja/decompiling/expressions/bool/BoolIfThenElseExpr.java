@@ -7,16 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
-
 /** imports */
-
-
-
-import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
-import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomVoidExpr;
+import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
+import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
+
 import de.uni_bremen.agra.fomeja.decompiling.misc.ComponentVariables;
 import de.uni_bremen.agra.fomeja.exceptions.EvaluationException;
 import de.uni_bremen.agra.fomeja.types.BooleanConnector;
@@ -201,6 +199,9 @@ public class BoolIfThenElseExpr extends BoolExpression {
 
 		BoolIfThenElseExpr boolIfThenElseExpr = (BoolIfThenElseExpr) object;
 
+		if (!super.equals(boolIfThenElseExpr))
+			return false;
+
 		if (this.condBoolExprPairs.size() != boolIfThenElseExpr.condBoolExprPairs.size())
 			return false;
 
@@ -209,6 +210,15 @@ public class BoolIfThenElseExpr extends BoolExpression {
 				return false;
 
 		return this.elseCaseExpr.equals(boolIfThenElseExpr.elseCaseExpr);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(79, 37)
+				.appendSuper(super.hashCode())
+				.append(this.condBoolExprPairs)
+				.append(this.elseCaseExpr)
+				.toHashCode();
 	}
 
 	@Override

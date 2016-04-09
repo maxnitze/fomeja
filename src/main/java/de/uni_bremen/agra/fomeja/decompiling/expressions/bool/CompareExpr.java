@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.backends.parameterobjects.ParameterObject;
@@ -232,12 +233,23 @@ public class CompareExpr extends BoolExpression {
 
 		CompareExpr compareExpr = (CompareExpr) obj;
 
-		return ((this.expr1.equals(compareExpr.expr1)
-						&& this.expr2.equals(compareExpr.expr2)
-						&& (this.operator == compareExpr.operator))
-				|| (this.expr1.equals(compareExpr.expr2)
-						&& this.expr2.equals(compareExpr.expr1)
-						&& this.operator == compareExpr.operator.getSwapped()));
+		return super.equals(compareExpr)
+				&& ((this.exprEquals(this.expr1, compareExpr.expr1)
+								&& this.exprEquals(this.expr2, compareExpr.expr2)
+								&& this.operator == compareExpr.operator)
+						|| (this.exprEquals(this.expr1, compareExpr.expr2)
+								&& this.exprEquals(this.expr2, compareExpr.expr1)
+								&& this.operator == compareExpr.operator.getSwapped()));
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(61, 43)
+				.appendSuper(super.hashCode())
+				.append(this.expr1)
+				.append(this.expr2)
+				.append(this.operator)
+				.toHashCode();
 	}
 
 	@Override
@@ -341,5 +353,18 @@ public class CompareExpr extends BoolExpression {
 
 		Logger.getLogger(CompareExpr.class).fatal(message);
 		throw new EvaluationException(message);
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param expr1 COMMENT
+	 * @param expr2 COMMENT
+	 * 
+	 * @return COMMENT
+	 */
+	private boolean exprEquals(Expression expr1, Expression expr2) {
+		return ((expr1 == null || expr2 == null) && expr1 == expr2)
+				|| expr1.equals(expr2);
 	}
 }

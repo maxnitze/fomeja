@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
@@ -109,7 +111,17 @@ public class AtomBoolExpr extends BoolExpression {
 		if (!(object instanceof AtomBoolExpr))
 			return false;
 
-		return this.value == ((AtomBoolExpr) object).value;
+		AtomBoolExpr atomBoolExpr = (AtomBoolExpr) object;
+		return super.equals(atomBoolExpr)
+				&& this.value == atomBoolExpr.value;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 29)
+				.appendSuper(super.hashCode())
+				.append(this.value)
+				.toHashCode();
 	}
 
 	@Override

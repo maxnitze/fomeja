@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -141,8 +142,20 @@ public class StoreExpr extends Expression {
 		if (!(object instanceof StoreExpr))
 			return false;
 
-		return this.name.equals(((StoreExpr) object).name)
-				&& this.resultType.equals(((StoreExpr) object).resultType);
+		StoreExpr storeExpr = (StoreExpr) object;
+
+		return super.equals(storeExpr)
+				&& this.name.equals(storeExpr.name)
+				&& this.resultType.equals(storeExpr.resultType);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(5, 29)
+				.appendSuper(super.hashCode())
+				.append(this.name)
+				.append(this.resultType)
+				.toHashCode();
 	}
 
 	@Override

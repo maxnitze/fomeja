@@ -37,7 +37,7 @@ import de.uni_bremen.agra.fomeja.utils.RefactoringUtils;
  * 
  * @author Max Nitze
  */
-public class ComponentVariables {
+public class ComponentVariables implements Cloneable {
 	/** COMMENT */
 	private Object component;
 
@@ -219,7 +219,7 @@ public class ComponentVariables {
 	/**
 	 * COMMENT
 	 * 
-	 * @param literalPreField COMMENT
+	 * @param field COMMENT
 	 * 
 	 * @return COMMENT
 	 */

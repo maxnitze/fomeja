@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -410,13 +411,6 @@ public class StatementSeq implements Cloneable {
 	/** overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
-	/**
-	 * COMMENT
-	 * 
-	 * @param object COMMENT
-	 * 
-	 * @return COMMENT
-	 */
 	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof StatementSeq))
@@ -441,11 +435,17 @@ public class StatementSeq implements Cloneable {
 		return this.returnStmt.equals(stmtSeq.returnStmt);
 	}
 
-	/**
-	 * COMMENT
-	 * 
-	 * @return COMMENT
-	 */
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder(167, 131)
+				.append(this.returnStmt);
+		for (AssignmentStmt assignmentStmt : this.paramStmts)
+			hashCodeBuilder.append(assignmentStmt);
+		for (Statement stmt : this.stmts)
+			hashCodeBuilder.append(stmt);
+		return hashCodeBuilder.toHashCode();
+	}
+
 	@Override
 	public StatementSeq clone() {
 		StatementSeq stmtSeq = new StatementSeq(this.storeIndex);
@@ -457,11 +457,6 @@ public class StatementSeq implements Cloneable {
 		return stmtSeq;
 	}
 
-	/**
-	 * COMMENT
-	 * 
-	 * @return COMMENT
-	 */
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();

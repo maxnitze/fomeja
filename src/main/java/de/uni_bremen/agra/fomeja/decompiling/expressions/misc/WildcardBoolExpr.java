@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
@@ -113,7 +115,18 @@ public class WildcardBoolExpr extends BoolExpression {
 		if (!(object instanceof WildcardBoolExpr))
 			return false;
 
-		return this.name.equals(((WildcardBoolExpr) object).name);
+		WildcardBoolExpr wildcardBoolExpr = (WildcardBoolExpr) object;
+
+		return super.equals(wildcardBoolExpr)
+				&& this.name.equals(wildcardBoolExpr.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(79, 47)
+				.appendSuper(super.hashCode())
+				.append(this.name)
+				.toHashCode();
 	}
 
 	@Override

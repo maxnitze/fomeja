@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
@@ -68,7 +70,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 		this.compVars = compVars;
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -107,7 +109,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 		return this.stateExprs;
 	}
 
-	/** class methods
+	/* class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -140,7 +142,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 		return this.stateExprs.put(key, value);
 	}
 
-	/** overridden methods
+	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -183,7 +185,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 		return this;
 	}
 
-	/** overridden atomar expr methods
+	/* overridden atomar expr methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -222,7 +224,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 		return atomStringExprs;
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -231,14 +233,26 @@ public class PremLoopStmtExpr extends PrematureExpr {
 			return false;
 
 		PremLoopStmtExpr premLoopStmtExpr = (PremLoopStmtExpr) object;
-		return this.condition.equals(premLoopStmtExpr.condition)
+
+		return super.equals(premLoopStmtExpr)
+				&& this.condition.equals(premLoopStmtExpr.condition)
 				&& this.body.equals(premLoopStmtExpr.body)
 				&& this.subsequentExpr.equals(premLoopStmtExpr.subsequentExpr);
 	}
 
 	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(103, 101)
+				.appendSuper(super.hashCode())
+				.append(this.condition)
+				.append(this.body)
+				.append(this.subsequentExpr)
+				.toHashCode();
+	}
+
+	@Override
 	public PremLoopStmtExpr clone() {
-		return new PremLoopStmtExpr(this.condition.clone(), this.body.clone(), this.subsequentExpr.clone(), this.getCloneStateExprs(), this.compVars.clone());
+		return new PremLoopStmtExpr(this.condition.clone(), this.body.clone(), this.subsequentExpr.clone(), this.getClonedStateExprs(), this.compVars.clone());
 	}
 
 	@Override
@@ -254,7 +268,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 				.append(this.compVars.toString().replaceAll("\n", "\n  ")).toString();
 	}
 
-	/** private methods
+	/* private methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -273,7 +287,7 @@ public class PremLoopStmtExpr extends PrematureExpr {
 	 * 
 	 * @return COMMENT
 	 */
-	private Map<String, Expression> getCloneStateExprs() {
+	private Map<String, Expression> getClonedStateExprs() {
 		Map<String, Expression> clonedStateExprs = new HashMap<String, Expression>();
 		for (Map.Entry<String, Expression> stateExprsEntry : this.stateExprs.entrySet())
 			clonedStateExprs.put(stateExprsEntry.getKey(), stateExprsEntry.getValue().clone());

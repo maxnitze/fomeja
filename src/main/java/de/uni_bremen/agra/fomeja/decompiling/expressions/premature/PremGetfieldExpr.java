@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.annotations.Variable;
@@ -53,7 +54,7 @@ public class PremGetfieldExpr extends PrematureExpr {
 		this.isVariable = field.getAnnotation(Variable.class) != null;
 	}
 
-	/** overridden methods
+	/** class methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -195,8 +196,18 @@ public class PremGetfieldExpr extends PrematureExpr {
 
 		PremGetfieldExpr premGFExpr = (PremGetfieldExpr) object;
 
-		return this.expr.equals(premGFExpr.expr)
+		return super.equals(premGFExpr)
+				&& this.expr.equals(premGFExpr.expr)
 				&& this.field.equals(premGFExpr.field);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(3, 107)
+				.appendSuper(super.hashCode())
+				.append(this.expr)
+				.append(this.field)
+				.toHashCode();
 	}
 
 	@Override

@@ -4,6 +4,7 @@ package de.uni_bremen.agra.fomeja.decompiling.expressions.premature;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -43,7 +44,7 @@ public class PremClasscastExpr extends PrematureExpr {
 		this.integrityCheck();
 	}
 
-	/** getter/setter methods
+	/* getter/setter methods
 	 * ----- ----- ----- ----- ----- */
 
 	/**
@@ -138,7 +139,7 @@ public class PremClasscastExpr extends PrematureExpr {
 		return this.expr.getAtomStringExprs();
 	}
 
-	/** overridden object methods
+	/* overridden object methods
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
@@ -146,9 +147,20 @@ public class PremClasscastExpr extends PrematureExpr {
 		if (!(object instanceof PremClasscastExpr))
 			return false;
 
-		PremClasscastExpr expr = (PremClasscastExpr) object;
+		PremClasscastExpr premClassCastExpr = (PremClasscastExpr) object;
 
-		return this.expr.equals(expr.expr) && this.keyword.equals(expr.keyword);
+		return super.equals(premClassCastExpr)
+				&& this.expr.equals(premClassCastExpr.expr)
+				&& this.keyword == premClassCastExpr.keyword;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(163, 37)
+				.appendSuper(super.hashCode())
+				.append(this.expr)
+				.append(this.keyword)
+				.toHashCode();
 	}
 
 	@Override

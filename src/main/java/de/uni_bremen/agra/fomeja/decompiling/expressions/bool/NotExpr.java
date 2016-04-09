@@ -4,6 +4,8 @@ package de.uni_bremen.agra.fomeja.decompiling.expressions.bool;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
@@ -123,7 +125,18 @@ public class NotExpr extends BoolExpression {
 		if (!(object instanceof NotExpr))
 			return false;
 
-		return this.boolExpr.equals(((NotExpr) object).boolExpr);
+		NotExpr notExpr = (NotExpr) object;
+
+		return super.equals(notExpr)
+				&& this.boolExpr.equals(notExpr.boolExpr);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(61, 3)
+				.appendSuper(super.hashCode())
+				.append(this.boolExpr)
+				.toHashCode();
 	}
 
 	@Override

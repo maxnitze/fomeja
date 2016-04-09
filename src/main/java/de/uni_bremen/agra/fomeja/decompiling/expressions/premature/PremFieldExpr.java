@@ -6,6 +6,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -81,15 +82,8 @@ public class PremFieldExpr extends PremAccessibleObjectExpr<Field> {
 		return this.handleAccessibleObject();
 	}
 
-	@Override
-	public PremFieldExpr clone() {
-		return new PremFieldExpr(this.expr.clone(), this.accessibleObject);
-	}
-
-	@Override
-	public String toString() {
-		return this.expr.toString() + "." + this.accessibleObject.getName();
-	}
+	/* overridden object methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public boolean equals(Object object) {
@@ -98,8 +92,28 @@ public class PremFieldExpr extends PremAccessibleObjectExpr<Field> {
 
 		PremFieldExpr premFieldExpr = (PremFieldExpr) object;
 
-		return this.expr.equals(premFieldExpr.expr)
+		return super.equals(premFieldExpr)
+				&& this.expr.equals(premFieldExpr.expr)
 				&& this.accessibleObject.equals(premFieldExpr.accessibleObject);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(103, 71)
+				.appendSuper(super.hashCode())
+				.append(this.expr)
+				.append(this.accessibleObject)
+				.toHashCode();
+	}
+
+	@Override
+	public PremFieldExpr clone() {
+		return new PremFieldExpr(this.expr.clone(), this.accessibleObject);
+	}
+
+	@Override
+	public String toString() {
+		return this.expr.toString() + "." + this.accessibleObject.getName();
 	}
 
 	/** private methods

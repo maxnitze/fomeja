@@ -104,13 +104,15 @@ public class AtomVoidExpr extends AtomExpr<Void> implements Cloneable {
 
 		AtomVoidExpr atomVoidExpr = (AtomVoidExpr) object;
 
-		return this.getName().equals(atomVoidExpr.getName());
+		return super.equals(atomVoidExpr)
+				&& this.getName().equals(atomVoidExpr.getName());
 	}
 
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(71, 89)
 			.appendSuper(super.hashCode())
+			.append(this.getName())
 			.toHashCode();
 	}
 

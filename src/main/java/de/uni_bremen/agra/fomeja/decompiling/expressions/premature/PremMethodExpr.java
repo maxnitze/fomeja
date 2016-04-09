@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -83,6 +84,36 @@ public class PremMethodExpr extends PremAccessibleObjectExpr<Method> {
 		return this.handleAccessibleObject();
 	}
 
+	/* overridden object methods
+	 * ----- ----- ----- ----- ----- */
+
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof PremMethodExpr))
+			return false;
+
+		PremMethodExpr premMethodExpr = (PremMethodExpr) object;
+
+		for (int i=0; i<this.argExprs.size(); i++)
+			if (!this.argExprs.get(i).equals(premMethodExpr.argExprs.get(i)))
+				return false;
+
+		return super.equals(premMethodExpr)
+				&& this.expr.equals(premMethodExpr.expr)
+				&& this.accessibleObject.equals(premMethodExpr.accessibleObject);
+	}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder(167, 83)
+				.appendSuper(super.hashCode())
+				.append(this.expr)
+				.append(this.accessibleObject);
+		for (Expression argExpr : this.argExprs)
+			hashCodeBuilder.append(argExpr);
+		return hashCodeBuilder.toHashCode();
+	}
+
 	@Override
 	public PremMethodExpr clone() {
 		List<Expression> clonedArgumentExprs = new ArrayList<Expression>();
@@ -98,21 +129,6 @@ public class PremMethodExpr extends PremAccessibleObjectExpr<Method> {
 			return this.accessibleObject.getDeclaringClass().getSimpleName() + "." + this.accessibleObject.getName() + "(" + this.getArgumentString() + ")";
 		else
 			return this.expr.toString() + "." + this.accessibleObject.getName() + "(" + this.getArgumentString() + ")";
-	}
-
-	@Override
-	public boolean equals(Object object) {
-		if (!(object instanceof PremMethodExpr))
-			return false;
-
-		PremMethodExpr premMethodExpr = (PremMethodExpr) object;
-
-		for (int i=0; i<this.argExprs.size(); i++)
-			if (!this.argExprs.get(i).equals(premMethodExpr.argExprs.get(i)))
-				return false;
-
-		return this.expr.equals(premMethodExpr.expr)
-				&& this.accessibleObject.equals(premMethodExpr.accessibleObject);
 	}
 
 	/** private methods

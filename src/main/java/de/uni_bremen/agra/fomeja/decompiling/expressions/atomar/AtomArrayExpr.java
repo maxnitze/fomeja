@@ -18,7 +18,7 @@ import de.uni_bremen.agra.fomeja.decompiling.misc.ComponentVariables;
  *
  * @param <T> COMMENT
  */
-public class AtomArrayExpr<T> extends AtomExpr<Expression[]> implements Cloneable {
+public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 	/** COMMENT */
 	private Class<T> type;
 
@@ -189,8 +189,8 @@ public class AtomArrayExpr<T> extends AtomExpr<Expression[]> implements Cloneabl
 
 		AtomArrayExpr<?> arrayExpr = (AtomArrayExpr<?>) object;
 
-		return this.type.equals(arrayExpr.type)
-				&& super.equals(arrayExpr);
+		return super.equals(arrayExpr)
+				&& this.type.equals(arrayExpr.type);
 	}
 
 	@Override

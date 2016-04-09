@@ -2,8 +2,11 @@ package de.uni_bremen.agra.fomeja.decompiling.expressions.atomar;
 
 /* imports */
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import de.uni_bremen.agra.fomeja.datatypes.PreFieldList;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -126,11 +129,24 @@ public class AtomStringExpr extends AtomExpr<String> {
 	 * ----- ----- ----- ----- ----- */
 
 	@Override
-	public String toString() {
-		if (this.isVariable())
-			return super.toString();
-		else
-			return "\"" + super.toString() + "\"";
+	public boolean equals(Object object) {
+		if (!(object instanceof AtomStringExpr))
+			return false;
+
+		AtomStringExpr atomStringExpr = (AtomStringExpr) object;
+
+		return super.equals(atomStringExpr)
+				&& this.lengthExpr.equals(atomStringExpr.lengthExpr)
+				&& Arrays.deepEquals(this.charExprs, atomStringExpr.charExprs);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(71, 89)
+			.appendSuper(super.hashCode())
+			.append(this.lengthExpr)
+			.append(this.charExprs)
+			.toHashCode();
 	}
 
 	@Override
@@ -147,5 +163,13 @@ public class AtomStringExpr extends AtomExpr<String> {
 			expr.setReplacedValue(this.getReplacedValue());
 			return expr;
 		}
+	}
+
+	@Override
+	public String toString() {
+		if (this.isVariable())
+			return super.toString();
+		else
+			return "\"" + super.toString() + "\"";
 	}
 }

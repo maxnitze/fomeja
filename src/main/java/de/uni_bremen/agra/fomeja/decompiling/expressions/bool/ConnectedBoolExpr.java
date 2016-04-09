@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -27,8 +28,8 @@ import de.uni_bremen.agra.fomeja.types.BooleanConnector;
  * @author Max Nitze
  */
 public class ConnectedBoolExpr extends BoolExpression {
-	/** the boolean connector of both constraints */
-	private final BooleanConnector connector;
+	/** COMMENT */
+	private BooleanConnector connector;
 	/** COMMENT */
 	private List<BoolExpression> boolExprs;
 
@@ -237,13 +238,23 @@ public class ConnectedBoolExpr extends BoolExpression {
 		if (!(object instanceof ConnectedBoolExpr))
 			return false;
 
-		ConnectedBoolExpr connectedBoolExprSet = (ConnectedBoolExpr) object;
+		ConnectedBoolExpr connectedBoolExpr = (ConnectedBoolExpr) object;
 
-		boolean constraintListsAreEqual = this.boolExprs.size() == connectedBoolExprSet.boolExprs.size();
-		for (BoolExpression constraint : this.boolExprs)
-			constraintListsAreEqual &= connectedBoolExprSet.boolExprs.contains(constraint);
+		boolean boolExprListsAreEqual = this.boolExprs.size() == connectedBoolExpr.boolExprs.size();
+		for (BoolExpression boolExpr : this.boolExprs)
+			boolExprListsAreEqual &= connectedBoolExpr.boolExprs.contains(boolExpr);
 
-		return constraintListsAreEqual && this.connector == connectedBoolExprSet.connector;
+		return boolExprListsAreEqual && this.connector == connectedBoolExpr.connector;
+	}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder(79, 29)
+				.appendSuper(super.hashCode())
+				.append(this.connector);
+		for (BoolExpression boolExpr : this.boolExprs)
+			hashCodeBuilder.append(boolExpr);
+		return hashCodeBuilder.toHashCode();
 	}
 
 	@Override

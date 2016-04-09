@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -156,8 +157,20 @@ public class WildcardExpr extends Expression {
 		if (!(object instanceof WildcardExpr))
 			return false;
 
-		return this.name.equals(((WildcardExpr) object).name)
-				&& this.resultType.equals(((WildcardExpr) object).resultType);
+		WildcardExpr wildcardExpr = (WildcardExpr) object;
+
+		return super.equals(wildcardExpr)
+				&& this.name.equals(wildcardExpr.name)
+				&& this.resultType.equals(wildcardExpr.resultType);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(79, 47)
+				.appendSuper(super.hashCode())
+				.append(this.name)
+				.append(this.resultType)
+				.toHashCode();
 	}
 
 	@Override

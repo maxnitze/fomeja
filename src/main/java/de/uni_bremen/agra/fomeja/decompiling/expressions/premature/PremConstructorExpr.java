@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -82,19 +83,8 @@ public class PremConstructorExpr extends PremAccessibleObjectExpr<Constructor<?>
 		return this.handleAccessibleObject();
 	}
 
-	@Override
-	public PremConstructorExpr clone() {
-		List<Expression> clonedArgumentExprs = new ArrayList<Expression>();
-		for (Expression argumentExpr : this.argExprs)
-			clonedArgumentExprs.add(argumentExpr.clone());
-
-		return new PremConstructorExpr(this.expr.clone(), this.accessibleObject, clonedArgumentExprs);
-	}
-
-	@Override
-	public String toString() {
-		return "new " + ((Class<?>) ((AtomExpr<?>) this.expr).getValue()).getName() + "(" + this.getArgumentString() + ")";
-	}
+	/* overridden object methods
+	 * ----- ----- ----- ----- ----- */
 
 	@Override
 	public boolean equals(Object object) {
@@ -107,8 +97,34 @@ public class PremConstructorExpr extends PremAccessibleObjectExpr<Constructor<?>
 			if (!this.argExprs.get(i).equals(premConstructorExpr.argExprs.get(i)))
 				return false;
 
-		return this.expr.equals(premConstructorExpr.expr)
+		return super.equals(premConstructorExpr)
+				&& this.expr.equals(premConstructorExpr.expr)
 				&& this.accessibleObject.equals(premConstructorExpr.accessibleObject);
+	}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hashCodeBuilder =  new HashCodeBuilder(43, 13)
+				.appendSuper(super.hashCode())
+				.append(this.expr)
+				.append(this.accessibleObject);
+		for (Expression argExpr : this.argExprs)
+			hashCodeBuilder.append(argExpr);
+		return hashCodeBuilder.toHashCode();
+	}
+
+	@Override
+	public PremConstructorExpr clone() {
+		List<Expression> clonedArgumentExprs = new ArrayList<Expression>();
+		for (Expression argumentExpr : this.argExprs)
+			clonedArgumentExprs.add(argumentExpr.clone());
+
+		return new PremConstructorExpr(this.expr.clone(), this.accessibleObject, clonedArgumentExprs);
+	}
+
+	@Override
+	public String toString() {
+		return "new " + ((Class<?>) ((AtomExpr<?>) this.expr).getValue()).getName() + "(" + this.getArgumentString() + ")";
 	}
 
 	/** private methods

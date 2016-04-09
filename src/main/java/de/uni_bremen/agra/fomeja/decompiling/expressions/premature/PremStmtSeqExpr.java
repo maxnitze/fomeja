@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
@@ -138,7 +139,18 @@ public class PremStmtSeqExpr extends PrematureExpr {
 		if (!(object instanceof PremStmtSeqExpr))
 			return false;
 
-		return this.stmtSeq.equals(((PremStmtSeqExpr) object).stmtSeq);
+		PremStmtSeqExpr premStmtSeqExpr = (PremStmtSeqExpr) object;
+
+		return super.equals(premStmtSeqExpr)
+				&& this.stmtSeq.equals(premStmtSeqExpr.stmtSeq);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(47, 79)
+				.appendSuper(super.hashCode())
+				.append(this.stmtSeq)
+				.toHashCode();
 	}
 
 	@Override
