@@ -454,7 +454,7 @@ public class Decompiler {
 			if (expr1 instanceof AtomDoubleExpr && expr2 instanceof AtomDoubleExpr) {
 				double value1 = ((AtomDoubleExpr) expr1).getValue();
 				double value2 = ((AtomDoubleExpr) expr2).getValue();
-				this.stack.push(new AtomDoubleExpr(value1 - (value2 * new Double(value1 / value2).intValue())));
+				this.stack.push(new AtomDoubleExpr(value1 - (value2 * (value1 / value2))));
 			} else
 				this.stack.push(new ArithmeticExpr(
 						expr1, ArithmeticOperator.SUB,
