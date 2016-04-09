@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import de.uni_bremen.agra.fomeja.annotations.Variable;
@@ -29,7 +30,7 @@ import de.uni_bremen.agra.fomeja.utils.ExpressionUtils;
  * @version 1.0.0
  * @author Max Nitze
  */
-public abstract class AtomExpr<T> extends Expression implements Comparable<AtomExpr<?>> {
+public abstract class AtomExpr<T> extends Expression implements Cloneable, Comparable<AtomExpr<?>> {
 	/** the value of the literal */
 	private T value;
 
@@ -343,6 +344,8 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 		if (this.isFinishedType()) {
 			if (this.value == null || atomExpr.value == null)
 				return this.value == atomExpr.value;
+			else if (this.value.getClass().isArray() && atomExpr.value.getClass().isArray())
+				return Arrays.deepEquals((Object[]) this.value, (Object[]) atomExpr.value);
 			else
 				return this.value.equals(atomExpr.value);
 		} else
@@ -350,7 +353,17 @@ public abstract class AtomExpr<T> extends Expression implements Comparable<AtomE
 					|| (this.field != null && atomExpr.field != null
 							&& this.field.equals(atomExpr.field)
 							&& this.name.equals(atomExpr.name)
-							&& this.getPreFieldList().equals(atomExpr.getPreFieldList()));
+							&& super.equals(atomExpr));
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(53, 5)
+				.appendSuper(super.hashCode())
+				.append(this.value)
+				.append(this.field)
+				.append(this.name)
+				.toHashCode();
 	}
 
 	@Override

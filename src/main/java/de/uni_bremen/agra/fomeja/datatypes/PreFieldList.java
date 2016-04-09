@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 /**
@@ -13,7 +14,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Max Nitze
  */
-public class PreFieldList extends ArrayList<PreField> {
+public class PreFieldList extends ArrayList<PreField> implements Cloneable {
 	/** generated serialisation uid */
 	private static final long serialVersionUID = -4686167580108058185L;
 
@@ -242,14 +243,29 @@ public class PreFieldList extends ArrayList<PreField> {
 
 		PreFieldList preFieldList = (PreFieldList) object;
 
+		if (!this.object.equals(preFieldList.object)
+				|| this.variablePreFields != preFieldList.variablePreFields)
+			return false;
+
 		if (this.size() != preFieldList.size())
 			return false;
-		
 		for (int i=0; i<this.size(); i++)
 			if (!this.get(i).equals(preFieldList.get(i)))
 				return false;
 
 		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder(89, 53)
+				.append(this.object)
+				.append(this.variablePreFields);
+
+		for (PreField preField : this)
+			hashCodeBuilder.append(preField);
+		
+		return hashCodeBuilder.toHashCode();
 	}
 
 	@Override

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomVoidExpr;
@@ -21,7 +23,7 @@ import de.uni_bremen.agra.fomeja.utils.ClassUtils;
  * 
  * @author Max Nitze
  */
-public class IfThenElseExpr extends Expression {
+public class IfThenElseExpr extends Expression implements Cloneable {
 	/** COMMENT */
 	private List<CondExprPair> condExprPairs;
 	/** COMMENT */
@@ -277,6 +279,18 @@ public class IfThenElseExpr extends Expression {
 				return false;
 
 		return this.elseCaseExpr.equals(ifThenElseExpr.elseCaseExpr);
+	}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hashCodeBuilder = new HashCodeBuilder(83, 43)
+				.appendSuper(super.hashCode());
+
+		for (CondExprPair condExprPair : this.condExprPairs)
+			hashCodeBuilder.append(condExprPair);
+		hashCodeBuilder.append(this.elseCaseExpr);
+
+		return hashCodeBuilder.toHashCode();
 	}
 
 	@Override

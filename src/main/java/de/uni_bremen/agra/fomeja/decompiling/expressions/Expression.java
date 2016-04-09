@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import de.uni_bremen.agra.fomeja.datatypes.PreField;
 import de.uni_bremen.agra.fomeja.datatypes.PreFieldList;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
@@ -19,7 +21,7 @@ import de.uni_bremen.agra.fomeja.decompiling.misc.ComponentVariables;
  * @version 1.0.0
  * @author Max Nitze
  */
-public abstract class Expression {
+public abstract class Expression implements Cloneable {
 	/** COMMENT */
 	private PreFieldList preFields;
 
@@ -59,6 +61,39 @@ public abstract class Expression {
 	 */
 	public PreFieldList getPreFieldList() {
 		return this.preFields;
+	}
+
+	/** overridden methods
+	 * ----- ----- ----- ----- ----- */
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param object the object to check for equality
+	 * 
+	 * @return {@code true} if the given object matches this abstract
+	 *  constraint value, {@code false} otherwise
+	 */
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof Expression))
+			return false;
+
+		Expression expr = (Expression) object;
+
+		return this.preFields.equals(expr.preFields);
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @return COMMENT
+	 */
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(83, 43)
+				.append(this.preFields)
+				.toHashCode();
 	}
 
 	/** abstract methods
@@ -187,18 +222,6 @@ public abstract class Expression {
 
 	/** overridden abstract methods
 	 * ----- ----- ----- ----- ----- */
-
-	/**
-	 * equals checks if this abstract constraint value and the given object are
-	 *  equal.
-	 * 
-	 * @param object the object to check for equality
-	 * 
-	 * @return {@code true} if the given object matches this abstract
-	 *  constraint value, {@code false} otherwise
-	 */
-	@Override
-	public abstract boolean equals(Object object);
 
 	/**
 	 * clone returns a copy of this abstract constraint value.

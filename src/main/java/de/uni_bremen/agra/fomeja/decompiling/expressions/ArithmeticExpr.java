@@ -5,20 +5,20 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
+import de.uni_bremen.agra.fomeja.types.ArithmeticOperator;
+import de.uni_bremen.agra.fomeja.utils.ClassUtils;
 /** imports */
-
-
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomStringExpr;
 import de.uni_bremen.agra.fomeja.decompiling.expressions.atomar.AtomVoidExpr;
+
 import de.uni_bremen.agra.fomeja.decompiling.expressions.bool.BoolExpression;
 import de.uni_bremen.agra.fomeja.decompiling.misc.ComponentVariables;
 import de.uni_bremen.agra.fomeja.exceptions.ExpressionException;
 import de.uni_bremen.agra.fomeja.exceptions.NotConvertibleException;
-import de.uni_bremen.agra.fomeja.types.ArithmeticOperator;
-import de.uni_bremen.agra.fomeja.utils.ClassUtils;
 
 /**
  * COMMENT
@@ -26,7 +26,7 @@ import de.uni_bremen.agra.fomeja.utils.ClassUtils;
  * @version 1.0.0
  * @author Max Nitze
  */
-public class ArithmeticExpr extends Expression {
+public class ArithmeticExpr extends Expression implements Cloneable {
 	/** the first expression */
 	private Expression expr1;
 	/** the second expression */
@@ -208,6 +208,16 @@ public class ArithmeticExpr extends Expression {
 		return this.expr1.equals(aritExpr.expr1) 
 				&& this.operator == aritExpr.operator
 				&& this.expr2.equals(aritExpr.expr2);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(59, 89)
+				.appendSuper(super.hashCode())
+				.append(this.expr1)
+				.append(this.expr2)
+				.append(this.operator)
+				.toHashCode();
 	}
 
 	@Override

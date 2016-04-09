@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
 import de.uni_bremen.agra.fomeja.decompiling.misc.ComponentVariables;
 
@@ -16,7 +18,7 @@ import de.uni_bremen.agra.fomeja.decompiling.misc.ComponentVariables;
  *
  * @param <T> COMMENT
  */
-public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
+public class AtomArrayExpr<T> extends AtomExpr<Expression[]> implements Cloneable {
 	/** COMMENT */
 	private Class<T> type;
 
@@ -187,17 +189,16 @@ public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 
 		AtomArrayExpr<?> arrayExpr = (AtomArrayExpr<?>) object;
 
-		if (!this.type.equals(arrayExpr.type))
-			return false;
+		return this.type.equals(arrayExpr.type)
+				&& super.equals(arrayExpr);
+	}
 
-		if (this.getValue().length != arrayExpr.getValue().length)
-			return false;
-
-		for (int i=0; i<this.getValue().length; i++)
-			if (!this.getValue()[i].equals(arrayExpr.getValue()[i]))
-				return false;
-
-		return true;
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(29, 3)
+				.appendSuper(super.hashCode())
+				.append(this.type)
+				.toHashCode();
 	}
 
 	@Override

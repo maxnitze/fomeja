@@ -3,6 +3,8 @@ package de.uni_bremen.agra.fomeja.datatypes;
 /* imports */
 import java.lang.reflect.Field;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import de.uni_bremen.agra.fomeja.annotations.Variable;
 
 /**
@@ -57,7 +59,16 @@ public class PreField {
 
 		PreField preField = (PreField) object;
 
-		return this.field != null && preField.field != null && this.field.equals(preField.field);
+		return this.field != null && preField.field != null && this.field.equals(preField.field)
+				&& this.isVariable != preField.isVariable;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(23, 67)
+		.append(this.field)
+		.append(this.isVariable)
+		.toHashCode();
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import de.uni_bremen.agra.fomeja.decompiling.expressions.Expression;
 import de.uni_bremen.agra.fomeja.decompiling.statements.misc.State;
 
@@ -13,7 +15,7 @@ import de.uni_bremen.agra.fomeja.decompiling.statements.misc.State;
  * 
  * @author Max Nitze
  */
-public class AtomVoidExpr extends AtomExpr<Void> {
+public class AtomVoidExpr extends AtomExpr<Void> implements Cloneable {
 	/** COMMENT */
 	private static int counter = 0;
 
@@ -103,6 +105,13 @@ public class AtomVoidExpr extends AtomExpr<Void> {
 		AtomVoidExpr atomVoidExpr = (AtomVoidExpr) object;
 
 		return this.getName().equals(atomVoidExpr.getName());
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(71, 89)
+			.appendSuper(super.hashCode())
+			.toHashCode();
 	}
 
 	@Override
