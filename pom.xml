@@ -64,7 +64,7 @@
 		<compiler-plugin.version>3.1</compiler-plugin.version>
 		<source-plugin.version>2.1.2</source-plugin.version>
 		<javadoc-plugin.version>2.9.1</javadoc-plugin.version>
-		<gpg-plugin.version>2.9.1</gpg-plugin.version>
+		<gpg-plugin.version>1.5</gpg-plugin.version>
 		<surefire-plugin.version>2.18.1</surefire-plugin.version>
 		<failsafe-plugin.version>2.18.1</failsafe-plugin.version>
 
