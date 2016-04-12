@@ -1,40 +1,11 @@
-image: x12
+before_script:
+  - java -version
+  - mvn --version
+  - mvn clean -B
 
-openjdk6:
+maven_install:
   only:
     - master
     - testing
   script:
-    - OPENJDK6=$(update-alternatives --list java | grep 'java-6-openjdk-amd64' | sed 's/\/bin\/java$/''/g')
-    - echo $JAVA_HOME
-    - export JAVA_HOME=$OPENJDK6
-    - java -version
-    - mvn --version
-    - mvn clean -B
-    - mvn install -B -DskipTests -Dgpg.skip
-
-openjdk7:
-  only:
-    - master
-    - testing
-  script:
-    - OPENJDK7=$(update-alternatives --list java | grep 'java-7-openjdk-amd64' | sed 's/\/bin\/java$/''/g')
-    - echo $JAVA_HOME
-    - export JAVA_HOME=$OPENJDK7
-    - java -version
-    - mvn --version
-    - mvn clean -B
-    - mvn install -B -DskipTests -Dgpg.skip
-
-oraclejdk8:
-  only:
-    - master
-    - testing
-  script:
-    - ORACLEJDK8=$(update-alternatives --list java | grep 'java-8-oracle' | sed 's/\/bin\/java$/''/g')
-    - echo $JAVA_HOME
-    - export JAVA_HOME=$ORACLEJDK8
-    - java -version
-    - mvn --version
-    - mvn clean -B
     - mvn install -B -DskipTests -Dgpg.skip
