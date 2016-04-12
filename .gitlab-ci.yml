@@ -4,7 +4,8 @@ openjdk6:
     - testing
   script:
     - OPENJDK6=$(update-alternatives --list java | grep 'java-6-openjdk-amd64' | sed 's/\/bin\/java$/''/g')
-    - export JAVA_HOME=$OPENJDK6:$JAVA_HOME
+    - echo $JAVA_HOME
+    - export JAVA_HOME=$OPENJDK6
     - java -version
     - mvn --version
     - mvn clean -B
@@ -16,7 +17,8 @@ openjdk7:
     - testing
   script:
     - OPENJDK7=$(update-alternatives --list java | grep 'java-7-openjdk-amd64' | sed 's/\/bin\/java$/''/g')
-    - export JAVA_HOME=$OPENJDK7:$JAVA_HOME
+    - echo $JAVA_HOME
+    - export JAVA_HOME=$OPENJDK7
     - java -version
     - mvn --version
     - mvn clean -B
@@ -28,7 +30,8 @@ oraclejdk8:
     - testing
   script:
     - ORACLEJDK8=$(update-alternatives --list java | grep 'java-8-oracle' | sed 's/\/bin\/java$/''/g')
-    - export JAVA_HOME=$ORACLEJDK8:$JAVA_HOME
+    - echo $JAVA_HOME
+    - export JAVA_HOME=$ORACLEJDK8
     - java -version
     - mvn --version
     - mvn clean -B
