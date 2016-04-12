@@ -1,4 +1,6 @@
 before_script:
+  - java -version
+  - mvn --version
   - mvn clean -B
 
 build_jdk7:
