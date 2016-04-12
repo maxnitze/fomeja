@@ -1,0 +1,18 @@
+.build_template: &build_def
+  only:
+    - master
+    - testing
+  script:
+    - mvn install -B -DskipTests -Dgpg.skip
+
+before_script:
+  - mvn clean -B
+
+build_jdk7:
+  <<: *build_def
+  image: maven:3-jdk-7
+
+build_jdk8:
+  <<: *build_def
+  image: maven:3-jdk-8
+
