@@ -1,8 +1,7 @@
-only:
-  - master
-  - testing
-
-build_openjdk6:
+openjdk6:
+  only:
+    - master
+    - testing
   script:
     - OPENJDK6=$(update-alternatives --list java | grep 'java-6-openjdk-amd64' | sed 's/\/bin\/java$/''/g')
     - export JAVA_HOME=$OPENJDK6:$JAVA_HOME
@@ -11,7 +10,10 @@ build_openjdk6:
     - mvn clean -B
     - mvn install -B -DskipTests -Dgpg.skip
 
-build_openjdk7:
+openjdk7:
+  only:
+    - master
+    - testing
   script:
     - OPENJDK7=$(update-alternatives --list java | grep 'java-7-openjdk-amd64' | sed 's/\/bin\/java$/''/g')
     - export JAVA_HOME=$OPENJDK7:$JAVA_HOME
@@ -20,7 +22,10 @@ build_openjdk7:
     - mvn clean -B
     - mvn install -B -DskipTests -Dgpg.skip
 
-build_oraclejdk8:
+oraclejdk8:
+  only:
+    - master
+    - testing
   script:
     - ORACLEJDK8=$(update-alternatives --list java | grep 'java-8-oracle' | sed 's/\/bin\/java$/''/g')
     - export JAVA_HOME=$ORACLEJDK8:$JAVA_HOME
