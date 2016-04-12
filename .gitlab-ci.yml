@@ -1,3 +1,5 @@
+image: x12
+
 openjdk6:
   only:
     - master
