@@ -72,7 +72,7 @@ public class AtomArrayExpr<T> extends AtomExpr<Expression[]> {
 	 * 
 	 * @return COMMENT
 	 */
-	public Class<?> getType() {
+	public Class<T> getType() {
 		return this.type;
 	}
 
