@@ -153,7 +153,7 @@ public class PremStmtSeqExpr extends PrematureExpr {
 	}
 
 	@Override
-	public Expression clone() {
+	public PremStmtSeqExpr clone() {
 		return new PremStmtSeqExpr(this.stmtSeq.clone(), this.substState.clone());
 	}
 

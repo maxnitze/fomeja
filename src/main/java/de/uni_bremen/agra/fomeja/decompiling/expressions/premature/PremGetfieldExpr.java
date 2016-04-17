@@ -210,7 +210,7 @@ public class PremGetfieldExpr extends PrematureExpr {
 	}
 
 	@Override
-	public Expression clone() {
+	public PremGetfieldExpr clone() {
 		return new PremGetfieldExpr(this.expr.clone(), this.field);
 	}
 

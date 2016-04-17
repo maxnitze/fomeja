@@ -83,7 +83,7 @@ public class BreakStmt extends FlowControlStmt {
 	}
 
 	@Override
-	public Statement clone() {
+	public BreakStmt clone() {
 		return new BreakStmt();
 	}
 

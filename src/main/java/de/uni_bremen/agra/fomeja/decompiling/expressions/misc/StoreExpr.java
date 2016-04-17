@@ -158,7 +158,7 @@ public class StoreExpr extends Expression {
 	}
 
 	@Override
-	public Expression clone() {
+	public StoreExpr clone() {
 		return new StoreExpr(this.name, this.resultType);
 	}
 

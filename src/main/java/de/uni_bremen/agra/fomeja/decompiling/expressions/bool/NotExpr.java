@@ -139,7 +139,7 @@ public class NotExpr extends BoolExpression {
 	}
 
 	@Override
-	public BoolExpression clone() {
+	public NotExpr clone() {
 		return new NotExpr(this.boolExpr.clone());
 	}
 

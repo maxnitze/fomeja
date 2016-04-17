@@ -220,7 +220,7 @@ public class BoolIfThenElseExpr extends BoolExpression {
 	}
 
 	@Override
-	public BoolExpression clone() {
+	public BoolIfThenElseExpr clone() {
 		BoolIfThenElseExpr boolIfThenElseExpr = new BoolIfThenElseExpr(this.elseCaseExpr.clone());
 		for (CondBoolExprPair condExprPair : this.condBoolExprPairs)
 			boolIfThenElseExpr.add(condExprPair.condition.clone(), condExprPair.boolExpr.clone());

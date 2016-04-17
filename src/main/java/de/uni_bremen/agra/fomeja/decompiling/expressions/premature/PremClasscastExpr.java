@@ -163,7 +163,7 @@ public class PremClasscastExpr extends PrematureExpr {
 	}
 
 	@Override
-	public Expression clone() {
+	public PremClasscastExpr clone() {
 		return new PremClasscastExpr(this.expr.clone(), this.keyword);
 	}
 

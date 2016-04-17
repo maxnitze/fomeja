@@ -296,7 +296,7 @@ public class IfThenElseExpr extends Expression implements Cloneable {
 	}
 
 	@Override
-	public Expression clone() {
+	public IfThenElseExpr clone() {
 		IfThenElseExpr ifThenElseExpr = new IfThenElseExpr(this.elseCaseExpr.clone());
 		for (CondExprPair condExprPair : this.condExprPairs)
 			ifThenElseExpr.add(condExprPair.condition.clone(), condExprPair.expr.clone());

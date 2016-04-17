@@ -219,7 +219,7 @@ public class ArithmeticExpr extends Expression implements Cloneable {
 	}
 
 	@Override
-	public Expression clone() {
+	public ArithmeticExpr clone() {
 		return new ArithmeticExpr(
 				this.expr1.clone(), this.operator, this.expr2.clone());
 	}

@@ -173,7 +173,7 @@ public class WildcardExpr extends Expression {
 	}
 
 	@Override
-	public Expression clone() {
+	public WildcardExpr clone() {
 		return new WildcardExpr(this.name, this.resultType);
 	}
 
