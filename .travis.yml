@@ -40,7 +40,7 @@ notifications:
 addons:
   coverity_scan:
     project:
-      name: "razr69/fomeja"
+      name: "maxnitze/fomeja"
     notification_email: maxnitze@cs.uni-bremen.de
     build_command_prepend: "mvn clean"
     build_command: "mvn -DskipTests=true compile"
