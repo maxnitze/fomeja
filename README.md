@@ -1,7 +1,7 @@
 Fomeja - Formal Methods in Java
 ====================================
 
-[![Build Status](https://travis-ci.org/razr69/fomeja.svg?branch=master)](https://travis-ci.org/maxnitze/fomeja)
+[![Build Status](https://travis-ci.org/maxnitze/fomeja.svg?branch=master)](https://travis-ci.org/maxnitze/fomeja)
 [![Coverage Status](https://coveralls.io/repos/github/maxnitze/fomeja/badge.svg?branch=master)](https://coveralls.io/github/maxnitze/fomeja?branch=master)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/8496/badge.svg)](https://scan.coverity.com/projects/maxnitze-fomeja)
 [![Maven Central](https://img.shields.io/maven-central/v/de.uni_bremen.agra.fomeja/fomeja.svg)](http://mvnrepository.com/artifact/de.uni_bremen.agra.fomeja/fomeja)
