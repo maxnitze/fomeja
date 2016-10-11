@@ -29,6 +29,15 @@ public class AtomEnumExpr extends AtomExpr<Enum<?>> {
 		super(field, preFields);
 	}
 
+	/**
+	 * COMMENT
+	 * 
+	 * @param name COMMENT
+	 */
+	public AtomEnumExpr(String name) {
+		super(name, false);
+	}
+
 	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 

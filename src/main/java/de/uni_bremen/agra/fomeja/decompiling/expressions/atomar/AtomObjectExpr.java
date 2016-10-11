@@ -29,6 +29,16 @@ public class AtomObjectExpr extends AtomExpr<Object> {
 		super(field, preFields);
 	}
 
+	/**
+	 * COMMENT
+	 * 
+	 * @param name COMMENT
+	 * @param nullObject COMMENT
+	 */
+	public AtomObjectExpr(String name, Object nullObject) {
+		super(name, false);
+	}
+
 	/* overridden methods
 	 * ----- ----- ----- ----- ----- */
 

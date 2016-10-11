@@ -110,12 +110,36 @@ public class RandElementGenerator {
 	/**
 	 * COMMENT
 	 * 
+	 * @param exprClass COMMENT
+	 * @param depth COMMENT
+	 * 
+	 * @return COMMENT
+	 */
+	public static <T extends Expression> T generateExpr(Class<T> exprClass, int depth) {
+		return generateExpr(exprClass, false, depth);
+	}
+
+	/**
+	 * COMMENT
+	 * 
 	 * @param boolExprClass COMMENT
 	 * 
 	 * @return COMMENT
 	 */
 	public static <T extends BoolExpression> T generateBoolExpr(Class<T> boolExprClass) {
-		return generateBoolExpr(boolExprClass, MAX_DEPTH);
+		return generateBoolExpr(boolExprClass, false, MAX_DEPTH);
+	}
+
+	/**
+	 * COMMENT
+	 * 
+	 * @param boolExprClass COMMENT
+	 * @param depth COMMENT
+	 * 
+	 * @return COMMENT
+	 */
+	public static <T extends BoolExpression> T generateBoolExpr(Class<T> boolExprClass, int depth) {
+		return generateBoolExpr(boolExprClass, false, depth);
 	}
 
 	/* private generator classes
@@ -132,8 +156,15 @@ public class RandElementGenerator {
 	 */
 	@SuppressWarnings("unchecked")
 	private static <T extends Expression> T generateExpr(Class<T> exprClass, boolean returnNumber, int depth) {
+		ExprClass exprClassElement;
+		if (exprClass.equals(Expression.class)) {
+			exprClassElement = ExprClass.getRandom(returnNumber, depth);
+			exprClass = (Class<T>) exprClassElement.cls;
+		} else
+			exprClassElement = ExprClass.valueOf(exprClass);
+
 		int newDepth = depth-1;
-		switch (ExprClass.valueOf(exprClass)) {
+		switch (exprClassElement) {
 		/* general expression classes */
 		case ArithmeticExpr:
 			return (T) new ArithmeticExpr(
@@ -142,15 +173,15 @@ public class RandElementGenerator {
 					generateExpr(ExprClass.getRandom(true, newDepth).cls, true, newDepth));
 		case IfThenElseExpr:
 			return (T) new IfThenElseExpr(
-					generateBoolExpr(BoolExprClass.getRandom(newDepth).cls, newDepth),
+					generateBoolExpr(BoolExprClass.getRandom(newDepth).cls, returnNumber, newDepth),
 					generateExpr(ExprClass.getRandom(returnNumber, newDepth).cls, returnNumber, newDepth),
 					generateExpr(ExprClass.getRandom(returnNumber, newDepth).cls, returnNumber, newDepth));
 		/* atomar expression classes */
 		case AtomExpr:
-			return (T) generateAtomExpr(AtomExprClass.getRandom(returnNumber, depth).cls, returnNumber, depth);
+			return (T) generateAtomExpr((Class<AtomExpr<?>>) exprClass, returnNumber, depth);
 		/* boolean expression classes */
 		case BoolExpression:
-			return (T) generateBoolExpr(BoolExprClass.getRandom(depth).cls, depth);
+			return (T) generateBoolExpr((Class<BoolExpression>) exprClass, returnNumber, depth);
 		/* default case */
 		default:
 			String message = "can not process unknown expression class type \"" + exprClass + "\"";
@@ -163,25 +194,33 @@ public class RandElementGenerator {
 	 * COMMENT
 	 * 
 	 * @param boolExprClass COMMENT
+	 * @param returnNumber COMMENT
 	 * @param depth COMMENT
 	 * 
 	 * @return COMMENT
 	 */
 	@SuppressWarnings("unchecked")
-	private static <T extends BoolExpression> T generateBoolExpr(Class<T> boolExprClass, int depth) {
+	private static <T extends BoolExpression> T generateBoolExpr(Class<T> boolExprClass, boolean returnNumber, int depth) {
+		BoolExprClass boolExprClassElement;
+		if (boolExprClass.equals(BoolExpression.class)) {
+			boolExprClassElement = BoolExprClass.getRandom(depth);
+			boolExprClass = (Class<T>) boolExprClassElement.cls;
+		} else
+			boolExprClassElement = BoolExprClass.valueOf(boolExprClass);
+
 		int newDepth = depth-1;
-		switch (BoolExprClass.valueOf(boolExprClass)) {
+		switch (boolExprClassElement) {
 		/* boolean expression classes */
 		case AtomBoolExpr:
 			return (T) new AtomBoolExpr(RANDOMIZER.nextBoolean());
 		case BoolIfThenElseExpr:
 			BoolIfThenElseExpr boolIfThenElseExpr = new BoolIfThenElseExpr(
-					generateBoolExpr(BoolExprClass.getRandom(newDepth).cls, newDepth));
+					generateBoolExpr(BoolExprClass.getRandom(newDepth).cls, returnNumber, newDepth));
 			int condExprPairSize = RANDOMIZER.nextInt(MAX_LIST_SIZE);
 			for (int i=0; i<condExprPairSize; i++)
 				boolIfThenElseExpr.add(
-						generateBoolExpr(BoolExprClass.getRandom(newDepth).cls, newDepth),
-						generateBoolExpr(BoolExprClass.getRandom(newDepth).cls, newDepth));
+						generateBoolExpr(BoolExprClass.getRandom(newDepth).cls, returnNumber, newDepth),
+						generateBoolExpr(BoolExprClass.getRandom(newDepth).cls, returnNumber, newDepth));
 			return (T) boolIfThenElseExpr;
 		case CompareExpr:
 			return (T) new CompareExpr(
@@ -193,10 +232,10 @@ public class RandElementGenerator {
 					BooleanConnector.values()[RANDOMIZER.nextInt(BooleanConnector.values().length)]);
 			int connectedExprPairSize = RANDOMIZER.nextInt(MAX_LIST_SIZE);
 			for (int i=0; i<connectedExprPairSize; i++)
-				connectedBoolExpr.add(generateBoolExpr(BoolExprClass.getRandom(newDepth).cls, newDepth));
+				connectedBoolExpr.add(generateBoolExpr(BoolExprClass.getRandom(newDepth).cls, returnNumber, newDepth));
 			return (T) connectedBoolExpr;
 		case NotExpr:
-			return (T) new NotExpr(generateBoolExpr(BoolExprClass.getRandom(newDepth).cls, newDepth));
+			return (T) new NotExpr(generateBoolExpr(BoolExprClass.getRandom(newDepth).cls, returnNumber, newDepth));
 		/* default case */
 		default:
 			String message = "can not process unknown bool expression class type \"" + boolExprClass + "\"";
@@ -216,7 +255,13 @@ public class RandElementGenerator {
 	 */
 	@SuppressWarnings("unchecked")
 	private static <T extends AtomExpr<?>> T generateAtomExpr(Class<T> atomExprClass, boolean returnNumber, int depth) {
-		switch(AtomExprClass.valueOf(atomExprClass)) {
+		AtomExprClass atomExprClassElement;
+		if (atomExprClass.equals(AtomExpr.class))
+			atomExprClassElement = AtomExprClass.getRandom(returnNumber, depth);
+		else
+			atomExprClassElement = AtomExprClass.valueOf(atomExprClass);
+
+		switch(atomExprClassElement) {
 		/* atomar expression classes */
 //		case AtomArrayExpr:
 //			return (T) null;
@@ -256,26 +301,52 @@ public class RandElementGenerator {
 	 * @return COMMENT
 	 */
 	private static AtomExpr<?> generateAtomExprForClass(Class<?> cls) {
-		if (cls.equals(Boolean.class))
-			return new AtomBooleanExpr(RANDOMIZER.nextBoolean());
-		else if (cls.equals(Character.class))
-			return new AtomCharacterExpr((char) RANDOMIZER.nextInt(MAX_CHARACTER));
-		else if (cls.equals(Double.class))
-			return new AtomDoubleExpr(RANDOMIZER.nextDouble());
-		else if (cls.equals(Float.class))
-			return new AtomFloatExpr(RANDOMIZER.nextFloat());
-		else if (cls.equals(Integer.class))
-			return new AtomIntegerExpr(RANDOMIZER.nextInt());
-		else if (cls.equals(String.class)) {
+		boolean genFinishedExpr = RANDOMIZER.nextBoolean();
+		if (genFinishedExpr) {
+			if (cls.equals(Boolean.class))
+				return new AtomBooleanExpr(RANDOMIZER.nextBoolean());
+			else if (cls.equals(Character.class))
+				return new AtomCharacterExpr((char) RANDOMIZER.nextInt(MAX_CHARACTER));
+			else if (cls.equals(Double.class))
+				return new AtomDoubleExpr(RANDOMIZER.nextDouble());
+			else if (cls.equals(Float.class))
+				return new AtomFloatExpr(RANDOMIZER.nextFloat());
+			else if (cls.equals(Integer.class))
+				return new AtomIntegerExpr(RANDOMIZER.nextInt());
+			else if (cls.equals(String.class)) {
+				int stringLength = RANDOMIZER.nextInt(MAX_STRING_LENGTH);
+				StringBuilder stringBuilder = new StringBuilder();
+				for (int i=0; i<stringLength; i++)
+					stringBuilder.append((char) RANDOMIZER.nextInt(MAX_CHARACTER));
+				return new AtomStringExpr(stringBuilder.toString());
+			} else if (cls.isEnum())
+				return new AtomEnumExpr((Enum<?>) cls.getEnumConstants()[RANDOMIZER.nextInt(cls.getEnumConstants().length)]);
+			else
+				return new AtomObjectExpr(new Object());
+		} else {
 			int stringLength = RANDOMIZER.nextInt(MAX_STRING_LENGTH);
 			StringBuilder stringBuilder = new StringBuilder();
 			for (int i=0; i<stringLength; i++)
 				stringBuilder.append((char) RANDOMIZER.nextInt(MAX_CHARACTER));
-			return new AtomStringExpr(stringBuilder.toString());
-		} else if (cls.isEnum())
-			return new AtomEnumExpr((Enum<?>) cls.getEnumConstants()[RANDOMIZER.nextInt(cls.getEnumConstants().length)]);
-		else
-			return new AtomObjectExpr(new Object());
+			String atomExprName = stringBuilder.toString();
+
+			if (cls.equals(Boolean.class))
+				return new AtomBooleanExpr(atomExprName);
+			else if (cls.equals(Character.class))
+				return new AtomCharacterExpr(atomExprName);
+			else if (cls.equals(Double.class))
+				return new AtomDoubleExpr(atomExprName);
+			else if (cls.equals(Float.class))
+				return new AtomFloatExpr(atomExprName);
+			else if (cls.equals(Integer.class))
+				return new AtomIntegerExpr(atomExprName);
+			else if (cls.equals(String.class)) {
+				return new AtomStringExpr(atomExprName, null);
+			} else if (cls.isEnum())
+				return new AtomEnumExpr(atomExprName);
+			else
+				return new AtomObjectExpr(atomExprName);
+		}
 	}
 
 	/* private inner classes
@@ -349,7 +420,7 @@ public class RandElementGenerator {
 		 */
 		public static ExprClass valueOf(Class<? extends Expression> exprClass) {
 			for (ExprClass value : values())
-				if (value.cls.equals(exprClass))
+				if (value.cls.isAssignableFrom(exprClass))
 					return value;
 	
 			String message = "can not get expression class for class \"" + exprClass.getSimpleName() + "\"";
